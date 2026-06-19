@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classement Énergétique GT — Calculateur Netair</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #0F3261;
+    --teal:   #0897A5;
+    --blue:   #0070C8;
+    --bg:     #F8FAFC;
+    --muted:  #ECF1F4;
+    --border: #E2E8F0;
+    --text:   #0F3261;
+    --sub:    #4A5E7A;
+    --white:  #FFFFFF;
+    --radius: 6px;
+    --shadow: 0 2px 12px rgba(15,50,97,.08);
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--teal);
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--navy);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-mark svg { width: 22px; height: 22px; }
+  .header-title { flex: 1; }
+  .header-title h1 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+  .header-title p {
+    font-size: 11px;
+    color: var(--sub);
+    margin-top: 2px;
+    letter-spacing: .04em;
+  }
+  .header-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  /* ── LAYOUT ── */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 680px) {
+    main { grid-template-columns: 1fr; padding: 20px 16px; }
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .card-head {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--sub);
+    background: var(--muted);
+  }
+  .card-body { padding: 20px; }
+
+  /* ── FORM ── */
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--sub);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  select, input[type="number"] {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 13px;
+    color: var(--text);
+    background: var(--white);
+    outline: none;
+    transition: border-color .15s;
+    appearance: none;
+  }
+  select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234A5E7A'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  select:focus, input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(8,151,165,.12); }
+
+  .input-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .input-with-unit {
+    position: relative;
+  }
+  .input-with-unit input { padding-right: 42px; }
+  .unit {
+    position: absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--sub);
+    pointer-events: none;
+    font-weight: 500;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  .radio-group {
+    display: flex;
+    gap: 8px;
+  }
+  .radio-btn {
+    flex: 1;
+    position: relative;
+  }
+  .radio-btn input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .radio-btn label {
+    display: block;
+    text-align: center;
+    padding: 8px 6px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--sub);
+    transition: all .15s;
+    background: var(--white);
+    line-height: 1.3;
+    margin: 0;
+  }
+  .radio-btn input:checked + label {
+    border-color: var(--teal);
+    background: rgba(8,151,165,.07);
+    color: var(--teal);
+  }
+
+  /* ── RESULTS ── */
+  .result-grid {
+    display: grid;
+    gap: 12px;
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 12px;
+    background: var(--muted);
+    border-radius: var(--radius);
+  }
+  .result-label {
+    font-size: 11px;
+    color: var(--sub);
+    font-weight: 500;
+  }
+  .result-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .result-value .val-unit {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--sub);
+    margin-left: 4px;
+  }
+
+  /* ── GT BADGE ── */
+  .gt-block {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .gt-letter {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: -.02em;
+  }
+  .gt-info { flex: 1; }
+  .gt-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    opacity: .7;
+  }
+  .gt-desc {
+    font-size: 12px;
+    margin-top: 4px;
+    opacity: .85;
+    font-weight: 500;
+  }
+  .gt-energy {
+    font-size: 12px;
+    margin-top: 2px;
+    opacity: .7;
+  }
+
+  /* GT colors */
+  .gt-App  { border-color: #00A850; background: #E8F9EF; color: #00612F; }
+  .gt-Ap   { border-color: #4BB543; background: #EEF9ED; color: #2A6B26; }
+  .gt-A    { border-color: #0070C8; background: #E5F0FC; color: #004A8A; }
+  .gt-B    { border-color: #0897A5; background: #E6F6F8; color: #055F6A; }
+  .gt-C    { border-color: #F5A623; background: #FEF6E7; color: #8A5900; }
+  .gt-D    { border-color: #E84040; background: #FEECEC; color: #9A1A1A; }
+
+  /* ── SCALE BAR ── */
+  .scale-bar {
+    display: flex;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 8px;
+    margin-top: 16px;
+    gap: 2px;
+  }
+  .scale-seg {
+    flex: 1;
+    border-radius: 2px;
+    transition: opacity .3s;
+    opacity: .25;
+  }
+  .scale-seg.active { opacity: 1; }
+  .scale-seg:nth-child(1) { background: #00A850; }
+  .scale-seg:nth-child(2) { background: #4BB543; }
+  .scale-seg:nth-child(3) { background: #0070C8; }
+  .scale-seg:nth-child(4) { background: #0897A5; }
+  .scale-seg:nth-child(5) { background: #F5A623; }
+  .scale-seg:nth-child(6) { background: #E84040; }
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    color: var(--sub);
+  }
+
+  /* ── INTERMEDIARY ── */
+  .calc-details {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+  }
+  .calc-details summary {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--sub);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+  }
+  .calc-details summary::after { content: ' ▸'; }
+  .calc-details[open] summary::after { content: ' ▾'; }
+  .detail-rows { margin-top: 12px; display: grid; gap: 6px; }
+  .detail-row {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--sub);
+  }
+  .detail-row span:last-child { font-weight: 600; color: var(--text); }
+
+  /* ── NOTE ── */
+  .note {
+    grid-column: 1 / -1;
+    font-size: 10px;
+    color: var(--sub);
+    padding: 12px 16px;
+    background: var(--muted);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--teal);
+    line-height: 1.5;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: white; }
+    .card { box-shadow: none; border: 1px solid #ccc; }
+    .note { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">
+    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="11" cy="11" r="9" stroke="white" stroke-width="1.5" fill="none"/>
+      <path d="M7 11 C7 8.5 9 7 11 7 C13 7 15 8.5 15 11 C15 13.5 13 15 11 15" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <circle cx="11" cy="11" r="1.5" fill="white"/>
+    </svg>
+  </div>
+  <div class="header-title">
+    <h1>Netair</h1>
+    <p>Classement Énergétique GT — Calculateur de performance</p>
+  </div>
+  <div class="header-badge">Beta</div>
+</header>
+
+<main>
+
+  <!-- ── INPUTS ── -->
+  <div class="card">
+    <div class="card-head">Paramètres d'installation</div>
+    <div class="card-body">
+
+      <div class="field">
+        <label>Produit Netair</label>
+        <select id="produit">
+          <optgroup label="— NETPLY —">
+            <option value="NETPLY_G4_48">NETPLY G4 — ePM10 60% — EP48mm</option>
+            <option value="NETPLY_G4_98">NETPLY G4 — ePM10 60% — EP98mm</option>
+          </optgroup>
+          <optgroup label="— NETBAG S —">
+            <option value="NETBAG_M5_380">NETBAG S M5 — ePM10 50% — 592×592×380mm</option>
+            <option value="NETBAG_M5_550">NETBAG S M5 — ePM10 50% — 592×592×550mm</option>
+            <option value="NETBAG_M5_650">NETBAG S M5 — ePM10 50% — 592×592×650mm</option>
+            <option value="NETBAG_F7_380">NETBAG S F7 — ePM1 55% — 592×592×380mm</option>
+            <option value="NETBAG_F7_550">NETBAG S F7 — ePM1 55% — 592×592×550mm</option>
+            <option value="NETBAG_F7_650">NETBAG S F7 — ePM1 55% — 592×592×650mm</option>
+            <option value="NETBAG_F8_360">NETBAG S F8 — ePM1 70% — 592×592×360mm</option>
+            <option value="NETBAG_F8_500">NETBAG S F8 — ePM1 70% — 592×592×500mm</option>
+            <option value="NETBAG_F9_380">NETBAG S F9 — ePM1 80% — 592×592×380mm</option>
+            <option value="NETBAG_F9_550">NETBAG S F9 — ePM1 80% — 592×592×550mm</option>
+            <option value="NETBAG_F9_650">NETBAG S F9 — ePM1 80% — 592×592×650mm</option>
+          </optgroup>
+          <optgroup label="— NETPAK S AZUR —">
+            <option value="AZUR_M5_48">NETPAK S AZUR M5 — ePM10 50% — EP48mm</option>
+            <option value="AZUR_M5_98" selected>NETPAK S AZUR M5 — ePM10 50% — EP98mm</option>
+            <option value="AZUR_M6_48">NETPAK S AZUR M6 — ePM2.5 50% — EP48mm</option>
+            <option value="AZUR_M6_98">NETPAK S AZUR M6 — ePM2.5 50% — EP98mm</option>
+            <option value="AZUR_GRF7_48">NETPAK S AZUR GR F7 — ePM1 50% — EP48mm</option>
+            <option value="AZUR_GRF7_98">NETPAK S AZUR GR F7 — ePM1 50% — EP98mm</option>
+            <option value="AZUR_F7_48">NETPAK S AZUR F7 — ePM1 55% — EP48mm</option>
+            <option value="AZUR_F8_48">NETPAK S AZUR F8 — ePM1 70% — EP48mm</option>
+            <option value="AZUR_F8_98">NETPAK S AZUR F8 — ePM1 70% — EP98mm</option>
+            <option value="AZUR_F9_48">NETPAK S AZUR F9 — ePM1 80% — EP48mm</option>
+            <option value="AZUR_F9_98">NETPAK S AZUR F9 — ePM1 80% — EP98mm</option>
+          </optgroup>
+          <optgroup label="— NETPAK S CILIA —">
+            <option value="CILIA_F7">NETPAK S CILIA F7 — ePM1 55% — Miniplis</option>
+          </optgroup>
+          <optgroup label="— NETPAK S BORA —">
+            <option value="BORA_F7">NETPAK S BORA F7 — ePM1 55% — EP292mm</option>
+            <option value="BORA_F8">NETPAK S BORA F8 — ePM1 70% — EP292mm</option>
+            <option value="BORA_F9">NETPAK S BORA F9 — ePM1 80% — EP292mm</option>
+          </optgroup>
+          <optgroup label="— NETPAK S LUMEN (rechargeable) —">
+            <option value="LUMEN_F7">NETPAK S LUMEN F7 — ePM1 55% — EP292mm</option>
+            <option value="LUMEN_F8">NETPAK S LUMEN F8 — ePM1 70% — EP292mm</option>
+            <option value="LUMEN_F9">NETPAK S LUMEN F9 — ePM1 80% — EP292mm</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <div class="field">
+          <label>Largeur</label>
+          <div class="input-with-unit">
+            <input type="number" id="largeur" value="592" min="100" max="2000" step="1">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Longueur</label>
+          <div class="input-with-unit">
+            <input type="number" id="longueur" value="592" min="100" max="2000" step="1">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Débit d'air</label>
+        <div class="input-with-unit">
+          <input type="number" id="debit" value="3000" min="100" max="50000" step="50">
+          <span class="unit">m³/h</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="input-group">
+        <div class="field">
+          <label>Heures / jour</label>
+          <div class="input-with-unit">
+            <input type="number" id="heures" value="24" min="1" max="24" step="1">
+            <span class="unit">h</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Jours / an</label>
+          <div class="input-with-unit">
+            <input type="number" id="jours" value="250" min="1" max="365" step="1">
+            <span class="unit">j</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Rendement ventilateur</label>
+        <div class="input-with-unit">
+          <input type="number" id="rendement" value="50" min="10" max="95" step="1">
+          <span class="unit">%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Prix de l'énergie</label>
+        <div class="input-with-unit">
+          <input type="number" id="prix" value="0.15" min="0.05" max="1" step="0.01">
+          <span class="unit">€/kWh</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Méthode de changement de filtre</label>
+        <div class="radio-group">
+          <div class="radio-btn">
+            <input type="radio" name="methode" id="m_en13053" value="en13053" checked>
+            <label for="m_en13053">EN 13053<br>ΔP + 100 Pa</label>
+          </div>
+          <div class="radio-btn">
+            <input type="radio" name="methode" id="m_x2" value="x2">
+            <label for="m_x2">Recommandation<br>ΔP × 2</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── RESULTS ── -->
+  <div>
+    <div class="card">
+      <div class="card-head">Résultats</div>
+      <div class="card-body">
+
+        <div class="result-grid">
+          <div class="result-row">
+            <span class="result-label">Vitesse frontale</span>
+            <span class="result-value" id="r-vitesse">—<span class="val-unit">m/s</span></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Perte de charge initiale</span>
+            <span class="result-value" id="r-dpi">—<span class="val-unit">Pa</span></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Consommation annuelle</span>
+            <span class="result-value" id="r-energie">—<span class="val-unit">kWh/an</span></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Coût énergétique annuel</span>
+            <span class="result-value" id="r-cout">—<span class="val-unit">€/an</span></span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Émissions CO₂</span>
+            <span class="result-value" id="r-co2">—<span class="val-unit">kg/an</span></span>
+          </div>
+        </div>
+
+        <!-- GT Badge -->
+        <div class="gt-block" id="gt-block">
+          <div class="gt-letter" id="gt-letter">—</div>
+          <div class="gt-info">
+            <div class="gt-label">Classement Énergétique GT</div>
+            <div class="gt-desc" id="gt-desc">Saisissez les paramètres</div>
+            <div class="gt-energy" id="gt-energy"></div>
+          </div>
+        </div>
+
+        <div class="scale-bar">
+          <div class="scale-seg" id="seg-App"></div>
+          <div class="scale-seg" id="seg-Ap"></div>
+          <div class="scale-seg" id="seg-A"></div>
+          <div class="scale-seg" id="seg-B"></div>
+          <div class="scale-seg" id="seg-C"></div>
+          <div class="scale-seg" id="seg-D"></div>
+        </div>
+        <div class="scale-labels">
+          <span>A++</span><span>A+</span><span>A</span><span>B</span><span>C</span><span>D</span>
+        </div>
+
+        <details class="calc-details">
+          <summary>Détails du calcul</summary>
+          <div class="detail-rows">
+            <div class="detail-row"><span>Surface frontale</span><span id="d-surface">—</span></div>
+            <div class="detail-row"><span>ΔP finale (seuil de changement)</span><span id="d-dpf">—</span></div>
+            <div class="detail-row"><span>ΔP moyen retenu (× 0,85)</span><span id="d-dpm">—</span></div>
+            <div class="detail-row"><span>Heures de fonctionnement/an</span><span id="d-heures">—</span></div>
+            <div class="detail-row"><span>Coefficients produit A / B / C</span><span id="d-abc">—</span></div>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    Les coefficients de perte de charge (A, B, C) sont issus de mesures sur produits équivalents en classe de filtration. Ils sont à affiner dès que les mesures sur produits Netair seront disponibles.
+    Formules conformes à la méthode de classement GT (RE2020) — facteur CO₂ réseau électrique français : 0,079 kg/kWh.
+  </div>
+
+</main>
+
+<script>
+// ── PRODUCT DATABASE ──────────────────────────────────────────────────────────
+const PRODUCTS = {
+  NETPLY_G4_48:   { A: 5.20,  B: 10.38, C: -2.62, group: 'M5' },
+  NETPLY_G4_98:   { A: 6.27,  B:  5.37, C: -0.70, group: 'M5' },
+  NETBAG_M5_380:  { A: 7.28,  B:  7.21, C:  9.85, group: 'M5' },
+  NETBAG_M5_550:  { A: 3.84,  B: 11.30, C:  6.35, group: 'M5' },
+  NETBAG_M5_650:  { A: 3.59,  B:  4.92, C:  8.98, group: 'M5' },
+  NETBAG_F7_380:  { A: 9.06,  B: 43.81, C: -9.09, group: 'F7' },
+  NETBAG_F7_550:  { A: 5.74,  B: 22.42, C:  3.50, group: 'F7' },
+  NETBAG_F7_650:  { A: 7.68,  B: 13.14, C: 10.00, group: 'F7' },
+  NETBAG_F8_360:  { A: 4.73,  B: 63.54, C:-13.54, group: 'F8' },
+  NETBAG_F8_500:  { A: 6.01,  B: 29.68, C:  4.48, group: 'F8' },
+  NETBAG_F9_380:  { A:15.30,  B: 47.89, C: 14.04, group: 'F9' },
+  NETBAG_F9_550:  { A: 9.45,  B: 30.39, C:  8.29, group: 'F9' },
+  NETBAG_F9_650:  { A: 8.17,  B: 28.23, C:  6.40, group: 'F9' },
+  AZUR_M5_48:     { A: 6.43,  B:  9.79, C: -0.75, group: 'M5' },
+  AZUR_M5_98:     { A: 5.20,  B:  9.75, C: -0.07, group: 'M5' },
+  AZUR_M6_48:     { A: 4.41,  B: 24.89, C: -3.47, group: 'M5' },
+  AZUR_M6_98:     { A: 5.80,  B: 12.30, C:  1.64, group: 'M5' },
+  AZUR_GRF7_48:   { A: 2.41,  B: 17.72, C: -3.99, group: 'F7hi' },
+  AZUR_GRF7_98:   { A: 5.88,  B:  7.92, C:  0.76, group: 'F7hi' },
+  AZUR_F7_48:     { A: 6.45,  B: 16.40, C:  2.61, group: 'F7' },
+  AZUR_F8_48:     { A: 8.51,  B: 33.49, C:  2.34, group: 'F8' },
+  AZUR_F8_98:     { A: 7.59,  B: 18.44, C:  2.39, group: 'F8' },
+  AZUR_F9_48:     { A: 9.47,  B: 37.29, C:  2.52, group: 'F9' },
+  AZUR_F9_98:     { A: 8.29,  B: 20.97, C:  2.32, group: 'F9' },
+  CILIA_F7:       { A: 6.19,  B:  9.04, C:  0.13, group: 'F7' },
+  BORA_F7:        { A:13.78,  B:-10.59, C: 11.16, group: 'F7' },
+  BORA_F8:        { A:10.76,  B:  1.18, C:  3.00, group: 'F8' },
+  BORA_F9:        { A:11.29,  B:  0.78, C:  3.93, group: 'F9' },
+  LUMEN_F7:       { A:13.78,  B:-10.59, C: 11.16, group: 'F7' },
+  LUMEN_F8:       { A:10.76,  B:  1.18, C:  3.00, group: 'F8' },
+  LUMEN_F9:       { A:11.29,  B:  0.78, C:  3.93, group: 'F9' },
+};
+
+// ── CLASSIFICATION TABLE ──────────────────────────────────────────────────────
+// Seuils d'énergie annuelle (kWh) — source: méthode GT classement énergétique
+const SEUILS = [0, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400];
+
+const CLASS_TABLES = {
+  M5:   ['A++','A++','A+','A+','A', 'B', 'C', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D'],
+  F7hi: ['A++','A++','A++','A++','A+','A+','A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 'D'],
+  F7:   ['A++','A++','A+','A+','A+','A+','A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 'D'],
+  F8:   ['A++','A++','A++','A++','A+','A+','A+','A', 'A', 'B', 'B', 'C', 'C', 'D', 'D'],
+  F9:   ['A++','A++','A++','A++','A++','A+','A+','A', 'A', 'B', 'B', 'C', 'C', 'D', 'D'],
+};
+
+const GT_META = {
+  'A++': { label: 'Très haute efficacité',    cssKey: 'App' },
+  'A+':  { label: 'Haute efficacité',          cssKey: 'Ap'  },
+  'A':   { label: 'Bonne efficacité',          cssKey: 'A'   },
+  'B':   { label: 'Efficacité correcte',       cssKey: 'B'   },
+  'C':   { label: 'Efficacité limitée',        cssKey: 'C'   },
+  'D':   { label: 'Faible efficacité',         cssKey: 'D'   },
+};
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function getClass(energy, group) {
+  const table = CLASS_TABLES[group] || CLASS_TABLES['M5'];
+  let idx = 0;
+  for (let i = 0; i < SEUILS.length; i++) {
+    if (energy >= SEUILS[i]) idx = i; else break;
+  }
+  return table[Math.min(idx, table.length - 1)];
+}
+
+function fmt(val, dec = 0) {
+  if (val === null || isNaN(val)) return '—';
+  return val.toFixed(dec).replace('.', ',');
+}
+
+// ── CALCULATE ─────────────────────────────────────────────────────────────────
+function calculate() {
+  const prodKey   = document.getElementById('produit').value;
+  const largeur   = parseFloat(document.getElementById('largeur').value);
+  const longueur  = parseFloat(document.getElementById('longueur').value);
+  const debit     = parseFloat(document.getElementById('debit').value);
+  const heures    = parseFloat(document.getElementById('heures').value);
+  const jours     = parseFloat(document.getElementById('jours').value);
+  const rendement = parseFloat(document.getElementById('rendement').value);
+  const prix      = parseFloat(document.getElementById('prix').value);
+  const methode   = document.querySelector('input[name="methode"]:checked').value;
+
+  const p = PRODUCTS[prodKey];
+  if (!p || !largeur || !longueur || !debit || !heures || !jours || !rendement) return;
+
+  // Surface frontale (m²)
+  const surface = (largeur * longueur) / 1e6;
+
+  // Vitesse frontale (m/s)
+  const v = debit / (surface * 3600);
+
+  // ΔP initiale (Pa)
+  const dpi = Math.round(p.A * v * v + p.B * v + p.C);
+
+  // ΔP finale selon méthode
+  const dpf = methode === 'en13053' ? dpi + 100 : dpi * 2;
+
+  // ΔP moyen retenu
+  const dpm = (dpf / 2) * 0.85;
+
+  // Énergie annuelle (kWh)
+  const heuresAn = heures * jours;
+  const energie = Math.ceil((debit * dpm * heuresAn) / (3600000 * (rendement / 100)));
+
+  // Coût et CO2
+  const cout = Math.round(energie * prix * 100) / 100;
+  const co2  = Math.round(energie * 0.079 * 10) / 10;
+
+  // Classement GT
+  const classe = getClass(energie, p.group);
+  const meta   = GT_META[classe];
+
+  // ── Mise à jour DOM ──
+  const setTxt = (id, html) => document.getElementById(id).innerHTML = html;
+
+  setTxt('r-vitesse', `${fmt(v, 2)}<span class="val-unit">m/s</span>`);
+  setTxt('r-dpi',     `${fmt(dpi)}<span class="val-unit">Pa</span>`);
+  setTxt('r-energie', `${fmt(energie)}<span class="val-unit">kWh/an</span>`);
+  setTxt('r-cout',    `${fmt(cout, 2)}<span class="val-unit">€/an</span>`);
+  setTxt('r-co2',     `${fmt(co2, 1)}<span class="val-unit">kg/an</span>`);
+
+  // Badge GT
+  const block = document.getElementById('gt-block');
+  block.className = `gt-block gt-${meta.cssKey}`;
+  setTxt('gt-letter', classe);
+  setTxt('gt-desc',   meta.label);
+  setTxt('gt-energy', `${energie} kWh/an · groupe ${p.group}`);
+
+  // Barre de classe
+  const order = ['App','Ap','A','B','C','D'];
+  order.forEach(k => {
+    const el = document.getElementById('seg-' + k);
+    el.classList.toggle('active', k === meta.cssKey);
+  });
+
+  // Détails
+  setTxt('d-surface', `${(surface * 10000 / 100).toFixed(4).replace('.', ',')} m²`);
+  setTxt('d-dpf',     `${dpf} Pa (${methode === 'en13053' ? 'EN 13053 : ΔP + 100' : 'Recommandation : ΔP × 2'})`);
+  setTxt('d-dpm',     `${fmt(dpm, 1)} Pa`);
+  setTxt('d-heures',  `${heuresAn} h/an (${heures} h/j × ${jours} j)`);
+  setTxt('d-abc',     `A = ${p.A} · B = ${p.B} · C = ${p.C}`);
+}
+
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+['produit','largeur','longueur','debit','heures','jours','rendement','prix'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calculate);
+});
+document.querySelectorAll('input[name="methode"]').forEach(r => {
+  r.addEventListener('change', calculate);
+});
+
+// Calcul initial
+calculate();
+</script>
+</body>
+</html>
