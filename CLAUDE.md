@@ -15,6 +15,19 @@
 3. **Review** (Sonnet) — vérifier la correction, la sécurité, la cohérence avec la charte Netair
 4. **Commit + push** — toujours en fin de tâche, sans exception
 
+## Branches
+
+- `main` — stable, chaque merge représente une version cohérente
+- Une branche `feature/<sujet>` par fonctionnalité, créée depuis `main`
+- PR vers `main` en fin de feature — toujours, même sans version en prod : ça garde un historique lisible
+
+```
+git checkout -b feature/<sujet>   # début de tâche
+# ... travail ...
+git push --set-upstream origin feature/<sujet>
+gh pr create ...                  # fin de tâche
+```
+
 ## Commit & push
 
 À la fin de chaque tâche, sans attendre que l'utilisateur le demande :
