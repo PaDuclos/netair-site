@@ -53,6 +53,19 @@ Garantie : régénérer `netply.json` reproduit `gabarit_base.html` à l'octet p
 Calculateur = **polynôme `ΔP = a·v² + b·v + c`** (mesures R&D), source `DONNEES_PDC`.
 Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 €, 250 j).
 
+## Règle ΔP finale recommandée (spec) — IMPÉRATIVE
+
+La ligne specs « ΔP finale recommandée » est **toujours** :
+
+```
+["ΔP finale recommandée", "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"]
+```
+
+— **identique au fonctionnement du calculateur énergétique** (ΔP finale = min(ΔP init + 50 ; 3×ΔP init)).
+**Ne jamais** mettre les valeurs absolues des fiches Titanair (ex. 250 Pa EN 779 / 200 Pa ISO) : elles sont
+dépendantes du débit et contredisent le calculateur. Référence = NETPLY v6. (Appliqué partout : NETPLY v6,
+NETPLAN, NETMETAL, NETFIL, NETFIBRE.)
+
 ## Réglages disponibles par produit (clés du JSON)
 
 | Clé | Effet |
