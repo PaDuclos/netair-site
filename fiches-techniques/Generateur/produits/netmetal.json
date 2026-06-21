@@ -14,7 +14,7 @@
   "photo": "netmetal-photo.jpg",
   "photo_alt": "Cellule filtrante métallique NETMETAL",
 
-  "description": "Le NETMETAL est une cellule filtrante métallique régénérable destinée à la préfiltration des poussières grossières en centrale de traitement d'air. Son média en mailles métalliques superposées, agencées en structure labyrinthique — aluminium, acier galvanisé ou inox 304 — est maintenu entre deux grilles en fil zingué et cerclé d'un cadre en acier galvanisé 8/10, gage de robustesse. Lavable et réutilisable, il réduit les déchets et le coût d'exploitation. Sa grande résistance mécanique et sa faible section de passage le destinent aussi à la séparation de gouttes et à la filtration anti-graisse, là où il faut conjuguer débit d'air élevé et tenue dans le temps.",
+  "description": "Le NETMETAL est une cellule filtrante métallique régénérable destinée à la préfiltration des poussières grossières en centrale de traitement d'air. Son média en mailles métalliques superposées, agencées en structure labyrinthique — aluminium, acier galvanisé ou inox 304 — est maintenu entre deux grilles en fil zingué et cerclé d'un cadre en acier galvanisé ou inox 304 (ép. 8/10), gage de robustesse. Lavable et réutilisable, il réduit les déchets et le coût d'exploitation. Sa grande résistance mécanique et sa faible section de passage le destinent aussi à la séparation de gouttes et à la filtration anti-graisse, là où il faut conjuguer débit d'air élevé et tenue dans le temps.",
 
   "points_cles": [
     "Lavable et régénérable",
@@ -26,8 +26,7 @@
   "specs": [
     ["Média filtrant", "Mailles métalliques superposées (tricot labyrinthique)"],
     ["Matériau média", "Aluminium (réf.) · acier galvanisé · inox 304"],
-    ["Parois cellule", "Acier galvanisé"],
-    ["Cadre", "Acier galvanisé ép. 8/10"],
+    ["Cadre", "Acier galvanisé ou inox 304 — ép. 8/10"],
     ["Grilles de maintien", "Fil zingué (2 faces)"],
     ["Efficacités EN 779", "G3 (réf.) — gamme G1 → G3 selon nb de couches"],
     ["Efficacités ISO 16890", "Coarse 50%"],
