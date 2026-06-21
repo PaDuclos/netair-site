@@ -231,10 +231,10 @@
             <line x1="52" y1="250" x2="580" y2="250" stroke="#0F3261" stroke-width="1.4"></line>
             <!-- y tick labels -->
             <text x="46" y="254" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">0</text>
-            <text x="46" y="195.5" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">30</text>
-            <text x="46" y="137" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">60</text>
-            <text x="46" y="78.5" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">90</text>
-            <text x="46" y="20" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">120</text>
+            <text x="46" y="195.5" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">20</text>
+            <text x="46" y="137" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">40</text>
+            <text x="46" y="78.5" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">60</text>
+            <text x="46" y="20" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">80</text>
             <!-- x tick labels -->
             <text x="52" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">0</text>
             <text x="184.0" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">0,5</text>
@@ -429,7 +429,7 @@
   var fr = function (n) { return Math.round(n).toLocaleString('fr-FR'); };
   var $  = function (id) { return document.getElementById(id); };
   var mapX = function (v) { return 52 + (v / Vmax) * 528; };
-  var mapY = function (p) { return 250 - (Math.min(p, 120) / 120) * 234; };
+  var mapY = function (p) { return 250 - (Math.min(p, 80) / 80) * 234; };
 
   function pdc(co, v) { return Math.max(0, co.a * v * v + co.b * v + co.c); }
   function curve(co) {
