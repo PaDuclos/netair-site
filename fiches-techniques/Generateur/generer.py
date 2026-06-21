@@ -136,6 +136,43 @@ def _co(co):
     return f"{{ a: {co['a']}, b: {co['b']}, c: {co['c']} }}"
 
 
+AREF = 0.592 * 0.592   # surface frontale de référence (m²)
+
+
+def _frnum(x):
+    """Nombre format français : 2 -> '2', 1.5 -> '1,5', 0.5 -> '0,5'."""
+    return f"{x:g}".replace(".", ",")
+
+
+def _mapx(v, vmax):
+    return 52 + (v / vmax) * 528
+
+
+def build_gridlines(vmax, vnom):
+    """Graduations verticales (0,5 / 1 / …) + ligne pointillée du point nominal."""
+    out, v = [], 0.5
+    while v < vmax - 1e-9:
+        x = f"{_mapx(v, vmax):.1f}"
+        out.append(f'<line x1="{x}" y1="16" x2="{x}" y2="250" stroke="#EDF1F6" stroke-width="1"></line>')
+        v += 0.5
+    xn = f"{_mapx(vnom, vmax):.1f}"
+    out.append(f'<line x1="{xn}" y1="16" x2="{xn}" y2="250" stroke="#0F3261" '
+               f'stroke-width="1" stroke-dasharray="2 3" opacity="0.4"></line>')
+    return "\n".join("            " + l for l in out)
+
+
+def build_xlabels(vmax):
+    """Étiquettes de l'axe vitesse : 0, 0,5, … (centrées) puis Vmax (aligné à droite)."""
+    out, v = [], 0.0
+    base = ('font-family="\'IBM Plex Mono\',monospace" font-size="11" fill="#5A6573"')
+    while v < vmax - 1e-9:
+        x = "52" if v == 0 else f"{_mapx(v, vmax):.1f}"
+        out.append(f'<text x="{x}" y="265" text-anchor="middle" {base}>{_frnum(v)}</text>')
+        v += 0.5
+    out.append(f'<text x="580" y="265" text-anchor="end" {base}>{_frnum(vmax)}</text>')
+    return "\n".join("            " + l for l in out)
+
+
 def build_poly_block(low, high):
     """Bloc de constantes JS — polynômes ΔP = a·v² + b·v + c. Espacement exact du gabarit."""
     return (
@@ -237,6 +274,30 @@ def generer(d, html):
     # --- #10b constantes JS (POLY / ADD / RULE)
     html = sub1(html, r"  var POLY = \{.*?var RULE = \{[^\n]*\};",
                 lambda m: build_poly_block(low, high), flags=re.DOTALL)
+
+    # --- plage de vitesse / débit nominal (optionnel ; NETPLY garde les défauts du gabarit)
+    if "vmax" in d:
+        vmax = d["vmax"]
+        dnom = d.get("debit_nom", 3400)
+        vnom = (dnom / 3600) / AREF
+        # constantes JS
+        html = html.replace("var Vmax = 3.17;", f"var Vmax = {vmax};")
+        html = html.replace("var Vnom = (3400 / 3600) / Aref;",
+                            f"var Vnom = ({dnom} / 3600) / Aref;")
+        html = html.replace("fr(v / Vnom * 3400)", f"fr(v / Vnom * {dnom})")
+        # débit par défaut du calculateur
+        html = html.replace('id="inDebit" min="500" max="6000" step="50" value="3400"',
+                            f'id="inDebit" min="500" max="6000" step="50" value="{dnom}"')
+        html = html.replace("debit: 3400,", f"debit: {dnom},")
+        # axe X : graduations, point nominal, étiquettes, annotation
+        html = sub1(html, r"(<!-- vertical gridlines -->\n)(.*?)(\n            <!-- 4 courbes)",
+                    lambda m: m.group(1) + build_gridlines(vmax, vnom) + m.group(3), flags=re.DOTALL)
+        html = sub1(html, r"(<!-- x tick labels -->\n)(.*?)(\n            <!-- axis titles)",
+                    lambda m: m.group(1) + build_xlabels(vmax) + m.group(3), flags=re.DOTALL)
+        annot = f"{vnom:.1f}".replace(".", ",") + f" m/s ≈ {dnom} m³/h · 592×592"
+        xn = f"{_mapx(vnom, vmax):.1f}"
+        html = sub1(html, r'(<text x=")[\d.]+(" y="11"[^>]*>)[^<]*(</text>)',
+                    lambda m: m.group(1) + xn + m.group(2) + annot + m.group(3))
 
     # --- note sous le tableau dimensions (optionnelle)
     if "note_dimensions" in d:

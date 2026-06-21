@@ -1,11 +1,13 @@
 {
-  "_commentaire": "NETPLAN — fiche MONO-CLASSE G4 (Coarse 65%, 25 mm). Données réelles Titanair fiche 2018 'TITAPLAN G4-COARSE 65%' + cache graphe Excel (ΔP 12/25/41/68 à v 0,5/1/1,5/2). Descriptif reformulé depuis Documentation/Titaplan.pdf. G3 écarté (graphe source erroné = copie du G4). Modèle polynomial a·v²+b·v+c ≈ {14, 1.8, 8} (DONNEES_PDC ligne 14). À VALIDER : photo, ΔP au-delà de 2 m/s (extrapolé, ΔP nom ≈ 115 Pa).",
+  "_commentaire": "NETPLAN — fiche MONO-CLASSE G4 (Coarse 65%, 25 mm). Données réelles Titanair fiche 2018 'TITAPLAN G4-COARSE 65%' + cache graphe Excel (ΔP 12/25/41/68 à v 0,5/1/1,5/2). Descriptif reformulé depuis Documentation/Titaplan.pdf. G3 écarté (graphe source erroné = copie du G4). Modèle polynomial a·v²+b·v+c ≈ {14, 1.8, 8} (DONNEES_PDC ligne 14). Vitesse max 2 m/s, point nominal 1,5 m/s (1900 m³/h) → ΔP nom ≈ 42 Pa, mesurée (plus d'extrapolation).",
 
   "slug": "netplan",
   "nom": "NETPLAN",
   "soustitre": "Filtre plan — Préfiltre synthétique",
   "mono_classe": true,
   "surface_facteur": 1,
+  "vmax": 2,
+  "debit_nom": 1900,
 
   "fiche": { "num": "FT-NETPLAN-001", "version": "v1.0", "date": "21/06/2026" },
 
@@ -48,15 +50,14 @@
   ],
 
   "classes": {
-    "low":  { "label": "G4", "iso": "Coarse 65%", "poly": { "48": { "a": 14, "b": 1.8, "c": 8 }, "98": { "a": 14, "b": 1.8, "c": 8 } }, "add": 50, "rule": "classe Coarse", "dp": 115, "epaisseur": 25 },
-    "high": { "label": "G4", "iso": "Coarse 65%", "poly": { "48": { "a": 14, "b": 1.8, "c": 8 }, "98": { "a": 14, "b": 1.8, "c": 8 } }, "add": 50, "rule": "classe Coarse", "dp": 115, "epaisseur": 25 }
+    "low":  { "label": "G4", "iso": "Coarse 65%", "poly": { "48": { "a": 14, "b": 1.8, "c": 8 }, "98": { "a": 14, "b": 1.8, "c": 8 } }, "add": 50, "rule": "classe Coarse", "dp": 42, "epaisseur": 25 },
+    "high": { "label": "G4", "iso": "Coarse 65%", "poly": { "48": { "a": 14, "b": 1.8, "c": 8 }, "98": { "a": 14, "b": 1.8, "c": 8 } }, "add": 50, "rule": "classe Coarse", "dp": 42, "epaisseur": 25 }
   },
 
-  "note_dimensions": "Surface filtrante = surface frontale (L × H). ΔP de référence ≈ 115 Pa à 3400 m³/h sur 592×592 (polynôme a·v²+b·v+c ajusté sur la courbe mesurée jusqu'à 2 m/s, extrapolé au-delà) ; le débit indiqué est le débit nominal correspondant.",
+  "note_dimensions": "Surface filtrante = surface frontale (L × H). ΔP de référence ≈ 42 Pa à 1900 m³/h sur 592×592 (vitesse nominale 1,5 m/s, dans la plage mesurée) ; le débit indiqué est le débit nominal correspondant.",
 
   "dimensions": [
-    { "L": 592, "H": 592, "P": 25, "debit": 3400 },
-    { "L": 287, "H": 592, "P": 25, "debit": 1700 },
-    { "L": 490, "H": 592, "P": 25, "debit": 2800 }
+    { "L": 592, "H": 592, "P": 25, "debit": 1900 },
+    { "L": 287, "H": 592, "P": 25, "debit": 900 }
   ]
 }
