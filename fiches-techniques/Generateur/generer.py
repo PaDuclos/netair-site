@@ -240,11 +240,20 @@ def generer(d, html):
         flags=re.DOTALL)
 
     # --- #8 dimensions & références
-    html = sub1(
-        html,
-        r"(<!-- Dimensions -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
-        lambda m: m.group(1) + build_dimensions(d) + m.group(3),
-        flags=re.DOTALL)
+    no_dim = d.get("no_dimensions", False)
+    if no_dim:
+        # produit sans dimensions standard : on retire tout le bloc (titre + table + note)
+        html = sub1(
+            html,
+            r"\n        <!-- Dimensions -->\n        <div style=\"margin-top:8mm;\">.*?\n        </div>",
+            lambda m: "",
+            flags=re.DOTALL)
+    else:
+        html = sub1(
+            html,
+            r"(<!-- Dimensions -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
+            lambda m: m.group(1) + build_dimensions(d) + m.group(3),
+            flags=re.DOTALL)
 
     # --- #9 pied de page (n°, version, date — P1 et P2)
     html = html.replace("Fiche n° FT-NETPLY-001", f"Fiche n° {d['fiche']['num']}")
@@ -261,7 +270,7 @@ def generer(d, html):
                 lambda m: m.group(1) + lab_high + m.group(2), flags=re.DOTALL)
     mono = d.get("mono_classe", False)
     ep = low.get("epaisseur")
-    leg_low_a = f"{lab_low} — {ep} mm" if mono else f"{lab_low} — 48 mm"
+    leg_low_a = f"{lab_low} — {_frnum(ep)} mm" if mono else f"{lab_low} — 48 mm"
     for eid, txt in (("legG4a", leg_low_a), ("legG4b", f"{lab_low} — 98 mm"),
                      ("legM5a", f"{lab_high} — 48 mm"), ("legM5b", f"{lab_high} — 98 mm")):
         html = sub1(html, r'(id="' + eid + r'"[^>]*>.*?</span>)(.*?)(</div>)',
@@ -313,8 +322,8 @@ def generer(d, html):
             html = sub1(html, r'(x="46" y="' + re.escape(ypos) + r'"[^>]*>)[^<]*(</text>)',
                         lambda m, l=lab: m.group(1) + l + m.group(2))
 
-    # --- note sous le tableau dimensions (optionnelle)
-    if "note_dimensions" in d:
+    # --- note sous le tableau dimensions (optionnelle ; sans objet si bloc retiré)
+    if "note_dimensions" in d and not no_dim:
         html = sub1(html, r'(margin-top:6px; line-height:1\.45;">)(.*?)(</div>)',
                     lambda m: m.group(1) + d["note_dimensions"] + m.group(3),
                     flags=re.DOTALL)

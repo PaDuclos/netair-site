@@ -1,10 +1,11 @@
 {
-  "_commentaire": "NETFIL — cellule filtrante cousue (équiv. Titanair TITAFIL). Fiche MONO-CLASSE G3. ARBITRAGE SOURCES (3 révisions divergentes) : descriptif 2015 = média fibres synthétiques G2/G3 ; fiche v2_2020 = G3, média fibre synthétique, courbe ΔP [2;2,8;4;6,5;11,5;21] à v=[0,16;0,25;0,35;0,5;1;1,5] ; fiche v3_2023 = G4/Coarse 65%, média 100% polyester, courbe [3;4;6;9;16;27]. Choix client : MONO-CLASSE G3 (cohérent gamme G2/G3, sous NETPLAN/NETPLY) sur courbe G3 v2_2020. ISO 16890 = Coarse 50% (équivalence indicative, la fiche Titanair ne donnait pas le %). Polynôme ajusté ΔP=a·v²+b·v+c ≈ {3,99;7,24;0,97} (R²≈0,994, 6 pts mesurés 0,16–1,5 m/s). Vmax=1,5 (limite mesurée, filtre basse vitesse / ventilo-convecteurs), nominal 1,0 m/s ≈ 1260 m³/h sur 592×592 → ΔP nom ≈ 12 Pa, dans la plage mesurée. Specs fiches 2018 : T° continue 60 °C / acc. 80 °C 1h, feu M1. Cadre fil acier galvanisé Ø4,5mm (descriptif 2015, plus précis que 'parois cellule'). Descriptif reformulé depuis Documentation/Titafil.pdf. ÉPAISSEUR 20 mm = À VALIDER (filtre cousu sur mesure, non spécifié dans les fiches). PHOTO = placeholder Titanair détouré sur blanc (sujet blanc-sur-blanc, bords du liseré approximatifs) — À REMPLACER par photo réelle Netair.",
+  "_commentaire": "NETFIL — cellule filtrante cousue (équiv. Titanair TITAFIL). Fiche MONO-CLASSE G3. ARBITRAGE SOURCES (3 révisions divergentes) : descriptif 2015 = média fibres synthétiques G2/G3 ; fiche v2_2020 = G3, média fibre synthétique, courbe ΔP [2;2,8;4;6,5;11,5;21] à v=[0,16;0,25;0,35;0,5;1;1,5] ; fiche v3_2023 = G4/Coarse 65%, média 100% polyester, courbe [3;4;6;9;16;27]. Choix client : MONO-CLASSE G3 (cohérent gamme G2/G3, sous NETPLAN/NETPLY) sur courbe G3 v2_2020. ISO 16890 = Coarse 50% (équivalence indicative, la fiche Titanair ne donnait pas le %). Polynôme ajusté ΔP=a·v²+b·v+c ≈ {3,99;7,24;0,97} (R²≈0,994, 6 pts mesurés 0,16–1,5 m/s). Vmax=1,5 (limite mesurée, filtre basse vitesse / ventilo-convecteurs), nominal 1,0 m/s ≈ 1260 m³/h sur 592×592 → ΔP nom ≈ 12 Pa, dans la plage mesurée. Specs fiches 2018 : T° continue 60 °C / acc. 80 °C 1h, feu M1. Cadre fil acier galvanisé Ø4,5mm (descriptif 2015, plus précis que 'parois cellule'). Descriptif reformulé depuis Documentation/Titafil.pdf. PROFONDEUR ≈ 4,5 mm (= Ø du fil du cadre ; filtre cousu plat, pas de dimensions standard → bloc dimensions retiré via no_dimensions). PHOTO = placeholder Titanair détouré sur blanc (sujet blanc-sur-blanc, bords du liseré approximatifs) — À REMPLACER par photo réelle Netair.",
 
   "slug": "netfil",
   "nom": "NETFIL",
   "soustitre": "Filtre cousu — Préfiltre fibres synthétiques",
   "mono_classe": true,
+  "no_dimensions": true,
   "surface_facteur": 1,
   "vmax": 1.5,
   "pmax": 24,
@@ -48,15 +49,7 @@
   ],
 
   "classes": {
-    "low":  { "label": "G3", "iso": "Coarse 50%", "poly": { "48": { "a": 3.99, "b": 7.24, "c": 0.97 }, "98": { "a": 3.99, "b": 7.24, "c": 0.97 } }, "add": 50, "rule": "classe Coarse", "dp": 12, "epaisseur": 20 },
-    "high": { "label": "G3", "iso": "Coarse 50%", "poly": { "48": { "a": 3.99, "b": 7.24, "c": 0.97 }, "98": { "a": 3.99, "b": 7.24, "c": 0.97 } }, "add": 50, "rule": "classe Coarse", "dp": 12, "epaisseur": 20 }
-  },
-
-  "note_dimensions": "Surface filtrante = surface frontale (L × H). Filtre cousu fabriqué sur mesure (toutes dimensions, grandes longueurs) ; épaisseur courante 20 mm — à confirmer. ΔP de référence ≈ 12 Pa à 1260 m³/h sur 592×592 (vitesse nominale 1,0 m/s, dans la plage mesurée).",
-
-  "dimensions": [
-    { "L": 592, "H": 592, "P": 20, "debit": 1260 },
-    { "L": 490, "H": 592, "P": 20, "debit": 1040 },
-    { "L": 287, "H": 592, "P": 20, "debit": 610 }
-  ]
+    "low":  { "label": "G3", "iso": "Coarse 50%", "poly": { "48": { "a": 3.99, "b": 7.24, "c": 0.97 }, "98": { "a": 3.99, "b": 7.24, "c": 0.97 } }, "add": 50, "rule": "classe Coarse", "dp": 12, "epaisseur": 4.5 },
+    "high": { "label": "G3", "iso": "Coarse 50%", "poly": { "48": { "a": 3.99, "b": 7.24, "c": 0.97 }, "98": { "a": 3.99, "b": 7.24, "c": 0.97 } }, "add": 50, "rule": "classe Coarse", "dp": 12, "epaisseur": 4.5 }
+  }
 }
