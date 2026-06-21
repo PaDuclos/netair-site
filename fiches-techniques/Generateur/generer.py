@@ -299,6 +299,20 @@ def generer(d, html):
         html = sub1(html, r'(<text x=")[\d.]+(" y="11"[^>]*>)[^<]*(</text>)',
                     lambda m: m.group(1) + xn + m.group(2) + annot + m.group(3))
 
+    # --- échelle de l'axe Y / perte de charge (optionnel ; NETPLY garde 120 Pa)
+    if "pmax" in d:
+        pmax = d["pmax"]
+        # mapY : borne haute de l'axe (250 px = 0 Pa, 16 px = pmax)
+        html = html.replace("return 250 - (Math.min(p, 120) / 120) * 234;",
+                            f"return 250 - (Math.min(p, {pmax}) / {pmax}) * 234;")
+        # 5 graduations Y (x="46") : 0, pmax/4, pmax/2, 3·pmax/4, pmax
+        yticks = (("254", 0), ("195.5", 1), ("137", 2), ("78.5", 3), ("20", 4))
+        for ypos, k in yticks:
+            val = pmax * k / 4
+            lab = _frnum(round(val, 1)) if abs(val - round(val)) > 1e-9 else str(int(round(val)))
+            html = sub1(html, r'(x="46" y="' + re.escape(ypos) + r'"[^>]*>)[^<]*(</text>)',
+                        lambda m, l=lab: m.group(1) + l + m.group(2))
+
     # --- note sous le tableau dimensions (optionnelle)
     if "note_dimensions" in d:
         html = sub1(html, r'(margin-top:6px; line-height:1\.45;">)(.*?)(</div>)',

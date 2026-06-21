@@ -62,6 +62,7 @@ Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 
 | `mono_classe` | fiche à 1 seule classe (1 courbe, sélecteurs masqués) |
 | `surface_facteur` | surface filtrante : `2` (plissé) ou `1` (plan, frontale) |
 | `vmax` | vitesse max de la courbe (axe X reconstruit auto) |
+| `pmax` | échelle haute de l'axe Y / ΔP (défaut 120 Pa ; graduations 0…pmax auto) |
 | `debit_nom` | débit nominal → point nominal, annotation, défaut calculateur |
 | `classes.*.epaisseur` | épaisseur réelle (légende, libellés) |
 | `note_dimensions` | note sous le tableau dimensions |

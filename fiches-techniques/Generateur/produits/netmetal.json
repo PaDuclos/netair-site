@@ -7,6 +7,7 @@
   "mono_classe": true,
   "surface_facteur": 1,
   "vmax": 2.4,
+  "pmax": 60,
   "debit_nom": 1900,
 
   "fiche": { "num": "FT-NETMETAL-001", "version": "v1.0", "date": "22/06/2026" },
@@ -18,7 +19,7 @@
 
   "points_cles": [
     "Lavable et régénérable",
-    "Cadre acier galvanisé 8/10",
+    "Cadre acier galva ou inox 304",
     "Média alu / galva / inox 304",
     "Anti-graisse · séparateur de gouttes"
   ],
