@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Archives & sauvegardes
+*.zip
+*.bak
+
+# Sources lourdes / références non versionnées
+fiches-techniques/Titanair/
+*-orig.jpg

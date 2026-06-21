@@ -1,0 +1,57 @@
+{
+  "_commentaire": "BROUILLON NETPLAN à VALIDER. Valeurs marquées (À VALIDER) = reprises de NETPLY ou typiques, à confirmer/mesurer avant diffusion. Voir la checklist fournie par Claude Code.",
+
+  "slug": "netplan",
+  "nom": "NETPLAN",
+  "soustitre": "Filtre plan — Préfiltre synthétique",
+
+  "fiche": { "num": "FT-NETPLAN-001", "version": "v1.0", "date": "21/06/2026" },
+
+  "photo": "netply-photo.jpg",
+  "photo_alt": "Filtre NETPLAN",
+
+  "description": "Le filtre plan NETPLAN constitue une première barrière filtrante robuste pour les centrales de traitement d'air. Son média en fibres synthétiques (polyester) à densité croissante est maintenu entre deux grilles galvanisées, dans un cadre acier galvanisé épaisseur 8/10. Disponible en G3 et G4 selon EN 779 / EN ISO 16890, il offre une grande résistance mécanique et s'adapte à toutes les dimensions de CTA.",
+
+  "points_cles": [
+    "Cadre acier galvanisé robuste",
+    "Grilles de maintien galvanisées",
+    "Faible perte de charge",
+    "Sans fibre de verre"
+  ],
+
+  "specs": [
+    ["Média filtrant", "Fibres synthétiques (polyester)"],
+    ["Structure", "2 grilles acier galvanisé"],
+    ["Cadre", "Acier galvanisé ép. 8/10"],
+    ["Joint d'étanchéité", "Polyuréthane (option)"],
+    ["Classement au feu", "À VALIDER"],
+    ["Surface du média", "À VALIDER"],
+    ["Température de service", "−20 °C à +70 °C"],
+    ["Humidité relative max.", "95 % (sans condensation)"],
+    ["Incinérable", "Non (cadre métallique)"]
+  ],
+
+  "badges_p1": [
+    "ISO 16890 : Coarse 60% / Coarse 75%",
+    "EN 779 : G3 / G4",
+    "EN 13053"
+  ],
+  "badges_p2": [
+    "ISO 16890 : Coarse 60% → Coarse 75%",
+    "EN 779 : G3 → G4",
+    "EN 13053"
+  ],
+
+  "classes": {
+    "low":  { "label": "G3", "iso": "Coarse 60%", "scale48": 45, "scale98": 32, "exp": 1.60, "add": 50, "rule": "classe Coarse", "dp": 45 },
+    "high": { "label": "G4", "iso": "Coarse 75%", "scale48": 60, "scale98": 42, "exp": 1.60, "add": 50, "rule": "classe Coarse", "dp": 60 }
+  },
+
+  "dimensions": [
+    { "L": 592, "H": 592, "P": 48, "debit": 3400 },
+    { "L": 287, "H": 592, "P": 48, "debit": 1700 },
+    { "L": 490, "H": 592, "P": 48, "debit": 2800 },
+    { "L": 625, "H": 500, "P": 48, "debit": 3050 },
+    { "L": 500, "H": 500, "P": 48, "debit": 2450 }
+  ]
+}
