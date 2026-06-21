@@ -99,5 +99,9 @@ Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 
   7,34·v²+2,44·v+5,57 (fit 5 pts 0,79–2,38 m/s), Vmax 2,4 · nominal 1,5 m/s (1900 m³/h) ✅
   — doc 2015 disait G1-G2 → priorité fiche 2018 ; photo placeholder Titanair à remplacer ;
   ΔP au-delà de 2,38 m/s non mesurée.
+- **NETFIL** — mono-classe G3 / Coarse 50% (équiv. TITAFIL, filtre cousu), polynôme
+  3,99·v²+7,24·v+0,97 (fit 6 pts 0,16–1,5 m/s, fiche v2_2020), Vmax 1,5 · nominal 1,0 m/s (1260 m³/h) ✅
+  — 3 révisions Titanair (G3 2020 / G4 2023) → G3 retenu (cohérent gamme) ; épaisseur 20 mm et
+  photo placeholder à valider ; domaine basse vitesse hors grille débits de DONNEES_PDC.
 - **NETFIBRE** — 🔜 prochain (rouleau media synthétique, réf. TITAFIBRE, G2 → M5)
-- Suivants : NETFIL, NETBAG S, NETPAK…, NETCEL…, NETCARB… (cf. Bibliothèque)
+- Suivants : NETBAG S, NETPAK…, NETCEL…, NETCARB… (cf. Bibliothèque)
