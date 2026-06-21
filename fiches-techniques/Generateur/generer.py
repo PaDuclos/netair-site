@@ -333,6 +333,13 @@ def generer(d, html):
         html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
                             'align-items:center; gap:18px; margin-top:7px; display:none;">')
 
+    # --- page 1 compacte (par produit) : réduit les marges verticales pour
+    #     faire tenir un contenu plus dense sur l'A4, sans toucher les autres fiches.
+    if d.get("compact_p1"):
+        html = html.replace("margin:9mm 0 7mm 0;", "margin:6mm 0 5mm 0;")           # filet en-tête P1
+        html = html.replace('<div style="margin-top:9mm;">', '<div style="margin-top:6mm;">')   # Caractéristiques
+        html = html.replace('<div style="margin-top:8mm;">', '<div style="margin-top:6mm;">')   # Dimensions
+
     return html
 
 

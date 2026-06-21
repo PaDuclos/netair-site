@@ -4,6 +4,7 @@
   "slug": "netply",
   "nom": "NETPLY",
   "soustitre": "Filtre plissé — Préfiltre synthétique",
+  "compact_p1": true,
 
   "fiche": { "num": "FT-NETPLY-001", "version": "v6", "date": "22/06/2026" },
 
@@ -16,7 +17,8 @@
     "Grande surface filtrante",
     "Faible perte de charge",
     "Média sans couture ni colle",
-    "Démontable — tri sélectif"
+    "Démontable — tri sélectif",
+    "Sans fibre de verre"
   ],
 
   "specs": [
@@ -25,10 +27,11 @@
     ["Cadre", "Acier galvanisé"],
     ["Séparateur", "Sans"],
     ["Classement au feu", "M1"],
-    ["Surface média", "0,70 m² (48 mm) · 1,05 m² (98 mm) — cellule 592×592"],
+    ["Surface média", "2 × surface frontale (48 mm) · 3 × surface frontale (98 mm)"],
     ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
     ["Humidité relative max.", "100 %"],
-    ["ΔP finale recommandée", "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"]
+    ["ΔP finale recommandée", "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"],
+    ["Incinérable", "Média oui · cadre acier non"]
   ],
 
   "badges_p1": [
