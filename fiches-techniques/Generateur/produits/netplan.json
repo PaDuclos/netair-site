@@ -26,7 +26,7 @@
     ["Parois cellule", "Acier galvanisé"],
     ["Cadre", "Acier galvanisé ép. 8/10"],
     ["Séparateur", "Sans"],
-    ["Efficacités disponibles", "G2 · G3 · G4 (données de référence : G4)"],
+    ["Efficacités disponibles", "EN 779 : G2 · G3 · G4 — ISO 16890 : Coarse 40% · 50% · 65% (réf. : G4)"],
     ["Épaisseurs disponibles", "8 · 10 · 15 · 20 · 23 · 25 mm"],
     ["Classement au feu", "M1"],
     ["Surface média", "Surface frontale"],
