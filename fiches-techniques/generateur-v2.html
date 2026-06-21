@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur de fiches techniques — Netair</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:#0F3261; --teal:#0897A5; --blue:#0070C8;
+  --bg:#F0F2F5; --muted:#ECF1F4; --border:#D8E2EC;
+  --text:#0F3261; --sub:#4A5E7A; --white:#fff;
+  --r:6px;
+}
+body { font-family:'Helvetica Neue',Arial,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ── TOPBAR ── */
+.topbar { background:var(--white); border-bottom:1px solid var(--border); padding:12px 24px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:200; box-shadow:0 1px 6px rgba(0,0,0,.06); }
+.topbar::before { content:''; position:absolute; left:0;top:0;bottom:0;width:4px;background:var(--teal); }
+.topbar-logo { height:28px; }
+.topbar-title { flex:1; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--navy); }
+.btn { padding:8px 16px; border-radius:var(--r); font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; border:none; cursor:pointer; display:inline-flex;align-items:center;gap:6px; transition:.15s; }
+.btn-outline { background:var(--white); border:1px solid var(--border); color:var(--sub); }
+.btn-outline:hover { border-color:var(--teal); color:var(--teal); }
+.btn-primary { background:var(--navy); color:var(--white); }
+.btn-primary:hover { background:#0a2248; }
+
+/* ── LAYOUT ── */
+.app { display:grid; grid-template-columns:400px 1fr; height:calc(100vh - 53px); }
+
+/* ── FORM ── */
+.form-wrap { overflow-y:auto; background:var(--white); border-right:1px solid var(--border); }
+.sec { border-bottom:1px solid var(--border); }
+.sec-hd { padding:13px 18px; display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
+.sec-hd:hover { background:var(--muted); }
+.sec-n { width:20px;height:20px;border-radius:50%;background:var(--navy);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+.sec-title { font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text);flex:1; }
+.sec-arrow { color:var(--sub);font-size:9px;transition:.2s; }
+.sec.open .sec-arrow { transform:rotate(90deg); }
+.sec-body { padding:14px 18px; display:none; }
+.sec.open .sec-body { display:block; }
+
+.f { margin-bottom:12px; }
+.f:last-child { margin-bottom:0; }
+label { display:block;font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--sub);margin-bottom:4px; }
+input[type=text],input[type=number],textarea,select { width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:var(--r);font-size:12px;color:var(--text);background:var(--white);font-family:inherit;outline:none; }
+input:focus,textarea:focus,select:focus { border-color:var(--teal);box-shadow:0 0 0 2px rgba(8,151,165,.1); }
+textarea { resize:vertical;min-height:64px;line-height:1.5; }
+.row2 { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+.row3 { display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px; }
+
+.dt { width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px; }
+.dt th { background:var(--muted);padding:5px 7px;text-align:left;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);border:1px solid var(--border); }
+.dt td { border:1px solid var(--border);padding:1px; }
+.dt td input { border:none;padding:5px 6px;width:100%;font-size:11px;background:transparent;outline:none;font-family:inherit; }
+.dt td input:focus { background:rgba(8,151,165,.05); }
+.dt .dx { background:none;border:none;color:#c33;cursor:pointer;font-size:13px;padding:2px 5px;width:100%; }
+.add-btn { width:100%;padding:7px;border:1px dashed var(--teal);border-radius:var(--r);background:none;color:var(--teal);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:4px; }
+.add-btn:hover { background:rgba(8,151,165,.06); }
+
+.vcard { border:1px solid var(--border);border-radius:var(--r);padding:11px;margin-bottom:9px;background:var(--muted);position:relative; }
+.vcard-hd { display:flex;align-items:center;gap:7px;margin-bottom:9px; }
+.vdot { width:10px;height:10px;border-radius:50%;border:1px solid rgba(0,0,0,.15);flex-shrink:0; }
+.vlbl { flex:1;font-size:12px;font-weight:600;border:none;border-bottom:1px solid var(--border);background:transparent;padding:1px 4px;color:var(--text);outline:none;font-family:inherit; }
+.vlbl:focus { border-color:var(--teal); }
+.vdel { background:none;border:none;color:#c33;font-size:16px;cursor:pointer;padding:0 3px; }
+
+/* ── PREVIEW ── */
+.preview-wrap { overflow-y:auto; background:#C8CDD5; padding:28px 32px; display:flex; flex-direction:column; align-items:center; gap:28px; }
+.preview-page { background:white; width:794px; box-shadow:0 8px 40px rgba(0,0,0,.2); flex-shrink:0; }
+.preview-label { font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888;align-self:flex-start; }
+
+/* ════════════════════════════════════════════
+   FICHE STYLES — embedded in export too
+   ════════════════════════════════════════════ */
+
+/* PAGE 1 */
+.fp1 { font-family:'Helvetica Neue',Arial,sans-serif;color:#0F3261;background:#fff;width:794px;min-height:1123px;padding:36px 44px 36px 44px;display:flex;flex-direction:column;position:relative; }
+
+.f-hdr { display:flex;align-items:flex-start;padding-bottom:18px;border-bottom:1.5px solid #D8E2EC;margin-bottom:24px; }
+.f-hdr-logo { width:140px;flex-shrink:0; }
+.f-hdr-logo svg { width:140px; }
+.f-hdr-logo img { width:140px; }
+.f-hdr-center { flex:1;text-align:center;padding:0 20px; }
+.f-hdr-pname { font-size:36px;font-weight:900;letter-spacing:-.01em;color:#0F3261;line-height:1; }
+.f-hdr-ptype { font-size:12px;color:#4A5E7A;margin-top:4px; }
+.f-hdr-right { display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:180px; }
+.fbadge { display:inline-block;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.06em; }
+.fb-iso { background:#0F3261;color:#fff; }
+.fb-en779 { background:#4A5E7A;color:#fff; }
+.fb-norm { border:1px solid #D8E2EC;color:#4A5E7A;background:#fff; }
+
+.f-body { display:grid;grid-template-columns:220px 1fr;gap:24px;margin-bottom:24px; }
+.f-photo { background:#F0F4F8;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;aspect-ratio:1/.75; }
+.f-photo img { width:100%;height:100%;object-fit:contain; }
+.f-photo-placeholder { color:#B0B8C4;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:20px; }
+.f-right {}
+.f-sec-title { font-size:8.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#0070C8;border-bottom:1px solid #E2E8F0;padding-bottom:5px;margin-bottom:10px; }
+.f-desc { font-size:11px;color:#4A5E7A;line-height:1.7; }
+.f-pts { margin-top:14px; }
+.f-pts-title { font-size:8.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#0070C8;margin-bottom:8px; }
+.f-pts-grid { display:grid;grid-template-columns:1fr 1fr;gap:5px 12px; }
+.f-pt { display:flex;align-items:center;gap:7px;font-size:11px;color:#0F3261;font-weight:500; }
+.f-pt-sq { width:8px;height:8px;background:#0F3261;flex-shrink:0; }
+
+.f-caract { margin-bottom:22px; }
+.f-ctable { width:100%;border-collapse:collapse; }
+.f-ctable tr td { padding:7px 12px;font-size:11px;border-bottom:1px solid #EEF2F6; }
+.f-ctable tr:nth-child(odd) td { background:#F7FAFC; }
+.f-ctable td:first-child { color:#0F3261;font-weight:700;width:45%; }
+.f-ctable td:last-child { color:#4A5E7A; }
+
+.f-dims { margin-bottom:22px; }
+.f-dtable { width:100%;border-collapse:collapse; }
+.f-dtable th { background:#0F3261;color:#fff;padding:8px 12px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:left; }
+.f-dtable td { padding:7px 12px;font-size:11px;border-bottom:1px solid #EEF2F6;color:#0F3261; }
+.f-dtable tr:last-child td { border-bottom:none; }
+.f-dtable td.dref { font-family:monospace;font-size:10px;color:#0070C8;font-weight:600; }
+.f-dtable td.dsm { color:#4A5E7A;font-style:italic; }
+.f-sm-note { font-size:10px;color:#4A5E7A;font-style:italic;margin-top:6px; }
+
+.f-footer { margin-top:auto;border-top:1px solid #E2E8F0;padding-top:10px;display:flex;justify-content:space-between;align-items:center; }
+.f-footer span { font-size:9px;color:#4A5E7A; }
+.f-footer .f-brand { font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0897A5; }
+
+/* PAGE 2 — dark */
+.fp2 { font-family:'Helvetica Neue',Arial,sans-serif;background:#0F1E3A;color:#fff;width:794px;min-height:1123px;padding:36px 44px 36px 44px;display:flex;flex-direction:column; }
+
+.fp2 .f-hdr { border-bottom-color:rgba(255,255,255,.12); }
+.fp2 .f-hdr-pname { color:#fff; }
+.fp2 .f-hdr-ptype { color:rgba(255,255,255,.6); }
+.fp2 .fb-iso { background:#0897A5; }
+.fp2 .fb-en779 { background:rgba(255,255,255,.15);color:#fff; }
+.fp2 .fb-norm { background:transparent;border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.7); }
+
+.fp2 .f-sec-title { color:#0897A5;border-bottom-color:rgba(255,255,255,.1); }
+
+/* Chart */
+.f-chart-box { background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:16px;margin-bottom:20px; }
+.f-chart-toggles { display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;align-items:center; }
+.f-chart-toggle { display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.8);cursor:pointer;user-select:none; }
+.f-chart-toggle input { accent-color:#0897A5; }
+.f-chart-note { font-size:9.5px;color:rgba(255,255,255,.45);margin-top:10px;font-style:italic; }
+.f-chart-note2 { font-size:10px;color:rgba(255,255,255,.7);margin-top:8px; }
+
+/* Calculator */
+.f-calc-layout { display:grid;grid-template-columns:1fr 260px;gap:20px; }
+.f-calc-left {}
+.f-calc-right { background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:16px; }
+
+.f-pill-group { display:flex;gap:6px;margin-bottom:14px; }
+.f-pill { flex:1;padding:9px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:.15s; }
+.f-pill.active { background:#0897A5;border-color:#0897A5;color:#fff; }
+.f-pill-label { font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px; }
+
+.f-dp-row { display:flex;gap:10px;margin-bottom:10px; }
+.f-dp { flex:1;background:rgba(255,255,255,.08);border-radius:6px;padding:10px 12px;text-align:center; }
+.f-dp.active { background:#0897A5; }
+.f-dp-val { font-size:18px;font-weight:800;color:#fff;line-height:1; }
+.f-dp-lbl { font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:3px; }
+.f-dp.active .f-dp-lbl { color:rgba(255,255,255,.85); }
+.f-dp-note { font-size:9px;color:rgba(255,255,255,.45);margin-bottom:14px;font-style:italic; }
+
+.f-slider-row { margin-bottom:12px; }
+.f-slider-hd { display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px; }
+.f-slider-name { font-size:10.5px;color:#fff;font-weight:500; }
+.f-dims-inline { display:flex;align-items:center;gap:6px;font-size:10.5px;color:rgba(255,255,255,.5);margin-bottom:5px; }
+.f-dims-inline span { font-size:12px;font-weight:700;color:rgba(255,255,255,.8); }
+.f-slider-val { font-size:11px;font-weight:700;color:#0897A5; }
+input[type=range] { width:100%;appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,.15);outline:none;cursor:pointer; }
+input[type=range]::-webkit-slider-thumb { appearance:none;width:16px;height:16px;border-radius:50%;background:#0897A5;border:2px solid #fff; }
+.f-dim-inputs { display:flex;gap:8px;align-items:center;margin-bottom:6px; }
+.f-dim-inputs input { flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:4px;padding:6px 8px;font-size:12px;color:#fff;font-family:inherit;outline:none; }
+.f-dim-inputs input:focus { border-color:#0897A5; }
+.f-dim-inputs span { color:rgba(255,255,255,.5);font-size:13px; }
+
+/* Energy badge (right column) */
+.f-elabel-title { font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center; }
+.f-elabel-badge { font-size:20px;font-weight:900;color:#fff;background:#0070C8;border-radius:5px;padding:3px 10px; }
+.f-gauge-wrap { position:relative;width:100%;padding-bottom:52%;overflow:hidden;margin:8px 0 4px; }
+.f-gauge-svg { position:absolute;top:0;left:0;width:100%;height:200%; }
+.f-gauge-labels { display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.5);margin-bottom:10px; }
+.f-elabel-note { font-size:10px;color:rgba(255,255,255,.7);text-align:center;margin-bottom:14px; }
+.f-results-grid { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px; }
+.f-rc { background:rgba(255,255,255,.08);border-radius:6px;padding:10px;text-align:center; }
+.f-rc-val { font-size:22px;font-weight:900;color:#fff;line-height:1; }
+.f-rc-unit { font-size:9px;color:rgba(255,255,255,.5);margin-top:2px; }
+.f-rc-lbl { font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0897A5;margin-top:4px; }
+.f-rc-sm { display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:rgba(255,255,255,.05);border-radius:5px;margin-bottom:5px;font-size:11px;color:rgba(255,255,255,.7); }
+.f-rc-sm span { font-weight:700;color:#fff; }
+
+.f-method-note { margin-top:16px;background:rgba(255,255,255,.06);border-radius:6px;padding:10px 12px;font-size:9px;color:rgba(255,255,255,.5);line-height:1.6; }
+
+.fp2 .f-footer { border-top-color:rgba(255,255,255,.12); }
+.fp2 .f-footer span { color:rgba(255,255,255,.4); }
+.fp2 .f-footer .f-brand { color:#0897A5; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <svg class="topbar-logo" viewBox="0 100 800 200" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0 0 C4.31 -0.29 8.62 -0.47 12.94 -0.62 C25.55 -1.12 25.55 -1.12 29.79 2.15 C32.06 4.67 34.06 7.22 36 10 C48.09 25.39 60.73 38.63 73.38 51.88 C85.46 64.89 97.24 78.94 109 96 C115.68 104.16 122.29 112.34 128.77 120.64 C139.44 133.57 149.06 147.51 160.5 160 C166.69 166.66 173.06 173.17 179.44 179.68 C184.54 185.85 189.58 192.06 194.61 198.28 C196.83 200.79 199.05 203.3 201.27 205.8 C204.35 209.09 207.14 212.52 210 216 C210.17 182.67 210.17 182.67 211 14 C222.22 14 233.44 14 245 14 C245 101.45 245 188.9 245 279 C218 279 218 279 211 272.88 C205.42 265.81 200.03 258.44 195 252 C184.39 239.4 173.38 226.81 162.56 214.06 C147.88 197.06 133.06 180.19 118.2 163.33 C109 152.24 99.89 141.09 90.83 129.88 C81.9 118.79 73.41 107.58 65.09 96.22 C55.26 83.32 45.37 70.46 35.38 57.72 C34.63 56.77 33.88 55.83 33.12 54.86 C31.95 53.44 30.79 52 29.61 50.53 C27.9 48.38 26.2 46.22 24.5 44.06 C22.8 41.96 21.1 39.86 19.38 37.75 C18.71 36.94 18.05 36.13 17.37 35.3 C15.4 32.88 13.45 30.44 11.5 28 C11.17 59.35 10.84 90.7 10.5 123 C7 120 4 117.5 3.04 116.05 C1.09 112.87 -0.81 109.17 -2 106 C-2.11 100.74 -2.11 95.41 -2.02 90.97 C-2.02 89.69 -2.02 88.4 -2.03 87.07 C-2.03 79.56 -1.98 72.05 -1.91 64.53 C-1.86 56.86 -1.85 49.18 -1.84 41.5 C-1.81 26.54 -1.74 11.59 -1.65 -3.37 C-1.55 -7.71 -1.5 -12.21 -1.45 -17.13 C-1.36 -33.42 -1.2 -49.71 0 -66 Z" fill="#0F3261" transform="translate(336,66)"/>
+    <path d="M0 0 C18.29 15.87 26.4 34.84 30.67 58.32 C30.67 68.22 30.67 78.12 30.67 88.32 C-19.16 88.65 -68.99 88.98 -120.33 89.32 C-116.1 109.05 -110.43 123.86 -93.33 135.32 C-71.62 147.41 -46.26 148.19 -22.56 141.97 C-5.44 135.52 7.64 122.58 17.67 110 C18.9 120 19 130 16 142 C2 152 -16 160 -35.33 162 C-78 163 -110 148 -128 115 C-152 70 -138 20 -108 -4 C-78 -28 -28 -24 0 0 Z M-108 30 C-116 42 -119 52 -120 65 C-81 65 -42 65 -1.33 65 C-3 46 -8 32 -20 20 C-47 -2 -88 5 -108 30 Z" fill="#0F3261" transform="translate(738,80)"/>
+    <path d="M0 0 C13.53 12.67 20.19 29.16 21.26 47.56 C21.3 54.11 21.28 61.12 21.22 71.44 C21.2 86.97 21.12 102.98 21.08 118.46 C16.82 118.48 12.57 118.5 8.32 118.51 C-4.26 118.51 -9.92 118 -10.92 117 C-9.97 104 -9.66 92.8 -9.8 80.89 C-9.82 77.89 -9.82 74.88 -9.85 71.84 C-10 60 -10 40 -12 30 C-20 16 -30 10 -42 7 C-64 3 -84 7 -108 11 C-130 15.46 -130 15.46 -130 -8 C-120 -11 -110 -13 -100 -14 C-70 -20 -27 -20 0 0 Z M-110 66 C-115 73 -117 81 -116 90 C-113 101 -108 108 -100 113 C-82 122 -59 120 -40 114 C-28 110 -18 102 -12 90 C-10 82 -10 75 -10 67 C-40 60 -85 44 -110 66 Z" fill="#0897A5" transform="translate(1062,80)"/>
+    <path d="M0 0 C10.89 0 21.78 0 33 0 C33 18.48 33 36.96 33 56 C53.46 56 73.92 56 95 56 C95 65.24 95 74.48 95 84 C74.54 84 54.08 84 33 84 C33 109.47 33 134 33 162 C43 170 51.74 172 71 172 C81 172 88 171 95 169 C95 178 95 188 100 197 C78 204 54 207 32 197 C18 190 8 179 4 164 C1 152 0 140 0 126 C0 110 0 100 0 84 C-8.58 84 -17.16 84 -26 84 C-26 74.76 -26 65.52 -26 56 C-17.42 56 -8.84 56 0 56 Z" fill="#0F3261" transform="translate(797,7)"/>
+    <path d="M0 0 C40 23 82 38 130 26 C140 23 147 20 148 20 C134 29 121 35 105 40 C63 48 25 34 -10 19 C-32 9 -55 2 -79 11 C-89 15 -98 20 -107 26 C-133 43 -162 54 -193 47 C-207 42 -219 36 -229 27 C-222 27 -218 29 -218 29 C-210 33 -203 33 -195 33 C-180 33 -170 30 -160 25 C-130 12 -100 -6 -60 -2 C-40 0 -20 8 0 0 Z" fill="#0F3261" transform="translate(268,230)"/>
+    <path d="M0 0 C0 0 92 53 160 26 C149 36 133 42 106 40 C51 34 19 -8 -14 -13 C-55 -15 -95 8 -130 25 C-160 42 -192 48 -225 33 C-211 38 -195 37 -180 30 C-100 -10 -50 -30 0 0 Z" fill="#0897A5" transform="translate(268,104)"/>
+    <path d="M0 0 C50 40 100 58 152 41 C139 56 112 62 92 62 C52 63 19 47 -14 25 C-40 9 -68 -2 -100 4 C-132 10 -155 30 -163 7 C-110 -28 -49 -20 0 0 Z" fill="#0070C8" transform="translate(283,178)"/>
+    <path d="M0 0 C10.89 0 21.78 0 33 0 C33 59 33 118 33 178 C33 183 33 188 32 190 C21 190 11 190 0 190 Z" fill="#0897A5" transform="translate(1116,63)"/>
+    <path d="M0 0 C6 3 9 7 11 12 C13 20 11 26 7 33 C2 37 -3 40 -10 40 C-17 40 -22 37 -27 32 C-31 26 -32 20 -31 14 C-29 7 -25 3 -19 0 C-12 -3 -7 -3 0 0 Z" fill="#0897A5" transform="translate(1142,4)"/>
+    <path d="M0 0 C6 3 9 7 11 12 C6 20 0 30 -56 20 C-44 9 -26 0 0 0 Z M-10 66 C-15 73 -18 81 -17 90 C-14 101 -9 108 -1 113 C17 122 41 120 60 114 C72 110 82 102 88 90 C90 82 90 75 90 67 C60 60 15 44 -10 66 Z" fill="#0897A5" transform="translate(1062,80)"/>
+  </svg>
+  <div class="topbar-title">Générateur de fiches techniques</div>
+  <button class="btn btn-outline" onclick="loadExample()">Exemple NETPLY</button>
+  <button class="btn btn-primary" onclick="exportFiche()" style="margin-left:6px">⬇ Exporter HTML</button>
+</div>
+
+<div class="app">
+
+<!-- FORM -->
+<div class="form-wrap" id="formWrap">
+
+  <!-- 1. Identité -->
+  <div class="sec open">
+    <div class="sec-hd" onclick="this.closest('.sec').classList.toggle('open')">
+      <div class="sec-n">1</div><div class="sec-title">Identité produit</div><div class="sec-arrow">▶</div>
+    </div>
+    <div class="sec-body">
+      <div class="f"><label>Nom produit</label><input type="text" id="f-nom" placeholder="NETPLY" oninput="render()"></div>
+      <div class="f"><label>Sous-titre</label><input type="text" id="f-type" placeholder="Filtre plissé — Préfiltre synthétique" oninput="render()"></div>
+      <div class="row2">
+        <div class="f"><label>ISO 16890</label><input type="text" id="f-iso" placeholder="Coarse 65% → ePM10 50%" oninput="render()"></div>
+        <div class="f"><label>EN 779</label><input type="text" id="f-en779" placeholder="G4 → M5" oninput="render()"></div>
+      </div>
+      <div class="row3">
+        <div class="f"><label>Norme</label><input type="text" id="f-norme" placeholder="EN 13053" oninput="render()"></div>
+        <div class="f"><label>N° fiche</label><input type="text" id="f-num" placeholder="FT-NETPLY-001" oninput="render()"></div>
+        <div class="f"><label>Version</label><input type="text" id="f-ver" placeholder="v1.0" oninput="render()"></div>
+      </div>
+      <div class="row2">
+        <div class="f"><label>Date</label><input type="text" id="f-date" placeholder="20/06/2026" oninput="render()"></div>
+        <div class="f"><label>Société</label><input type="text" id="f-soc" value="Netair SAS" oninput="render()"></div>
+      </div>
+      <div class="f"><label>Photo produit (URL ou base64)</label><input type="text" id="f-photo" placeholder="https://… ou data:image/…" oninput="render()"></div>
+      <div class="f" style="margin-top:6px"><label style="margin-bottom:4px">Ou importer une image</label>
+        <input type="file" accept="image/*" onchange="loadImage(this)" style="font-size:11px">
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Description -->
+  <div class="sec">
+    <div class="sec-hd" onclick="this.closest('.sec').classList.toggle('open')">
+      <div class="sec-n">2</div><div class="sec-title">Description & Points clés</div><div class="sec-arrow">▶</div>
+    </div>
+    <div class="sec-body">
+      <div class="f"><label>Description</label><textarea id="f-desc" rows="5" oninput="render()"></textarea></div>
+      <div class="f"><label>Points clés (un par ligne)</label><textarea id="f-points" rows="5" oninput="render()"></textarea></div>
+    </div>
+  </div>
+
+  <!-- 3. Caract. -->
+  <div class="sec">
+    <div class="sec-hd" onclick="this.closest('.sec').classList.toggle('open')">
+      <div class="sec-n">3</div><div class="sec-title">Caractéristiques techniques</div><div class="sec-arrow">▶</div>
+    </div>
+    <div class="sec-body">
+      <table class="dt"><thead><tr><th>Propriété</th><th>Valeur</th><th style="width:28px"></th></tr></thead>
+        <tbody id="caract-body"></tbody></table>
+      <button class="add-btn" onclick="addCaract()">+ Ajouter</button>
+    </div>
+  </div>
+
+  <!-- 4. Dimensions -->
+  <div class="sec">
+    <div class="sec-hd" onclick="this.closest('.sec').classList.toggle('open')">
+      <div class="sec-n">4</div><div class="sec-title">Dimensions & Références</div><div class="sec-arrow">▶</div>
+    </div>
+    <div class="sec-body">
+      <table class="dt"><thead><tr><th>L</th><th>H</th><th>P</th><th>Classe</th><th>Référence</th><th style="width:28px"></th></tr></thead>
+        <tbody id="dim-body"></tbody></table>
+      <button class="add-btn" onclick="addDim()">+ Ajouter</button>
+      <div class="f" style="margin-top:10px"><label>Note sur mesure</label>
+        <input type="text" id="f-sm" placeholder="sur demande — délai à confirmer" oninput="render()"></div>
+    </div>
+  </div>
+
+  <!-- 5. Variantes -->
+  <div class="sec">
+    <div class="sec-hd" onclick="this.closest('.sec').classList.toggle('open')">
+      <div class="sec-n">5</div><div class="sec-title">Variantes aérauliques</div><div class="sec-arrow">▶</div>
+    </div>
+    <div class="sec-body">
+      <p style="font-size:10px;color:var(--sub);margin-bottom:10px;line-height:1.5">ΔP = A·v² + B·v + C — Les variantes servent de boutons pill dans le calculateur de la page 2.</p>
+      <div id="var-list"></div>
+      <button class="add-btn" id="add-var-btn" onclick="addVar()">+ Ajouter une variante</button>
+      <div class="row3" style="margin-top:12px">
+        <div class="f"><label>Dim. réf. L (mm)</label><input type="number" id="ref-L" value="592" oninput="render()"></div>
+        <div class="f"><label>Dim. réf. H (mm)</label><input type="number" id="ref-H" value="592" oninput="render()"></div>
+        <div class="f"><label>Débit réf. (m³/h)</label><input type="number" id="ref-Q" value="3400" oninput="render()"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /form-wrap -->
+
+<!-- PREVIEW -->
+<div class="preview-wrap" id="prevWrap">
+  <div class="preview-label">Page 1</div>
+  <div class="preview-page" id="prev1"></div>
+  <div class="preview-label">Page 2</div>
+  <div class="preview-page" id="prev2"></div>
+</div>
+
+</div>
+
+<script>
+// ── LOGO SVG (inline) ─────────────────────────────────────────────────────────
+const LOGO_SVG = `<svg viewBox="0 0 1259 347" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto"><path d="M0 0 C4.31 -0.29 8.62 -0.47 12.94 -0.62 C14.15 -0.71 15.36 -0.79 16.61 -0.88 C25.55 -1.12 25.55 -1.12 29.79 2.15 C32.06 4.67 34.06 7.22 36 10 C36.94 11.16 37.88 12.32 38.83 13.48 C39.63 14.52 40.43 15.55 41.25 16.62 C42.18 17.83 43.12 19.03 44.05 20.23 C44.29 20.54 44.29 20.54 45.51 22.1 C48.09 25.39 50.73 28.63 53.38 31.88 C53.65 32.21 53.65 32.21 55.02 33.89 C56.68 35.93 58.34 37.96 60 40 C66.68 48.19 73.33 56.39 79.84 64.72 C85.46 71.89 91.24 78.94 97 86 C103.66 94.16 110.29 102.34 116.77 110.64 C121.02 116.07 125.41 121.37 129.81 126.68 C133.44 131.07 137 135.51 140.5 140 C145.69 146.66 151.06 153.17 156.44 159.68 C161.54 165.85 166.58 172.06 171.61 178.28 C172.83 179.79 174.05 181.3 175.27 182.8 C180.35 189.09 185.14 195.52 190 202 C190.17 168.67 190.17 168.67 191 0 C202.22 0 213.44 0 225 0 C225 87.45 225 174.9 225 265 C198 265 198 265 191 258.88 C189.42 256.81 189.42 256.81 188.42 255 C186.03 250.98 183.26 247.44 180.31 243.81 C179.4 242.64 178.48 241.47 177.57 240.29 C174.59 236.46 171.52 232.71 168.44 228.96 C161.39 220.4 154.38 211.81 147.56 203.06 C142.88 197.06 138.06 191.19 133.2 185.33 C129 180.24 124.89 175.09 120.83 169.88 C117.42 165.53 113.95 161.23 110.44 156.96 C102.9 147.79 95.41 138.58 88.09 129.22 C84.26 124.32 80.37 119.46 76.48 114.6 C73.61 111.03 70.77 107.44 67.96 103.83 C61.65 95.75 55.14 87.84 48.61 79.94 C46.35 77.22 44.11 74.49 41.88 71.75 C41.21 70.94 40.55 70.13 39.87 69.3 C37.9 66.88 35.95 64.44 34 62 C33.67 93.35 33.34 124.7 33 157 C24 152.5 24 152.5 21.04 150.05 C18.39 147.87 17.74 147.32 17.06 146.75 C16.41 146.22 15.76 145.68 15.09 145.13 C13.78 144.05 12.49 142.96 11.22 141.85 C9 140 9 140 6.67 138.37 C3.09 135.68 0.45 133.56 -0.81 129.17 C-1.11 125.74 -1.11 122.41 -1.02 118.97 C-1.02 117.69 -1.02 116.4 -1.03 115.07 C-1.03 111.56 -0.98 108.05 -0.91 104.53 C-0.86 100.86 -0.85 97.18 -0.84 93.5 C-0.81 86.54 -0.74 79.59 -0.65 72.63 C-0.55 64.71 -0.5 56.79 -0.45 48.87 C-0.36 32.58 -0.2 16.29 0 0 Z " fill="#0F3261" transform="translate(314,0)"/><path d="M0 0 C18.29 15.87 26.4 34.84 30.67 58.32 C30.67 68.22 30.67 78.12 30.67 88.32 C-19.16 88.65 -68.99 88.98 -120.33 89.32 C-116.1 109.05 -110.43 123.86 -93.33 135.32 C-71.62 147.41 -46.26 148.19 -22.56 141.97 C-13.68 139.42 -5.44 135.52 2.73 131.26 C3.34 130.95 3.95 130.63 4.58 130.3 C7.64 128.64 10.35 126.84 12.98 124.58 C15.67 122.32 15.67 122.32 17.67 122.32 C17.9 126.49 18.06 130.65 18.17 134.81 C18.21 136.23 18.27 137.64 18.35 139.05 C18.98 150.78 18.98 150.78 15.81 154.52 C13.49 156.08 11.24 157.23 8.67 158.32 C7.76 158.87 6.85 159.41 5.91 159.98 C-6.64 166.47 -21.23 171.84 -35.33 173.32 C-78.23 175.18 -105.48 167.54 -125.4 149.19 C-139.56 135.55 -147.95 119.38 -152.33 100.32 C-158.03 70.73 -152.98 42.76 -138.33 20.32 C-123.11 -1.09 -101.95 -13.84 -76.33 -18.68 C-49.58 -22.68 -21.18 -17.53 0 0 Z M-108.09 29.83 C-116.45 39.92 -119.16 50.46 -120.33 63.32 C-81.06 63.32 -41.79 63.32 -1.33 63.32 C-2.79 45.78 -7.29 32.49 -20.33 20.32 C-58.32 0.91 -89.77 8.91 -108.09 29.83 Z " fill="#0F3261" transform="translate(716.328125,93.67578125)"/><path d="M0 0 C13.53 12.67 20.19 29.16 21.26 47.56 C21.32 50.84 21.31 57.39 21.31 61.12 C21.29 67.78 21.27 71.12 21.26 81.61 C21.24 94.83 21.19 116.5 21.18 124.03 C21.16 139.51 21.12 154.98 21.08 170.46 C8.32 170.51 6.87 170.52 -6.05 170.57 C-8.92 170.46 -8.92 170.46 -9.92 169.46 C-9.92 165.08 -10.33 154.01 -10.92 148.46 C-27.21 165.72 -49.24 172.96 -70.63 173.66 C-94.52 174.03 -117.64 170.67 -135.82 153.71 C-144.31 144.62 -148.99 132.83 -149.92 120.46 C-150.83 104.42 -145.73 91.04 -137.15 80.22 C-124.32 66.25 -105.11 60.28 -86.92 57.46 C-76.8 56.1 -70.06 56.22 -63.36 56.21 C-44.41 56.2 -28.36 58.41 -11.92 61.46 C-9.02 50.91 -11.94 37.46 -17.27 28.08 C-26.43 15.17 -39.05 11.24 -53.92 8.46 C-89.22 6.86 -109.99 10.94 -130.92 15.46 C-130.92 -2.36 -130.92 -2.36 -130.92 -11.54 C-70.26 -23.59 -27.38 -23.83 0 0 Z M-109.92 95.46 C-115.08 102.55 -117.69 110.67 -116.92 119.46 C-114.56 129.26 -109.61 136.27 -101.07 141.62 C-83.2 150.7 -59.03 149.02 -40.39 143.39 C-18.12 131.43 -9.66 104.8 -9.8 96.89 C-9.85 91.38 -9.88 88.92 -9.92 86.46 C-39.65 79.39 -85.13 73.22 -109.92 95.46 Z " fill="#0897A5" transform="translate(1039.921875,94.54296875)"/><path d="M0 0 C10.89 0 21.78 0 33 0 C33 18.48 33 36.96 33 56 C53.46 56 73.92 56 95 56 C95 65.24 95 74.48 95 84 C74.54 84 54.08 84 33 84 C33.13 109.47 33.35 142.66 33.46 160.63 C33.59 199.06 33.59 199.06 43 209 C51.74 215.71 60.27 217.37 71.06 217.31 C81.21 217.22 87.6 216.46 94.45 214.66 C97 214 97 214 100 214 C100 231.82 100 231.82 100 241 C77.76 247.88 53.57 250.49 31.78 240.51 C17.79 232.92 8.46 222.49 3.77 207.18 C0.94 197.22 -0.15 187.84 -0.11 177.54 C-0.11 164.47 -0.09 157.51 -0.07 139.24 C-0.05 126.8 -0.05 120.58 -0.04 108.39 C-0.02 96.19 0 84 0 84 C-8.58 84 -17.16 84 -26 84 C-26 65.52 -26 65.52 -26 56 C-8.84 56 -8.84 56 0 56 Z " fill="#0F3261" transform="translate(775,21)"/><path d="M0 0 C40.92 22.83 82.8 38.48 129.91 25.64 C139.88 22.48 144.67 20.27 148.39 20.67 C134.98 29.84 121.1 35.82 105.39 39.67 C63.44 48 25.5 34.15 -9.53 18.95 C-55.44 2.1 -79.01 11.14 -106.99 26.11 C-133.34 42.63 -161.7 53.84 -193.15 46.64 C-206.43 42.9 -218.68 36.27 -228.61 26.67 C-218.05 29.34 -210.5 32.26 -195.24 32.98 C-179.88 32.13 -173.61 29.67 -170.78 28.67 C-155.63 22.94 -142.48 12.47 -130.4 1.87 C-86.86 -36.31 -46.51 -25.95 0 0 Z " fill="#0F3261" transform="translate(246.6120147705078,223.33206176757813)"/><path d="M0 0 C9.78 0.06 16.67 0.95 23.88 2.19 C23.88 11.43 23.88 20.67 23.88 30.19 C-4.27 28.45 -18.3 29.94 -31.31 40.38 C-42.55 50.8 -45.14 65.53 -46.12 80.19 C-46.22 91.43 -46.22 91.96 -46.22 94.65 C-46.19 105.12 -46.18 108.73 -46.18 112.35 C-46.15 127.66 -46.12 135.31 -46.07 162.03 C-46.05 169.17 -46.03 174.91 -46.03 179.24 C-46.01 183.17 -46.01 184.07 -46.01 185 C-46.12 189.19 -46.12 189.19 -47.12 190.19 C-54 190.28 -54 190.29 -62.69 190.25 C-67.15 190.24 -70.81 190.23 -78.12 190.19 C-78.2 174.43 -78.32 128.27 -78.35 120.95 C-78.4 108.17 -78.41 101.78 -78.44 91.66 C-78.61 63.42 -75.73 40.23 -55.12 19.19 C-39.94 4.32 -18.19 -0.01 0 0 Z " fill="#0897A5" transform="translate(1235.125,74.8125)"/><path d="M0 0 C15.11 12.18 29.21 25.68 42.86 39.46 C57.98 53.19 74.98 68.48 95.33 81.43 C117.05 88.75 131.11 93.3 154.36 94.07 C165.5 94.08 172.22 93.62 179.23 91.82 C169.21 102.52 149.29 105.37 135.37 106.16 C97.87 107.35 63.24 89.6 35.23 65.82 C25.04 57.55 20.51 53.45 15.99 49.29 C8.65 43.04 4.89 40.02 -2.39 33.57 C-31.94 6.73 -68.67 -15.15 -109.72 -13.31 C-119.79 -12.69 -129.15 -10.11 -138.77 -7.18 C-141.77 -6.51 -145.77 -5.18 -145.77 -5.18 C-137.5 -12.35 -132.27 -15.18 -131.46 -15.62 C-85.91 -40.01 -37.76 -29.82 0 0 Z " fill="#0897A5" transform="translate(246.765625,98.18359375)"/><path d="M0 0 C7.28 5.36 8.66 6.38 11.42 8.42 C44.52 32.88 84.04 52.91 126.34 46.74 C132.86 45.66 139.17 43.88 152.5 40 C138.41 55.01 111.68 61.57 91.83 62.2 C51.84 62.83 19.07 47.13 -13.5 25 C-16.06 23.29 -24.8 17.46 -28.5 15 C-29.16 14.56 -30.5 13.67 -30.5 13.67 C-63.16 -8.05 -96.01 -23.44 -136 -15.57 C-148.5 -11.92 -154.62 -9.68 -162.5 -7 C-112.6 -58.43 -49.68 -36.65 0 0 Z " fill="#0070C8" transform="translate(261.5,174)"/><path d="M0 0 C10.89 0 21.78 0 33 0 C33.05 70.88 33.06 81.85 33.08 103.79 C33.09 113.35 33.11 147.66 33.12 161.96 C33.12 163.71 33.12 165.45 33.12 167.2 C33.12 171.98 33.12 174.37 33.13 176.46 C33.12 180.5 32.68 183.95 32 188 C21.44 188 10.88 188 0 188 Z " fill="#0897A5" transform="translate(1094,77)"/><path d="M0 0 C5.32 2.65 8.61 6.41 10.82 11.91 C12.89 19.61 11.12 25.85 7.25 32.66 C2.46 37.08 -3.26 40.17 -9.87 40.41 C-16.94 39.95 -22.18 36.8 -27.18 31.91 C-30.8 26.3 -31.88 20.33 -30.56 13.84 C-28.57 7.27 -25.42 3.28 -19.37 -0.03 C-12.51 -3.11 -6.94 -2.93 0 0 Z " fill="#0897A5" transform="translate(1120.18359375,4.09375)"/></svg>`;
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const COLORS = ['#0F3261','#4A5E7A','#E84040','#F5A623','#0897A5','#0070C8'];
+let caracts=[], dims=[], vars=[];
+let photoSrc = '';
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+const g = id => document.getElementById(id)?.value||'';
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+
+function loadImage(inp) {
+  const f = inp.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = e => { photoSrc = e.target.result; document.getElementById('f-photo').value='[image importée]'; render(); };
+  r.readAsDataURL(f);
+}
+
+// ── DYNAMIC TABLES ────────────────────────────────────────────────────────────
+function addCaract(p='',v='') {
+  const id=Date.now()+Math.random(); caracts.push({id,p,v}); renderCaracts();
+}
+function renderCaracts() {
+  document.getElementById('caract-body').innerHTML = caracts.map(r=>`
+    <tr>
+      <td><input value="${esc(r.p)}" placeholder="Propriété" oninput="caracts.find(x=>x.id==${r.id}).p=this.value;render()"></td>
+      <td><input value="${esc(r.v)}" placeholder="Valeur" oninput="caracts.find(x=>x.id==${r.id}).v=this.value;render()"></td>
+      <td><button class="dx" onclick="caracts=caracts.filter(x=>x.id!=${r.id});renderCaracts();render()">×</button></td>
+    </tr>`).join('');
+}
+
+function addDim(L='',H='',P='',cls='',ref='') {
+  const id=Date.now()+Math.random(); dims.push({id,L,H,P,cls,ref}); renderDims();
+}
+function renderDims() {
+  document.getElementById('dim-body').innerHTML = dims.map(r=>`
+    <tr>
+      <td><input value="${esc(r.L)}" style="width:42px" oninput="dims.find(x=>x.id==${r.id}).L=this.value;render()"></td>
+      <td><input value="${esc(r.H)}" style="width:42px" oninput="dims.find(x=>x.id==${r.id}).H=this.value;render()"></td>
+      <td><input value="${esc(r.P)}" style="width:38px" oninput="dims.find(x=>x.id==${r.id}).P=this.value;render()"></td>
+      <td><input value="${esc(r.cls)}" placeholder="G4 · Coarse 65%" oninput="dims.find(x=>x.id==${r.id}).cls=this.value;render()"></td>
+      <td><input value="${esc(r.ref)}" placeholder="NETPLY-G4-…" oninput="dims.find(x=>x.id==${r.id}).ref=this.value;render()"></td>
+      <td><button class="dx" onclick="dims=dims.filter(x=>x.id!=${r.id});renderDims();render()">×</button></td>
+    </tr>`).join('');
+}
+
+function addVar(label='',A='',B='',C='',delta=50,grp='M5') {
+  if(vars.length>=6) return;
+  const id=Date.now()+Math.random(); const color=COLORS[vars.length%COLORS.length];
+  vars.push({id,label,A,B,C,delta,grp,color}); renderVars();
+}
+function renderVars() {
+  document.getElementById('var-list').innerHTML = vars.map((v,i)=>`
+    <div class="vcard">
+      <div class="vcard-hd">
+        <div class="vdot" style="background:${v.color}"></div>
+        <input class="vlbl" value="${esc(v.label)}" placeholder="G4 · Coarse 65%" oninput="vars.find(x=>x.id==${v.id}).label=this.value;render()">
+        <button class="vdel" onclick="vars=vars.filter(x=>x.id!=${v.id});renderVars();render()">×</button>
+      </div>
+      <div class="row3">
+        <div><label>Coeff A</label><input type="number" step="0.01" value="${v.A}" oninput="vars.find(x=>x.id==${v.id}).A=+this.value;render()"></div>
+        <div><label>Coeff B</label><input type="number" step="0.01" value="${v.B}" oninput="vars.find(x=>x.id==${v.id}).B=+this.value;render()"></div>
+        <div><label>Coeff C</label><input type="number" step="0.01" value="${v.C}" oninput="vars.find(x=>x.id==${v.id}).C=+this.value;render()"></div>
+      </div>
+      <div class="row2" style="margin-top:7px">
+        <div><label>ΔP = ΔP_init + X Pa</label><input type="number" value="${v.delta}" oninput="vars.find(x=>x.id==${v.id}).delta=+this.value;render()"></div>
+        <div><label>Groupe GT</label>
+          <select oninput="vars.find(x=>x.id==${v.id}).grp=this.value;render()">
+            ${['M5','F7hi','F7','F8','F9'].map(g=>`<option value="${g}"${v.grp===g?' selected':''}>${g}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>`).join('');
+  document.getElementById('add-var-btn').style.display=vars.length>=6?'none':'';
+}
+
+// ── CHART SVG ─────────────────────────────────────────────────────────────────
+function buildChart() {
+  const W=700,H=280,PL=52,PR=20,PT=20,PB=50;
+  const cW=W-PL-PR, cH=H-PT-PB;
+  const vMax=3.2, dpMax=130;
+  const refL=+(g('ref-L')||592), refH=+(g('ref-H')||592), refQ=+(g('ref-Q')||3400);
+  const refS=refL*refH/1e6, refV=refQ/(refS*3600);
+
+  const tx=v=>PL+(v/vMax)*cW, ty=dp=>PT+cH-(Math.max(0,Math.min(dp,dpMax))/dpMax)*cH;
+  const gridDP=[0,30,60,90,120], gridV=[0,0.5,1,1.5,2,2.5,3];
+
+  let s='';
+  // background
+  s+=`<rect x="${PL}" y="${PT}" width="${cW}" height="${cH}" fill="rgba(255,255,255,.04)" rx="2"/>`;
+  // grid
+  gridDP.forEach(dp=>{
+    const y=ty(dp);
+    s+=`<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="rgba(255,255,255,.1)" stroke-width="1"/>`;
+    s+=`<text x="${PL-6}" y="${y+4}" font-size="10" fill="rgba(255,255,255,.5)" text-anchor="end">${dp}</text>`;
+  });
+  gridV.forEach(v=>{
+    const x=tx(v);
+    s+=`<line x1="${x}" y1="${PT}" x2="${x}" y2="${H-PB}" stroke="rgba(255,255,255,.08)" stroke-width="1"/>`;
+    s+=`<text x="${x}" y="${H-PB+16}" font-size="10" fill="rgba(255,255,255,.5)" text-anchor="middle">${v.toString().replace('.',',')}</text>`;
+  });
+
+  // ref line
+  const rx=tx(Math.min(refV,vMax));
+  s+=`<line x1="${rx}" y1="${PT}" x2="${rx}" y2="${H-PB}" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-dasharray="4,3"/>`;
+  s+=`<text x="${rx+4}" y="${PT+12}" font-size="9" fill="rgba(255,255,255,.5)">${refV.toFixed(1).replace('.',',')} m/s ≈ ${refQ} m³/h · ${refL}×${refH}</text>`;
+
+  // curves
+  vars.forEach(v=>{
+    if(!v.A && !v.B && !v.C) return;
+    const pts=[];
+    for(let i=0;i<=80;i++){
+      const vel=i/80*vMax;
+      const dp=+v.A*vel*vel + +v.B*vel + +v.C;
+      if(dp>=0 && dp<=dpMax+5) pts.push(`${tx(vel).toFixed(1)},${ty(dp).toFixed(1)}`);
+    }
+    if(pts.length>1) s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${v.color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    // dot at ref
+    const dpRef=+v.A*refV*refV + +v.B*refV + +v.C;
+    if(dpRef>=0 && dpRef<=dpMax && refV<=vMax)
+      s+=`<circle cx="${tx(refV).toFixed(1)}" cy="${ty(dpRef).toFixed(1)}" r="4" fill="${v.color}" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/>`;
+  });
+
+  // axes labels
+  s+=`<text x="${PL+cW/2}" y="${H}" font-size="11" fill="rgba(255,255,255,.6)" text-anchor="middle">Vitesse d'air (m/s)</text>`;
+  s+=`<text x="${13}" y="${PT+cH/2}" font-size="11" fill="rgba(255,255,255,.6)" text-anchor="middle" transform="rotate(-90 13 ${PT+cH/2})">Perte de charge (Pa)</text>`;
+
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">${s}</svg>`;
+}
+
+// ── LEGEND ─────────────────────────────────────────────────────────────────────
+function buildLegend() {
+  return `<div style="display:flex;flex-wrap:wrap;gap:12px 20px;margin-top:10px">
+    ${vars.map(v=>`<div style="display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.7)">
+      <div style="width:24px;height:3px;background:${v.color};border-radius:2px"></div>${esc(v.label||'—')}
+    </div>`).join('')}
+  </div>`;
+}
+
+// ── GT CLASSIFICATION ─────────────────────────────────────────────────────────
+const GT_S=[0,300,350,400,450,500,600,700,800,900,1000,1100,1200,1300,1400];
+const GT_T={M5:['A++','A++','A+','A+','A','B','C','D','D','D','D','D','D','D','D'],F7hi:['A++','A++','A++','A++','A+','A+','A','A','B','B','C','C','D','D','D'],F7:['A++','A++','A+','A+','A+','A+','A','A','B','B','C','C','D','D','D'],F8:['A++','A++','A++','A++','A+','A+','A+','A','A','B','B','C','C','D','D'],F9:['A++','A++','A++','A++','A++','A+','A+','A','A','B','B','C','C','D','D']};
+const GT_C={'A++':'#00A850','A+':'#4BB543','A':'#0070C8','B':'#0897A5','C':'#F5A623','D':'#E84040'};
+const GT_P={'A++':3,'A+':20,'A':37,'B':55,'C':72,'D':88};
+function gtClass(e,grp){const t=GT_T[grp]||GT_T.M5;let idx=0;for(let i=0;i<GT_S.length;i++){if(e>=GT_S[i])idx=i;else break;}return t[Math.min(idx,t.length-1)];}
+
+// ── GAUGE SVG ─────────────────────────────────────────────────────────────────
+function buildGauge(cl) {
+  const pct = (GT_P[cl]||50)/100;
+  const cx=100, cy=100, r=75;
+  const startAngle=-Math.PI, endAngle=0;
+  function arc(p,color,sw) {
+    const a=startAngle+(endAngle-startAngle)*p;
+    return `<path d="M${cx+r*Math.cos(startAngle)} ${cy+r*Math.sin(startAngle)} A${r} ${r} 0 ${p>.5?1:0} 1 ${cx+r*Math.cos(a)} ${cy+r*Math.sin(a)}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round"/>`;
+  }
+  const gradArcs=[
+    ['#00A850',0.17],['#4BB543',0.17],['#0070C8',0.17],['#F5A623',0.17],['#E84040',0.32]
+  ];
+  let svgArcs='';
+  let acc=0;
+  gradArcs.forEach(([c,seg])=>{
+    const a0=startAngle+(endAngle-startAngle)*acc;
+    const a1=startAngle+(endAngle-startAngle)*(acc+seg);
+    const x0=cx+r*Math.cos(a0), y0=cy+r*Math.sin(a0);
+    const x1=cx+r*Math.cos(a1), y1=cy+r*Math.sin(a1);
+    const large=seg>.5?1:0;
+    svgArcs+=`<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${c}" stroke-width="14" stroke-linecap="butt"/>`;
+    acc+=seg;
+  });
+  // needle
+  const needleAngle=startAngle+(endAngle-startAngle)*pct;
+  const nx=cx+65*Math.cos(needleAngle), ny=cy+65*Math.sin(needleAngle);
+  svgArcs+=`<line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>`;
+  svgArcs+=`<circle cx="${cx}" cy="${cy}" r="5" fill="#fff"/>`;
+  return `<svg viewBox="0 0 200 105" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">${svgArcs}</svg>`;
+}
+
+// ── RENDER PAGE 1 ─────────────────────────────────────────────────────────────
+function renderP1() {
+  const nom=g('f-nom')||'—', type=g('f-type'), iso=g('f-iso'), en779=g('f-en779'), norme=g('f-norme');
+  const desc=g('f-desc'), pts=(g('f-points')||'').split('\n').filter(l=>l.trim());
+  const sm=g('f-sm'), num=g('f-num'), ver=g('f-ver'), date=g('f-date'), soc=g('f-soc');
+  const photo = photoSrc || g('f-photo');
+
+  return `<div class="fp1">
+    <div class="f-hdr">
+      <div class="f-hdr-logo">${LOGO_SVG}</div>
+      <div class="f-hdr-center">
+        <div class="f-hdr-pname">${esc(nom)}</div>
+        <div class="f-hdr-ptype">${esc(type)}</div>
+      </div>
+      <div class="f-hdr-right">
+        ${iso?`<span class="fbadge fb-iso">ISO 16890 : ${esc(iso)}</span>`:''}
+        ${en779?`<span class="fbadge fb-en779">EN 779 : ${esc(en779)}</span>`:''}
+        ${norme?`<span class="fbadge fb-norm">${esc(norme)}</span>`:''}
+      </div>
+    </div>
+
+    <div class="f-body">
+      <div class="f-photo">
+        ${photo&&photo!=='[image importée]'
+          ? `<img src="${photo}" alt="${esc(nom)}">`
+          : `<div class="f-photo-placeholder">Photo produit</div>`}
+      </div>
+      <div class="f-right">
+        ${desc?`<div class="f-sec-title">Description</div><div class="f-desc">${esc(desc)}</div>`:''}
+        ${pts.length?`<div class="f-pts"><div class="f-pts-title">Points clés</div>
+          <div class="f-pts-grid">${pts.map(p=>`<div class="f-pt"><div class="f-pt-sq"></div>${esc(p)}</div>`).join('')}</div>
+        </div>`:''}
+      </div>
+    </div>
+
+    ${caracts.length?`<div class="f-caract">
+      <div class="f-sec-title">Caractéristiques techniques</div>
+      <table class="f-ctable">${caracts.map(r=>`<tr><td>${esc(r.p)}</td><td>${esc(r.v)}</td></tr>`).join('')}</table>
+    </div>`:''}
+
+    ${dims.length?`<div class="f-dims">
+      <div class="f-sec-title">Dimensions &amp; références standard</div>
+      <table class="f-dtable">
+        <thead><tr><th>L (mm)</th><th>H (mm)</th><th>P (mm)</th><th>Classe</th><th>Référence complète</th></tr></thead>
+        <tbody>
+          ${dims.map(r=>`<tr><td>${esc(r.L)}</td><td>${esc(r.H)}</td><td>${esc(r.P)}</td><td>${esc(r.cls)}</td><td class="dref">${esc(r.ref)}</td></tr>`).join('')}
+          ${sm?`<tr><td class="dsm" colspan="2" style="font-weight:700;color:#0F3261">Sur mesure</td><td colspan="3" class="dsm">${esc(sm)}</td></tr>`:''}
+        </tbody>
+      </table>
+    </div>`:''}
+
+    <div class="f-footer">
+      <span class="f-brand">${esc(soc)}</span>
+      <span>Fiche n° ${esc(num)}</span>
+      <span>${esc(ver)} — ${esc(date)} — Page 1/2</span>
+    </div>
+  </div>`;
+}
+
+// ── RENDER PAGE 2 ─────────────────────────────────────────────────────────────
+function renderP2(interactive=true) {
+  const nom=g('f-nom')||'—', iso=g('f-iso'), en779=g('f-en779'), norme=g('f-norme');
+  const num=g('f-num'), ver=g('f-ver'), date=g('f-date'), soc=g('f-soc');
+  const refL=+(g('ref-L')||592), refH=+(g('ref-H')||592), refQ=+(g('ref-Q')||3400);
+
+  // pill groups - group variants by "family" (same label prefix before ' — ')
+  const efficGroups=[...new Set(vars.map(v=>(v.label||'').split(' — ')[0].trim()))];
+  const epais=[...new Set(vars.map(v=>{const m=(v.label||'').match(/(\d+)\s*mm/);return m?m[1]+' mm':null;}))].filter(Boolean);
+
+  const efficPills=efficGroups.map((g,i)=>`<button class="f-pill${i===0?' active':''}" onclick="selectEffic(${i})" id="ep-${i}">${esc(g)}</button>`).join('');
+  const epaisPills=epais.map((e,i)=>`<button class="f-pill${i===0?' active':''}" onclick="selectEpais(${i})" id="ep2-${i}">${esc(e)}</button>`).join('');
+
+  // initial dp note
+  const refS=refL*refH/1e6, refV=refQ/(refS*3600);
+  const dpNotes=vars.filter((v,i)=>i<4).map(v=>{
+    const dp=Math.round(+v.A*refV*refV + +v.B*refV + +v.C);
+    return `${esc(v.label||'?')} ${dp} Pa`;
+  }).join(' · ');
+
+  const varJson=JSON.stringify(vars.map(v=>({A:+v.A,B:+v.B,C:+v.C,delta:+v.delta,grp:v.grp,label:v.label,color:v.color})));
+
+  const calcScript = interactive ? `
+<script>
+(function(){
+  var vs=${varJson};
+  var GT_S=[0,300,350,400,450,500,600,700,800,900,1000,1100,1200,1300,1400];
+  var GT_T={M5:['A++','A++','A+','A+','A','B','C','D','D','D','D','D','D','D','D'],F7hi:['A++','A++','A++','A++','A+','A+','A','A','B','B','C','C','D','D','D'],F7:['A++','A++','A+','A+','A+','A+','A','A','B','B','C','C','D','D','D'],F8:['A++','A++','A++','A++','A+','A+','A+','A','A','B','B','C','C','D','D'],F9:['A++','A++','A++','A++','A++','A+','A+','A','A','B','B','C','C','D','D']};
+  var GT_C={'A++':'#00A850','A+':'#4BB543','A':'#0070C8','B':'#0897A5','C':'#F5A623','D':'#E84040'};
+  var GT_P={'A++':3,'A+':20,'A':37,'B':55,'C':72,'D':88};
+  function gtClass(e,g){var t=GT_T[g]||GT_T.M5;var idx=0;for(var i=0;i<GT_S.length;i++){if(e>=GT_S[i])idx=i;else break;}return t[Math.min(idx,t.length-1)];}
+  function buildGauge(cl){
+    var pct=(GT_P[cl]||50)/100;
+    var cx=100,cy=100,r=75;
+    var sA=-Math.PI,eA=0;
+    var segs=[['#00A850',0.17],['#4BB543',0.17],['#0070C8',0.17],['#F5A623',0.17],['#E84040',0.32]];
+    var s='',acc=0;
+    segs.forEach(function(seg){
+      var a0=sA+(eA-sA)*acc,a1=sA+(eA-sA)*(acc+seg[1]);
+      var x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+      s+='<path d="M'+x0.toFixed(1)+' '+y0.toFixed(1)+' A'+r+' '+r+' 0 '+(seg[1]>.5?1:0)+' 1 '+x1.toFixed(1)+' '+y1.toFixed(1)+'" fill="none" stroke="'+seg[0]+'" stroke-width="14" stroke-linecap="butt"/>';
+      acc+=seg[1];
+    });
+    var na=sA+(eA-sA)*pct,nx=cx+65*Math.cos(na),ny=cy+65*Math.sin(na);
+    s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+nx.toFixed(1)+'" y2="'+ny.toFixed(1)+'" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>';
+    s+='<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#fff"/>';
+    return '<svg viewBox="0 0 200 105" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">'+s+'</svg>';
+  }
+  var curVar=0;
+  function getVar(){return vs[curVar]||vs[0];}
+  function calc(){
+    var v=getVar();if(!v)return;
+    var L=+(document.getElementById('c-L').value||${refL});
+    var H=+(document.getElementById('c-H').value||${refH});
+    var Q=+(document.getElementById('c-Q').value||${refQ});
+    var h=+(document.getElementById('c-h').value||6000);
+    var eta=+(document.getElementById('c-eta').value||55);
+    var px=+(document.getElementById('c-px').value||0.18);
+    var S=L*H/1e6, vel=Q/(S*3600);
+    var dpi=Math.max(0,v.A*vel*vel+v.B*vel+v.C);
+    var dpf=dpi+v.delta;
+    var dpm=(dpi+dpf)/2;
+    var P=Q/3600*dpm/eta*100;
+    var E=Math.round(P*h/1000);
+    var cout=Math.round(E*px);
+    var co2=Math.round(E*0.052);
+    var cl=gtClass(E,v.grp);
+    // update sliders display
+    document.getElementById('r-Q-v').textContent=Q.toLocaleString('fr')+' m³/h';
+    document.getElementById('r-h-v').textContent=h.toLocaleString('fr')+' h/an';
+    document.getElementById('r-eta-v').textContent=eta+' %';
+    document.getElementById('r-px-v').textContent=px.toFixed(2).replace('.',',')+' €/kWh';
+    // dp boxes
+    document.getElementById('r-dpi').textContent=Math.round(dpi)+' Pa';
+    document.getElementById('r-dpf').textContent=Math.round(dpf)+' Pa';
+    document.getElementById('r-dpm').textContent=Math.round(dpm)+' Pa';
+    document.getElementById('r-dpnote').textContent='ΔP finale = ΔP initiale + '+v.delta+' Pa (EN 13053)';
+    // dim display
+    document.getElementById('r-dimS').textContent=(S).toFixed(4).replace('.',',')+' m² · '+vel.toFixed(1).replace('.',',')+' m/s';
+    // results
+    document.getElementById('r-E').textContent=E;
+    document.getElementById('r-cout').textContent=cout;
+    document.getElementById('r-P').textContent=Math.round(P);
+    document.getElementById('r-co2').textContent=co2;
+    // label
+    document.getElementById('r-cl').textContent=cl;
+    document.getElementById('r-cl').style.background=GT_C[cl]||'#0070C8';
+    document.getElementById('r-gauge').innerHTML=buildGauge(cl);
+    document.getElementById('r-note').textContent='Filtre '+(cl==='A++'||cl==='A+'?'très économe':'énergivore')+' · ΔP moyenne '+Math.round(dpm)+' Pa';
+  }
+  window.selectVar=function(i){curVar=i;calc();};
+  // Group pills: click sets curVar to first matching variant
+  window.selectEffic=function(gi){
+    var groups=[...new Set(vs.map(function(v){return(v.label||'').split(' — ')[0].trim()}))];
+    var lbl=groups[gi];
+    var idx=vs.findIndex(function(v){return(v.label||'').startsWith(lbl);});
+    if(idx>=0){curVar=idx;calc();}
+    document.querySelectorAll('[id^="ep-"]').forEach(function(el,i){el.classList.toggle('active',i===gi);});
+  };
+  window.selectEpais=function(ei){
+    var epais=[...new Set(vs.map(function(v){var m=(v.label||'').match(/(\\d+)\\s*mm/);return m?m[1]+' mm':null;}))].filter(Boolean);
+    var ep=epais[ei];
+    var idx=vs.findIndex(function(v){return(v.label||'').includes(ep);});
+    if(idx>=0){curVar=idx;calc();}
+    document.querySelectorAll('[id^="ep2-"]').forEach(function(el,i){el.classList.toggle('active',i===ei);});
+  };
+  ['c-Q','c-h','c-eta','c-px','c-L','c-H'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.addEventListener('input',calc);
+  });
+  calc();
+})();
+<\/script>` : '';
+
+  return `<div class="fp2">
+    <div class="f-hdr">
+      <div class="f-hdr-logo">${LOGO_SVG}</div>
+      <div class="f-hdr-center">
+        <div class="f-hdr-pname">${esc(nom)}</div>
+        <div class="f-hdr-ptype">Performances aérauliques &amp; énergétique</div>
+      </div>
+      <div class="f-hdr-right">
+        ${iso?`<span class="fbadge fb-iso">${esc(iso)}</span>`:''}
+        ${en779?`<span class="fbadge fb-en779">EN 779 : ${esc(en779)}</span>`:''}
+        ${norme?`<span class="fbadge fb-norm">${esc(norme)}</span>`:''}
+      </div>
+    </div>
+
+    ${vars.length?`
+    <div class="f-sec-title">Courbe vitesse / perte de charge</div>
+    <div class="f-chart-box">
+      <div class="f-chart-toggles">
+        <span style="font-size:10px;color:rgba(255,255,255,.5);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-right:4px">Afficher :</span>
+        ${vars.map((v,i)=>`<label class="f-chart-toggle"><input type="checkbox" checked onchange="document.querySelectorAll('.cv${i}').forEach(function(el){el.style.display=this.checked?'':'none'},this)"><span style="display:inline-block;width:20px;height:3px;background:${v.color};border-radius:2px;vertical-align:middle"></span> ${esc(v.label||'Variante')}</label>`).join('')}
+      </div>
+      ${buildChart()}
+      ${buildLegend()}
+      <div class="f-chart-note">Média propre — air à 20 °C</div>
+      ${dpNotes?`<div class="f-chart-note2">ΔP initiale à ${refQ} m³/h (${refL}×${refH}) : ${dpNotes}</div>`:''}
+    </div>`:''}
+
+    <div class="f-sec-title">Calculateur énergétique</div>
+    <p style="font-size:10.5px;color:rgba(255,255,255,.6);margin-bottom:14px;line-height:1.6">Estimez la consommation du ventilateur liée à la perte de charge du filtre sur une année de fonctionnement. Ajustez les paramètres ci-dessous.</p>
+
+    <div class="f-calc-layout">
+      <div class="f-calc-left">
+        ${efficGroups.length?`<div class="f-pill-label">Efficacité</div>
+        <div class="f-pill-group">${efficPills}</div>`:''}
+        ${epais.length?`<div class="f-pill-label">Épaisseur du filtre</div>
+        <div class="f-pill-group">${epaisPills}</div>`:''}
+
+        <div class="f-dp-row">
+          <div class="f-dp"><div class="f-dp-val" id="r-dpi">—</div><div class="f-dp-lbl">ΔP initiale</div></div>
+          <div class="f-dp"><div class="f-dp-val" id="r-dpf">—</div><div class="f-dp-lbl">ΔP finale</div></div>
+          <div class="f-dp active"><div class="f-dp-val" id="r-dpm">—</div><div class="f-dp-lbl">ΔP moyenne</div></div>
+        </div>
+        <div class="f-dp-note" id="r-dpnote"></div>
+
+        <div class="f-slider-row">
+          <div style="font-size:10.5px;color:rgba(255,255,255,.7);margin-bottom:5px;font-weight:500">Dimensions du filtre (mm) <span style="color:#0897A5;margin-left:6px" id="r-dimS"></span></div>
+          <div class="f-dim-inputs"><input id="c-L" type="number" value="${refL}"><span>×</span><input id="c-H" type="number" value="${refH}"></div>
+        </div>
+        <div class="f-slider-row">
+          <div class="f-slider-hd"><span class="f-slider-name">Débit d'air</span><span class="f-slider-val" id="r-Q-v">${refQ.toLocaleString('fr')} m³/h</span></div>
+          <input id="c-Q" type="range" min="500" max="10000" step="100" value="${refQ}">
+        </div>
+        <div class="f-slider-row">
+          <div class="f-slider-hd"><span class="f-slider-name">Heures de fonctionnement</span><span class="f-slider-val" id="r-h-v">6 000 h/an</span></div>
+          <input id="c-h" type="range" min="500" max="8760" step="100" value="6000">
+        </div>
+        <div class="f-slider-row">
+          <div class="f-slider-hd"><span class="f-slider-name">Rendement moto-ventilateur</span><span class="f-slider-val" id="r-eta-v">55 %</span></div>
+          <input id="c-eta" type="range" min="20" max="90" step="1" value="55">
+        </div>
+        <div class="f-slider-row">
+          <div class="f-slider-hd"><span class="f-slider-name">Prix de l'électricité</span><span class="f-slider-val" id="r-px-v">0,18 €/kWh</span></div>
+          <input id="c-px" type="range" min="0.05" max="0.50" step="0.01" value="0.18">
+        </div>
+      </div>
+
+      <div class="f-calc-right">
+        <div class="f-elabel-title">Étiquette énergétique <span class="f-elabel-badge" id="r-cl">—</span></div>
+        <div id="r-gauge">${buildGauge('A')}</div>
+        <div class="f-gauge-labels"><span>Faible conso.</span><span>Énergivore</span></div>
+        <div class="f-elabel-note" id="r-note"></div>
+        <div class="f-results-grid">
+          <div class="f-rc"><div class="f-rc-val" id="r-E">—</div><div class="f-rc-unit">kWh</div><div class="f-rc-lbl">Consommation</div></div>
+          <div class="f-rc"><div class="f-rc-val" id="r-cout">—</div><div class="f-rc-unit">€</div><div class="f-rc-lbl">Coût</div></div>
+        </div>
+        <div class="f-rc-sm">Puissance absorbée <span id="r-P">—</span> W</div>
+        <div class="f-rc-sm">Émissions CO₂ <span id="r-co2">—</span> kg/an</div>
+      </div>
+    </div>
+
+    <div class="f-method-note">
+      <strong style="color:rgba(255,255,255,.7)">Méthode :</strong> P = (Q ⁄ 3600) × ΔP ⁄ η · Énergie = P × heures de fonctionnement. Valeurs indicatives à but de comparaison — base CO₂ 0,052 kgCO₂/kWh (mix électrique France). η = rendement global du moto-ventilateur.
+    </div>
+
+    <div class="f-footer" style="margin-top:auto">
+      <span class="f-brand">${esc(soc)}</span>
+      <span>Fiche n° ${esc(num)}</span>
+      <span>${esc(ver)} — ${esc(date)} — Page 2/2</span>
+    </div>
+  </div>${calcScript}`;
+}
+
+// ── RENDER PREVIEW ────────────────────────────────────────────────────────────
+function render() {
+  document.getElementById('prev1').innerHTML = renderP1();
+  document.getElementById('prev2').innerHTML = renderP2(true);
+}
+
+// ── EXPORT ─────────────────────────────────────────────────────────────────────
+function exportFiche() {
+  const nom = g('f-nom')||'fiche-netair';
+  const css = document.querySelector('style').textContent;
+  const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fiche technique ${esc(nom)} — Netair</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:#C8CDD5;display:flex;flex-direction:column;align-items:center;padding:32px;gap:28px}
+@media print{body{background:white;padding:0;gap:0}.page-wrap{box-shadow:none;page-break-after:always}}
+.page-wrap{box-shadow:0 8px 40px rgba(0,0,0,.2)}
+${css}
+</style>
+</head>
+<body>
+<div class="page-wrap">${renderP1()}</div>
+<div class="page-wrap">${renderP2(true)}</div>
+</body>
+</html>`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+  a.download=nom+'.html'; a.click();
+}
+
+// ── EXAMPLE ──────────────────────────────────────────────────────────────────
+function loadExample() {
+  document.getElementById('f-nom').value='NETPLY';
+  document.getElementById('f-type').value='Filtre plissé — Préfiltre synthétique';
+  document.getElementById('f-iso').value='Coarse 65% → ePM10 50%';
+  document.getElementById('f-en779').value='G4 → M5';
+  document.getElementById('f-norme').value='EN 13053';
+  document.getElementById('f-num').value='FT-NETPLY-001';
+  document.getElementById('f-ver').value='v1.0';
+  document.getElementById('f-date').value='20/06/2026';
+  document.getElementById('f-desc').value="Le filtre plissé NETPLY constitue la première barrière filtrante des centrales de traitement d'air. Son média synthétique plissé offre une grande surface active dans un encombrement réduit, garantissant un faible différentiel de pression et une durée de vie optimisée. Disponible de G3 à M5 selon EN 779 / EN ISO 16890, il s'adapte à toutes les dimensions de CTA.";
+  document.getElementById('f-points').value="Faible perte de charge\nLongue durée de vie\nCadre carton ou métal\nSans fibre de verre";
+  document.getElementById('f-sm').value="sur demande — délai à confirmer";
+  document.getElementById('ref-L').value=592;
+  document.getElementById('ref-H').value=592;
+  document.getElementById('ref-Q').value=3400;
+  caracts=[];
+  [['Média filtrant','Synthétique non-tissé'],['Structure','Grille plastique ABS'],['Cadre','Carton recyclé ou aluminium'],
+   ["Joint d'étanchéité",'Polyuréthane (option)'],['Classement au feu','M1'],['Surface du média','0,85 m²'],
+   ['Température de service','−20 °C à +70 °C'],['Humidité relative max.','95 % (sans condensation)'],['Incinérable','Oui']]
+  .forEach(([p,v])=>caracts.push({id:Date.now()+Math.random(),p,v}));
+  dims=[];
+  [['592','592','48','G4 · Coarse 65%','NETPLY-G4-592x592x48'],['592','592','98','M5 · ePM10 50%','NETPLY-M5-592x592x98'],
+   ['490','287','48','G4 · Coarse 65%','NETPLY-G3-490x287x48'],['287','592','48','M5 · ePM10 50%','NETPLY-G4-287x592x48']]
+  .forEach(([L,H,P,cls,ref])=>dims.push({id:Date.now()+Math.random(),L,H,P,cls,ref}));
+  vars=[];
+  [{label:'G4 · Coarse 65% — 48 mm',A:5.2,B:10.38,C:-2.62,delta:50,grp:'M5',color:COLORS[0]},
+   {label:'G4 · Coarse 65% — 98 mm',A:6.27,B:5.37,C:-0.7,delta:50,grp:'M5',color:COLORS[1]},
+   {label:'M5 · ePM10 50% — 48 mm',A:6.43,B:9.79,C:-0.75,delta:100,grp:'M5',color:COLORS[2]},
+   {label:'M5 · ePM10 50% — 98 mm',A:5.2,B:9.75,C:-0.07,delta:100,grp:'M5',color:COLORS[3]}]
+  .forEach(v=>vars.push({...v,id:Date.now()+Math.random()}));
+  renderCaracts(); renderDims(); renderVars();
+  document.querySelectorAll('.sec').forEach(s=>s.classList.add('open'));
+  render();
+}
+
+// INIT
+renderCaracts(); renderDims(); renderVars(); render();
+</script>
+</body>
+</html>
