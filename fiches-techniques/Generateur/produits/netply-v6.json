@@ -28,7 +28,7 @@
     ["Surface média", "2 × surface frontale (48 mm) · 3 × surface frontale (98 mm)"],
     ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
     ["Humidité relative max.", "100 %"],
-    ["ΔP finale recommandée", "ΔP initiale + 50 Pa (EN 13053)"]
+    ["ΔP finale recommandée", "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"]
   ],
 
   "badges_p1": [
