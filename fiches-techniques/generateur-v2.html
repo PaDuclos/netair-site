@@ -432,16 +432,16 @@ function renderP2(interactive=true){
 
   return `<div class="a4"><div class="a4-inner">
     <div class="fh2">
-      <img style="position:absolute;left:0;top:50%;transform:translateY(-50%);height:40px;width:auto;display:block" src="data:image/svg+xml,${encodeURIComponent(LOGO_S.replace(/style="height:40px;width:auto;display:block"/,''))}" alt="Netair">
+      <div style="position:absolute;left:0;top:50%;transform:translateY(-50%)">${LOGO_S}</div>
       <div class="fh2-name">${esc(nom)}</div><div class="fh2-sub">Performances aérauliques &amp; énergétique</div>
       <div class="fh2-badges">${iso?`<span class="badge2 badge-n">${esc(iso)}</span>`:''} ${en779?`<span class="badge2 badge-t">EN 779 : ${esc(en779)}</span>`:''} ${norme?`<span class="badge2 badge-o">${esc(norme)}</span>`:''}</div>
     </div>
     <div class="f-div2"></div>
     ${vars.length?`
     <div class="sh"><span class="sh-lbl">Courbe vitesse / perte de charge</span><span class="sh-line"></span></div>
-    <div style="display:flex;align-items:center;gap:18px;margin-top:7px">
-      <span style="font-size:11px;font-weight:600;color:#5A6573;white-space:nowrap">Afficher :</span>
-      ${vars.map((v,i)=>`<label style="display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:11.5px;color:#3a4654;white-space:nowrap"><input type="checkbox" checked id="chk-${i}" onchange="toggleCurve(${i},this.checked)" style="width:15px;height:15px;accent-color:${v.color};cursor:pointer"> ${esc(v.label||'Variante')}</label>`).join('')}
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;margin-top:7px">
+      <span style="font-size:10.5px;font-weight:600;color:#5A6573;white-space:nowrap">Afficher :</span>
+      ${vars.map((v,i)=>`<label style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;font-size:10.5px;color:#3a4654"><input type="checkbox" checked id="chk-${i}" onchange="toggleCurve(${i},this.checked)" style="width:13px;height:13px;accent-color:${v.color};cursor:pointer;flex-shrink:0"> ${esc(v.label||'Variante')}</label>`).join('')}
     </div>
     <div class="chart-box">
       ${buildChart()}
