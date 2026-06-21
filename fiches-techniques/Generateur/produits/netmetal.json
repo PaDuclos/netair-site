@@ -5,6 +5,7 @@
   "nom": "NETMETAL",
   "soustitre": "Cellule filtrante métallique — Préfiltre régénérable",
   "mono_classe": true,
+  "no_dimensions": true,
   "surface_facteur": 1,
   "vmax": 2.4,
   "pmax": 60,
@@ -52,13 +53,5 @@
   "classes": {
     "low":  { "label": "G3", "iso": "Coarse 50%", "poly": { "48": { "a": 7.34, "b": 2.44, "c": 5.57 }, "98": { "a": 7.34, "b": 2.44, "c": 5.57 } }, "add": 50, "rule": "classe Coarse", "dp": 26, "epaisseur": 48 },
     "high": { "label": "G3", "iso": "Coarse 50%", "poly": { "48": { "a": 7.34, "b": 2.44, "c": 5.57 }, "98": { "a": 7.34, "b": 2.44, "c": 5.57 } }, "add": 50, "rule": "classe Coarse", "dp": 26, "epaisseur": 48 }
-  },
-
-  "note_dimensions": "Surface filtrante = surface frontale (L × H). Filtre métallique le plus souvent réalisé sur mesure ; les formats ci-dessus sont des dimensions courantes. ΔP de référence ≈ 26 Pa à 1900 m³/h sur 592×592 (vitesse nominale 1,5 m/s, dans la plage mesurée). Média de référence : aluminium ép. 48 mm ; acier galvanisé (ΔP supérieure) et inox 304 sur demande.",
-
-  "dimensions": [
-    { "L": 592, "H": 592, "P": 48, "debit": 1900 },
-    { "L": 490, "H": 592, "P": 48, "debit": 1550 },
-    { "L": 287, "H": 592, "P": 48, "debit": 900 }
-  ]
+  }
 }
