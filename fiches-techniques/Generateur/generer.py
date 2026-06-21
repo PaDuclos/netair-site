@@ -130,14 +130,18 @@ def build_dimensions(d):
     return "\n".join("              " + r for r in rows)
 
 
-def build_scale_block(low, high):
-    """Bloc de constantes JS (#10). Reproduit l'espacement exact du gabarit."""
+def _co(co):
+    """Formate un jeu de coefficients {a,b,c} comme dans le gabarit."""
+    return f"{{ a: {co['a']}, b: {co['b']}, c: {co['c']} }}"
+
+
+def build_poly_block(low, high):
+    """Bloc de constantes JS — polynômes ΔP = a·v² + b·v + c. Espacement exact du gabarit."""
     return (
-        "  var SCALE = {            // ΔP initiale (Pa) à 3400 m³/h sur 592×592 (≈ 2,69 m/s)\n"
-        f"    g4: {{ 48: {low['scale48']}, 98: {low['scale98']} }},   // {low['label']} · {low['iso']}\n"
-        f"    m5: {{ 48: {high['scale48']}, 98: {high['scale98']} }}    // {high['label']} · {high['iso']}\n"
+        "  var POLY = {\n"
+        f"    g4: {{ 48: {_co(low['poly']['48'])}, 98: {_co(low['poly']['98'])} }},   // {low['label']} · {low['iso']}\n"
+        f"    m5: {{ 48: {_co(high['poly']['48'])}, 98: {_co(high['poly']['98'])} }}    // {high['label']} · {high['iso']}\n"
         "  };\n"
-        f"  var EXP  = {{ g4: {low['exp']}, m5: {high['exp']} }};          // exposant de la loi ΔP ∝ v^exp\n"
         f"  var ADD  = {{ g4: {low['add']},   m5: {high['add']} }};           // EN 13053 : +50 Pa (Coarse) / +100 Pa (ePM)\n"
         f"  var RULE = {{ g4: '{low['rule']}', m5: '{high['rule']}' }};"
     )
@@ -229,9 +233,9 @@ def generer(d, html):
     html = sub1(html, r'(id="btnEffM5"[^>]*>)([^<]*)(</button>)',
                 lambda m: m.group(1) + f'{high["iso"]} ({high["label"]})' + m.group(3))
 
-    # --- #10b constantes JS (SCALE / EXP / ADD / RULE)
-    html = sub1(html, r"  var SCALE = \{.*?var RULE = \{[^\n]*\};",
-                lambda m: build_scale_block(low, high), flags=re.DOTALL)
+    # --- #10b constantes JS (POLY / ADD / RULE)
+    html = sub1(html, r"  var POLY = \{.*?var RULE = \{[^\n]*\};",
+                lambda m: build_poly_block(low, high), flags=re.DOTALL)
 
     # --- note sous le tableau dimensions (optionnelle)
     if "note_dimensions" in d:

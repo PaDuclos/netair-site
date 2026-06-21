@@ -65,15 +65,16 @@ et 2 épaisseurs (48 / 98 mm). Pour chaque classe :
 |---|---|
 | `label` | code EN 779, ex. `G4` |
 | `iso` | classe ISO 16890, ex. `Coarse 65%` |
-| `scale48` / `scale98` | ΔP initiale (Pa) à 3400 m³/h sur 592×592, par épaisseur |
-| `exp` | exposant de la loi ΔP ∝ vitesseᵉˣᵖ |
+| `poly` | **polynôme ΔP = a·v²+b·v+c** par épaisseur : `{ "48": {a,b,c}, "98": {a,b,c} }` (coeffs mesurés, cf. `DONNEES_PDC_Netair.xlsx`) |
 | `add` | Pa ajoutés en fin de vie (EN 13053) |
 | `rule` | libellé court (ex. `classe Coarse`) |
-| `dp` | ΔP fixe affichée dans le tableau dimensions |
+| `dp` | ΔP de référence affichée dans le tableau dimensions (= polynôme au point nominal 2,69 m/s) |
+
+> **Modèle ΔP** : depuis le 21/06/2026 le calculateur utilise le **polynôme `a·v²+b·v+c`** (mesures R&D, source `DONNEES_PDC_Netair.xlsx`), et non plus la loi puissance. La source de vérité des coefficients est `DONNEES_PDC` ; les reporter dans le `poly` du JSON.
 
 ### Calculs automatiques (tableau dimensions)
 
-- **Surface filtrante** = `2 × (L × H)` (m², arrondi au centième).
+- **Surface filtrante** = `surface_facteur × (L × H)` (m², arrondi au centième) : `2` pour les plissés, `1` pour les filtres plans (frontale).
 - **Débit** = valeur **curatée** fournie par dimension (champ `debit`), car les
   débits du gabarit sont des arrondis métier (ex. 287×592 → 1700).
 - **ΔP** = `dp` de la classe (fixe). **Ordre** : toutes les lignes classe basse,
