@@ -20,6 +20,7 @@ import json
 import re
 import sys
 import os
+import shutil
 from decimal import Decimal, ROUND_HALF_UP
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -277,18 +278,29 @@ def main():
 
     result = generer(d, html)
 
+    # Par défaut, la fiche finale va dans le dossier livrables Fiches_Netair/.
     if out is None:
-        out = os.path.join(ROOT, f"Fiche technique {d['nom']}.html")
+        out = os.path.join(ROOT, "..", "Fiches_Netair", f"Fiche technique {d['nom']}.html")
     elif not os.path.isabs(out):
         out = os.path.join(ROOT, out)
+    out = os.path.abspath(out)
+    outdir = os.path.dirname(out)
+    os.makedirs(outdir, exist_ok=True)
 
     with open(out, "w", encoding="utf-8") as f:
         f.write(result)
 
-    # contrôle photo
-    photo_path = os.path.join(ROOT, "assets", d["photo"])
-    warn = "" if os.path.exists(photo_path) else "  ⚠️ photo absente de assets/ !"
-    print(f"✅ {os.path.basename(out)} généré.{warn}")
+    # Copier la photo à côté de la fiche (assets/) pour un livrable autonome.
+    src_photo = os.path.join(ROOT, "assets", d["photo"])
+    if os.path.exists(src_photo):
+        dst_assets = os.path.join(outdir, "assets")
+        os.makedirs(dst_assets, exist_ok=True)
+        if os.path.abspath(src_photo) != os.path.join(dst_assets, d["photo"]):
+            shutil.copy(src_photo, os.path.join(dst_assets, d["photo"]))
+        warn = ""
+    else:
+        warn = "  ⚠️ photo absente de Generateur/assets/ !"
+    print(f"✅ {os.path.basename(out)} → {os.path.relpath(outdir)}{warn}")
 
 
 if __name__ == "__main__":

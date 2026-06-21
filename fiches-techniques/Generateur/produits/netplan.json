@@ -9,8 +9,8 @@
 
   "fiche": { "num": "FT-NETPLAN-001", "version": "v1.0", "date": "21/06/2026" },
 
-  "photo": "netply-photo.jpg",
-  "photo_alt": "Filtre NETPLAN",
+  "photo": "netplan-photo.jpg",
+  "photo_alt": "Filtre plan NETPLAN",
 
   "description": "Le NETPLAN est une cellule filtrante plane à moyen rendement (G4 / Coarse 65%). Son média en fibres synthétiques, maintenu entre deux grilles galvanisées sur un cadre en acier galvanisé épaisseur 8/10, lui confère une bonne tenue mécanique. Il s'utilise aussi bien en filtration finale qu'en préfiltration en amont de filtres à haute efficacité (poches souples, poches rigides, charbon actif) ou sur grilles de reprise. Montage en frontal ou sur glissières.",
 
