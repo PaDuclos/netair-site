@@ -1,57 +1,61 @@
 {
-  "_commentaire": "BROUILLON NETPLAN à VALIDER. Valeurs marquées (À VALIDER) = reprises de NETPLY ou typiques, à confirmer/mesurer avant diffusion. Voir la checklist fournie par Claude Code.",
+  "_commentaire": "NETPLAN — fiche MONO-CLASSE G4 (Coarse 65%, 25 mm). Données réelles Titanair fiche 2018 'TITAPLAN G4-COARSE 65%' + cache graphe Excel (ΔP 12/25/41/68 à v 0,5/1/1,5/2). Descriptif reformulé depuis Documentation/Titaplan.pdf. G3 écarté (graphe source erroné = copie du G4). À VALIDER : photo, SCALE/exp (ajustés sur courbe mesurée jusqu'à 2 m/s, extrapolés à 2,69).",
 
   "slug": "netplan",
   "nom": "NETPLAN",
   "soustitre": "Filtre plan — Préfiltre synthétique",
+  "mono_classe": true,
+  "surface_facteur": 1,
 
   "fiche": { "num": "FT-NETPLAN-001", "version": "v1.0", "date": "21/06/2026" },
 
   "photo": "netply-photo.jpg",
   "photo_alt": "Filtre NETPLAN",
 
-  "description": "Le filtre plan NETPLAN constitue une première barrière filtrante robuste pour les centrales de traitement d'air. Son média en fibres synthétiques (polyester) à densité croissante est maintenu entre deux grilles galvanisées, dans un cadre acier galvanisé épaisseur 8/10. Disponible en G3 et G4 selon EN 779 / EN ISO 16890, il offre une grande résistance mécanique et s'adapte à toutes les dimensions de CTA.",
+  "description": "Le NETPLAN est une cellule filtrante plane à moyen rendement (G4 / Coarse 65%). Son média en fibres synthétiques, maintenu entre deux grilles galvanisées sur un cadre en acier galvanisé épaisseur 8/10, lui confère une bonne tenue mécanique. Il s'utilise aussi bien en filtration finale qu'en préfiltration en amont de filtres à haute efficacité (poches souples, poches rigides, charbon actif) ou sur grilles de reprise. Montage en frontal ou sur glissières.",
 
   "points_cles": [
-    "Cadre acier galvanisé robuste",
-    "Grilles de maintien galvanisées",
-    "Faible perte de charge",
-    "Sans fibre de verre"
+    "Montage frontal ou sur glissières",
+    "Cadre acier galvanisé ép. 8/10",
+    "Filtre final ou préfiltre",
+    "Média fibres synthétiques"
   ],
 
   "specs": [
-    ["Média filtrant", "Fibres synthétiques (polyester)"],
-    ["Structure", "2 grilles acier galvanisé"],
+    ["Média filtrant", "Fibre synthétique"],
+    ["Parois cellule", "Acier galvanisé"],
     ["Cadre", "Acier galvanisé ép. 8/10"],
-    ["Joint d'étanchéité", "Polyuréthane (option)"],
-    ["Classement au feu", "À VALIDER"],
-    ["Surface du média", "À VALIDER"],
-    ["Température de service", "−20 °C à +70 °C"],
-    ["Humidité relative max.", "95 % (sans condensation)"],
-    ["Incinérable", "Non (cadre métallique)"]
+    ["Séparateur", "Sans"],
+    ["Classement au feu", "M1"],
+    ["Surface média", "Surface frontale"],
+    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
+    ["Humidité relative max.", "100 %"],
+    ["ΔP finale recommandée", "250 Pa (EN 779) · 150 Pa (EN 13053)"]
   ],
 
   "badges_p1": [
-    "ISO 16890 : Coarse 60% / Coarse 75%",
-    "EN 779 : G3 / G4",
+    "ISO 16890 : Coarse 65%",
+    "EN 779 : G4",
     "EN 13053"
   ],
   "badges_p2": [
-    "ISO 16890 : Coarse 60% → Coarse 75%",
-    "EN 779 : G3 → G4",
+    "ISO 16890 : Coarse 65%",
+    "EN 779 : G4",
     "EN 13053"
   ],
 
   "classes": {
-    "low":  { "label": "G3", "iso": "Coarse 60%", "scale48": 45, "scale98": 32, "exp": 1.60, "add": 50, "rule": "classe Coarse", "dp": 45 },
-    "high": { "label": "G4", "iso": "Coarse 75%", "scale48": 60, "scale98": 42, "exp": 1.60, "add": 50, "rule": "classe Coarse", "dp": 60 }
+    "low":  { "label": "G4", "iso": "Coarse 65%", "scale48": 90, "scale98": 90, "exp": 1.22, "add": 50, "rule": "classe Coarse", "dp": 90, "epaisseur": 25 },
+    "high": { "label": "G4", "iso": "Coarse 65%", "scale48": 90, "scale98": 90, "exp": 1.22, "add": 50, "rule": "classe Coarse", "dp": 90, "epaisseur": 25 }
   },
 
+  "note_dimensions": "Surface filtrante = surface frontale (L × H). ΔP de référence ≈ 90 Pa à 3400 m³/h sur 592×592 (extrapolée du tracé mesuré jusqu'à 2 m/s) ; le débit indiqué est le débit nominal correspondant.",
+
   "dimensions": [
-    { "L": 592, "H": 592, "P": 48, "debit": 3400 },
-    { "L": 287, "H": 592, "P": 48, "debit": 1700 },
-    { "L": 490, "H": 592, "P": 48, "debit": 2800 },
-    { "L": 625, "H": 500, "P": 48, "debit": 3050 },
-    { "L": 500, "H": 500, "P": 48, "debit": 2450 }
+    { "L": 592, "H": 592, "P": 25, "debit": 3400 },
+    { "L": 287, "H": 592, "P": 25, "debit": 1700 },
+    { "L": 490, "H": 592, "P": 25, "debit": 2800 },
+    { "L": 625, "H": 500, "P": 25, "debit": 3050 },
+    { "L": 500, "H": 500, "P": 25, "debit": 2450 }
   ]
 }

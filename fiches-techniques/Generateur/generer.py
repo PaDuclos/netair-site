@@ -27,9 +27,10 @@ BASE = os.path.join(ROOT, "gabarit_base.html")
 
 
 # ---------------------------------------------------------------- helpers ----
-def fr_surface(L, H):
-    """Surface filtrante = 2 × (L × H) en m², format français '0,70'."""
-    val = Decimal(2 * L * H) / Decimal(1_000_000)
+def fr_surface(L, H, facteur=2):
+    """Surface filtrante = facteur × (L × H) en m², format français '0,70'.
+    facteur=2 pour les plissés (NETPLY), facteur=1 pour les filtres plans (frontale)."""
+    val = Decimal(facteur * L * H) / Decimal(1_000_000)
     val = val.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
     return f"{val}".replace(".", ",")
 
@@ -82,6 +83,8 @@ def build_specs(specs):
 def build_dimensions(d):
     nom = d["nom"]
     low, high = d["classes"]["low"], d["classes"]["high"]
+    mono = d.get("mono_classe", False)
+    facteur = d.get("surface_facteur", 2)
     rows = []
     i = 0  # index global (striping continu sur toutes les lignes de données)
 
@@ -91,7 +94,7 @@ def build_dimensions(d):
         grey = (i % 2 == 0)  # ligne 1 blanche, ligne 2 grise, …
         tr = ' style="background:#F2F6FB;"' if grey else ""
         L, H, P = dim["L"], dim["H"], dim["P"]
-        surface = fr_surface(L, H)
+        surface = fr_surface(L, H, facteur)
         debit = fr_debit(dim["debit"])
         eff = f'{cls["iso"]} ({cls["label"]})'
         ref = f'{nom}-{cls["iso"]}-{cls["label"]}-{L}x{H}x{P}'
@@ -113,8 +116,9 @@ def build_dimensions(d):
 
     for dim in d["dimensions"]:      # toutes les lignes classe basse…
         emit(dim, low)
-    for dim in d["dimensions"]:      # …puis toutes les lignes classe haute
-        emit(dim, high)
+    if not mono:                     # …puis classe haute (sauf fiche mono-classe)
+        for dim in d["dimensions"]:
+            emit(dim, high)
 
     rows.append(
         '<tr style="background:#E6F5F7;">'
@@ -213,7 +217,10 @@ def generer(d, html):
                 lambda m: m.group(1) + lab_low + m.group(2), flags=re.DOTALL)
     html = sub1(html, r'(id="cbM5"[^>]*>\s*).*?(\s*</label>)',
                 lambda m: m.group(1) + lab_high + m.group(2), flags=re.DOTALL)
-    for eid, txt in (("legG4a", f"{lab_low} — 48 mm"), ("legG4b", f"{lab_low} — 98 mm"),
+    mono = d.get("mono_classe", False)
+    ep = low.get("epaisseur")
+    leg_low_a = f"{lab_low} — {ep} mm" if mono else f"{lab_low} — 48 mm"
+    for eid, txt in (("legG4a", leg_low_a), ("legG4b", f"{lab_low} — 98 mm"),
                      ("legM5a", f"{lab_high} — 48 mm"), ("legM5b", f"{lab_high} — 98 mm")):
         html = sub1(html, r'(id="' + eid + r'"[^>]*>.*?</span>)(.*?)(</div>)',
                     lambda m, t=txt: m.group(1) + t + m.group(3), flags=re.DOTALL)
@@ -225,6 +232,26 @@ def generer(d, html):
     # --- #10b constantes JS (SCALE / EXP / ADD / RULE)
     html = sub1(html, r"  var SCALE = \{.*?var RULE = \{[^\n]*\};",
                 lambda m: build_scale_block(low, high), flags=re.DOTALL)
+
+    # --- note sous le tableau dimensions (optionnelle)
+    if "note_dimensions" in d:
+        html = sub1(html, r'(margin-top:6px; line-height:1\.45;">)(.*?)(</div>)',
+                    lambda m: m.group(1) + d["note_dimensions"] + m.group(3),
+                    flags=re.DOTALL)
+
+    # --- mode mono-classe : 1 seule courbe, sans toggle classe/épaisseur
+    if mono:
+        css = ("\n<style>/* fiche mono-classe : 1 courbe, sans sélecteur */\n"
+               "#pathG498,#cG498,#tG498,#legG4b,#legM5a,#legM5b,"
+               "#hd2,#hh2,#ht2,#hd3,#hh3,#ht3,#hd4,#hh4,#ht4{display:none!important;}\n"
+               "</style>\n</head>")
+        html = html.replace("</head>", css, 1)
+        # masquer le sélecteur Classe d'efficacité + Épaisseur
+        html = html.replace('grid-template-columns:1.7fr 1fr; gap:12px;">',
+                            'grid-template-columns:1.7fr 1fr; gap:12px; display:none;">')
+        # masquer la ligne de contrôles « Afficher : … »
+        html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
+                            'align-items:center; gap:18px; margin-top:7px; display:none;">')
 
     return html
 
