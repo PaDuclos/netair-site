@@ -66,6 +66,7 @@ Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 
 | `debit_nom` | débit nominal → point nominal, annotation, défaut calculateur |
 | `classes.*.epaisseur` | épaisseur réelle (légende, libellés) |
 | `note_dimensions` | note sous le tableau dimensions |
+| `compact_p1` | réduit les marges verticales de la page 1 (contenu dense qui doit tenir sur l'A4), par produit |
 
 ## Pièges identifiés (à surveiller partout)
 
@@ -89,10 +90,14 @@ Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 
 
 ## État d'avancement
 
-- **NETPLY** — référence (gabarit), polynôme ✅
-- **NETPLAN** — mono-classe G4, polynôme, 0-2 m/s, nominal 1,5 m/s ✅
+- **NETPLY** — référence (gabarit = ancre d'identité, ne pas écraser) ✅ ·
+  **v6** retravaillée d'après TITAPLY EC : specs corrigées (acier galvanisé, sans couture ni colle),
+  éco-conception générique, photo détourée, `compact_p1`. Fichier `Fiche technique NETPLY v6.html`.
+  (l'ancienne `Fiche technique NETPLY.html` est conservée pour l'instant à la demande de PA)
+- **NETPLAN** — mono-classe G4, polynôme, 0-2 m/s, nominal 1,5 m/s (ΔP nom ≈ 42 Pa) ✅
 - **NETMETAL** — mono-classe G3 / Coarse 50% (équiv. TITAMETAL KMZ/A alu, ép. 48), polynôme
   7,34·v²+2,44·v+5,57 (fit 5 pts 0,79–2,38 m/s), Vmax 2,4 · nominal 1,5 m/s (1900 m³/h) ✅
   — doc 2015 disait G1-G2 → priorité fiche 2018 ; photo placeholder Titanair à remplacer ;
   ΔP au-delà de 2,38 m/s non mesurée.
-- Suivants : NETFIL, NETFIBRE, NETBAG S, … (cf. Bibliothèque)
+- **NETFIBRE** — 🔜 prochain (rouleau media synthétique, réf. TITAFIBRE, G2 → M5)
+- Suivants : NETFIL, NETBAG S, NETPAK…, NETCEL…, NETCARB… (cf. Bibliothèque)
