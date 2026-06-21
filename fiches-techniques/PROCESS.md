@@ -55,16 +55,24 @@ Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 
 
 ## Règle ΔP finale recommandée (spec) — IMPÉRATIVE
 
-La ligne specs « ΔP finale recommandée » est **toujours** :
+ΔP finale recommandée = **min( ΔP initiale + ADD ; 3 × ΔP initiale )** — EN 13053, où **ADD dépend de la classe** :
 
-```
-["ΔP finale recommandée", "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"]
-```
+| Classe | ADD |
+|---|---|
+| **Coarse** (G / grossier) | **+ 50 Pa** |
+| **ePM10 · ePM2,5 · ePM1** | **+ 100 Pa** |
 
-— **identique au fonctionnement du calculateur énergétique** (ΔP finale = min(ΔP init + 50 ; 3×ΔP init)).
-**Ne jamais** mettre les valeurs absolues des fiches Titanair (ex. 250 Pa EN 779 / 200 Pa ISO) : elles sont
-dépendantes du débit et contredisent le calculateur. Référence = NETPLY v6. (Appliqué partout : NETPLY v6,
-NETPLAN, NETMETAL, NETFIL, NETFIBRE.)
+C'est **exactement** la logique du calculateur énergétique (constante `ADD = { Coarse: 50, ePM: 100 }` dans le moteur).
+Le **texte de la ligne specs doit refléter la (les) classe(s) réelle(s) de la fiche** :
+
+- Fiche **mono-Coarse** (NETFIBRE, NETPLAN, NETMETAL, NETFIL) :
+  `"min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"`
+- Fiche **multi-classes Coarse + ePM** (NETPLY v6 : G4 Coarse + M5 ePM10) :
+  `"min(ΔP initiale + 50 Pa [Coarse] / + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"`
+- Fiche **ePM seule** (à venir : NETBAG S, NETPAK…) : `+ 100 Pa`.
+
+**Ne jamais** mettre les valeurs absolues des fiches Titanair (ex. 250 Pa EN 779 / 200 Pa ISO) : elles dépendent
+du débit et contredisent le calculateur.
 
 ## Réglages disponibles par produit (clés du JSON)
 
