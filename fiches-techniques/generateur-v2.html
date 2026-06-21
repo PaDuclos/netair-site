@@ -507,7 +507,13 @@ function renderP2(interactive=true){
   <div class="f-foot"><strong>${esc(soc)}</strong><span class="mono">Fiche n° ${esc(num)}</span><span>${esc(ver)} — ${esc(date)} — Page 2/2</span></div></div>${calcScript}`;
 }
 
-function render(){document.getElementById('prev1').innerHTML=renderP1();document.getElementById('prev2').innerHTML=renderP2(true);}
+function render(){
+  document.getElementById('prev1').innerHTML=renderP1();
+  document.getElementById('prev2').innerHTML=renderP2(true);
+  document.getElementById('prev2').querySelectorAll('script').forEach(s=>{
+    const ns=document.createElement('script');ns.textContent=s.textContent;document.head.appendChild(ns);ns.remove();
+  });
+}
 
 function exportFiche(){
   const nom=g('f-nom')||'fiche-netair';
