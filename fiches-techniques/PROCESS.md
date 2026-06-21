@@ -90,4 +90,8 @@ Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 
 
 - **NETPLY** — référence (gabarit), polynôme ✅
 - **NETPLAN** — mono-classe G4, polynôme, 0-2 m/s, nominal 1,5 m/s ✅
-- Suivants : NETMETAL, NETFIL, NETFIBRE, NETBAG S, … (cf. Bibliothèque)
+- **NETMETAL** — mono-classe G3 / Coarse 50% (équiv. TITAMETAL KMZ/A alu, ép. 48), polynôme
+  7,34·v²+2,44·v+5,57 (fit 5 pts 0,79–2,38 m/s), Vmax 2,4 · nominal 1,5 m/s (1900 m³/h) ✅
+  — doc 2015 disait G1-G2 → priorité fiche 2018 ; photo placeholder Titanair à remplacer ;
+  ΔP au-delà de 2,38 m/s non mesurée.
+- Suivants : NETFIL, NETFIBRE, NETBAG S, … (cf. Bibliothèque)
