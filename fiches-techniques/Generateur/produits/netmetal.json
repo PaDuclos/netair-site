@@ -32,11 +32,9 @@
     ["Efficacités ISO 16890", "Coarse 50%"],
     ["Épaisseurs disponibles", "10 · 15 · 20 · 25 · 30 · 48 mm"],
     ["Classement au feu", "M0 (incombustible)"],
-    ["Surface média", "Surface frontale"],
     ["Température de service", "150 °C (accidentelle 200 °C / 1 h)"],
     ["Humidité relative max.", "100 %"],
-    ["Régénérable", "Oui — lavable, réutilisable"],
-    ["ΔP finale recommandée", "250 Pa (EN 779)"]
+    ["Régénérable", "Oui — lavable, réutilisable"]
   ],
 
   "badges_p1": [
