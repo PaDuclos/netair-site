@@ -1,6 +1,5 @@
 {
   "_commentaire": "NETMETAL — cellule filtrante métallique régénérable (équiv. Titanair TITAMETAL). Fiche MONO-CLASSE G3 / Coarse 50%. Données réelles : fiche 2018 'TITAMETAL KMZ/A' (média ALUMINIUM, ép. 48 mm) — FT 2019-037 v2 : EN779 G3, ISO Coarse 50%, parois acier galvanisé, T° continue 150 °C / accidentelle 200 °C 1 h, feu M0, ΔP finale 250 Pa. Courbe ΔP = cache graphe Excel KMZA Ep48 : v=[0,79;1,19;1,59;1,98;2,38] → ΔP=[12;19;28;39;53] Pa. Polynôme ajusté ΔP=a·v²+b·v+c ≈ {7,34 ; 2,44 ; 5,57} (R²≈1). Vmax=2,4 (limite mesurée 2,38), nominal 1,5 m/s ≈ 1900 m³/h sur 592×592 → ΔP nom ≈ 26 Pa, DANS la plage mesurée (pas d'extrapolation). Descriptif reformulé depuis Documentation/Titametal.pdf (jamais copié). ARBITRAGE SOURCES : doc 2015 annonce G1-G2 ; fiches 2018 (PRIORITAIRES) étiquètent G3/Coarse 50% DÉCISION PA (22/06/2026) : afficher la classe **G2 / G3** (EN 779), courbe mesurée = G3/Coarse 50% (référence, seule mesurée). Variantes galva (KMZ, +ΔP) et inox 304 (KMXCA) sur demande. PHOTO = placeholder Titanair détouré sur blanc — À REMPLACER par photo réelle Netair.",
-
   "slug": "netmetal",
   "nom": "NETMETAL",
   "soustitre": "Cellule filtrante métallique — Préfiltre régénérable",
@@ -10,36 +9,70 @@
   "vmax": 2.4,
   "pmax": 60,
   "debit_nom": 1900,
-
-  "fiche": { "num": "FT-NETMETAL-001", "version": "v1.0", "date": "22/06/2026" },
-
+  "fiche": {
+    "num": "FT-NETMETAL-001",
+    "version": "v1.0",
+    "date": "22/06/2026"
+  },
   "photo": "netmetal-photo.jpg",
   "photo_alt": "Cellule filtrante métallique NETMETAL",
-
   "description": "Le NETMETAL est une cellule filtrante métallique régénérable destinée à la préfiltration des poussières grossières en centrale de traitement d'air. Son média en mailles métalliques superposées, agencées en structure labyrinthique — aluminium, acier galvanisé ou inox 304 — est maintenu entre deux grilles en fil zingué et cerclé d'un cadre en acier galvanisé ou inox 304 (ép. 8/10), gage de robustesse. Lavable et réutilisable, il réduit les déchets et le coût d'exploitation. Sa grande résistance mécanique et sa faible section de passage le destinent aussi à la séparation de gouttes et à la filtration anti-graisse, là où il faut conjuguer débit d'air élevé et tenue dans le temps.",
-
   "points_cles": [
     "Lavable et régénérable",
     "Cadre acier galva ou inox 304",
     "Média alu / galva / inox 304",
     "Anti-graisse · séparateur de gouttes"
   ],
-
   "specs": [
-    ["Média filtrant", "Mailles métalliques superposées (tricot labyrinthique)"],
-    ["Matériau média", "Aluminium (réf.) · acier galvanisé · inox 304"],
-    ["Cadre", "Acier galvanisé ou inox 304 — ép. 8/10"],
-    ["Grilles de maintien", "Fil zingué (2 faces)"],
-    ["Efficacités EN 779", "G2 / G3 (Coarse) selon le nombre de couches"],
-    ["Efficacités ISO 16890", "Coarse 50%"],
-    ["Épaisseurs disponibles", "10 · 15 · 20 · 25 · 30 · 48 mm"],
-    ["Classement au feu", "M0 (incombustible)"],
-    ["Température de service", "150 °C (accidentelle 200 °C / 1 h)"],
-    ["Humidité relative max.", "100 %"],
-    ["Régénérable", "Oui — lavable, réutilisable"],
-    ["ΔP finale recommandée", "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"]
+    [
+      "Média filtrant",
+      "Mailles métalliques superposées (tricot labyrinthique)"
+    ],
+    [
+      "Matériau média",
+      "Aluminium (réf.) · acier galvanisé · inox 304"
+    ],
+    [
+      "Cadre",
+      "Acier galvanisé ou inox 304 — ép. 8/10"
+    ],
+    [
+      "Grilles de maintien",
+      "Fil zingué (2 faces)"
+    ],
+    [
+      "Efficacités EN 779",
+      "G2 / G3 (Coarse) selon le nombre de couches"
+    ],
+    [
+      "Efficacités ISO 16890",
+      "Coarse 50%"
+    ],
+    [
+      "Épaisseurs disponibles",
+      "10 · 15 · 20 · 25 · 30 · 48 mm"
+    ],
+    [
+      "Classement au feu",
+      "M0 (incombustible)"
+    ],
+    [
+      "Température de service",
+      "150 °C (accidentelle 200 °C / 1 h)"
+    ],
+    [
+      "Humidité relative max.",
+      "100 %"
+    ],
+    [
+      "Régénérable",
+      "Oui — lavable, réutilisable"
+    ],
+    [
+      "ΔP finale recommandée",
+      "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"
+    ]
   ],
-
   "badges_p1": [
     "ISO 16890 : Coarse 50%",
     "EN 779 : G2 / G3",
@@ -50,9 +83,47 @@
     "EN 779 : G2 / G3",
     "Lavable / régénérable"
   ],
-
   "classes": {
-    "low":  { "label": "G2 / G3", "iso": "Coarse 50%", "poly": { "48": { "a": 7.34, "b": 2.44, "c": 5.57 }, "98": { "a": 7.34, "b": 2.44, "c": 5.57 } }, "add": 50, "rule": "classe Coarse", "dp": 26, "epaisseur": 48 },
-    "high": { "label": "G2 / G3", "iso": "Coarse 50%", "poly": { "48": { "a": 7.34, "b": 2.44, "c": 5.57 }, "98": { "a": 7.34, "b": 2.44, "c": 5.57 } }, "add": 50, "rule": "classe Coarse", "dp": 26, "epaisseur": 48 }
-  }
+    "low": {
+      "label": "G2 / G3",
+      "iso": "Coarse 50%",
+      "poly": {
+        "48": {
+          "a": 7.34,
+          "b": 2.44,
+          "c": 5.57
+        },
+        "98": {
+          "a": 7.34,
+          "b": 2.44,
+          "c": 5.57
+        }
+      },
+      "add": 50,
+      "rule": "classe Coarse",
+      "dp": 26,
+      "epaisseur": 48
+    },
+    "high": {
+      "label": "G2 / G3",
+      "iso": "Coarse 50%",
+      "poly": {
+        "48": {
+          "a": 7.34,
+          "b": 2.44,
+          "c": 5.57
+        },
+        "98": {
+          "a": 7.34,
+          "b": 2.44,
+          "c": 5.57
+        }
+      },
+      "add": 50,
+      "rule": "classe Coarse",
+      "dp": 26,
+      "epaisseur": 48
+    }
+  },
+  "compact_p2": true
 }
