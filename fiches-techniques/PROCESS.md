@@ -116,7 +116,7 @@ du débit et contredisent le calculateur.
 | `note_dimensions` | note sous le tableau dimensions |
 | `compact_p1` | réduit les marges verticales de la page 1 (contenu dense qui doit tenir sur l'A4), par produit |
 | `series` (+ `courbes`, `classes_def`, `classes_order`, `eff0`, `len0`) | **mode multi-classes opt-in** (N courbes classe × longueur ; calculateur à sélecteur classe × longueur ; cases par classe). Chemin **legacy 2×2 inchangé** sans cette clé → test d'identité NETPLY préservé. Utilisé par NETBAG S. |
-| `multi_classe` (+ `classes_list`, `dimensions_multi`, `velocities`, `eff_default`) | **mode multi-classes « compact » opt-in** → `generer_multi`. **Sélecteur 5 classes**, 2 courbes (classe choisie en 48/98) à la fois, fiche **3 pages** (P1 desc/specs · P2 dimensions + tableau ΔP complet + courbe · P3 calculateur), surface m²/m², réfs cadre `-A`/`-P`. Chemin 2×2 inchangé. Utilisé par NETPAK S CILIA. ⚠️ proche de `series` — à fusionner un jour. |
+| `multi_classe` (+ `classes_list`, `dimensions_multi`, `velocities`, `eff_default`) | **mode multi-classes « compact » opt-in** → `generer_multi`. **Sélecteur 5 classes**, 2 courbes (classe choisie en 48/98) à la fois, fiche **3 pages** (P1 desc/specs · P2 dimensions + tableau ΔP complet + courbe · P3 calculateur). **Calculateur à sélecteur d'efficacité + épaisseur INDÉPENDANT de la courbe** (`state.calcEff` ≠ `state.eff`) — afficher une classe et calculer l'énergie d'une autre. Surface m²/m², réfs cadre `-A`/`-P`. Chemin 2×2 inchangé. Utilisé par NETPAK S CILIA. ⚠️ proche de `series` — à fusionner un jour. |
 
 ## Pièges identifiés (à surveiller partout)
 
