@@ -15,9 +15,9 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 |---|:--:|---|
 | NETPLY | ✅ | Photo finale Netair (placeholder détouré) |
 | NETPLAN | 🟡 | Photo · ΔP extrapolée > 2 m/s à confirmer |
-| NETMETAL | 🟡 | Photo · ΔP > 2,38 m/s non mesurée · classe G3 vs doc 2015 (G1-G2) |
-| NETFIL | 🟡 | Photo · épaisseur/profondeur · révision G3/G4 à trancher |
-| NETFIBRE | 🟡 | Photo · courbes G2/G3/M5 à mesurer · T° harmonisée à confirmer |
+| NETMETAL | 🟡 | ΔP > 2,38 m/s non mesurée · ~~classe~~ ✅ G2/G3 (déc. PA) |
+| NETFIL | 🟡 | épaisseur/profondeur · ~~G3/G4~~ ✅ G3 confirmé (PA) |
+| NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) |
 | NETBAG S | 🟡 | Anomalie M5 550/650 · G4 non mesuré · 287×592 & humidité · photo |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
@@ -33,6 +33,9 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 
 - [ ] **Photos produit Netair** : toutes les fiches créées utilisent une **photo Titanair détourée
       en placeholder** → remplacer par des photos réelles du produit Netair.
+- [ ] **🟠 Page 2 déborde l'A4** (~1222 px vs 1122) sur les fiches **2-classes / mono-classe**
+      (NETPLAN, NETMETAL, NETFIL, NETFIBRE, NETPLY) — la section courbe + calculateur dépasse ~26 mm.
+      À corriger (compactage page 2 du gabarit, ou pagination) → re-lancer le test d'identité NETPLY.
 - [ ] **Humidité relative max.** : harmoniser/confirmer (100 % retenu par défaut sur média synthétique).
 - [ ] **Pieds de page** : numéros de fiche figés OK ; vérifier version/date à chaque révision.
 - [ ] **Classe G4 (Coarse, ADD +50)** sur les familles poches/poches rigides : annoncée commercialement,

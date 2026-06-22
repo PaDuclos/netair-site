@@ -67,7 +67,7 @@
           </div>
           <div style="display:flex; flex-direction:column; align-items:flex-end; gap:7px; flex:none;">
             <div style="display:inline-block; background:#0F3261; color:#fff; font-size:10px; font-weight:600; padding:5px 11px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">ISO 16890 : Coarse 50%</div>
-            <div style="display:inline-block; background:#0897A5; color:#fff; font-size:10px; font-weight:600; padding:5px 11px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">EN 779 : G3</div>
+            <div style="display:inline-block; background:#0897A5; color:#fff; font-size:10px; font-weight:600; padding:5px 11px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">EN 779 : G2 / G3</div>
             <div style="display:flex; gap:6px; margin-top:2px;">
               <div style="display:inline-block; background:#fff; color:#0F3261; font-size:10px; font-weight:600; padding:3px 9px; border-radius:20px; border:1.5px solid #C9D7E8;">Lavable / régénérable</div>
             </div>
@@ -110,7 +110,7 @@
               <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Matériau média</td><td style="padding:6px 12px; color:#3a4654;">Aluminium (réf.) · acier galvanisé · inox 304</td></tr>
               <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Cadre</td><td style="padding:6px 12px; color:#3a4654;">Acier galvanisé ou inox 304 — ép. 8/10</td></tr>
               <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Grilles de maintien</td><td style="padding:6px 12px; color:#3a4654;">Fil zingué (2 faces)</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités EN 779</td><td style="padding:6px 12px; color:#3a4654;">G3 (réf.) — gamme G1 → G3 selon nb de couches</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités EN 779</td><td style="padding:6px 12px; color:#3a4654;">G2 / G3 (Coarse) selon le nombre de couches</td></tr>
               <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités ISO 16890</td><td style="padding:6px 12px; color:#3a4654;">Coarse 50%</td></tr>
               <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Épaisseurs disponibles</td><td style="padding:6px 12px; color:#3a4654;">10 · 15 · 20 · 25 · 30 · 48 mm</td></tr>
               <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Classement au feu</td><td style="padding:6px 12px; color:#3a4654;">M0 (incombustible)</td></tr>
@@ -144,7 +144,7 @@
           <div style="position:absolute; right:0; top:50%; transform:translateY(-50%); text-align:right;">
             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
               <div style="display:inline-block; background:#0F3261; color:#fff; font-size:9px; font-weight:600; padding:4px 9px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">ISO 16890 : Coarse 50%</div>
-              <div style="display:inline-block; background:#0897A5; color:#fff; font-size:9px; font-weight:600; padding:4px 9px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">EN 779 : G3</div>
+              <div style="display:inline-block; background:#0897A5; color:#fff; font-size:9px; font-weight:600; padding:4px 9px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">EN 779 : G2 / G3</div>
               <div style="display:inline-block; background:#fff; color:#0F3261; font-size:9px; font-weight:600; padding:3px 9px; border-radius:20px; border:1.5px solid #C9D7E8; white-space:nowrap;">Lavable / régénérable</div>
             </div>
           </div>
@@ -160,11 +160,11 @@
           <span style="font-size:11px; font-weight:600; color:#5A6573; white-space:nowrap;">Afficher :</span>
           <label style="display:inline-flex; align-items:center; gap:7px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;">
             <input type="checkbox" id="cbG4" checked style="width:15px; height:15px; accent-color:#0F3261; cursor:pointer;">
-            G3 · Coarse 50%
+            G2 / G3 · Coarse 50%
           </label>
           <label style="display:inline-flex; align-items:center; gap:7px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;">
             <input type="checkbox" id="cbM5" style="width:15px; height:15px; accent-color:#0897A5; cursor:pointer;">
-            G3 · Coarse 50%
+            G2 / G3 · Coarse 50%
           </label>
         </div>
 
@@ -240,10 +240,10 @@
             <rect id="hoverHit" x="52" y="16" width="528" height="234" fill="transparent" style="cursor:crosshair;"></rect>
           </svg>
           <div style="display:flex; gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
-            <div id="legG4a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0F3261; display:inline-block; border-radius:2px;"></span>G3 · Coarse 50% — 48 mm</div>
-            <div id="legG4b" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#6B8FC2; display:inline-block; border-radius:2px;"></span>G3 · Coarse 50% — 98 mm</div>
-            <div id="legM5a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0897A5; display:inline-block; border-radius:2px;"></span>G3 · Coarse 50% — 48 mm</div>
-            <div id="legM5b" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#7FCBD3; display:inline-block; border-radius:2px;"></span>G3 · Coarse 50% — 98 mm</div>
+            <div id="legG4a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0F3261; display:inline-block; border-radius:2px;"></span>G2 / G3 · Coarse 50% — 48 mm</div>
+            <div id="legG4b" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#6B8FC2; display:inline-block; border-radius:2px;"></span>G2 / G3 · Coarse 50% — 98 mm</div>
+            <div id="legM5a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0897A5; display:inline-block; border-radius:2px;"></span>G2 / G3 · Coarse 50% — 48 mm</div>
+            <div id="legM5b" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#7FCBD3; display:inline-block; border-radius:2px;"></span>G2 / G3 · Coarse 50% — 98 mm</div>
             <div style="margin-left:auto; font-style:italic; color:#5A6573;">Média propre — air à 20 °C</div>
           </div>
         </div>
@@ -262,8 +262,8 @@
               <div>
                 <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d'efficacité</div>
                 <div style="display:flex; background:#EEF3F9; border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;">
-                  <button id="btnEffG4">Coarse 50% (G3)</button>
-                  <button id="btnEffM5">Coarse 50% (G3)</button>
+                  <button id="btnEffG4">Coarse 50% (G2 / G3)</button>
+                  <button id="btnEffM5">Coarse 50% (G2 / G3)</button>
                 </div>
               </div>
               <div>
@@ -387,8 +387,8 @@
 
   // ---- Modèle de données — polynômes ΔP = a·v² + b·v + c (mesures R&D, DONNEES_PDC) ----
   var POLY = {
-    g4: { 48: { a: 7.34, b: 2.44, c: 5.57 }, 98: { a: 7.34, b: 2.44, c: 5.57 } },   // G3 · Coarse 50%
-    m5: { 48: { a: 7.34, b: 2.44, c: 5.57 }, 98: { a: 7.34, b: 2.44, c: 5.57 } }    // G3 · Coarse 50%
+    g4: { 48: { a: 7.34, b: 2.44, c: 5.57 }, 98: { a: 7.34, b: 2.44, c: 5.57 } },   // G2 / G3 · Coarse 50%
+    m5: { 48: { a: 7.34, b: 2.44, c: 5.57 }, 98: { a: 7.34, b: 2.44, c: 5.57 } }    // G2 / G3 · Coarse 50%
   };
   var ADD  = { g4: 50,   m5: 50 };           // EN 13053 : +50 Pa (Coarse) / +100 Pa (ePM)
   var RULE = { g4: 'classe Coarse', m5: 'classe Coarse' };
