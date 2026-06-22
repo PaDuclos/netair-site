@@ -149,12 +149,14 @@ def _mapx(v, vmax):
 
 
 def build_gridlines(vmax, vnom):
-    """Graduations verticales (0,5 / 1 / …) + ligne pointillée du point nominal."""
-    out, v = [], 0.5
+    """Graduations verticales (0,5 / 1 / …) + ligne pointillée du point nominal.
+    Pas de 0,1 m/s pour les très basses plages (HEPA laminaire, Vmax ≤ 1)."""
+    step = 0.1 if vmax <= 1 else 0.5
+    out, v = [], step
     while v < vmax - 1e-9:
         x = f"{_mapx(v, vmax):.1f}"
         out.append(f'<line x1="{x}" y1="16" x2="{x}" y2="250" stroke="#EDF1F6" stroke-width="1"></line>')
-        v += 0.5
+        v += step
     xn = f"{_mapx(vnom, vmax):.1f}"
     out.append(f'<line x1="{xn}" y1="16" x2="{xn}" y2="250" stroke="#0F3261" '
                f'stroke-width="1" stroke-dasharray="2 3" opacity="0.4"></line>')
@@ -165,11 +167,12 @@ def build_xlabels(vmax):
     """Étiquettes de l'axe vitesse : 0, 0,5, … (centrées) puis Vmax (aligné à droite)."""
     out, v = [], 0.0
     base = ('font-family="\'IBM Plex Mono\',monospace" font-size="11" fill="#5A6573"')
-    # On s'arrête 0,3 m/s avant Vmax pour ne pas chevaucher l'étiquette Vmax (aligné à droite).
-    while v < vmax - 0.3:
+    step = 0.1 if vmax <= 1 else 0.5
+    margin = 0.06 if vmax <= 1 else 0.3   # on s'arrête avant Vmax pour ne pas chevaucher son étiquette
+    while v < vmax - margin:
         x = "52" if v == 0 else f"{_mapx(v, vmax):.1f}"
         out.append(f'<text x="{x}" y="265" text-anchor="middle" {base}>{_frnum(v)}</text>')
-        v += 0.5
+        v += step
     out.append(f'<text x="580" y="265" text-anchor="end" {base}>{_frnum(vmax)}</text>')
     return "\n".join("            " + l for l in out)
 
@@ -318,6 +321,7 @@ SERIES_JS = r"""<script>
   var CLS    = __CLS__;
   var ORDER  = __ORDER__;
   var Vmax = __VMAX__, Pmax = __PMAX__, Dnom = __DNOM__;
+  var HEPA = __HEPA__;
   var Aref = 0.592 * 0.592;
   var Vnom = (Dnom / 3600) / Aref;
 
@@ -397,7 +401,7 @@ SERIES_JS = r"""<script>
     var cs = curSeries(), co = cs.co, add = CLS[cs.cls].add, rule = CLS[cs.cls].rule;
     var areaNum = (Math.max(50, state.flen) / 1000) * (Math.max(50, state.fwid) / 1000);
     var velNum = (state.debit / 3600) / areaNum;
-    var dpInit = pdc(co, velNum), dpFinal = Math.min(dpInit + add, dpInit * 3), dpAvg = (dpFinal / 2) * 0.85;
+    var dpInit = pdc(co, velNum), dpFinal = HEPA ? dpInit * 2 : Math.min(dpInit + add, dpInit * 3), dpAvg = (dpFinal / 2) * 0.85;
     $('dpInit').textContent = fr(dpInit); $('dpFinal').textContent = fr(dpFinal); $('dpAvg').textContent = fr(dpAvg);
     $('effAdd').textContent = add; $('effRule').textContent = rule;
     $('area').textContent = areaNum.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -476,6 +480,7 @@ def build_series_script(d):
     js = js.replace("__VMAX__", repr(d.get("vmax", 3.17)))
     js = js.replace("__PMAX__", repr(d.get("pmax", 120)))
     js = js.replace("__DNOM__", str(d.get("debit_nom", 3400)))
+    js = js.replace("__HEPA__", "true" if d.get("hepa") else "false")
     js = js.replace("__EFF0__", _json.dumps(d.get("eff0", order[0])))
     js = js.replace("__LEN0__", str(d.get("len0", d["courbes"][0]["len"])))
     js = js.replace("__DISP0__", _json.dumps(disp0))
@@ -579,6 +584,14 @@ def generer_series(d, html):
     if "note_dimensions" in d:
         html = sub1(html, r'(margin-top:6px; line-height:1\.45;">)(.*?)(</div>)',
                     lambda m: m.group(1) + d["note_dimensions"] + m.group(3), flags=re.DOTALL)
+
+    # --- mode HEPA : ΔP finale = 2 × initiale (au lieu de la règle ePM ; cf. EN 1822)
+    if d.get("hepa"):
+        html = html.replace(
+            'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) '
+            '<span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span>',
+            'ΔP finale = 2 × ΔP initiale<span id="effAdd" style="display:none"></span> '
+            '<span style="color:#b9c2cd;">— EN 1822 · <span id="effRule"></span></span>')
 
     # --- page 1 compacte
     if d.get("compact_p1"):
@@ -1293,25 +1306,46 @@ def generer(d, html):
     if "vmax" in d:
         vmax = d["vmax"]
         dnom = d.get("debit_nom", 3400)
-        vnom = (dnom / 3600) / AREF
+        aref = d.get("aref", AREF)            # HEPA : aire de réf. 610² ≠ 592²
+        dim_ref = d.get("dim_ref", "592×592")
+        vnom = (dnom / 3600) / aref
         # constantes JS
         html = html.replace("var Vmax = 3.17;", f"var Vmax = {vmax};")
+        if d.get("aref"):
+            html = html.replace("var Aref = 0.592 * 0.592;", f"var Aref = {aref};")
+            # dimensions par défaut du calculateur = cellule réelle (ex. 610×610) au lieu de 592
+            cl, cw = (re.split(r"[×x]", dim_ref) + ["592", "592"])[:2]
+            html = html.replace('id="inLen" min="50" max="2000" value="592"',
+                                f'id="inLen" min="50" max="2000" value="{cl}"')
+            html = html.replace('id="inWid" min="50" max="2000" value="592"',
+                                f'id="inWid" min="50" max="2000" value="{cw}"')
+            html = html.replace("len: 592, wid: 592", f"len: {cl}, wid: {cw}")
         html = html.replace("var Vnom = (3400 / 3600) / Aref;",
                             f"var Vnom = ({dnom} / 3600) / Aref;")
         html = html.replace("fr(v / Vnom * 3400)", f"fr(v / Vnom * {dnom})")
-        # débit par défaut du calculateur
+        # débit par défaut du calculateur (+ plage du curseur, configurable)
+        dmin = d.get("debit_min", 500); dmax = d.get("debit_max", 6000); dstep = d.get("debit_step", 50)
         html = html.replace('id="inDebit" min="500" max="6000" step="50" value="3400"',
-                            f'id="inDebit" min="500" max="6000" step="50" value="{dnom}"')
+                            f'id="inDebit" min="{dmin}" max="{dmax}" step="{dstep}" value="{dnom}"')
         html = html.replace("debit: 3400,", f"debit: {dnom},")
         # axe X : graduations, point nominal, étiquettes, annotation
         html = sub1(html, r"(<!-- vertical gridlines -->\n)(.*?)(\n            <!-- 4 courbes)",
                     lambda m: m.group(1) + build_gridlines(vmax, vnom) + m.group(3), flags=re.DOTALL)
         html = sub1(html, r"(<!-- x tick labels -->\n)(.*?)(\n            <!-- axis titles)",
                     lambda m: m.group(1) + build_xlabels(vmax) + m.group(3), flags=re.DOTALL)
-        annot = f"{vnom:.1f}".replace(".", ",") + f" m/s ≈ {dnom} m³/h · 592×592"
+        _prec = 2 if vmax <= 1 else 1     # HEPA basse vitesse : 2 décimales
+        annot = f"{vnom:.{_prec}f}".replace(".", ",") + f" m/s ≈ {dnom} m³/h · {dim_ref}"
         xn = f"{_mapx(vnom, vmax):.1f}"
         html = sub1(html, r'(<text x=")[\d.]+(" y="11"[^>]*>)[^<]*(</text>)',
                     lambda m: m.group(1) + xn + m.group(2) + annot + m.group(3))
+
+    # --- mode ΔP finale HEPA : 2 × ΔP initiale (EN 1822), au lieu de min(init+ADD ; 3×init)
+    if d.get("dp_final_mode") == "x2":
+        html = html.replace("var dpFinalNum = Math.min(dpInitNum + ADD[eff], dpInitNum * 3);",
+                            "var dpFinalNum = dpInitNum * 2;")
+        html = html.replace(
+            'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span>',
+            'ΔP finale = 2 × ΔP initiale<span id="effAdd" style="display:none;"></span> <span style="color:#b9c2cd;">— EN 1822 · <span id="effRule"></span></span>')
 
     # --- échelle de l'axe Y / perte de charge (optionnel ; NETPLY garde 120 Pa)
     if "pmax" in d:

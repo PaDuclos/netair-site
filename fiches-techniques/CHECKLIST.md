@@ -25,8 +25,9 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK S LUMEN | 🟡 | Variantes fournisseurs 2024-25 (MFILTER/FILTECH) · surface média n.c. · photo (Titanair visible) |
 | NETPAK S BORA | 🟡 | GREENTEX ePM1 50% retenu (variante HPE 55% non tracée) · courbe lue sur image · surface n.c. · photo |
 | NETPAK S DUO | 🟡 | ✅ créée (F7 GREENTEX + CA, ep48) · capacité charbon (grammage) à préciser R&D · A4 p2 OK · photo |
-| NETPAK V LAM (laminaire H14) | ⬜ | Tout · pas de nom signature (volontaire) |
-| NETCEL V AZUR / NIVAL | ⬜ | Tout · NIVAL nom validé, AZUR à valider |
+| NETPAK V LAM | 🟡 | ✅ créée (HEPA H14, flux laminaire, A4 OK) · capacité/colmatage à confirmer · photo HEPA |
+| NETCEL V NIVAL | 🟡 | E10 & H14 sans courbe (H14 = copie H13) · 610×610 sur moteur 592 · photo |
+| NETCEL V AZUR | ⬜ | À créer (E10 + H13 mesurés) · nom à valider |
 | NETCARB CILIA/AZUR/NIVAL/BAG | ⬜ | Tout · noms à valider (sauf BAG) |
 
 ---
@@ -163,6 +164,15 @@ Données ΔP **réelles** lues sur l'image `GR DSK F7.png`, recoupées FORMULE_P
 - [ ] **Séparateur** : fiche HPE indique « INT » + colle « OUI », alors que le DSK est annoncé « sans séparateur de colle » (livret) → à clarifier.
 - [ ] **Surface média n.c.** · **Photo** : TITAPAK S DSK réelle nettoyée = placeholder → photo produit Netair.
 
+### NETCEL V NIVAL 🟡
+Filtre absolu HEPA polydièdre (équiv. TITACEL V), 610×610×292, surface 40 m². **Mode HEPA** (ΔP finale = 2×init, EN 1822 ; pas d'étiquette Eurovent).
+Courbe **H13** réelle (cache Excel) : `DONNEES_PDC` l.56. Fit 9,44·v²+75,31·v−1,20 (R²≈1).
+
+- [ ] **E10 — courbe à ajouter** : Excel sans cache, extraction PDF échouée → mentionné en specs/gamme mais sans courbe.
+- [ ] **🟠 H14 — courbe à ajouter** : la courbe H14 source (TITAPAK V CU H14) est une **copie exacte du H13** `[39,85,137,189,250,316]` (impossible : H14 doit être plus résistant) → non utilisée. Vraie courbe H14 **à mesurer**.
+- [ ] **610×610 sur moteur série calibré 592×592** : axe vitesse + annotation « 592×592 » cosmétiquement décalés (le couple débit↔ΔP reste juste). À corriger si on généralise le moteur aux cadres 610.
+- [ ] **Photo** : TITACEL V.png réelle nettoyée = placeholder → photo produit Netair.
+
 ---
 
 ## Fiches à créer — données à rassembler
@@ -171,11 +181,9 @@ Données ΔP **réelles** lues sur l'image `GR DSK F7.png`, recoupées FORMULE_P
 > PDF), polynôme (DONNEES_PDC), dimensions, photo. Réfs Titanair dans la Bibliothèque.
 
 ### Poches rigides / compacts — famille NETPAK (noms ⚠ à valider)
-- [ ] **NETPAK V LAM** (laminaire H14, pas de nom signature — volontaire) — réf. TITAPAK V LAM
 
 ### HEPA / T.H.E — famille NETCEL
 - [ ] **NETCEL V AZUR** (multidièdre E10/H13) — réf. TITAPAK V GD · nom à valider
-- [ ] **NETCEL V NIVAL** (polydièdre E10→H14) — réf. TITACEL V · nom validé
 
 ### Charbon actif — famille NETCARB (noms ⚠ à valider sauf BAG)
 - [ ] **NETCARB CILIA** (compact CA) — réf. PRISME CARB
