@@ -164,5 +164,5 @@ du débit et contredisent le calculateur.
   en vitesse) + absolus en tableau dims (11,68 / 23,87 m² @592×592). **Cadre** acier galvanisé (**-A**) / plastique (**-P**), même ΔP.
   **PIÈGES** : (1) PRISME P : F8=F9 (copier-collé) → écarté, PRISME A où F8≠F9 ; (2) PRISME A **ep48 : F9 = F8 + 10 Pa exact**
   (offset suspect, À VALIDER) ; (3) F8 ep98 = 6 pts, 7e (≈137 Pa @3,17) extrapolé. Vmax 3,17 · nominal 3400 m³/h · axe Y 200 Pa.
-  Nom validé par PA via skill `netair-naming` (CILIA = cils vibratiles, pas de chevauchement PRISME). Photo PLACEHOLDER à remplacer.
+  Nom validé par PA via skill `netair-naming` (CILIA = cils vibratiles, pas de chevauchement PRISME). Photo = TITAPAK PRISME A HD détourée sur blanc pur (cadre acier + plissage), à reshooter Netair à terme.
 - Suivants : NETPAK S BORA/AZUR/LUMEN/DUO, NETCEL…, NETCARB… (cf. Bibliothèque / CHECKLIST)
