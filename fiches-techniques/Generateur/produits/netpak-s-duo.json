@@ -1,0 +1,65 @@
+{
+  "_commentaire": "NETPAK S DUO — compact mini-plis COMBINÉ particules + charbon actif (équiv. Titanair TITAPAK S PRISME DUO). Nom validé PA (22/06/2026). Fiche MONO-CLASSE 'F7 GREENTEX + charbon actif' (ePM1 50%), ep48. Source = TITAPAK S PRISME A DUO F7 GR-CA ep48 (fiche 2018, GREENTEX cohérent avec CILIA F7). Courbe ΔP réelle (cache Excel, combinée particulaire + couche charbon) : v=[0,79..3,17] → ΔP=[36,58,88,121,157,198,247] Pa. Polynôme ajusté 15,013·v²+28,882·v+3,537 (R²=0,9998). ΔP finale Titanair = 'PDC initiale + 100 Pa' = exactement notre règle ePM (+100). Specs fiche 2018 : parois ACIER GALVANISÉ, média POLYPROPYLENE + CA, lut OUI, séparateur intérieur, T° continue 60°C (acc.65/1h), CLASSEMENT FEU = NA (le charbon actif n'est pas classé au feu). Surface média développée du média F7 GREENTEX ≈ 12,55 m² @592×592 ep48 (la couche charbon s'ajoute au pack). Vmax 3,17 · nominal 3400 m³/h (≈2,7 m/s) → ΔP nom ≈ 190 Pa. La fonction charbon actif assure l'adsorption des gaz/odeurs/COV (capacité dépend du grammage CA, non communiquée par Titanair → à préciser R&D). PHOTO = placeholder (PRISME A, à remplacer par visuel DUO Netair).",
+
+  "slug": "netpak-s-duo",
+  "nom": "NETPAK S DUO",
+  "soustitre": "Compact mini-plis combiné — particules + charbon actif",
+  "mono_classe": true,
+  "surface_facteur": 35.81,
+  "vmax": 3.17,
+  "pmax": 260,
+  "debit_nom": 3400,
+  "compact_p2": true,
+
+  "fiche": { "num": "FT-NETPAK-S-DUO-001", "version": "v1.0", "date": "22/06/2026" },
+
+  "photo": "netpak-s-duo-photo.jpg",
+  "photo_alt": "Filtre compact combiné NETPAK S DUO (F7 + charbon actif)",
+
+  "description": "Le NETPAK S DUO combine en une seule cellule la filtration fine des particules et le traitement des gaz. Son média mini-plis F7 GREENTEX (basse résistance) retient les poussières fines (ePM1 50 %), tandis qu'une couche de charbon actif adsorbe les odeurs et composés organiques volatils (COV). Cette double action en fait la solution idéale pour les ambiances chargées en gaz et odeurs — cuisines, laboratoires, ateliers, air urbain — sans multiplier les étages de filtration. Cadre acier galvanisé, profondeur 48 mm, sur cadre 592×592 (et 287×592).",
+
+  "points_cles": [
+    "Double filtration : particules + gaz",
+    "Charbon actif — odeurs & COV",
+    "Média F7 GREENTEX basse résistance",
+    "Une seule cellule (gain d'encombrement)",
+    "Cadre acier galvanisé"
+  ],
+
+  "specs": [
+    ["Type", "Compact mini-plis + couche charbon actif"],
+    ["Média filtrant", "Polypropylène GREENTEX + charbon actif"],
+    ["Fonction charbon actif", "Adsorption gaz · odeurs · COV"],
+    ["Parois cellule", "Acier galvanisé"],
+    ["Séparateur", "Intercalaire (INT)"],
+    ["Efficacité EN 779", "F7 (GREENTEX) + charbon actif"],
+    ["Efficacité ISO 16890", "ePM1 50 % + charbon actif"],
+    ["Surface média développée", "≈ 12,6 m² (592×592, 48 mm)"],
+    ["Classement au feu", "NA — non classé (charbon actif)"],
+    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
+    ["Humidité relative max.", "100 %"],
+    ["ΔP finale recommandée", "min(ΔP initiale + 100 Pa ; 3 × ΔP initiale) — EN 13053"]
+  ],
+
+  "badges_p1": [
+    "ISO 16890 : ePM1 50% + CA",
+    "EN 779 : F7 + CA",
+    "EN 13053"
+  ],
+  "badges_p2": [
+    "ISO 16890 : ePM1 50% + CA",
+    "EN 779 : F7 + CA",
+    "EN 13053"
+  ],
+
+  "classes": {
+    "low":  { "label": "F7 +CA", "iso": "ePM1 50%", "poly": { "48": { "a": 15.013, "b": 28.882, "c": 3.537 }, "98": { "a": 15.013, "b": 28.882, "c": 3.537 } }, "add": 100, "rule": "classe ePM1", "dp": 190, "epaisseur": 48 },
+    "high": { "label": "F7 +CA", "iso": "ePM1 50%", "poly": { "48": { "a": 15.013, "b": 28.882, "c": 3.537 }, "98": { "a": 15.013, "b": 28.882, "c": 3.537 } }, "add": 100, "rule": "classe ePM1", "dp": 190, "epaisseur": 48 }
+  },
+
+  "note_dimensions": "Surface = surface média développée (mini-plis F7 GREENTEX) ; la couche de charbon actif s'ajoute au pack. ΔP de référence ≈ 190 Pa à 3400 m³/h sur 592×592 (la perte de charge intègre le charbon, d'où une valeur plus élevée qu'un F7 seul). Profondeur 48 mm.",
+  "dimensions": [
+    { "L": 592, "H": 592, "P": 48, "debit": 3400 },
+    { "L": 287, "H": 592, "P": 48, "debit": 1650 }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "_commentaire": "NETBAG S — filtre à poches souples (équiv. Titanair TITABAG S). Fiche MULTI-CLASSES (moteur série opt-in via la clé 'series'). Données ΔP RÉELLES extraites des courbes vectorielles des PDF Titanair 'Fiches techniques 2018/TITABAG' et recalées sur les axes (méthode validée : F9 p500 reproduit 38/58/81/105/134/166/199 Pa). Polynômes ΔP=a·v²+b·v+c ajustés (R²≈1) sur v=débit/3600/0,3505 (frontale 592×592), débit testé 1000→4000 m³/h. Descriptif reformulé du livret_2023 p.9 (jamais copié). Specs = fiches 2018 (T° 60°C, feu M1, écarteurs thermosoudés sans colle, cadre acier galva/PP ép.25). Toutes les classes ePM → ADD=+100 Pa. ANOMALIE: M5 550mm (48 Pa, 5,11 m²) < M5 650mm (65 Pa, 6,10 m²) physiquement incohérent → M5 550 marquée À VALIDER (dash). Photo Titabag.jpg détourée = PLACEHOLDER. Détails/manques : CHECKLIST.md.",
+
+  "slug": "netbag-s",
+  "nom": "NETBAG S",
+  "soustitre": "Filtre à poches souples — Moyenne et haute efficacité",
+  "series": true,
+  "compact_p1": true,
+  "vmax": 3.17,
+  "pmax": 240,
+  "debit_nom": 3400,
+  "eff0": "f7",
+  "len0": 650,
+
+  "fiche": { "num": "FT-NETBAG-S-001", "version": "v1.0", "date": "22/06/2026" },
+
+  "photo": "netbag-s-photo.jpg",
+  "photo_alt": "Filtre à poches souples NETBAG S",
+
+  "description": "Le NETBAG S est un filtre à poches souples conçu pour la filtration moyenne à fine des centrales de traitement d'air. Son média synthétique à densité croissante développe une grande surface filtrante répartie sur plusieurs poches, gage d'une forte capacité de rétention et d'une longue durée de vie à faible perte de charge. Les coutures sont tenues par des écarteurs thermosoudés, sans colle, pour une résistance mécanique renforcée et un encrassement régulier. Disponible de M5 à F9 (et G4 en préfiltration) selon EN 779 / EN ISO 16890, en plusieurs profondeurs de poche (380 à 650 mm), sur cadre acier galvanisé ou polypropylène, en 592×592 ou 287×592 mm.",
+
+  "points_cles": [
+    "Grande surface filtrante (multi-poches)",
+    "Faible perte de charge",
+    "Forte capacité de rétention",
+    "Écarteurs thermosoudés — sans colle",
+    "Sans fibre de verre"
+  ],
+
+  "specs": [
+    ["Média filtrant", "Fibres synthétiques à densité croissante"],
+    ["Type", "Poches souples (multi-poches)"],
+    ["Cadre", "Acier galvanisé (option polypropylène) — ép. 25 mm"],
+    ["Écarteurs / séparateurs", "Thermosoudés (sans colle)"],
+    ["Efficacités EN 779", "M5 · M6 · F7 · F8 · F9 (+ G4 préfiltration)"],
+    ["Efficacités ISO 16890", "ePM10 50% · ePM2,5 50% · ePM1 55% → 80%"],
+    ["Profondeurs de poche", "380 · 500 · 550 · 650 mm"],
+    ["Dimensions cadre", "592×592 · 287×592 mm"],
+    ["Classement au feu", "M1"],
+    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
+    ["ΔP finale recommandée", "min(ΔP initiale + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"]
+  ],
+
+  "badges_p1": [
+    "ISO 16890 : ePM10 50% → ePM1 80%",
+    "EN 779 : M5 → F9 (+ G4)",
+    "EN 13053"
+  ],
+  "badges_p2": [
+    "ISO 16890 : ePM10 50% → ePM1 80%",
+    "EN 779 : M5 → F9 (+ G4)",
+    "EN 13053"
+  ],
+
+  "classes_def": {
+    "m5": { "label": "M5", "iso": "ePM10 50%",  "add": 100, "rule": "classe ePM10" },
+    "m6": { "label": "M6", "iso": "ePM2,5 50%", "add": 100, "rule": "classe ePM2,5" },
+    "f7": { "label": "F7", "iso": "ePM1 55%",   "add": 100, "rule": "classe ePM1" },
+    "f8": { "label": "F8", "iso": "ePM1 70%",   "add": 100, "rule": "classe ePM1" },
+    "f9": { "label": "F9", "iso": "ePM1 80%",   "add": 100, "rule": "classe ePM1" }
+  },
+  "classes_order": ["m5", "m6", "f7", "f8", "f9"],
+
+  "courbes": [
+    { "cls": "m5", "len": 380, "a": 7.07, "b": 8.03,  "c": 9.16,   "surface": 3.46, "dp": 82,  "color": "#0897A5" },
+    { "cls": "m5", "len": 550, "a": 3.56, "b": 5.08,  "c": 8.76,   "surface": 5.11, "dp": 48,  "color": "#6FCBD2", "dash": true, "avalider": true },
+    { "cls": "m5", "len": 650, "a": 3.89, "b": 11.08, "c": 6.46,   "surface": 6.10, "dp": 65,  "color": "#036C77" },
+    { "cls": "m6", "len": 380, "a": 8.34, "b": 42.40, "c": -18.33, "surface": 3.46, "dp": 156, "color": "#1B9E5A" },
+    { "cls": "f7", "len": 380, "a": 9.10, "b": 43.96, "c": -9.79,  "surface": 3.46, "dp": 175, "color": "#0F3261" },
+    { "cls": "f7", "len": 550, "a": 5.80, "b": 22.09, "c": 3.65,   "surface": 5.11, "dp": 105, "color": "#3E66A6" },
+    { "cls": "f7", "len": 650, "a": 7.70, "b": 13.26, "c": 9.61,   "surface": 6.10, "dp": 101, "color": "#7CA0D6" },
+    { "cls": "f8", "len": 380, "a": 4.71, "b": 63.58, "c": -13.72, "surface": 3.46, "dp": 192, "color": "#6A4C93" },
+    { "cls": "f8", "len": 500, "a": 5.95, "b": 29.89, "c": 4.18,   "surface": 5.11, "dp": 128, "color": "#A98FD0" },
+    { "cls": "f9", "len": 500, "a": 9.10, "b": 31.72, "c": 6.89,   "surface": 5.11, "dp": 158, "color": "#C0392B" }
+  ]
+}

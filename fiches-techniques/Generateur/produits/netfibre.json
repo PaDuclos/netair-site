@@ -1,0 +1,121 @@
+{
+  "_commentaire": "NETFIBRE — média synthétique à densité croissante (équiv. Titanair TITAFIBRE), commercialisé par Netair en PANNEAU DÉCOUPÉ sur mesure (média aussi disponible en rouleau 20 m × 2 m). Fiche MONO-CLASSE G4 (choix PA 22/06/2026 : seule classe avec une courbe ΔP réelle mesurée). SOURCES : fiche 2018 'TITAFIBRE G4' (FT 2018-030, EP 20, surface frontale, G4/Grossier 65%, M1, T° continue 80 °C / acc. 85 °C 1h, ΔP finale 250 Pa EN779 / 200 Pa ISO16890). TEMPÉRATURE : harmonisée à 60 °C (acc. 65 °C/1h) comme NETPLY/NETPLAN — même média fibres synthétiques. Les sources Titanair étaient incohérentes entre elles (fiche 2018 = 80 °C, doc 2013 = 100 °C) ; la gamme Netair tient le média synthétique à 60 °C. + cache graphe Excel : ΔP=[12;25;41;68] à v=[0,5;1;1,5;2]. Descriptif reformulé depuis Documentation 2015 'Titafibre S 2013' (média densité croissante, lavable 2-3× à l'eau tiède pour les séries G, série M imprégnée non lavable). CONTRÔLE QUALITÉ : la courbe G4 est IDENTIQUE au point près à celle du TITAPLAN/NETPLAN G4 (probable réutilisation du même graphe Excel chez Titanair) MAIS recoupée par le doc 2013 (ΔP init G4 = 38 Pa @1,5 m/s ; modèle = 42 Pa) → valeur plausible pour un G4 synthétique, RETENUE en la signalant. Polynôme ajusté ΔP=a·v²+b·v+c = {14;1,8;8} (fit 4 pts fiche 2018, R²≈0,998) = même poly que NETPLAN. Vmax=2 (limite mesurée), nominal 1,5 m/s = vitesse de réf. Titanair (5400 m³/h/m²) ≈ 1900 m³/h sur 592×592 → ΔP nom ≈ 42 Pa, dans la plage mesurée. surface_facteur=1 (média plan = surface frontale). no_dimensions=true : produit 100% découpé sur mesure (pas de tableau dimensions, choix PA), mention découpe/rouleau dans le descriptif. La gamme complète G2→M5 (ISO Coarse→ePM10) reste annoncée dans le sous-titre et les specs ; seules les courbes G2/G3/M5 restent À MESURER (un seul point initial connu doc 2013 : G2 10 / G3 24 / M5 125 Pa @1,5 m/s). PHOTO = Titanair détourée sur blanc pur (croissance de région depuis les bords) — rouleau + panneaux découpés ; à remplacer par photo réelle Netair à terme.",
+  "slug": "netfibre",
+  "nom": "NETFIBRE",
+  "soustitre": "Média synthétique — Préfiltre à densité croissante (gamme G2 → M5)",
+  "mono_classe": true,
+  "no_dimensions": true,
+  "surface_facteur": 1,
+  "vmax": 2,
+  "pmax": 80,
+  "debit_nom": 1900,
+  "fiche": {
+    "num": "FT-NETFIBRE-001",
+    "version": "v1.0",
+    "date": "22/06/2026"
+  },
+  "photo": "netfibre-photo.jpg",
+  "photo_alt": "Média synthétique NETFIBRE — rouleau et panneaux découpés",
+  "description": "Le NETFIBRE est un média filtrant en fibres synthétiques à densité croissante, livré en panneau découpé aux dimensions exactes de votre installation. Sa structure à porosité dégressive retient progressivement les poussières dans l'épaisseur du média, pour une grande capacité de rétention en préfiltration comme en filtration finale sur les centrales de traitement d'air. Les séries G se lavent 2 à 3 fois à l'eau tiède, qui leur restitue leurs performances d'origine. Le média est également disponible en rouleau (20 m × 2 m) pour une découpe sur site.",
+  "points_cles": [
+    "Découpe sur mesure",
+    "Média à densité croissante",
+    "Lavable 2 à 3 fois (séries G)",
+    "Aussi disponible en rouleau"
+  ],
+  "specs": [
+    [
+      "Média filtrant",
+      "Fibres synthétiques à densité croissante"
+    ],
+    [
+      "Conditionnement",
+      "Panneau découpé sur mesure · rouleau 20 m × 2 m"
+    ],
+    [
+      "Efficacité EN 779",
+      "G4 (réf.) — gamme G2 → M5"
+    ],
+    [
+      "Efficacité ISO 16890",
+      "Coarse 65% (réf.) — gamme Coarse → ePM10"
+    ],
+    [
+      "Épaisseur (G4)",
+      "20 mm"
+    ],
+    [
+      "Surface média",
+      "Surface frontale"
+    ],
+    [
+      "Régénérable",
+      "Lavable 2 à 3 fois à l'eau tiède (séries G)"
+    ],
+    [
+      "Classement au feu",
+      "M1"
+    ],
+    [
+      "Température de service",
+      "60 °C (accidentelle 65 °C / 1 h)"
+    ],
+    [
+      "ΔP finale recommandée",
+      "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"
+    ]
+  ],
+  "badges_p1": [
+    "ISO 16890 : Coarse 65%",
+    "EN 779 : G4",
+    "Densité croissante"
+  ],
+  "badges_p2": [
+    "ISO 16890 : Coarse 65%",
+    "EN 779 : G4",
+    "Densité croissante"
+  ],
+  "classes": {
+    "low": {
+      "label": "G4",
+      "iso": "Coarse 65%",
+      "poly": {
+        "48": {
+          "a": 14,
+          "b": 1.8,
+          "c": 8
+        },
+        "98": {
+          "a": 14,
+          "b": 1.8,
+          "c": 8
+        }
+      },
+      "add": 50,
+      "rule": "classe Coarse",
+      "dp": 42,
+      "epaisseur": 20
+    },
+    "high": {
+      "label": "G4",
+      "iso": "Coarse 65%",
+      "poly": {
+        "48": {
+          "a": 14,
+          "b": 1.8,
+          "c": 8
+        },
+        "98": {
+          "a": 14,
+          "b": 1.8,
+          "c": 8
+        }
+      },
+      "add": 50,
+      "rule": "classe Coarse",
+      "dp": 42,
+      "epaisseur": 20
+    }
+  },
+  "compact_p2": true
+}

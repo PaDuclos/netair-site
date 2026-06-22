@@ -1,0 +1,143 @@
+{
+  "_commentaire": "NETPLAN — fiche MONO-CLASSE G4 (Coarse 65%, 25 mm). Données réelles Titanair fiche 2018 'TITAPLAN G4-COARSE 65%' + cache graphe Excel (ΔP 12/25/41/68 à v 0,5/1/1,5/2). Descriptif reformulé depuis Documentation/Titaplan.pdf. G3 écarté (graphe source erroné = copie du G4). Modèle polynomial a·v²+b·v+c ≈ {14, 1.8, 8} (DONNEES_PDC ligne 14). Vitesse max 2 m/s, point nominal 1,5 m/s (1900 m³/h) → ΔP nom ≈ 42 Pa, mesurée (plus d'extrapolation).",
+  "slug": "netplan",
+  "nom": "NETPLAN",
+  "soustitre": "Filtre plan — Préfiltre synthétique",
+  "mono_classe": true,
+  "surface_facteur": 1,
+  "vmax": 2,
+  "pmax": 80,
+  "debit_nom": 1900,
+  "fiche": {
+    "num": "FT-NETPLAN-001",
+    "version": "v1.0",
+    "date": "21/06/2026"
+  },
+  "photo": "netplan-photo.jpg",
+  "photo_alt": "Filtre plan NETPLAN",
+  "description": "Robuste et économique, le NETPLAN assure une préfiltration plane fiable des centrales de traitement d'air. Son média en fibres synthétiques, maintenu entre deux grilles galvanisées dans un cadre en acier galvanisé épaisseur 8/10, garantit une excellente tenue mécanique et une longue durée de service. Polyvalent, il s'emploie aussi bien en filtration finale qu'en préfiltration en amont de filtres à haute efficacité (poches souples, poches rigides, charbon actif) ou sur grilles de reprise, en montage frontal ou sur glissières.",
+  "points_cles": [
+    "Montage frontal ou sur glissières",
+    "Cadre acier galvanisé ép. 8/10",
+    "Filtre final ou préfiltre",
+    "Média fibres synthétiques"
+  ],
+  "specs": [
+    [
+      "Média filtrant",
+      "Fibre synthétique"
+    ],
+    [
+      "Parois cellule",
+      "Acier galvanisé"
+    ],
+    [
+      "Cadre",
+      "Acier galvanisé ép. 8/10"
+    ],
+    [
+      "Séparateur",
+      "Sans"
+    ],
+    [
+      "Efficacités EN 779",
+      "G2 · G3 · G4 (réf. : G4)"
+    ],
+    [
+      "Efficacités ISO 16890",
+      "Coarse 40% · 50% · 65%"
+    ],
+    [
+      "Épaisseurs disponibles",
+      "8 · 10 · 15 · 20 · 23 · 25 mm"
+    ],
+    [
+      "Classement au feu",
+      "M1"
+    ],
+    [
+      "Surface média",
+      "Surface frontale"
+    ],
+    [
+      "Température de service",
+      "60 °C (accidentelle 65 °C / 1 h)"
+    ],
+    [
+      "Humidité relative max.",
+      "100 %"
+    ],
+    [
+      "ΔP finale recommandée",
+      "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"
+    ]
+  ],
+  "badges_p1": [
+    "ISO 16890 : Coarse 65%",
+    "EN 779 : G4",
+    "EN 13053"
+  ],
+  "badges_p2": [
+    "ISO 16890 : Coarse 65%",
+    "EN 779 : G4",
+    "EN 13053"
+  ],
+  "classes": {
+    "low": {
+      "label": "G4",
+      "iso": "Coarse 65%",
+      "poly": {
+        "48": {
+          "a": 14,
+          "b": 1.8,
+          "c": 8
+        },
+        "98": {
+          "a": 14,
+          "b": 1.8,
+          "c": 8
+        }
+      },
+      "add": 50,
+      "rule": "classe Coarse",
+      "dp": 42,
+      "epaisseur": 25
+    },
+    "high": {
+      "label": "G4",
+      "iso": "Coarse 65%",
+      "poly": {
+        "48": {
+          "a": 14,
+          "b": 1.8,
+          "c": 8
+        },
+        "98": {
+          "a": 14,
+          "b": 1.8,
+          "c": 8
+        }
+      },
+      "add": 50,
+      "rule": "classe Coarse",
+      "dp": 42,
+      "epaisseur": 25
+    }
+  },
+  "note_dimensions": "Surface filtrante = surface frontale (L × H). ΔP de référence ≈ 42 Pa à 1900 m³/h sur 592×592 (vitesse nominale 1,5 m/s, dans la plage mesurée) ; le débit indiqué est le débit nominal correspondant.",
+  "dimensions": [
+    {
+      "L": 592,
+      "H": 592,
+      "P": 25,
+      "debit": 1900
+    },
+    {
+      "L": 287,
+      "H": 592,
+      "P": 25,
+      "debit": 900
+    }
+  ],
+  "compact_p2": true
+}

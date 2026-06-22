@@ -1,0 +1,66 @@
+{
+  "_commentaire": "NETCEL V NIVAL — filtre absolu HEPA à polydièdres (équiv. Titanair TITACEL V). Fiche série en MODE HEPA (hepa:true → ΔP finale = 2×initiale, EN 1822, pas la règle ePM ; pas d'étiquette énergie Eurovent). Donnée ΔP RÉELLE = cache Excel TITACEL V H13 : débit [640,1280,1920,2560,3200,3840] → ΔP [39,85,137,189,250,316]. Fit (v=débit/3600/0,3505) : 9,44·v²+75,31·v−1,20 (R²=0,9999), ΔP@3400≈270. Surface média 40 m² (documentée). ⚠️ Décision PA : on ne met que la courbe H13 ; E10 (Excel sans cache, PDF non extractible) et H14 (courbe = copie exacte du H13 = piège) annoncés en specs/gamme mais SANS courbe → à mesurer/ajouter (CHECKLIST). ⚠️ Filtre 610×610 alors que le moteur série calcule la vitesse sur 592×592 → axe vitesse/annotation cosmétiquement décalés (le couple débit↔ΔP reste juste). Specs fiche 2018 : média fibre de verre, parois plastique, M1, 60°C, ΔP finale max 750 Pa (H13). Photo TITACEL V.png réelle = placeholder.",
+
+  "slug": "netcel-v-nival",
+  "nom": "NETCEL V NIVAL",
+  "soustitre": "Filtre absolu HEPA polydièdre — Très haute efficacité",
+  "series": true,
+  "hepa": true,
+  "compact_p1": true,
+  "vmax": 3.05,
+  "pmax": 330,
+  "debit_nom": 3400,
+  "eff0": "h13",
+  "len0": 292,
+
+  "fiche": { "num": "FT-NETCEL-V-NIVAL-001", "version": "v1.0", "date": "22/06/2026" },
+
+  "photo": "netcel-v-nival-photo.jpg",
+  "photo_alt": "Filtre absolu HEPA polydièdre NETCEL V NIVAL",
+
+  "description": "Le NETCEL V NIVAL est un filtre absolu (T.H.E) à polydièdres rigides, destiné à la filtration de très haute efficacité des centrales de traitement d'air, salles propres et environnements sensibles. Son média en fibre de verre microfine, plissé en dièdres sur une grande surface (40 m²), retient les particules les plus fines jusqu'aux classes HEPA. Disponible en E10, H13 et H14 selon EN 1822, sur cadre 610×610×292 mm. Classement au feu M1, température de service 60 °C.",
+
+  "points_cles": [
+    "Filtre absolu HEPA (T.H.E)",
+    "Grande surface média (40 m²)",
+    "Gamme E10 → H14 (EN 1822)",
+    "Média fibre de verre microfine",
+    "Polydièdres rigides"
+  ],
+
+  "specs": [
+    ["Média filtrant", "Fibre de verre microfine (papier HEPA)"],
+    ["Type", "Polydièdre T.H.E (filtre absolu)"],
+    ["Parois cellule", "Plastique"],
+    ["Surface média", "40 m²"],
+    ["Classe EN 1822", "E10 · H13 · H14"],
+    ["Efficacité (MPPS)", "H13 ≥ 99,95 % · H14 ≥ 99,995 %"],
+    ["Profondeur", "292 mm"],
+    ["Dimensions cadre", "610×610×292 mm"],
+    ["Classement au feu", "M1"],
+    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
+    ["ΔP finale recommandée", "2 × ΔP initiale (EN 1822 — pratique ; max 750 Pa [H13])"]
+  ],
+
+  "badges_p1": [
+    "EN 1822 : E10 → H14",
+    "Filtre absolu (T.H.E)",
+    "HEPA"
+  ],
+  "badges_p2": [
+    "EN 1822 : E10 → H14",
+    "Filtre absolu (T.H.E)",
+    "HEPA"
+  ],
+
+  "classes_def": {
+    "h13": { "label": "H13", "iso": "≥ 99,95% MPPS", "add": 0, "rule": "classe H13 (EN 1822)" }
+  },
+  "classes_order": ["h13"],
+
+  "courbes": [
+    { "cls": "h13", "len": 292, "a": 9.44, "b": 75.31, "c": -1.20, "surface": 40, "dp": 270, "color": "#0F3261" }
+  ],
+
+  "note_dimensions": "Polydièdre 610×610×292 mm · surface média 40 m². Gamme E10 / H13 / H14 (EN 1822). Courbe H13 mesurée ; E10 et H14 disponibles (courbes à ajouter). ΔP finale recommandée = 2 × ΔP initiale."
+}

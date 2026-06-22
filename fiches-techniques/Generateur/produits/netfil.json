@@ -1,0 +1,121 @@
+{
+  "_commentaire": "NETFIL — cellule filtrante cousue (équiv. Titanair TITAFIL). Fiche MONO-CLASSE G3. ARBITRAGE SOURCES (3 révisions divergentes) : descriptif 2015 = média fibres synthétiques G2/G3 ; fiche v2_2020 = G3, média fibre synthétique, courbe ΔP [2;2,8;4;6,5;11,5;21] à v=[0,16;0,25;0,35;0,5;1;1,5] ; fiche v3_2023 = G4/Coarse 65%, média 100% polyester, courbe [3;4;6;9;16;27]. Choix client : MONO-CLASSE G3 (cohérent gamme G2/G3, sous NETPLAN/NETPLY) sur courbe G3 v2_2020. ISO 16890 = Coarse 50% (équivalence indicative, la fiche Titanair ne donnait pas le %). Polynôme ajusté ΔP=a·v²+b·v+c ≈ {3,99;7,24;0,97} (R²≈0,994, 6 pts mesurés 0,16–1,5 m/s). Vmax=1,5 (limite mesurée, filtre basse vitesse / ventilo-convecteurs), nominal 1,0 m/s ≈ 1260 m³/h sur 592×592 → ΔP nom ≈ 12 Pa, dans la plage mesurée. Specs fiches 2018 : T° continue 60 °C / acc. 80 °C 1h, feu M1. Cadre fil acier galvanisé Ø4,5mm (descriptif 2015, plus précis que 'parois cellule'). Descriptif reformulé depuis Documentation/Titafil.pdf. PROFONDEUR ≈ 4,5 mm (= Ø du fil du cadre ; filtre cousu plat, pas de dimensions standard → bloc dimensions retiré via no_dimensions). PHOTO = placeholder Titanair détouré sur blanc (sujet blanc-sur-blanc, bords du liseré approximatifs) — À REMPLACER par photo réelle Netair.",
+  "slug": "netfil",
+  "nom": "NETFIL",
+  "soustitre": "Filtre cousu — Préfiltre fibres synthétiques",
+  "mono_classe": true,
+  "no_dimensions": true,
+  "surface_facteur": 1,
+  "vmax": 1.5,
+  "pmax": 24,
+  "debit_nom": 1260,
+  "fiche": {
+    "num": "FT-NETFIL-001",
+    "version": "v1.0",
+    "date": "22/06/2026"
+  },
+  "photo": "netfil-photo.jpg",
+  "photo_alt": "Cellule filtrante cousue NETFIL",
+  "description": "Le NETFIL est une cellule filtrante cousue, conçue pour la filtration finale et la préfiltration sous faible encombrement. Son média en fibres synthétiques (100% polyester) est cousu sur un cadre en fil d'acier galvanisé Ø 4,5 mm — une construction renforcée qui autorise les grandes longueurs et toutes les dimensions sur mesure. Sa faible section de passage en fait un filtre idéal pour les ventilo-convecteurs et les centrales de traitement d'air, là où l'on recherche un débit d'air important dans un volume réduit.",
+  "points_cles": [
+    "Faible encombrement",
+    "Média cousu sur cadre fil",
+    "Construction renforcée",
+    "Toutes dimensions sur mesure"
+  ],
+  "specs": [
+    [
+      "Média filtrant",
+      "Fibres synthétiques (100% polyester)"
+    ],
+    [
+      "Construction",
+      "Média cousu sur cadre fil"
+    ],
+    [
+      "Cadre",
+      "Fil acier galvanisé Ø 4,5 mm"
+    ],
+    [
+      "Séparateur",
+      "Sans"
+    ],
+    [
+      "Efficacité EN 779",
+      "G3"
+    ],
+    [
+      "Efficacité ISO 16890",
+      "Coarse 50%"
+    ],
+    [
+      "Classement au feu",
+      "M1"
+    ],
+    [
+      "Température de service",
+      "60 °C (accidentelle 80 °C / 1 h)"
+    ],
+    [
+      "Humidité relative max.",
+      "95 % (sans condensation)"
+    ],
+    [
+      "ΔP finale recommandée",
+      "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"
+    ]
+  ],
+  "badges_p1": [
+    "ISO 16890 : Coarse 50%",
+    "EN 779 : G3",
+    "Filtre cousu"
+  ],
+  "badges_p2": [
+    "ISO 16890 : Coarse 50%",
+    "EN 779 : G3",
+    "Filtre cousu"
+  ],
+  "classes": {
+    "low": {
+      "label": "G3",
+      "iso": "Coarse 50%",
+      "poly": {
+        "48": {
+          "a": 3.99,
+          "b": 7.24,
+          "c": 0.97
+        },
+        "98": {
+          "a": 3.99,
+          "b": 7.24,
+          "c": 0.97
+        }
+      },
+      "add": 50,
+      "rule": "classe Coarse",
+      "dp": 12,
+      "epaisseur": 4.5
+    },
+    "high": {
+      "label": "G3",
+      "iso": "Coarse 50%",
+      "poly": {
+        "48": {
+          "a": 3.99,
+          "b": 7.24,
+          "c": 0.97
+        },
+        "98": {
+          "a": 3.99,
+          "b": 7.24,
+          "c": 0.97
+        }
+      },
+      "add": 50,
+      "rule": "classe Coarse",
+      "dp": 12,
+      "epaisseur": 4.5
+    }
+  },
+  "compact_p2": true
+}
