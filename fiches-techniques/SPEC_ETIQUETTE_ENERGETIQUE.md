@@ -91,8 +91,13 @@ Source : catalogue AFPRO Filters 2021 (réf. Eurovent ECP-11-FIL-2020). Le filtr
 Eurovent 4/21 ne classe **que** les filtres fins (ePM1/ePM2,5/ePM10). Les préfiltres **Coarse**
 (NETMETAL, NETFIL, NETPLAN, NETFIBRE) n'ont **pas** d'étiquette → badge « Préfiltre — non classé ».
 
-> ⚠️ Petite divergence de sources sur ePM2,5 50-55 % : Interfilter donnait C ≤ 1200 / D ≤ 1700 ;
-> AFPRO 2021 (retenu) donne C ≤ 1300 / D ≤ 1900. À reconfirmer sur le RS4/C/001 officiel si dispo.
+> ✅ Tables **confirmées par Camfil** (leader du marché, brochure FR « Classement Eurovent 2019 »),
+> **identiques à AFPRO** sur les 3 groupes — y compris ePM2,5 50-55 % (C ≤ 1300 / D ≤ 1900).
+> L'ancienne valeur Interfilter (C ≤ 1200 / D ≤ 1700) était erronée/obsolète → écartée.
+
+**Dimensions dérivées** : Camfil n'affiche **que le 592×592 comme dimension certifiée** ; les
+dérivées (287×592, 490×592, 592×287…) reçoivent **la même classe** que le 592×592. → pour nos
+fiches multi-dimensions, une seule classe par (classe × longueur), valable pour toutes les largeurs de cadre.
 
 ---
 
@@ -141,6 +146,10 @@ Vérification de la méthode (ΔP propre +10 %) contre des poches AFPRO **certif
 marqué que +10 %). **Suffisant pour un badge « indicatif »** ; insuffisant pour revendiquer la
 classe certifiée. (Un cas AFPRO interne est incohérent — 55 Pa noté D — non retenu.)
 
+**Point de calage Camfil (étiquette réelle certifiée)** : *Opakfil ES 7 — ISO ePM1 60 %*,
+AEC **838 kWh/an** → classe **A+** (ePM1 60-65 % : A+ ≤ 850). Rétro-calcul : ΔP moyenne ≈ 74 Pa
+(838 / 11,33). Cohérent avec la méthode.
+
 ---
 
 ## 7. Limites & étapes pour passer de « indicatif » à « certifié »
@@ -159,5 +168,8 @@ classe certifiée. (Un cas AFPRO interne est incohérent — 55 Pa noté D — n
 
 - Eurovent 4/21:2019 — PDF officiel (méthode, exemple, Annexe 1 sur le débit fixe) :
   https://www.eurovent.me/wp-content/uploads/publications-files/eurovent-rec-4-21-energy-efficiency-evaluation-of-air-filters-for-general-ventilation-purposes-fourth-edition-2019-en.pdf
-- Tables de seuils complètes (3 groupes) — catalogue AFPRO Filters 2021 (réf. ECP-11-FIL-2020).
-- Interfilter (seuils ePM1) · Camfil · MANN+HUMMEL · TROX (paramètres de référence).
+- Tables de seuils complètes (3 groupes) — **catalogue AFPRO Filters 2021** (réf. ECP-11-FIL-2020)
+  **ET brochure Camfil FR « Classement Eurovent 2019 »** (leader, tables identiques — confirmation croisée) :
+  https://www.camfil.com/-/media/files/qbank/documents/__web/insight/standards-and-regulations/brochure-classement-eurovent-2019-fr.pdf
+- Exemple d'étiquette certifiée (calage) : Camfil Opakfil ES 7, ePM1 60 %, 838 kWh/an → A+.
+- Interfilter (seuils ePM1) · MANN+HUMMEL · TROX (paramètres de référence).
