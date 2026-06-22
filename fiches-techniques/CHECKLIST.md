@@ -37,6 +37,9 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 - [ ] **Pieds de page** : numéros de fiche figés OK ; vérifier version/date à chaque révision.
 - [ ] **Classe G4 (Coarse, ADD +50)** sur les familles poches/poches rigides : annoncée commercialement,
       rarement mesurée → à mesurer au cas par cas.
+- [ ] **Étiquette énergétique Eurovent 4/21** : spec prête et sourcée (Camfil/AFPRO) →
+      `SPEC_ETIQUETTE_ENERGETIQUE.md`. **À implémenter** (badge indicatif figé 3400 m³/h, +10 %,
+      tables ePM1/2,5/10, Coarse exclu). En attente de validation du design.
 
 ---
 

@@ -69,6 +69,17 @@ Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 
   ΔP finale EN 13053). Seuls le prix (GT 0,15 vs nous 0,18) et le débit défaut (GT 3000 vs nous 3400) diffèrent encore.
 - ⚠️ Conséquence assumée : la **ΔP moyenne affichée peut être < ΔP initiale** (propre à la formule GT).
 
+## Étiquette énergétique Eurovent 4/21 (spec prête — à implémenter)
+
+> Spec complète : **`SPEC_ETIQUETTE_ENERGETIQUE.md`** (méthode + 3 tables de seuils A+→E
+> ePM1/ePM2,5/ePM10, confirmées Camfil/AFPRO + design du badge).
+
+- Badge **indicatif figé à 3400 m³/h** (η 50 % · 6000 h · `W = 11,33 × ΔP_moy`), **distinct du
+  calculateur interactif** → la lettre ne bouge jamais (corrige le défaut Titanair où la classe variait avec le débit).
+- ΔP moyenne (faute d'essai de colmatage ISO 16890-3) = **ΔP propre @3400 × 1,10** ; mention « non certifié Eurovent ».
+- **Coarse = non classé** (préfiltres). Dimensions dérivées 287×592… = même classe que le 592×592.
+- **Pas encore implémenté dans le moteur/les fiches** — en attente de validation du design.
+
 ## Règle ΔP finale recommandée (spec) — IMPÉRATIVE
 
 ΔP finale recommandée = **min( ΔP initiale + ADD ; 3 × ΔP initiale )** — EN 13053, où **ADD dépend de la classe** :
