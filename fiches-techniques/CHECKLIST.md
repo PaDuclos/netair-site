@@ -37,8 +37,10 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
       en placeholder** → remplacer par des photos réelles du produit Netair.
 - [x] **Page 2 A4 — mono-classe : RÉGLÉ** via option `compact_p2` (marges p2 + graphe 84 %).
       NETPLAN, NETMETAL, NETFIL, NETFIBRE → page 2 = 1123 px (≤ A4). Identité NETPLY OK.
-- [ ] **🟠 NETPLY page 2 déborde** (1344 px, 2-classes : 4 courbes + légende + cases) — `compact_p2`
-      insuffisant. À passer en **3 pages** (courbe p2 / calculateur p3, comme CILIA). **Décision PA : laissé tel quel pour l'instant.**
+- [ ] **🟠 Fiches multi-courbes : page 2 déborde l'A4** — **NETPLY** (1344 px), **NETPAK S AZUR** (1375),
+      **NETPAK S LUMEN** (1375 + page 1 1169), **NETPAK S BORA**, **NETBAG S** : plusieurs courbes + cases +
+      sélecteur sur une page → `compact_p2` insuffisant (~67 mm). À passer en **3 pages** (courbe p2 /
+      calculateur p3, comme CILIA). **Décision PA (22/06/2026) : différé, laissé tel quel pour l'instant.**
 - [ ] **Humidité relative max.** : harmoniser/confirmer (100 % retenu par défaut sur média synthétique).
 - [ ] **Pieds de page** : numéros de fiche figés OK ; vérifier version/date à chaque révision.
 - [ ] **Classe G4 (Coarse, ADD +50)** sur les familles poches/poches rigides : annoncée commercialement,
