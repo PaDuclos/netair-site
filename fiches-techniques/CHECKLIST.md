@@ -83,9 +83,21 @@ Matrice classe × profondeur de poche **mesurée** :
 
 Surface média (cadre 592×592) : 380 → 3,46 m² · 500 = 550 → 5,11 m² · 650 → 6,10 m².
 
-- [ ] **Anomalie M5 — 550 vs 650** : 550 mm donne ΔP @3400 ≈ 48 Pa (5,11 m²) < 650 mm 65 Pa (6,10 m²) →
-      physiquement impossible (plus de surface = moins de ΔP). Une des deux courbes est suspecte (graphe
-      réutilisé/mal calé). **Provisoire** : les deux affichées, M5 550 marquée « à valider » (pointillé).
+- [ ] **🔴 ANOMALIE M5 — courbes 550 mm / 650 mm incohérentes** (priorité — à mesurer en R&D)
+      - **Principe** : poche plus profonde = plus de surface média = ΔP plus basse à débit égal.
+        Surfaces M5 : 380 → 3,46 m² · 550 → 5,11 m² · 650 → 6,10 m². Ordre ΔP attendu : **380 > 550 > 650**.
+      - **Mesuré (ΔP @3400 m³/h)** : 380 = **82 Pa** ✓ · 550 = **48 Pa** · 650 = **65 Pa** → le **650 (plus de
+        surface) est PLUS résistant que le 550** : physiquement impossible. À chaque débit, la courbe 650 est
+        au-dessus de la 550 alors qu'elle devrait être en-dessous.
+      - **Ce n'est pas une erreur d'extraction** : dans les PDF Titanair, l'axe Y est calé sur le pic de chaque
+        courbe → M5 550 axe à **70 Pa**, M5 650 axe à **100 Pa**. La source d'origine est elle-même incohérente
+        (même type de piège que G3 = copie du G4 sur TITAPLAN).
+      - **Hypothèse la plus probable** : **étiquettes 550 ↔ 650 interverties** (ou graphe copié-collé mal
+        réétiqueté). Si on inverse : 550 = 65 Pa, 650 = 48 Pa → ordre **82 > 65 > 48**, cohérent. (Le F7 est, lui,
+        cohérent : 550 = 105 Pa, 650 = 101 Pa.)
+      - **Décision actée (22/06/2026)** : on **garde la donnée brute en l'état**, sans supposition. Les 2 courbes
+        sont affichées, **M5 550 en pointillé « à valider »** (fiche + légende), note « ⚠ À VALIDER » dans
+        `DONNEES_PDC` l.29. **À trancher par une mesure banc R&D** (M5 550 et 650) → puis MAJ DONNEES_PDC + fiche.
 - [ ] **Classe G4** (préfiltration) annoncée (livret/plaquette) mais **aucune fiche 2018** → courbe à mesurer.
 - [ ] **Combinaisons classe × longueur manquantes** : M5/M6/F7 en 500 ; M6/F8/F9 en 550/650 ; F9 en 380/550/650 ;
       M6 en 500/550/650 (cf. matrice).
