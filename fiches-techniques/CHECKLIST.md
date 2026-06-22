@@ -20,7 +20,8 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETFIBRE | 🟡 | Photo · courbes G2/G3/M5 à mesurer · T° harmonisée à confirmer |
 | NETBAG S | 🟡 | Anomalie M5 550/650 · G4 non mesuré · 287×592 & humidité · photo |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
-| NETPAK S BORA/CILIA/AZUR/LUMEN | ⬜ | Tout (descriptif, ΔP, dimensions) · **noms à valider** |
+| NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
+| NETPAK S BORA/AZUR/LUMEN | ⬜ | Tout (descriptif, ΔP, dimensions) · **noms à valider** |
 | NETPAK S DUO (combiné) | ⬜ | Tout · nom à valider |
 | NETPAK V LAM (laminaire H14) | ⬜ | Tout · pas de nom signature (volontaire) |
 | NETCEL V AZUR / NIVAL | ⬜ | Tout · NIVAL nom validé, AZUR à valider |
@@ -109,6 +110,18 @@ Surface média (cadre 592×592) : 380 → 3,46 m² · 500 = 550 → 5,11 m² · 
 - [ ] **M6 / F7 / F8 (380 mm)** : terme `c` négatif (1ᵉʳ point bas-débit tassé) → léger pied de courbe < 0 (borné 0).
 - [ ] **Photo** : `TITABAG/Titabag.jpg` détourée = placeholder → photo produit Netair.
 
+### NETPAK S CILIA 🟡
+Compact mini-plis (équiv. TITAPAK S PRISME A). Multi-classes **M5→F9 × ép. 48/98**, fiche **3 pages** (moteur `multi_classe`).
+Données ΔP **réelles** : M5/M6/F8/F9 = **TITAPAK S HPE PRISME A 2018** ; **F7 = TITAPAK S GR PRISME A** (GREENTEX, ePM1 50%).
+Polynômes : `DONNEES_PDC` l.38-47.
+
+- [ ] **🟠 F9 ép. 48 mm = F8 ép. 48 mm + 10 Pa EXACTEMENT** (33=23+10, 53=43+10, … sur les 7 points) → offset/copie suspecte dans l'Excel Titanair (en ép. 98, F8≠F9 proprement). **À trancher par une mesure R&D du F9 ép. 48.**
+- [ ] **F8 ép. 98 mm — 7ᵉ point extrapolé** : 6 points mesurés (0,79→2,78 m/s) ; le point à 3,17 m/s (≈ 137 Pa) est calculé par le polynôme → à mesurer.
+- [ ] **F7 (GREENTEX) — croisement ép. 48/ép. 98 à haute vitesse** : au-delà de ~2 m/s la courbe ép. 98 repasse **au-dessus** de l'ép. 48 (ep48 12·20·30·40·51·63·76 / ep98 10·19·29·40·52·67·86), contraire à l'attendu (plus épais = plus de surface = ΔP plus basse). Présent tel quel dans la fiche source GR PRISME A → à confirmer en R&D.
+- [ ] **F7 (GREENTEX) ΔP < M5/M6** : média basse résistance → la courbe F7 passe sous M5/M6. Cohérent avec la techno GREENTEX mais à confirmer (mélange HPE/GR dans une même fiche).
+- [ ] **Surface média m²/m²** : le tableau dimensions affiche les valeurs HPE (11,68 m² ép. 48 / 23,87 ép. 98 @592×592) comme représentatives ; le F7 GREENTEX diffère (12,55 / 25,65 m²) → préciser si on distingue par classe.
+- [ ] **Photo** : TITAPAK PRISME A HD (© A. Périer) détourée sur blanc = placeholder → photo produit Netair.
+
 ---
 
 ## Fiches à créer — données à rassembler
@@ -118,7 +131,6 @@ Surface média (cadre 592×592) : 380 → 3,46 m² · 500 = 550 → 5,11 m² · 
 
 ### Poches rigides / compacts — famille NETPAK (noms ⚠ à valider)
 - [ ] **NETPAK S BORA** (compact à brides / DSK) — réf. TITAPAK S D.S.K
-- [ ] **NETPAK S CILIA** (prisme miniplis) — réf. TITAPAK S PRISME
 - [ ] **NETPAK S AZUR** (polydièdre) — réf. TITAPAK SV GD
 - [ ] **NETPAK S LUMEN** (polydièdre rechargeable, argument RSE) — réf. TITAPAK S QUARTZ
 - [ ] **NETPAK S DUO** (particulaire + charbon actif) — réf. PRISME DUO
