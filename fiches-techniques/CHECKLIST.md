@@ -23,7 +23,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
 | NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé) · M6 non mesurée · surface média n.c. · photo |
 | NETPAK S LUMEN | 🟡 | Variantes fournisseurs 2024-25 (MFILTER/FILTECH) · surface média n.c. · photo (Titanair visible) |
-| NETPAK S BORA | ⬜ | Tout (descriptif, ΔP, dimensions) · **nom à valider** |
+| NETPAK S BORA | 🟡 | GREENTEX ePM1 50% retenu (variante HPE 55% non tracée) · courbe lue sur image · surface n.c. · photo |
 | NETPAK S DUO (combiné) | ⬜ | Tout · nom à valider |
 | NETPAK V LAM (laminaire H14) | ⬜ | Tout · pas de nom signature (volontaire) |
 | NETCEL V AZUR / NIVAL | ⬜ | Tout · NIVAL nom validé, AZUR à valider |
@@ -151,6 +151,16 @@ Données ΔP **réelles** : courbes vectorielles PDF QUARTZ 2018 (FT 2019-041), 
 - [ ] **Largeur 287** : non mesurée indépendamment (extrapolée du 592).
 - [ ] **Photo** : Quartz.jpg (concept recharge) — **marque « Titanair » visible** sur la cassette → à remplacer en priorité par photo produit Netair.
 
+### NETPAK S BORA 🟡
+Panneau compact à brides 100 mm (équiv. TITAPAK S DSK). **Mono-classe F7 GREENTEX (ePM1 50 %)** — décision PA.
+Données ΔP **réelles** lues sur l'image `GR DSK F7.png`, recoupées FORMULE_PDC. Polynôme : `DONNEES_PDC` l.55.
+
+- [ ] **Variante HPE ePM1 55 %** : les specs pointées étaient HPE 55 % mais la seule courbe exploitable est GREENTEX 50 % → BORA fait en GREENTEX. Si on veut une fiche HPE 55 %, **courbe HPE à récupérer** (image/PDF non vectoriel).
+- [ ] **Courbe lue à l'œil** sur image (±2-3 Pa) ; recoupée FORMULE_PDC (5,83·v²+13,44·v−2,24) → à confirmer par les points mesurés exacts.
+- [ ] **Plage mesurée ≤ 3100 m³/h** (panneau 100 mm) ; débit nominal fixé à 3000. ΔP > 3100 non mesurée.
+- [ ] **Séparateur** : fiche HPE indique « INT » + colle « OUI », alors que le DSK est annoncé « sans séparateur de colle » (livret) → à clarifier.
+- [ ] **Surface média n.c.** · **Photo** : TITAPAK S DSK réelle nettoyée = placeholder → photo produit Netair.
+
 ---
 
 ## Fiches à créer — données à rassembler
@@ -159,7 +169,6 @@ Données ΔP **réelles** : courbes vectorielles PDF QUARTZ 2018 (FT 2019-041), 
 > PDF), polynôme (DONNEES_PDC), dimensions, photo. Réfs Titanair dans la Bibliothèque.
 
 ### Poches rigides / compacts — famille NETPAK (noms ⚠ à valider)
-- [ ] **NETPAK S BORA** (compact à brides / DSK) — réf. TITAPAK S D.S.K
 - [ ] **NETPAK S DUO** (particulaire + charbon actif) — réf. PRISME DUO
 - [ ] **NETPAK V LAM** (laminaire H14, pas de nom signature — volontaire) — réf. TITAPAK V LAM
 

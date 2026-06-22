@@ -1,0 +1,59 @@
+{
+  "_commentaire": "NETPAK S BORA — panneau compact à brides DSK, média GREENTEX (équiv. Titanair TITAPAK S GR DSK). Fiche MONO-CLASSE F7 / ePM1 50%. Décision dirigeant : retenir la version GREENTEX (média recyclé, argument éco) car c'est la courbe disponible et cohérente. Données ΔP RÉELLES lues sur la courbe image 'TITAPAK S GR DSK F7.png' (TITAPAK S GR DSK ePM1 50% - F7, 592×592×100), recoupées par FORMULE_PDC (polynôme GREENTEX 5,83·v²+13,44·v−2,24). Fit PNG : 7,16·v²+11,42·v−1,13 (R²=0,9998). Courbe mesurée jusqu'à ~3100 m³/h (≈70 Pa) → Vmax 2,46, débit nominal 3000. Specs fiche HPE DSK F7 2020 (FT 2020-044) : épaisseur 100 mm, parois polystyrène, média PP, M1, 60°C (acc.65/1h), HR 100%, EN13053 init+100, technologie D.S.K (pleine surface sans préfiltre, remplace poches souples). Surface média n.c. Photo TITAPAK S DSK réelle = placeholder.",
+
+  "slug": "netpak-s-bora",
+  "nom": "NETPAK S BORA",
+  "soustitre": "Panneau compact à brides GREENTEX — Filtration fine",
+  "mono_classe": true,
+  "no_dimensions": true,
+  "surface_facteur": 1,
+  "vmax": 2.5,
+  "pmax": 80,
+  "debit_nom": 3000,
+  "compact_p2": true,
+
+  "fiche": { "num": "FT-NETPAK-S-BORA-001", "version": "v1.0", "date": "22/06/2026" },
+
+  "photo": "netpak-s-bora-photo.jpg",
+  "photo_alt": "Panneau compact à brides NETPAK S BORA",
+
+  "description": "Le NETPAK S BORA est un panneau filtrant compact à brides, de 100 mm d'épaisseur, conçu pour remplacer les filtres à poches souples en filtration fine des centrales de traitement d'air. Son média GREENTEX, en microfibres synthétiques recyclées, s'inscrit dans une démarche d'éco-conception. Grâce à la technologie D.S.K, la poussière pénètre dans toute l'épaisseur du média : la surface filtrante est pleinement exploitée, sans préfiltre, pour une grande capacité de rétention et une faible perte de charge. Sans microfibre de verre. Classe F7 / ePM1 50 % selon EN 779 / EN ISO 16890, épaisseur 100 mm, cadre 592×592 mm.",
+
+  "points_cles": [
+    "Média GREENTEX recyclé — éco-conception",
+    "Remplace les filtres à poches",
+    "Pleine surface sans préfiltre (D.S.K)",
+    "Faible perte de charge",
+    "Sans fibre de verre"
+  ],
+
+  "specs": [
+    ["Média filtrant", "Microfibres synthétiques GREENTEX (recyclées)"],
+    ["Type", "Panneau compact à brides — technologie D.S.K"],
+    ["Épaisseur", "100 mm"],
+    ["Parois cellule", "Polystyrène"],
+    ["Efficacité EN 779", "F7"],
+    ["Efficacité ISO 16890", "ePM1 50 %"],
+    ["Dimensions cadre", "592×592 mm (et dimensions standard)"],
+    ["Classement au feu", "M1"],
+    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
+    ["Humidité relative max.", "100 %"],
+    ["ΔP finale recommandée", "min(ΔP initiale + 100 Pa ; 3 × ΔP initiale) — EN 13053"]
+  ],
+
+  "badges_p1": [
+    "ISO 16890 : ePM1 50%",
+    "EN 779 : F7",
+    "GREENTEX · éco"
+  ],
+  "badges_p2": [
+    "ISO 16890 : ePM1 50%",
+    "EN 779 : F7",
+    "GREENTEX · éco"
+  ],
+
+  "classes": {
+    "low":  { "label": "F7", "iso": "ePM1 50%", "poly": { "48": { "a": 7.16, "b": 11.42, "c": -1.13 }, "98": { "a": 7.16, "b": 11.42, "c": -1.13 } }, "add": 100, "rule": "classe ePM1", "dp": 67, "epaisseur": 100 },
+    "high": { "label": "F7", "iso": "ePM1 50%", "poly": { "48": { "a": 7.16, "b": 11.42, "c": -1.13 }, "98": { "a": 7.16, "b": 11.42, "c": -1.13 } }, "add": 100, "rule": "classe ePM1", "dp": 67, "epaisseur": 100 }
+  }
+}
