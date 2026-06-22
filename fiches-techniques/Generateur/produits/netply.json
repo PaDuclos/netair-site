@@ -1,12 +1,12 @@
 {
-  "_commentaire": "NETPLY v6 — contenu retravaillé d'après les vraies sources TITAPLY EC (fiche 2018 FT 2018-020 v3 + descriptif). Specs corrigées (acier galvanisé, média synthétique sans couture ni colle ; l'ancien gabarit indiquait par erreur plastique/carton). Positionnement éco-conception GÉNÉRIQUE (pas de revendication du brevet Titanair). ΔP = polynômes DONNEES_PDC (inchangés). N'écrase pas netply.json (ancre d'identité du gabarit).",
+  "_commentaire": "NETPLY — fiche produit officielle, contenu d'après les vraies sources TITAPLY EC (fiche 2018 FT 2018-020 v3 + descriptif). Specs réelles (acier galvanisé, média synthétique sans couture ni colle). Éco-conception GÉNÉRIQUE (pas de revendication du brevet Titanair). ΔP = polynômes DONNEES_PDC. L'ANCRE du test d'identité du gabarit est produits/_gabarit_ref.json (à ne pas confondre).",
 
   "slug": "netply",
   "nom": "NETPLY",
   "soustitre": "Filtre plissé — Préfiltre synthétique",
   "compact_p1": true,
 
-  "fiche": { "num": "FT-NETPLY-001", "version": "v6", "date": "22/06/2026" },
+  "fiche": { "num": "FT-NETPLY-001", "version": "v1.0", "date": "22/06/2026" },
 
   "photo": "netply-v6-photo.jpg",
   "photo_alt": "Filtre plissé NETPLY (épaisseurs 48 et 98 mm)",

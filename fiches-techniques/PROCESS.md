@@ -8,8 +8,9 @@
 L'utilisateur ne manipule pas le générateur : il donne ses consignes, Claude Code
 édite un `.json` et lance le script. Le **gabarit n'est jamais retouché à la main par
 produit** ; on ne change que les **zones variables** via `produits/<slug>.json`.
-Garantie : régénérer `netply.json` reproduit `gabarit_base.html` à l'octet près
-(test d'identité — à relancer après toute modif du moteur ou du gabarit).
+Garantie : régénérer `produits/_gabarit_ref.json` reproduit `gabarit_base.html` à
+l'octet près (test d'identité — à relancer après toute modif du moteur ou du gabarit).
+`produits/netply.json` est la **fiche produit NETPLY officielle** (≠ l'ancre `_gabarit_ref.json`).
 
 ## Règles d'or
 
@@ -111,10 +112,10 @@ du débit et contredisent le calculateur.
 
 ## État d'avancement
 
-- **NETPLY** — référence (gabarit = ancre d'identité, ne pas écraser) ✅ ·
-  **v6** retravaillée d'après TITAPLY EC : specs corrigées (acier galvanisé, sans couture ni colle),
-  éco-conception générique, photo détourée, `compact_p1`. Fichier `Fiche technique NETPLY v6.html`.
-  (l'ancienne `Fiche technique NETPLY.html` est conservée pour l'instant à la demande de PA)
+- **NETPLY** — fiche officielle `Fiche technique NETPLY.html` (v1.0), d'après TITAPLY EC :
+  specs réelles (acier galvanisé, sans couture ni colle), éco-conception générique, photo
+  détourée, `compact_p1`. Source = `produits/netply.json`. Ancre du test d'identité =
+  `produits/_gabarit_ref.json`. (l'ancienne fiche placeholder est dans `_Archive/divers/`)
 - **NETPLAN** — mono-classe G4, polynôme, 0-2 m/s, nominal 1,5 m/s (ΔP nom ≈ 42 Pa) ✅
 - **NETMETAL** — mono-classe G3 / Coarse 50% (équiv. TITAMETAL KMZ/A alu, ép. 48), polynôme
   7,34·v²+2,44·v+5,57 (fit 5 pts 0,79–2,38 m/s), Vmax 2,4 · nominal 1,5 m/s (1900 m³/h) ✅

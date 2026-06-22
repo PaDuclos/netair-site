@@ -25,10 +25,11 @@ Option : `--out "mon-nom.html"` pour choisir le nom du fichier de sortie.
 
 ## Garantie de fidélité (test d'identité)
 
-Régénérer `netply.json` reproduit `gabarit_base.html` **à l'octet près** :
+Régénérer `_gabarit_ref.json` (ancre) reproduit `gabarit_base.html` **à l'octet près**
+(`netply.json` est la fiche produit officielle, ≠ l'ancre) :
 
 ```bash
-python3 generer.py produits/netply.json --out _t.html && diff gabarit_base.html _t.html && rm _t.html
+python3 generer.py produits/_gabarit_ref.json --out _t.html && diff gabarit_base.html _t.html && rm _t.html
 ```
 
 Un `diff` vide prouve que tout le « fixe » (style, calculateur, courbe) est intact.
