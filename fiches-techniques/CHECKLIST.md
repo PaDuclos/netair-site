@@ -34,9 +34,10 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 
 - [ ] **Photos produit Netair** : toutes les fiches créées utilisent une **photo Titanair détourée
       en placeholder** → remplacer par des photos réelles du produit Netair.
-- [ ] **🟠 Page 2 déborde l'A4** (~1222 px vs 1122) sur les fiches **2-classes / mono-classe**
-      (NETPLAN, NETMETAL, NETFIL, NETFIBRE, NETPLY) — la section courbe + calculateur dépasse ~26 mm.
-      À corriger (compactage page 2 du gabarit, ou pagination) → re-lancer le test d'identité NETPLY.
+- [x] **Page 2 A4 — mono-classe : RÉGLÉ** via option `compact_p2` (marges p2 + graphe 84 %).
+      NETPLAN, NETMETAL, NETFIL, NETFIBRE → page 2 = 1123 px (≤ A4). Identité NETPLY OK.
+- [ ] **🟠 NETPLY page 2 déborde** (1344 px, 2-classes : 4 courbes + légende + cases) — `compact_p2`
+      insuffisant. À passer en **3 pages** (courbe p2 / calculateur p3, comme CILIA). **Décision PA : laissé tel quel pour l'instant.**
 - [ ] **Humidité relative max.** : harmoniser/confirmer (100 % retenu par défaut sur média synthétique).
 - [ ] **Pieds de page** : numéros de fiche figés OK ; vérifier version/date à chaque révision.
 - [ ] **Classe G4 (Coarse, ADD +50)** sur les familles poches/poches rigides : annoncée commercialement,
