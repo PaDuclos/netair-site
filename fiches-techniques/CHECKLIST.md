@@ -22,7 +22,8 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
 | NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé) · M6 non mesurée · surface média n.c. · photo |
-| NETPAK S BORA/LUMEN | ⬜ | Tout (descriptif, ΔP, dimensions) · **noms à valider** |
+| NETPAK S LUMEN | 🟡 | Variantes fournisseurs 2024-25 (MFILTER/FILTECH) · surface média n.c. · photo (Titanair visible) |
+| NETPAK S BORA | ⬜ | Tout (descriptif, ΔP, dimensions) · **nom à valider** |
 | NETPAK S DUO (combiné) | ⬜ | Tout · nom à valider |
 | NETPAK V LAM (laminaire H14) | ⬜ | Tout · pas de nom signature (volontaire) |
 | NETCEL V AZUR / NIVAL | ⬜ | Tout · NIVAL nom validé, AZUR à valider |
@@ -140,6 +141,16 @@ Données ΔP **réelles** : caches Excel SV-GD 2018 (F7/F9) + FORMULE_PDC. Polyn
 - [ ] **Largeurs 490/287** : F9 mesuré en 490 ; F7/F8 en 490/287 non mesurés (extrapolés du 592).
 - [ ] **Photo** : SV-GD réelle (© A. Périer) légèrement nettoyée = placeholder → photo produit Netair.
 
+### NETPAK S LUMEN 🟡
+Compact polydièdre **rechargeable** (équiv. TITAPAK S QUARTZ, argument RSE). Multi-classes **F7/F8/F9** (ePM1, moteur `series`), profondeur 292.
+Données ΔP **réelles** : courbes vectorielles PDF QUARTZ 2018 (FT 2019-041), **cohérentes F7<F8<F9** (pas de piège). Polynômes : `DONNEES_PDC` l.52-54.
+
+- [ ] **Variantes fournisseurs 2024-25** : FORMULE_PDC contient des courbes MFILTER (2024) et FILTECH (2024-25) **différentes** des fiches 2018 → le média a peut-être changé. **Priorité fiches 2018** retenue ; à reconfirmer avec le média actuel.
+- [ ] **% ePM1** : le livret annonce F7 60 % / F9 90 % ; les fiches 2018 disent **55 % / 80 %** (retenu) → à clarifier.
+- [ ] **Surface média développée non communiquée** (n.c.) → à obtenir.
+- [ ] **Largeur 287** : non mesurée indépendamment (extrapolée du 592).
+- [ ] **Photo** : Quartz.jpg (concept recharge) — **marque « Titanair » visible** sur la cassette → à remplacer en priorité par photo produit Netair.
+
 ---
 
 ## Fiches à créer — données à rassembler
@@ -149,7 +160,6 @@ Données ΔP **réelles** : caches Excel SV-GD 2018 (F7/F9) + FORMULE_PDC. Polyn
 
 ### Poches rigides / compacts — famille NETPAK (noms ⚠ à valider)
 - [ ] **NETPAK S BORA** (compact à brides / DSK) — réf. TITAPAK S D.S.K
-- [ ] **NETPAK S LUMEN** (polydièdre rechargeable, argument RSE) — réf. TITAPAK S QUARTZ
 - [ ] **NETPAK S DUO** (particulaire + charbon actif) — réf. PRISME DUO
 - [ ] **NETPAK V LAM** (laminaire H14, pas de nom signature — volontaire) — réf. TITAPAK V LAM
 
