@@ -54,6 +54,21 @@ l'octet près (test d'identité — à relancer après toute modif du moteur ou 
 Calculateur = **polynôme `ΔP = a·v² + b·v + c`** (mesures R&D), source `DONNEES_PDC`.
 Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 €, 250 j).
 
+## Calculateur énergétique — formule de ΔP moyenne (IMPÉRATIVE, validée 22/06/2026)
+
+> **ΔP moyenne = (ΔP finale ⁄ 2) × 0,85** — **alignée sur le calculateur de référence
+> `Classement énergétique GT_CARRIER` (Titanair/Carrier).**
+> (et **non** `(ΔP initiale + ΔP finale) ⁄ 2`).
+
+- Énergie : `kWh = (Débit⁄3600) × ΔP moyenne ⁄ η × heures ⁄ 1000`, avec η = rendement
+  moto-ventilateur (curseur, **défaut 55 %**), heures = `durée × jours` (défaut 24 × 250 = 6 000 h).
+- ΔP finale = `min(ΔP initiale + ADD ; 3 × ΔP initiale)` (cf. règle ci-dessus, ADD = +50 Coarse / +100 ePM).
+- Présente dans **les 3 moteurs** : gabarit legacy (`gabarit_base.html`), série N-classes (`SERIES_JS`),
+  multi compact (`generer_multi`). Toute fiche régénérée applique la formule.
+- Le **croisement GT/Carrier** a aussi confirmé : constantes alignées (η÷, 6000 h, CO₂ 0,079 RE2020,
+  ΔP finale EN 13053). Seuls le prix (GT 0,15 vs nous 0,18) et le débit défaut (GT 3000 vs nous 3400) diffèrent encore.
+- ⚠️ Conséquence assumée : la **ΔP moyenne affichée peut être < ΔP initiale** (propre à la formule GT).
+
 ## Règle ΔP finale recommandée (spec) — IMPÉRATIVE
 
 ΔP finale recommandée = **min( ΔP initiale + ADD ; 3 × ΔP initiale )** — EN 13053, où **ADD dépend de la classe** :

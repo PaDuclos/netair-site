@@ -469,7 +469,7 @@
 
     var dpInitNum = pdc(co, velNum);
     var dpFinalNum = Math.min(dpInitNum + ADD[eff], dpInitNum * 3);
-    var dpAvgNum = (dpInitNum + dpFinalNum) / 2;
+    var dpAvgNum = (dpFinalNum / 2) * 0.85;
 
     // Courbes
     $('pathG448').setAttribute('d', showG4 ? curve(POLY.g4[48]) : '');
