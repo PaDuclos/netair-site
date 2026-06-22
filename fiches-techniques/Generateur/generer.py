@@ -738,6 +738,10 @@ def build_multi_section(d):
     selbtns = "\n              ".join(
         f'<button id="cls_{c["id"]}" type="button" style="flex:1; padding:7px 3px; border:none; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit;">{c["label"]}</button>'
         for c in classes)
+    # sélecteur d'efficacité PROPRE au calculateur (indépendant de la courbe)
+    calcbtns = "\n                  ".join(
+        f'<button id="ce_{c["id"]}" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit;">{c["label"]}</button>'
+        for c in classes)
     grid = build_gridlines(vmax, vnom)
     xlab = build_xlabels(vmax)
     yvals = [("254", 0), ("195.5", 1), ("137", 2), ("78.5", 3), ("20", 4)]
@@ -820,14 +824,16 @@ def build_multi_section(d):
           <span style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase; white-space:nowrap;">Calculateur énergétique</span>
           <span style="flex:1; height:1px; background:#0F3261;"></span>
         </div>
-        <div style="font-size:12px; color:#5A6573; margin-top:5px; line-height:1.5;">Estimez la consommation du ventilateur liée à la perte de charge du filtre sur une année de fonctionnement. La classe sélectionnée ci-dessus pilote le calcul ; ajustez les paramètres.</div>
+        <div style="font-size:12px; color:#5A6573; margin-top:5px; line-height:1.5;">Estimez la consommation du ventilateur liée à la perte de charge du filtre sur une année de fonctionnement. Choisissez la classe d'efficacité et l'épaisseur (indépendamment de la courbe), puis ajustez les paramètres.</div>
 
         <div style="display:grid; grid-template-columns:1fr 80mm; gap:7mm; margin-top:5mm; align-items:stretch;">
           <div style="display:flex; flex-direction:column; gap:11px; padding-top:1px;">
             <div style="display:grid; grid-template-columns:1.7fr 1fr; gap:12px;">
               <div>
-                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe sélectionnée</div>
-                <div style="background:#EEF3F9; border:1px solid #D5E0EF; border-radius:9px; padding:9px 11px; font-size:12.5px; font-weight:600; color:#0F3261;"><span id="clsCalc"></span></div>
+                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d'efficacité</div>
+                <div style="display:flex; background:#EEF3F9; border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;">
+                  {calcbtns}
+                </div>
               </div>
               <div>
                 <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Épaisseur</div>
@@ -960,7 +966,8 @@ def build_multi_js(d):
   var Dnom = {dnom};
   var Vnom = (Dnom / 3600) / Aref;
 
-  var state = {{ eff: '{eff0}', thick: 48, debit: {dnom}, duree: 24, jours: 250, eta: 55, prix: 0.18, len: 592, wid: 592 }};
+  // eff = classe affichée sur la COURBE ; calcEff = classe du CALCULATEUR (indépendants)
+  var state = {{ eff: '{eff0}', calcEff: '{eff0}', thick: 48, debit: {dnom}, duree: 24, jours: 250, eta: 55, prix: 0.18, len: 592, wid: 592 }};
 
   var fr = function (n) {{ return Math.round(n).toLocaleString('fr-FR'); }};
   var $  = function (id) {{ return document.getElementById(id); }};
@@ -980,14 +987,15 @@ def build_multi_js(d):
   var SEL = 'flex:1; padding:7px 3px; border:none; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .12s; white-space:nowrap; ';
 
   function render() {{
-    var eff = state.eff;
-    var co = POLY[eff][state.thick];
+    var eff = state.eff;          // courbe
+    var ceff = state.calcEff;     // calculateur (indépendant)
+    var co = POLY[ceff][state.thick];
     var co48 = POLY[eff][48], co98 = POLY[eff][98];
 
     var areaNum = (Math.max(50, state.len) / 1000) * (Math.max(50, state.wid) / 1000);
     var velNum = (state.debit / 3600) / areaNum;
     var dpInitNum = pdc(co, velNum);
-    var dpFinalNum = Math.min(dpInitNum + ADD[eff], dpInitNum * 3);
+    var dpFinalNum = Math.min(dpInitNum + ADD[ceff], dpInitNum * 3);
     var dpAvgNum = (dpFinalNum / 2) * 0.85;
 
     $('p48').setAttribute('d', curve(co48));
@@ -1002,13 +1010,14 @@ def build_multi_js(d):
     pt('c48', 't48', pdc(co48, Vnom), -9, -8);
     pt('c98', 't98', pdc(co98, Vnom), 9, 14);
 
-    // sélecteur de classe
+    // sélecteur de classe de la COURBE
     IDS.forEach(function (id) {{
       var b = $('cls_' + id);
       if (b) b.setAttribute('style', SEL + (id === eff ? ON : OFF));
+      var c = $('ce_' + id);   // sélecteur d'efficacité du CALCULATEUR
+      if (c) c.setAttribute('style', BTN + (id === ceff ? ON : OFF));
     }});
     $('clsIso').textContent = LAB[eff] + ' · ' + ISO[eff];
-    $('clsCalc').textContent = LAB[eff] + ' · ' + ISO[eff];
     $('leg48t').textContent = LAB[eff] + ' · ' + ISO[eff] + ' — 48 mm';
     $('leg98t').textContent = LAB[eff] + ' · ' + ISO[eff] + ' — 98 mm';
 
@@ -1018,8 +1027,8 @@ def build_multi_js(d):
     $('dpInit').textContent = fr(dpInitNum);
     $('dpFinal').textContent = fr(dpFinalNum);
     $('dpAvg').textContent = fr(dpAvgNum);
-    $('effAdd').textContent = ADD[eff];
-    $('effRule').textContent = RULE[eff];
+    $('effAdd').textContent = ADD[ceff];
+    $('effRule').textContent = RULE[ceff];
 
     $('area').textContent = areaNum.toLocaleString('fr-FR', {{ minimumFractionDigits: 2, maximumFractionDigits: 2 }});
     $('vel').textContent = velNum.toLocaleString('fr-FR', {{ minimumFractionDigits: 1, maximumFractionDigits: 1 }});
@@ -1044,6 +1053,8 @@ def build_multi_js(d):
   IDS.forEach(function (id) {{
     var b = $('cls_' + id);
     if (b) b.addEventListener('click', function () {{ state.eff = id; render(); }});
+    var c = $('ce_' + id);
+    if (c) c.addEventListener('click', function () {{ state.calcEff = id; render(); }});
   }});
   $('btnThick48').addEventListener('click', function () {{ state.thick = 48; render(); }});
   $('btnThick98').addEventListener('click', function () {{ state.thick = 98; render(); }});
