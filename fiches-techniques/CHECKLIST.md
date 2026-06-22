@@ -27,7 +27,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK S DUO | 🟡 | ✅ créée (F7 GREENTEX + CA, ep48) · capacité charbon (grammage) à préciser R&D · A4 p2 OK · photo |
 | NETPAK V LAM | 🟡 | ✅ créée (HEPA H14, flux laminaire, A4 OK) · capacité/colmatage à confirmer · photo HEPA |
 | NETCEL V NIVAL | 🟡 | E10 & H14 sans courbe (H14 = copie H13) · 610×610 sur moteur 592 · photo |
-| NETCEL V AZUR | ⬜ | À créer (E10 + H13 mesurés) · nom à valider |
+| NETCEL V AZUR | 🟡 | H13 extrapolé >2400 m³/h · curseur débit init 3400 (calc OK 2400) · photo = idem NETPAK AZUR · nom à valider |
 | NETCARB CILIA/AZUR/NIVAL/BAG | ⬜ | Tout · noms à valider (sauf BAG) |
 
 ---
@@ -173,6 +173,15 @@ Courbe **H13** réelle (cache Excel) : `DONNEES_PDC` l.56. Fit 9,44·v²+75,31·
 - [ ] **610×610 sur moteur série calibré 592×592** : axe vitesse + annotation « 592×592 » cosmétiquement décalés (le couple débit↔ΔP reste juste). À corriger si on généralise le moteur aux cadres 610.
 - [ ] **Photo** : TITACEL V.png réelle nettoyée = placeholder → photo produit Netair.
 
+### NETCEL V AZUR 🟡
+Filtre absolu HEPA multidièdre (équiv. TITAPAK V-GD), 592×592×292, surface 24 m² (H13). **Mode HEPA** (ΔP finale = 2×init).
+Courbes **E10 + H13** réelles (caches Excel) : `DONNEES_PDC` l.57-58.
+
+- [ ] **H13 extrapolé > 2400 m³/h** (1,9 m/s) : mesuré jusqu'à 2400 ; au-delà la courbe est calculée par le polynôme → à mesurer si usage haut débit.
+- [ ] **🟠 Curseur débit s'initialise à 3400** alors que le calcul utilise bien `debit_nom` (2400) — le moteur série ne synchronise pas l'attribut `value` du slider quand debit_nom ≠ 3400. Décalage cosmétique au chargement → à corriger dans le moteur série.
+- [ ] **Photo = même polydièdre SV-GD que NETPAK S AZUR** → trouver/faire une photo distincte du V-GD HEPA.
+- [ ] **Nom « AZUR »** partagé avec NETPAK S AZUR (familles différentes, OK par convention) → confirmer.
+
 ---
 
 ## Fiches à créer — données à rassembler
@@ -183,7 +192,7 @@ Courbe **H13** réelle (cache Excel) : `DONNEES_PDC` l.56. Fit 9,44·v²+75,31·
 ### Poches rigides / compacts — famille NETPAK (noms ⚠ à valider)
 
 ### HEPA / T.H.E — famille NETCEL
-- [ ] **NETCEL V AZUR** (multidièdre E10/H13) — réf. TITAPAK V GD · nom à valider
+_(NIVAL et AZUR créées — voir ci-dessus)_
 
 ### Charbon actif — famille NETCARB (noms ⚠ à valider sauf BAG)
 - [ ] **NETCARB CILIA** (compact CA) — réf. PRISME CARB

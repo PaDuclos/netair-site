@@ -1,0 +1,68 @@
+{
+  "_commentaire": "NETCEL V AZUR — filtre absolu HEPA à multidièdres (équiv. Titanair TITAPAK V-GD). Fiche série MODE HEPA (hepa:true → ΔP finale=2×init, EN 1822 ; pas d'étiquette Eurovent). Données ΔP RÉELLES = caches Excel : E10 (TITAPAK V GD E10) débit [1000,1500,2000,2500,3000,3500] → ΔP [50,79,108,140,176,212] ; H13 (TITAPAK V-GD 592 H13, surface 24 m²) débit [400,800,1200,1600,2000,2400] → ΔP [25,75,131,188,250,331]. Fits (v=débit/3600/0,3505) : E10 7,16·v²+56,14·v+1,33 (R²=0,9999, mesuré ≤3500) ; H13 31,80·v²+119,76·v−14,70 (R²=0,9993, mesuré ≤2400 — plus dense, ΔP plus élevée). ⚠️ H13 extrapolé au-delà de 2400 m³/h (1,9 m/s). 592×592×292 (cadre = Aref moteur, pas de décalage). Specs fiches 2018 : média fibre de verre, parois polyester, M1, 60°C, ΔP finale max 450 Pa (E10). Photo = même polydièdre SV-GD que NETPAK S AZUR (placeholder à distinguer).",
+
+  "slug": "netcel-v-azur",
+  "nom": "NETCEL V AZUR",
+  "soustitre": "Filtre absolu HEPA multidièdre — Très haute efficacité",
+  "series": true,
+  "hepa": true,
+  "compact_p1": true,
+  "vmax": 2.5,
+  "pmax": 400,
+  "debit_nom": 2400,
+  "eff0": "h13",
+  "len0": 292,
+
+  "fiche": { "num": "FT-NETCEL-V-AZUR-001", "version": "v1.0", "date": "22/06/2026" },
+
+  "photo": "netcel-v-azur-photo.jpg",
+  "photo_alt": "Filtre absolu HEPA multidièdre NETCEL V AZUR",
+
+  "description": "Le NETCEL V AZUR est un filtre absolu (T.H.E) à multidièdres rigides, destiné à la filtration de très haute efficacité des centrales de traitement d'air et des environnements à exigence de pureté. Son média en fibre de verre microfine, plissé en multidièdres, est disponible en E10 et H13 selon EN 1822. Cadre 592×592×292 mm (et 490×592), classement au feu M1, température de service 60 °C.",
+
+  "points_cles": [
+    "Filtre absolu HEPA (T.H.E)",
+    "Multidièdres rigides",
+    "Classes E10 · H13 (EN 1822)",
+    "Média fibre de verre microfine",
+    "Encombrement compact (292 mm)"
+  ],
+
+  "specs": [
+    ["Média filtrant", "Fibre de verre microfine (papier HEPA)"],
+    ["Type", "Multidièdre T.H.E (filtre absolu)"],
+    ["Parois cellule", "Polyester"],
+    ["Surface média", "24 m² (H13)"],
+    ["Classe EN 1822", "E10 · H13"],
+    ["Efficacité (MPPS)", "E10 ≥ 85 % · H13 ≥ 99,95 %"],
+    ["Profondeur", "292 mm"],
+    ["Dimensions cadre", "592×592×292 mm (et 490×592)"],
+    ["Classement au feu", "M1"],
+    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
+    ["ΔP finale recommandée", "2 × ΔP initiale (EN 1822 — pratique ; max 450 Pa [E10])"]
+  ],
+
+  "badges_p1": [
+    "EN 1822 : E10 · H13",
+    "Filtre absolu (T.H.E)",
+    "HEPA"
+  ],
+  "badges_p2": [
+    "EN 1822 : E10 · H13",
+    "Filtre absolu (T.H.E)",
+    "HEPA"
+  ],
+
+  "classes_def": {
+    "e10": { "label": "E10", "iso": "≥ 85% MPPS",    "add": 0, "rule": "classe E10 (EN 1822)" },
+    "h13": { "label": "H13", "iso": "≥ 99,95% MPPS", "add": 0, "rule": "classe H13 (EN 1822)" }
+  },
+  "classes_order": ["e10", "h13"],
+
+  "courbes": [
+    { "cls": "e10", "len": 292, "a": 7.16,  "b": 56.14,  "c": 1.33,   "dp": 134, "color": "#0897A5" },
+    { "cls": "h13", "len": 292, "a": 31.80, "b": 119.76, "c": -14.70, "surface": 24, "dp": 331, "color": "#0F3261" }
+  ],
+
+  "note_dimensions": "Multidièdre 592×592×292 mm (et 490×592). Surface média 24 m² (H13). Courbes mesurées : E10 jusqu'à 3500 m³/h, H13 jusqu'à 2400 m³/h (extrapolé au-delà). ΔP finale recommandée = 2 × ΔP initiale."
+}
