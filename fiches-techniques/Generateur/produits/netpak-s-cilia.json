@@ -1,0 +1,86 @@
+{
+  "_commentaire": "NETPAK S CILIA — filtre COMPACT à mini-plis prismatiques (équiv. Titanair TITAPAK S PRISME A). Nom validé par PA (22/06/2026) via skill netair-naming : CILIA = cils vibratiles (filtration biologique de l'air), univers 'qualité d'air intérieur', pas de chevauchement avec PRISME (Titanair nomme par la forme). FICHE MULTI-CLASSES (extension moteur 'multi_classe' : sélecteur 5 classes, 2 courbes à la fois 48/98, calculateur 5 classes). SOURCES = PRISME A HPE 2018 (fiches techniques 2018, prioritaires) : M5/M6/F7/F8/F9 en ep48 ET ep98, caches Excel xl/charts/chart1.xml. Toutes courbes distinctes et physiquement cohérentes (ep98<ep48, ΔP croissante avec la classe). PIÈGES : (1) en PRISME P, F8=F9 (copier-collé) — écarté, on prend PRISME A où F8≠F9. (2) En PRISME A ep48, F9 = F8 + 10 Pa EXACTEMENT sur tous les points (offset suspect) — conservé (fiche 2018) mais À VALIDER. (3) F8 ep98 : 6 points mesurés (jusqu'à 2,78 m/s), le 7e (3,17 m/s ≈ 137 Pa) est extrapolé du polynôme. Specs réelles fiche PRISME A F7 (FT 2018-013) : parois cellule ACIER, média pack POLYPROPYLENE, lut/bond OUI, séparateur INT, M1, T° continue 60°C / acc. 65°C 1h, humidité 100%, surface média 11,68 m² (ep48) / 23,87 m² (ep98) pour une cellule 592×592. VARIANTES CADRE (PA) : acier galvanisé OU plastique (même courbe ΔP, seul le matériau change) → suffixe référence -A (acier) / -P (plastique) après les dimensions. SURFACE en m²/m² (PA) : la courbe étant exprimée en VITESSE (valable toutes dimensions), la surface développée est donnée par m² de section frontale (dimension-indépendante) : ep48 ≈ 33 m²/m² (11,68/0,3505), ep98 ≈ 68 m²/m² (23,87/0,3505). ΔP finale = règle PROCESS (+100 Pa toutes classes ePM, jamais les 450/300 Pa absolus Titanair). Polynômes ΔP=a·v²+b·v+c ajustés moindres carrés sur 6-7 points réels, R²≈0,9999-1,0000. PHOTO = à fournir (placeholder).",
+
+  "slug": "netpak-s-cilia",
+  "nom": "NETPAK S CILIA",
+  "soustitre": "Filtre compact à mini-plis — gamme M5 → F9",
+  "multi_classe": true,
+  "compact_p1": true,
+
+  "vmax": 3.17,
+  "pmax": 200,
+  "debit_nom": 3400,
+  "eff_default": "f7",
+  "velocities": [0.79, 1.19, 1.59, 1.98, 2.38, 2.78, 3.17],
+
+  "fiche": { "num": "FT-NETPAK-CILIA-001", "version": "v1.0", "date": "22/06/2026" },
+
+  "photo": "netpak-s-cilia-photo.jpg",
+  "photo_alt": "Filtre compact à mini-plis NETPAK S CILIA (épaisseurs 48 et 98 mm)",
+
+  "description": "Le NETPAK S CILIA est un filtre compact à mini-plis prismatiques offrant une très grande surface filtrante développée sous un faible encombrement. Cette densité de média (≈ 33 m²/m² de section en 48 mm, ≈ 68 m²/m² en 98 mm) garantit une faible perte de charge et une longue durée de vie, pour une filtration fine et économe des centrales de traitement d'air. Disponible de M5 à F9 (EN 779 / EN ISO 16890), en épaisseurs 48 et 98 mm, avec cadre acier galvanisé ou plastique selon l'application.",
+
+  "points_cles": [
+    "Très grande surface développée",
+    "Gamme complète M5 → F9",
+    "Faible perte de charge",
+    "Cadre acier galvanisé ou plastique",
+    "Épaisseurs 48 et 98 mm"
+  ],
+
+  "specs": [
+    ["Type", "Filtre compact à mini-plis prismatiques"],
+    ["Média filtrant", "Polypropylène (mini-plis)"],
+    ["Cadre", "Acier galvanisé (-A) ou plastique (-P)"],
+    ["Séparateur", "Intercalaire (INT)"],
+    ["Classement au feu", "M1"],
+    ["Surface média développée", "≈ 33 m²/m² (48 mm) · ≈ 68 m²/m² (98 mm) de section frontale"],
+    ["Efficacité EN 779", "M5 · M6 · F7 · F8 · F9"],
+    ["Efficacité ISO 16890", "ePM10 50% → ePM1 80%"],
+    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
+    ["Humidité relative max.", "100 %"],
+    ["ΔP finale recommandée", "min(ΔP initiale + 100 Pa ; 3 × ΔP initiale) — EN 13053"]
+  ],
+
+  "badges_p1": [
+    "ISO 16890 : ePM10 50% → ePM1 80%",
+    "EN 779 : M5 → F9",
+    "EN 13053"
+  ],
+  "badges_p2": [
+    "ISO 16890 : ePM10 50% → ePM1 80%",
+    "EN 779 : M5 → F9",
+    "EN 13053"
+  ],
+
+  "classes_list": [
+    { "id": "m5", "label": "M5", "iso": "ePM10 50%", "add": 100, "rule": "classe ePM10",
+      "poly": { "48": { "a": 6.206, "b": 11.495, "c": 1.183 }, "98": { "a": 6.431, "b": 9.793, "c": -0.754 } },
+      "points": { "48": [14, 24, 35, 48, 64, 81, 100], "98": [11, 20, 31, 44, 59, 76, 95] } },
+    { "id": "m6", "label": "M6", "iso": "ePM2,5 50%", "add": 100, "rule": "classe ePM2,5",
+      "poly": { "48": { "a": 4.414, "b": 24.876, "c": -3.46 }, "98": { "a": 5.8, "b": 12.3, "c": 1.642 } },
+      "points": { "48": [19, 32, 47, 63, 81, 100, 120], "98": [15, 24, 36, 49, 64, 81, 99] } },
+    { "id": "f7", "label": "F7", "iso": "ePM1 55%", "add": 100, "rule": "classe ePM1",
+      "poly": { "48": { "a": 6.075, "b": 21.556, "c": 2.404 }, "98": { "a": 7.346, "b": 9.226, "c": 5.911 } },
+      "points": { "48": [23, 37, 52, 69, 88, 109, 132], "98": [18, 27, 39, 53, 70, 88, 109] } },
+    { "id": "f8", "label": "F8", "iso": "ePM1 70%", "add": 100, "rule": "classe ePM1",
+      "poly": { "48": { "a": 6.567, "b": 36.887, "c": -10.099 }, "98": { "a": 7.595, "b": 18.438, "c": 2.391 } },
+      "points": { "48": [23, 43, 66, 88, 115, 143, 173], "98": [22, 35, 51, 68, 89, 113, 137] } },
+    { "id": "f9", "label": "F9", "iso": "ePM1 80%", "add": 100, "rule": "classe ePM1",
+      "poly": { "48": { "a": 6.567, "b": 36.887, "c": -0.099 }, "98": { "a": 8.289, "b": 20.972, "c": 2.319 } },
+      "points": { "48": [33, 53, 76, 98, 125, 153, 183], "98": [24, 39, 57, 76, 99, 125, 152] } }
+  ],
+
+  "_points_note": "Points ΔP réels (Pa) mesurés Titanair PRISME A 2018 aux vitesses velocities[]. F8 ep98 7e point (137 Pa @3,17 m/s) extrapolé du polynôme (6 pts mesurés). F9 ep48 = F8 ep48 +10 Pa exact (offset suspect, à valider).",
+
+  "dimensions_multi": [
+    { "L": 592, "H": 592, "P": 48, "surface": "11,68", "debit": 3400 },
+    { "L": 592, "H": 592, "P": 98, "surface": "23,87", "debit": 3400 },
+    { "L": 287, "H": 592, "P": 48, "surface": "5,84",  "debit": 1650 },
+    { "L": 287, "H": 592, "P": 98, "surface": "11,93", "debit": 1650 }
+  ],
+
+  "cadre_codes": [ ["A", "acier galvanisé"], ["P", "plastique"] ],
+
+  "dim_note": "Surface = surface média développée (mini-plis) pour la cellule. La courbe perte de charge étant exprimée en vitesse d'air, elle s'applique à toute dimension hors standard. Référence : NETPAK S CILIA · classe · L×H×P · -A (cadre acier galvanisé) ou -P (cadre plastique). ΔP de référence : voir le tableau perte de charge par classe."
+}

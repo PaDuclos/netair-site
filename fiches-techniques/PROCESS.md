@@ -90,6 +90,7 @@ du débit et contredisent le calculateur.
 | `note_dimensions` | note sous le tableau dimensions |
 | `compact_p1` | réduit les marges verticales de la page 1 (contenu dense qui doit tenir sur l'A4), par produit |
 | `series` (+ `courbes`, `classes_def`, `classes_order`, `eff0`, `len0`) | **mode multi-classes opt-in** (N courbes classe × longueur ; calculateur à sélecteur classe × longueur ; cases par classe). Chemin **legacy 2×2 inchangé** sans cette clé → test d'identité NETPLY préservé. Utilisé par NETBAG S. |
+| `multi_classe` (+ `classes_list`, `dimensions_multi`, `velocities`, `eff_default`) | **mode multi-classes « compact » opt-in** → `generer_multi`. **Sélecteur 5 classes**, 2 courbes (classe choisie en 48/98) à la fois, fiche **3 pages** (P1 desc/specs · P2 dimensions + tableau ΔP complet + courbe · P3 calculateur), surface m²/m², réfs cadre `-A`/`-P`. Chemin 2×2 inchangé. Utilisé par NETPAK S CILIA. ⚠️ proche de `series` — à fusionner un jour. |
 
 ## Pièges identifiés (à surveiller partout)
 
@@ -140,4 +141,13 @@ du débit et contredisent le calculateur.
   → ADD +100 Pa. Vmax 3,17 · nominal 3400 m³/h · axe Y 240 Pa. Descriptif reformulé du `livret_2023` p.9.
   **Anomalie** M5 550 mm (ΔP < 650 mm, incohérent) → marquée « à valider » (courbe pointillée). G4 annoncé
   (gamme) mais non mesuré. Manques suivis dans **`CHECKLIST.md`** (tracker global, section NETBAG S). Photo Titabag détourée = placeholder.
-- Suivants : NETPAK…, NETCEL…, NETCARB… (cf. Bibliothèque)
+- **NETPAK S CILIA** — filtre **compact à mini-plis** (équiv. TITAPAK S PRISME A), **MULTI-CLASSES** (moteur `multi_classe`) ✅
+  Fiche **3 pages** : P1 desc/specs · P2 dimensions + **tableau ΔP complet** + courbe · P3 calculateur. **Sélecteur 5 classes**
+  M5·M6·F7·F8·F9 ; classe choisie tracée en **48 mm (navy) + 98 mm (teal pointillé)** ; calculateur piloté par la classe + toggle
+  épaisseur. Source = **PRISME A HPE 2018** (fiches 2018, ep48+ep98, caches Excel) — courbes distinctes, ΔP croissante, ep98<ep48.
+  **10 polynômes** ajustés R²≈1 (DONNEES_PDC l.38-47). **Surface m²/m²** (≈33 ep48 / ≈68 ep98, dimension-indépendante car courbe
+  en vitesse) + absolus en tableau dims (11,68 / 23,87 m² @592×592). **Cadre** acier galvanisé (**-A**) / plastique (**-P**), même ΔP.
+  **PIÈGES** : (1) PRISME P : F8=F9 (copier-collé) → écarté, PRISME A où F8≠F9 ; (2) PRISME A **ep48 : F9 = F8 + 10 Pa exact**
+  (offset suspect, À VALIDER) ; (3) F8 ep98 = 6 pts, 7e (≈137 Pa @3,17) extrapolé. Vmax 3,17 · nominal 3400 m³/h · axe Y 200 Pa.
+  Nom validé par PA via skill `netair-naming` (CILIA = cils vibratiles, pas de chevauchement PRISME). Photo PLACEHOLDER à remplacer.
+- Suivants : NETPAK S BORA/AZUR/LUMEN/DUO, NETCEL…, NETCARB… (cf. Bibliothèque / CHECKLIST)
