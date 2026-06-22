@@ -1,0 +1,57 @@
+{
+  "_commentaire": "Données NETPLY — sert de RÉFÉRENCE/TEST. La fiche régénérée doit être identique au gabarit d'origine. Modèle à copier pour les autres produits.",
+
+  "slug": "netply",
+  "nom": "NETPLY",
+  "soustitre": "Filtre plissé — Préfiltre synthétique",
+
+  "fiche": { "num": "FT-NETPLY-001", "version": "v1.0", "date": "20/06/2026" },
+
+  "photo": "netply-photo.jpg",
+  "photo_alt": "Filtre NETPLY",
+
+  "description": "Le filtre plissé NETPLY constitue la première barrière filtrante des centrales de traitement d'air. Son média synthétique plissé offre une grande surface active dans un encombrement réduit, garantissant un faible différentiel de pression et une durée de vie optimisée. Disponible de G3 à M5 selon EN 779 / EN ISO 16890, il s'adapte à toutes les dimensions de CTA.",
+
+  "points_cles": [
+    "Faible perte de charge",
+    "Longue durée de vie",
+    "Cadre carton ou métal",
+    "Sans fibre de verre"
+  ],
+
+  "specs": [
+    ["Média filtrant", "Synthétique non-tissé"],
+    ["Structure", "Grille plastique ABS"],
+    ["Cadre", "Carton recyclé ou aluminium"],
+    ["Joint d'étanchéité", "Polyuréthane (option)"],
+    ["Classement au feu", "M1"],
+    ["Surface du média", "0,85 m²"],
+    ["Température de service", "−20 °C à +70 °C"],
+    ["Humidité relative max.", "95 % (sans condensation)"],
+    ["Incinérable", "Oui"]
+  ],
+
+  "badges_p1": [
+    "ISO 16890 : Coarse 65% / ePM10 50%",
+    "EN 779 : G4 / M5",
+    "EN 13053"
+  ],
+  "badges_p2": [
+    "ISO 16890 : Coarse 65% → ePM10 50%",
+    "EN 779 : G4 → M5",
+    "EN 13053"
+  ],
+
+  "classes": {
+    "low":  { "label": "G4", "iso": "Coarse 65%", "poly": { "48": { "a": 5.38, "b": 9.76, "c": -2.14 }, "98": { "a": 5.61, "b": 8.05, "c": -2.79 } }, "add": 50,  "rule": "classe Coarse", "dp": 63 },
+    "high": { "label": "M5", "iso": "ePM10 50%", "poly": { "48": { "a": 6.14, "b": 9.28, "c": -0.07 }, "98": { "a": 6.14, "b": 7.66, "c": -2.86 } }, "add": 100, "rule": "classe ePM10", "dp": 70 }
+  },
+
+  "dimensions": [
+    { "L": 592, "H": 592, "P": 48, "debit": 3400 },
+    { "L": 287, "H": 592, "P": 48, "debit": 1700 },
+    { "L": 490, "H": 592, "P": 48, "debit": 2800 },
+    { "L": 625, "H": 500, "P": 48, "debit": 3050 },
+    { "L": 500, "H": 500, "P": 48, "debit": 2450 }
+  ]
+}
