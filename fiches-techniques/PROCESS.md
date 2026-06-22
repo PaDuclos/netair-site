@@ -139,5 +139,5 @@ du débit et contredisent le calculateur.
   surface média réelle par ligne (3,46–6,10 m²), polynômes auto (LINEST) dans `DONNEES_PDC` l.28-37. Toutes ePM
   → ADD +100 Pa. Vmax 3,17 · nominal 3400 m³/h · axe Y 240 Pa. Descriptif reformulé du `livret_2023` p.9.
   **Anomalie** M5 550 mm (ΔP < 650 mm, incohérent) → marquée « à valider » (courbe pointillée). G4 annoncé
-  (gamme) mais non mesuré. Manques suivis dans **`Fiches_Netair/CHECKLIST_NETBAG.md`**. Photo Titabag détourée = placeholder.
+  (gamme) mais non mesuré. Manques suivis dans **`CHECKLIST.md`** (tracker global, section NETBAG S). Photo Titabag détourée = placeholder.
 - Suivants : NETPAK…, NETCEL…, NETCARB… (cf. Bibliothèque)
