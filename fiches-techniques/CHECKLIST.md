@@ -24,7 +24,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé) · M6 non mesurée · surface média n.c. · photo |
 | NETPAK S LUMEN | 🟡 | Variantes fournisseurs 2024-25 (MFILTER/FILTECH) · surface média n.c. · photo (Titanair visible) |
 | NETPAK S BORA | 🟡 | GREENTEX ePM1 50% retenu (variante HPE 55% non tracée) · courbe lue sur image · surface n.c. · photo |
-| NETPAK S DUO (combiné) | ⬜ | Tout · nom à valider |
+| NETPAK S DUO | 🟡 | ✅ créée (F7 GREENTEX + CA, ep48) · capacité charbon (grammage) à préciser R&D · A4 p2 OK · photo |
 | NETPAK V LAM (laminaire H14) | ⬜ | Tout · pas de nom signature (volontaire) |
 | NETCEL V AZUR / NIVAL | ⬜ | Tout · NIVAL nom validé, AZUR à valider |
 | NETCARB CILIA/AZUR/NIVAL/BAG | ⬜ | Tout · noms à valider (sauf BAG) |
@@ -171,7 +171,6 @@ Données ΔP **réelles** lues sur l'image `GR DSK F7.png`, recoupées FORMULE_P
 > PDF), polynôme (DONNEES_PDC), dimensions, photo. Réfs Titanair dans la Bibliothèque.
 
 ### Poches rigides / compacts — famille NETPAK (noms ⚠ à valider)
-- [ ] **NETPAK S DUO** (particulaire + charbon actif) — réf. PRISME DUO
 - [ ] **NETPAK V LAM** (laminaire H14, pas de nom signature — volontaire) — réf. TITAPAK V LAM
 
 ### HEPA / T.H.E — famille NETCEL
