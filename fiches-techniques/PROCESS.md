@@ -89,6 +89,7 @@ du débit et contredisent le calculateur.
 | `classes.*.epaisseur` | épaisseur réelle (légende, libellés) |
 | `note_dimensions` | note sous le tableau dimensions |
 | `compact_p1` | réduit les marges verticales de la page 1 (contenu dense qui doit tenir sur l'A4), par produit |
+| `series` (+ `courbes`, `classes_def`, `classes_order`, `eff0`, `len0`) | **mode multi-classes opt-in** (N courbes classe × longueur ; calculateur à sélecteur classe × longueur ; cases par classe). Chemin **legacy 2×2 inchangé** sans cette clé → test d'identité NETPLY préservé. Utilisé par NETBAG S. |
 
 ## Pièges identifiés (à surveiller partout)
 
@@ -132,4 +133,11 @@ du débit et contredisent le calculateur.
   (probable graphe Excel réutilisé) mais recoupée par doc 2013 (ΔP init G4 38 Pa @1,5 m/s) → retenue en la signalant.
   Gamme complète G2→M5 annoncée (specs+sous-titre) mais courbes G2/G3/M5 **à mesurer** (doc 2013 : G2 10/G3 24/M5 125 Pa @1,5 m/s).
   Photo Titanair détourée sur blanc (rouleau+panneaux) — placeholder à remplacer par photo Netair.
-- Suivants : NETBAG S, NETPAK…, NETCEL…, NETCARB… (cf. Bibliothèque)
+- **NETBAG S** — poches souples, fiche **MULTI-CLASSES** (1ʳᵉ utilisation du moteur `series`). 10 courbes ΔP
+  **réelles** extraites des **courbes vectorielles** des PDF `TITABAG` 2018 (recalées sur les axes ; contrôle :
+  F9 p500 reproduit 38/58/81/105/134/166/199 Pa). Classes M5/M6/F7/F8/F9 × profondeurs 380/500/550/650 mm,
+  surface média réelle par ligne (3,46–6,10 m²), polynômes auto (LINEST) dans `DONNEES_PDC` l.28-37. Toutes ePM
+  → ADD +100 Pa. Vmax 3,17 · nominal 3400 m³/h · axe Y 240 Pa. Descriptif reformulé du `livret_2023` p.9.
+  **Anomalie** M5 550 mm (ΔP < 650 mm, incohérent) → marquée « à valider » (courbe pointillée). G4 annoncé
+  (gamme) mais non mesuré. Manques suivis dans **`Fiches_Netair/CHECKLIST_NETBAG.md`**. Photo Titabag détourée = placeholder.
+- Suivants : NETPAK…, NETCEL…, NETCARB… (cf. Bibliothèque)
