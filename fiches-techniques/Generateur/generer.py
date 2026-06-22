@@ -266,7 +266,7 @@ def build_series_selector(d):
     cdef = d["classes_def"]; order = d["classes_order"]
     present = [c for c in order if any(s["cls"] == c for s in d["courbes"])]
     btns = "".join(
-        f'<button id="be_{c}" style="flex:1;">{cdef[c]["label"]}</button>' for c in present)
+        f'<button id="be_{c}" style="flex:1; font-size:10px;">{cdef[c]["iso"]} ({cdef[c]["label"]})</button>' for c in present)
     return (
         '            <div style="display:grid; grid-template-columns:1fr; gap:10px;">\n'
         '              <div>\n'
@@ -345,6 +345,7 @@ SERIES_JS = r"""<script>
   var ON  = 'background:#0897A5; color:#fff; box-shadow:0 1px 3px rgba(8,151,165,.4);';
   var OFF = 'background:transparent; color:#5A6573; box-shadow:none;';
   var BTN = 'flex:1; padding:7px 3px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .12s; white-space:nowrap; ';
+  var BEB = 'flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:9px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .12s; white-space:nowrap; ';
   var BTL = 'padding:6px 10px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; ';
 
   var NS = 'http://www.w3.org/2000/svg';
@@ -389,7 +390,7 @@ SERIES_JS = r"""<script>
     }
     for (i = 0; i < ORDER.length; i++) {
       var cb = $('cb_' + ORDER[i]); if (cb) cb.checked = state.disp[ORDER[i]] !== false;
-      var be = $('be_' + ORDER[i]); if (be) be.setAttribute('style', BTN + (state.eff === ORDER[i] ? ON : OFF));
+      var be = $('be_' + ORDER[i]); if (be) be.setAttribute('style', BEB + (state.eff === ORDER[i] ? ON : OFF));
     }
     buildLenBtns();
 
@@ -745,7 +746,7 @@ def build_multi_section(d):
         for c in classes)
     # sélecteur d'efficacité PROPRE au calculateur (indépendant de la courbe)
     calcbtns = "\n                  ".join(
-        f'<button id="ce_{c["id"]}" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit;">{c["label"]}</button>'
+        f'<button id="ce_{c["id"]}" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:9px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">{c["iso"]} ({c["label"]})</button>'
         for c in classes)
     grid = build_gridlines(vmax, vnom)
     xlab = build_xlabels(vmax)
@@ -990,6 +991,7 @@ def build_multi_js(d):
   var OFF = 'background:transparent; color:#5A6573; box-shadow:none;';
   var BTN = 'flex:1; padding:7px 3px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .12s; white-space:nowrap; ';
   var SEL = 'flex:1; padding:7px 3px; border:none; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .12s; white-space:nowrap; ';
+  var CEB = 'flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:9px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .12s; white-space:nowrap; ';
 
   function render() {{
     var eff = state.eff;          // courbe
@@ -1020,7 +1022,7 @@ def build_multi_js(d):
       var b = $('cls_' + id);
       if (b) b.setAttribute('style', SEL + (id === eff ? ON : OFF));
       var c = $('ce_' + id);   // sélecteur d'efficacité du CALCULATEUR
-      if (c) c.setAttribute('style', BTN + (id === ceff ? ON : OFF));
+      if (c) c.setAttribute('style', CEB + (id === ceff ? ON : OFF));
     }});
     $('clsIso').textContent = LAB[eff] + ' · ' + ISO[eff];
     $('leg48t').textContent = LAB[eff] + ' · ' + ISO[eff] + ' — 48 mm';

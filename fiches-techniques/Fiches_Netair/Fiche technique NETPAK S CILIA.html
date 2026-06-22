@@ -330,11 +330,11 @@
               <div>
                 <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d'efficacité</div>
                 <div style="display:flex; background:#EEF3F9; border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;">
-                  <button id="ce_m5" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit;">M5</button>
-                  <button id="ce_m6" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit;">M6</button>
-                  <button id="ce_f7" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit;">F7</button>
-                  <button id="ce_f8" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit;">F8</button>
-                  <button id="ce_f9" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit;">F9</button>
+                  <button id="ce_m5" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:9px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">ePM10 50% (M5)</button>
+                  <button id="ce_m6" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:9px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">ePM2,5 50% (M6)</button>
+                  <button id="ce_f7" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:9px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">ePM1 50% (F7)</button>
+                  <button id="ce_f8" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:9px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">ePM1 70% (F8)</button>
+                  <button id="ce_f9" type="button" style="flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:9px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap;">ePM1 80% (F9)</button>
                 </div>
               </div>
               <div>
@@ -484,6 +484,7 @@
   var OFF = 'background:transparent; color:#5A6573; box-shadow:none;';
   var BTN = 'flex:1; padding:7px 3px; border:none; border-radius:6px; font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .12s; white-space:nowrap; ';
   var SEL = 'flex:1; padding:7px 3px; border:none; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .12s; white-space:nowrap; ';
+  var CEB = 'flex:1; padding:7px 2px; border:none; border-radius:6px; font-size:9px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .12s; white-space:nowrap; ';
 
   function render() {
     var eff = state.eff;          // courbe
@@ -514,7 +515,7 @@
       var b = $('cls_' + id);
       if (b) b.setAttribute('style', SEL + (id === eff ? ON : OFF));
       var c = $('ce_' + id);   // sélecteur d'efficacité du CALCULATEUR
-      if (c) c.setAttribute('style', BTN + (id === ceff ? ON : OFF));
+      if (c) c.setAttribute('style', CEB + (id === ceff ? ON : OFF));
     });
     $('clsIso').textContent = LAB[eff] + ' · ' + ISO[eff];
     $('leg48t').textContent = LAB[eff] + ' · ' + ISO[eff] + ' — 48 mm';
