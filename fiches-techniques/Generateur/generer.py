@@ -292,7 +292,7 @@ def build_dimensions_series(d):
         tr = ' style="background:#F2F6FB;"' if grey else ""
         cl = cdef[s["cls"]]
         L, H, P = 592, 592, s["len"]
-        surf = f'{s["surface"]:.2f}'.replace(".", ",")
+        surf = f'{s["surface"]:.2f}'.replace(".", ",") if "surface" in s else "n.c."
         debit = fr_debit(dnom)
         eff = f'{cl["iso"]} ({cl["label"]})'
         ref = f'{nom}-{cl["iso"]}-{cl["label"]}-{L}x{H}x{P}'
@@ -573,6 +573,11 @@ def generer_series(d, html):
     # --- script principal (modèle N-séries)
     html = sub1(html, r'<script>\n\(function \(\) \{\n  "use strict";.*?\n  render\(\);\n\}\)\(\);\n</script>',
                 lambda m: build_series_script(d), flags=re.DOTALL)
+
+    # --- note sous le tableau dimensions (optionnelle)
+    if "note_dimensions" in d:
+        html = sub1(html, r'(margin-top:6px; line-height:1\.45;">)(.*?)(</div>)',
+                    lambda m: m.group(1) + d["note_dimensions"] + m.group(3), flags=re.DOTALL)
 
     # --- page 1 compacte
     if d.get("compact_p1"):
@@ -1346,6 +1351,24 @@ def generer(d, html):
         html = html.replace("margin:9mm 0 7mm 0;", "margin:6mm 0 5mm 0;")           # filet en-tête P1
         html = html.replace('<div style="margin-top:9mm;">', '<div style="margin-top:6mm;">')   # Caractéristiques
         html = html.replace('<div style="margin-top:8mm;">', '<div style="margin-top:6mm;">')   # Dimensions
+
+    # --- page 2 compacte (par produit) : courbe + calculateur sur une seule page A4.
+    #     Réduit les marges de la page 2 et la taille du graphe, sans toucher le gabarit
+    #     par défaut (NETPLY) ni le test d'identité.
+    if d.get("compact_p2"):
+        html = html.replace("margin:7mm 0 7mm 0;", "margin:4mm 0 4mm 0;")                       # filet en-tête P2
+        html = html.replace('<div style="margin-top:6mm; border:1px solid #E1E7EF;',
+                            '<div style="margin-top:3mm; border:1px solid #E1E7EF;')             # cadre courbe
+        html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
+                            'display:flex; align-items:center; gap:18px; margin-top:4px;">')     # ligne « Afficher : »
+        html = html.replace('gap:10px; margin-top:9mm;">',
+                            'gap:10px; margin-top:5mm;">')                                       # titre Calculateur
+        html = html.replace('gap:7mm; margin-top:6mm; align-items:stretch;">',
+                            'gap:7mm; margin-top:4mm; align-items:stretch;">')                   # grille calculateur
+        html = html.replace('margin-top:7mm; background:#F2F6FB;',
+                            'margin-top:4mm; background:#F2F6FB;')                               # note méthode
+        html = html.replace('<svg id="curveSvg" viewBox="0 0 600 300" style="width:100%; height:auto; display:block;">',
+                            '<svg id="curveSvg" viewBox="0 0 600 300" style="width:84%; height:auto; display:block; margin:0 auto;">')
 
     return html
 

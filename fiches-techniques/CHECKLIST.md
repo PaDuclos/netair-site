@@ -21,7 +21,8 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETBAG S | 🟡 | Anomalie M5 550/650 · G4 non mesuré · 287×592 & humidité · photo |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
-| NETPAK S BORA/AZUR/LUMEN | ⬜ | Tout (descriptif, ΔP, dimensions) · **noms à valider** |
+| NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé) · M6 non mesurée · surface média n.c. · photo |
+| NETPAK S BORA/LUMEN | ⬜ | Tout (descriptif, ΔP, dimensions) · **noms à valider** |
 | NETPAK S DUO (combiné) | ⬜ | Tout · nom à valider |
 | NETPAK V LAM (laminaire H14) | ⬜ | Tout · pas de nom signature (volontaire) |
 | NETCEL V AZUR / NIVAL | ⬜ | Tout · NIVAL nom validé, AZUR à valider |
@@ -128,6 +129,16 @@ Polynômes : `DONNEES_PDC` l.38-47.
 - [ ] **Surface média m²/m²** : le tableau dimensions affiche les valeurs HPE (11,68 m² ép. 48 / 23,87 ép. 98 @592×592) comme représentatives ; le F7 GREENTEX diffère (12,55 / 25,65 m²) → préciser si on distingue par classe.
 - [ ] **Photo** : TITAPAK PRISME A HD (© A. Périer) détourée sur blanc = placeholder → photo produit Netair.
 
+### NETPAK S AZUR 🟡
+Compact polydièdre rigide (équiv. TITAPAK SV-GD). Multi-classes **F7/F8/F9** (ePM1, moteur `series`), profondeur 292.
+Données ΔP **réelles** : caches Excel SV-GD 2018 (F7/F9) + FORMULE_PDC. Polynômes : `DONNEES_PDC` l.48-51.
+
+- [ ] **🟠 F8 (ePM1 70 %) = F9 × 0,95 EXACTEMENT** (18=round(19×0,95), … sur les 7 points) → courbe **dérivée, non mesurée** (même type de piège que CILIA F9=F8+10 et NETBAG M5). Affichée normalement sur **décision dirigeant**, mais **à mesurer en R&D**.
+- [ ] **M6 ePM2,5 50 %** annoncée (livret DEHS) mais **aucune courbe 2018** → mise en specs/badges seulement (« sur demande ») → courbe à mesurer.
+- [ ] **Surface média développée non communiquée** (n.c.) par Titanair → à obtenir/mesurer pour le tableau dimensions.
+- [ ] **Largeurs 490/287** : F9 mesuré en 490 ; F7/F8 en 490/287 non mesurés (extrapolés du 592).
+- [ ] **Photo** : SV-GD réelle (© A. Périer) légèrement nettoyée = placeholder → photo produit Netair.
+
 ---
 
 ## Fiches à créer — données à rassembler
@@ -137,7 +148,6 @@ Polynômes : `DONNEES_PDC` l.38-47.
 
 ### Poches rigides / compacts — famille NETPAK (noms ⚠ à valider)
 - [ ] **NETPAK S BORA** (compact à brides / DSK) — réf. TITAPAK S D.S.K
-- [ ] **NETPAK S AZUR** (polydièdre) — réf. TITAPAK SV GD
 - [ ] **NETPAK S LUMEN** (polydièdre rechargeable, argument RSE) — réf. TITAPAK S QUARTZ
 - [ ] **NETPAK S DUO** (particulaire + charbon actif) — réf. PRISME DUO
 - [ ] **NETPAK V LAM** (laminaire H14, pas de nom signature — volontaire) — réf. TITAPAK V LAM
