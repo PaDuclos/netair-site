@@ -396,7 +396,7 @@ SERIES_JS = r"""<script>
     var cs = curSeries(), co = cs.co, add = CLS[cs.cls].add, rule = CLS[cs.cls].rule;
     var areaNum = (Math.max(50, state.flen) / 1000) * (Math.max(50, state.fwid) / 1000);
     var velNum = (state.debit / 3600) / areaNum;
-    var dpInit = pdc(co, velNum), dpFinal = Math.min(dpInit + add, dpInit * 3), dpAvg = (dpInit + dpFinal) / 2;
+    var dpInit = pdc(co, velNum), dpFinal = Math.min(dpInit + add, dpInit * 3), dpAvg = (dpFinal / 2) * 0.85;
     $('dpInit').textContent = fr(dpInit); $('dpFinal').textContent = fr(dpFinal); $('dpAvg').textContent = fr(dpAvg);
     $('effAdd').textContent = add; $('effRule').textContent = rule;
     $('area').textContent = areaNum.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -602,14 +602,14 @@ def build_dp_table(d):
             i += 1
             tr = ' style="background:#F2F6FB;"' if (i % 2 == 0) else ""
             tds = "".join(
-                f'<td style="padding:2.5px 6px; text-align:right; '
+                f'<td style="padding:2px 6px; text-align:right; '
                 f"font-family:'IBM Plex Mono',monospace; color:#3a4654;\">{p}</td>"
                 for p in cls["points"][ep])
             rows.append(
                 f'<tr{tr}>'
-                f'<td style="padding:2.5px 7px; font-weight:700; color:#0F3261;">{cls["label"]}</td>'
-                f'<td style="padding:2.5px 7px; color:#5A6573; font-family:\'IBM Plex Mono\',monospace;">{cls["iso"]}</td>'
-                f'<td style="padding:2.5px 7px; color:#5A6573;">{ep}&nbsp;mm</td>'
+                f'<td style="padding:2px 7px; font-weight:700; color:#0F3261;">{cls["label"]}</td>'
+                f'<td style="padding:2px 7px; color:#5A6573; font-family:\'IBM Plex Mono\',monospace;">{cls["iso"]}</td>'
+                f'<td style="padding:2px 7px; color:#5A6573;">{ep}&nbsp;mm</td>'
                 f'{tds}</tr>')
     body = "\n".join("              " + r for r in rows)
     return (
@@ -636,7 +636,7 @@ def build_dp_table(d):
         f'{body}\n'
         '            </tbody>\n'
         '          </table>\n'
-        '          <div style="font-size:10px; color:#8b97a6; margin-top:6px; line-height:1.45;">Valeurs ΔP initiales mesurées (média propre, air 20 °C) — source fiches techniques 2018. F8 (98 mm) : dernier point extrapolé. ΔP finale recommandée = min(ΔP&nbsp;initiale&nbsp;+&nbsp;100&nbsp;Pa ; 3&nbsp;×&nbsp;ΔP&nbsp;initiale) — EN&nbsp;13053.</div>\n'
+        '          <div style="font-size:10px; color:#8b97a6; margin-top:3px; line-height:1.4;">Valeurs ΔP initiales mesurées (média propre, air 20 °C) — fiches techniques 2018 (F7 = GREENTEX, basse résistance). F8 (98 mm) : dernier point extrapolé. ΔP finale recommandée = min(ΔP&nbsp;initiale&nbsp;+&nbsp;100&nbsp;Pa ; 3&nbsp;×&nbsp;ΔP&nbsp;initiale) — EN&nbsp;13053.</div>\n'
         '        </div>')
 
 
@@ -808,7 +808,7 @@ def build_multi_section(d):
             </g>
             <rect id="hoverHit" x="52" y="16" width="528" height="234" fill="transparent" style="cursor:crosshair;"></rect>
           </svg>
-          <div style="display:flex; gap:14px 18px; align-items:center; margin-top:2mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
+          <div style="display:flex; gap:14px 18px; align-items:center; margin-top:1mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
             <div id="leg48" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:{C48}; display:inline-block; border-radius:2px;"></span><span id="leg48t"></span></div>
             <div id="leg98" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:0; border-top:3px dashed {C98}; display:inline-block;"></span><span id="leg98t"></span></div>
             <div style="margin-left:auto; font-style:italic; color:#5A6573;">Média propre — air à 20 °C</div>
@@ -988,7 +988,7 @@ def build_multi_js(d):
     var velNum = (state.debit / 3600) / areaNum;
     var dpInitNum = pdc(co, velNum);
     var dpFinalNum = Math.min(dpInitNum + ADD[eff], dpInitNum * 3);
-    var dpAvgNum = (dpInitNum + dpFinalNum) / 2;
+    var dpAvgNum = (dpFinalNum / 2) * 0.85;
 
     $('p48').setAttribute('d', curve(co48));
     $('p98').setAttribute('d', curve(co98));

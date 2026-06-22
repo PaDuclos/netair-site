@@ -144,7 +144,7 @@ du débit et contredisent le calculateur.
 - **NETPAK S CILIA** — filtre **compact à mini-plis** (équiv. TITAPAK S PRISME A), **MULTI-CLASSES** (moteur `multi_classe`) ✅
   Fiche **3 pages** : P1 desc/specs · P2 dimensions + **tableau ΔP complet** + courbe · P3 calculateur. **Sélecteur 5 classes**
   M5·M6·F7·F8·F9 ; classe choisie tracée en **48 mm (navy) + 98 mm (teal pointillé)** ; calculateur piloté par la classe + toggle
-  épaisseur. Source = **PRISME A HPE 2018** (fiches 2018, ep48+ep98, caches Excel) — courbes distinctes, ΔP croissante, ep98<ep48.
+  épaisseur. Source = **PRISME A HPE 2018** (M5/M6/F8/F9) + **GR PRISME A GREENTEX** pour le **F7 (ePM1 50%, média basse résistance)** — fiches 2018, ep48+ep98, caches Excel.
   **10 polynômes** ajustés R²≈1 (DONNEES_PDC l.38-47). **Surface m²/m²** (≈33 ep48 / ≈68 ep98, dimension-indépendante car courbe
   en vitesse) + absolus en tableau dims (11,68 / 23,87 m² @592×592). **Cadre** acier galvanisé (**-A**) / plastique (**-P**), même ΔP.
   **PIÈGES** : (1) PRISME P : F8=F9 (copier-collé) → écarté, PRISME A où F8≠F9 ; (2) PRISME A **ep48 : F9 = F8 + 10 Pa exact**

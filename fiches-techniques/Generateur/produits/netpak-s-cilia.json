@@ -60,9 +60,9 @@
     { "id": "m6", "label": "M6", "iso": "ePM2,5 50%", "add": 100, "rule": "classe ePM2,5",
       "poly": { "48": { "a": 4.414, "b": 24.876, "c": -3.46 }, "98": { "a": 5.8, "b": 12.3, "c": 1.642 } },
       "points": { "48": [19, 32, 47, 63, 81, 100, 120], "98": [15, 24, 36, 49, 64, 81, 99] } },
-    { "id": "f7", "label": "F7", "iso": "ePM1 55%", "add": 100, "rule": "classe ePM1",
-      "poly": { "48": { "a": 6.075, "b": 21.556, "c": 2.404 }, "98": { "a": 7.346, "b": 9.226, "c": 5.911 } },
-      "points": { "48": [23, 37, 52, 69, 88, 109, 132], "98": [18, 27, 39, 53, 70, 88, 109] } },
+    { "id": "f7", "label": "F7", "iso": "ePM1 50%", "add": 100, "rule": "classe ePM1",
+      "poly": { "48": { "a": 2.858, "b": 15.584, "c": -2.224 }, "98": { "a": 5.883, "b": 7.916, "c": 0.756 } },
+      "points": { "48": [12, 20, 30, 40, 51, 63, 76], "98": [10, 19, 29, 40, 52, 67, 86] } },
     { "id": "f8", "label": "F8", "iso": "ePM1 70%", "add": 100, "rule": "classe ePM1",
       "poly": { "48": { "a": 6.567, "b": 36.887, "c": -10.099 }, "98": { "a": 7.595, "b": 18.438, "c": 2.391 } },
       "points": { "48": [23, 43, 66, 88, 115, 143, 173], "98": [22, 35, 51, 68, 89, 113, 137] } },
@@ -71,7 +71,7 @@
       "points": { "48": [33, 53, 76, 98, 125, 153, 183], "98": [24, 39, 57, 76, 99, 125, 152] } }
   ],
 
-  "_points_note": "Points ΔP réels (Pa) mesurés Titanair PRISME A 2018 aux vitesses velocities[]. F8 ep98 7e point (137 Pa @3,17 m/s) extrapolé du polynôme (6 pts mesurés). F9 ep48 = F8 ep48 +10 Pa exact (offset suspect, à valider).",
+  "_points_note": "Points ΔP réels (Pa) Titanair aux vitesses velocities[]. M5/M6/F8/F9 = TITAPAK S HPE PRISME A 2018. F7 = TITAPAK S GR PRISME A (technologie GREENTEX, ePM1 50%, média basse résistance → ΔP plus faible que HPE, passe sous M5/M6 ; surface 12,55 m² ep48 / 25,65 m² ep98 ; ΔP nom 61/65 Pa, léger croisement ep48/ep98 à haute vitesse dans la fiche source). F8 ep98 7e point (137 Pa @3,17 m/s) extrapolé du polynôme (6 pts mesurés). F9 ep48 = F8 ep48 +10 Pa exact (offset suspect, à valider).",
 
   "dimensions_multi": [
     { "L": 592, "H": 592, "P": 48, "surface": "11,68", "debit": 3400 },
