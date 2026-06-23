@@ -17,18 +17,18 @@
   "photo": "netpak-s-lumen-photo.jpg",
   "photo_alt": "Filtre compact polydièdre rechargeable NETPAK S LUMEN",
 
-  "description": "Le NETPAK S LUMEN est un filtre compact à polydièdres rigides rechargeable, conçu pour la filtration fine des centrales de traitement d'air dans une démarche d'éco-conception. Sa carcasse polydièdre est conservée d'un cycle à l'autre : seules les cassettes de média en microfibres de polypropylène sont remplacées, ce qui divise les déchets par quatre et réduit le stockage comme la manutention. Le média haute performance (HPE), sans couture ni colle ni séparateur, conjugue une très faible perte de charge et une longue durée de vie, sans microfibre de verre. Disponible de F7 à F9 (ePM1 55 % → 80 %) selon EN 779 / EN ISO 16890, en profondeur 292 mm, sur cadre 592×592 (et 287×592).",
+  "description": "Le NETPAK S LUMEN est un filtre compact à polydièdres rigides rechargeable, conçu pour la filtration fine des centrales de traitement d'air dans une démarche d'éco-conception. Sa carcasse polydièdre est conservée d'un cycle à l'autre : seules les cassettes de média en microfibres de polypropylène sont remplacées, ce qui divise les déchets par quatre et réduit le stockage comme la manutention. Le média haute performance, sans couture ni colle ni séparateur, conjugue une très faible perte de charge et une longue durée de vie, sans microfibre de verre. Disponible de F7 à F9 (ePM1 55 % → 80 %) selon EN 779 / EN ISO 16890, en profondeur 292 mm, sur cadre 592×592 (et 287×592).",
 
   "points_cles": [
     "Polydièdre rechargeable — déchets ÷ 4",
     "Cassettes de média remplaçables",
-    "Très faible perte de charge (HPE)",
+    "Très faible perte de charge",
     "Sans fibre de verre ni séparateur",
     "Éco-conception / RSE"
   ],
 
   "specs": [
-    ["Média filtrant", "Microfibres de polypropylène HPE (cassettes)"],
+    ["Média filtrant", "Microfibres de polypropylène (cassettes)"],
     ["Type", "Compact polydièdre rechargeable"],
     ["Cadre / parois", "Polydièdre plastique réutilisable (polyester)"],
     ["Recharge", "Cassettes de média remplaçables — carcasse conservée"],

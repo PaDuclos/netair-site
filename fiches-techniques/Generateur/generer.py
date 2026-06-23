@@ -663,7 +663,7 @@ def build_dp_table(d):
         f'{body}\n'
         '            </tbody>\n'
         '          </table>\n'
-        '          <div style="font-size:10px; color:#8b97a6; margin-top:3px; line-height:1.4;">Valeurs ΔP initiales mesurées (média propre, air 20 °C) — fiches techniques 2018 (F7 = GREENTEX, basse résistance). F8 (98 mm) : dernier point extrapolé. ΔP finale recommandée = min(ΔP&nbsp;initiale&nbsp;+&nbsp;100&nbsp;Pa ; 3&nbsp;×&nbsp;ΔP&nbsp;initiale) — EN&nbsp;13053.</div>\n'
+        '          <div style="font-size:10px; color:#8b97a6; margin-top:3px; line-height:1.4;">Valeurs ΔP initiales mesurées (média propre, air 20 °C) ; le média F7 est à basse résistance. F8 (98 mm) : dernier point extrapolé. ΔP finale recommandée = min(ΔP&nbsp;initiale&nbsp;+&nbsp;100&nbsp;Pa ; 3&nbsp;×&nbsp;ΔP&nbsp;initiale) — EN&nbsp;13053.</div>\n'
         '        </div>')
 
 
