@@ -72,6 +72,48 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
         );
         els.forEach((el) => io.observe(el));
       }
+
+      // Compteurs animés (data-count)
+      const counters = document.querySelectorAll('[data-count]');
+      if (counters.length) {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const fmt = (v, dec) => (dec ? v.toFixed(dec) : Math.round(v).toLocaleString('fr-FR'));
+        const cio = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              const el = e.target;
+              const target = parseFloat(el.dataset.count);
+              const dec = parseInt(el.dataset.decimals || '0', 10);
+              const suffix = el.dataset.suffix || '';
+              if (reduce) {
+                el.textContent = fmt(target, dec) + suffix;
+              } else {
+                const dur = 1400;
+                const start = performance.now();
+                const step = (now) => {
+                  const p = Math.min((now - start) / dur, 1);
+                  const eased = 1 - Math.pow(1 - p, 3);
+                  el.textContent = fmt(target * eased, dec) + suffix;
+                  if (p < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+              }
+              cio.unobserve(el);
+            }
+          },
+          { threshold: 0.5 },
+        );
+        counters.forEach((el) => cio.observe(el));
+      }
+
+      // Ombre de l'en-tête au défilement
+      const navInner = document.getElementById('nav-inner');
+      if (navInner) {
+        const onScroll = () => navInner.classList.toggle('shadow-lift', window.scrollY > 12);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
     </script>
   </body>
 </html>

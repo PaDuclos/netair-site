@@ -1,5 +1,5 @@
 ---
-// En-tête : logo sur fond blanc + lame turquoise verticale + navigation.
+// En-tête : barre vitrée flottante + lame turquoise (signature charte) + navigation.
 const links = [
   { href: '/gammes', label: 'Gammes' },
   { href: '/a-propos', label: 'À propos' },
@@ -8,22 +8,25 @@ const links = [
 const path = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-30 bg-blanc/85 backdrop-blur-md border-b border-soft">
-  <div class="relative mx-auto max-w-[1140px] px-7">
-    <!-- Lame turquoise verticale (remplace l'ancien bandeau bleu) -->
-    <span class="absolute left-0 top-2 bottom-2 w-[3px] bg-turquoise rounded-full" aria-hidden="true"></span>
+<header class="fixed inset-x-0 top-0 z-40">
+  <div class="mx-auto max-w-[1200px] px-5 sm:px-8">
+    <div
+      id="nav-inner"
+      class="relative mt-3 flex h-16 items-center justify-between rounded-2xl glass px-4 pl-5 shadow-soft transition-shadow duration-300"
+    >
+      <!-- Lame turquoise verticale (signature « Precision Blanche ») -->
+      <span class="absolute left-0 top-3 bottom-3 w-[3px] rounded-full bg-turquoise" aria-hidden="true"></span>
 
-    <div class="flex items-center justify-between py-3.5">
       <a href="/" class="flex items-center" aria-label="Netair — accueil">
         <img src="/brand/logo.svg" alt="Netair" class="h-8 w-auto" />
       </a>
 
-      <nav class="hidden md:flex items-center gap-8" aria-label="Navigation principale">
+      <nav class="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
         {links.map((l) => (
           <a
             href={l.href}
             class:list={[
-              'text-sm font-medium transition-colors hover:text-marine',
+              'link-underline text-sm font-medium transition-colors hover:text-marine',
               path.startsWith(l.href) ? 'text-marine' : 'text-muted',
             ]}
           >
@@ -34,11 +37,13 @@ const path = Astro.url.pathname;
 
       <a
         href="/contact"
-        class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
-        style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
+        class="brand-gradient group inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold text-blanc shadow-soft transition-all duration-200 hover:shadow-lift"
       >
-        Demander un devis →
+        Demander un devis
+        <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
       </a>
     </div>
   </div>
 </header>
+<!-- Cale pour compenser l'en-tête fixe -->
+<div class="h-[88px]" aria-hidden="true"></div>
