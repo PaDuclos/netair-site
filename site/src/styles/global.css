@@ -18,6 +18,14 @@
   --color-soft: #E2E8F0;
   --color-mist: #F8FAFC;
 
+  /* Alias des noms de l'ancienne page (pour un en-tête identique partout) */
+  --color-primary: #0F3261;
+  --color-accent: #0897A5;
+  --color-accent-bright: #0070C8;
+  --color-background: #F8FAFC;
+  --color-foreground: #0F3261;
+  --color-border-soft: #E2E8F0;
+
   /* Polices auto-hébergées (importées dans BaseLayout) */
   --font-display: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif; /* titres */
   --font-body: "DM Sans Variable", "DM Sans", system-ui, sans-serif; /* corps */
