@@ -49,6 +49,15 @@ l'octet près (test d'identité — à relancer après toute modif du moteur ou 
    NETPLY si le moteur/gabarit a changé.
 9. **Commit + push.**
 
+## Publication sur le site (synchro auto)
+
+Les fiches vivent à **deux endroits** : `Fiches_Netair/` (sortie du générateur) et
+`site/public/fiches-techniques/` (copie **servie par le site Astro**, port 4321, suivie par git).
+Depuis le 23/06/2026, `generer.py` **synchronise automatiquement** la fiche + sa photo vers
+`site/public/fiches-techniques/` à chaque génération (sortie par défaut). Donc : régénérer une
+fiche la publie aussitôt sur le site. Désactiver avec `--no-site` ; ignoré si `--out` est utilisé
+ou si le dossier du site est absent. (Avant cette date, la copie publiée pouvait rester périmée.)
+
 ## Modèle ΔP (validé)
 
 Calculateur = **polynôme `ΔP = a·v² + b·v + c`** (mesures R&D), source `DONNEES_PDC`.
