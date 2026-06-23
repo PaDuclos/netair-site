@@ -324,9 +324,9 @@
         </div>
         <div style="font-size:12px; color:#5A6573; margin-top:5px; line-height:1.5;">Estimez la consommation du ventilateur liée à la perte de charge du filtre sur une année de fonctionnement. Choisissez la classe d'efficacité et l'épaisseur (indépendamment de la courbe), puis ajustez les paramètres.</div>
 
-        <div style="display:grid; grid-template-columns:1fr 80mm; gap:7mm; margin-top:5mm; align-items:stretch;">
-          <div style="display:flex; flex-direction:column; gap:11px; padding-top:1px;">
-            <div style="display:grid; grid-template-columns:1.7fr 1fr; gap:12px;">
+        <div style="display:grid; grid-template-columns:minmax(0,1fr) 80mm; gap:7mm; margin-top:5mm; align-items:stretch;">
+          <div style="display:flex; flex-direction:column; gap:11px; padding-top:1px; min-width:0;">
+            <div style="display:flex; flex-direction:column; gap:11px;">
               <div>
                 <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d'efficacité</div>
                 <div style="display:flex; background:#EEF3F9; border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;">
@@ -339,7 +339,7 @@
               </div>
               <div>
                 <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Épaisseur</div>
-                <div style="display:flex; background:#EEF3F9; border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;">
+                <div style="display:flex; background:#EEF3F9; border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px; max-width:200px;">
                   <button id="btnThick48" type="button">48 mm</button>
                   <button id="btnThick98" type="button">98 mm</button>
                 </div>
