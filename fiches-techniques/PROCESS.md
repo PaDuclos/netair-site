@@ -49,6 +49,30 @@ l'octet près (test d'identité — à relancer après toute modif du moteur ou 
    NETPLY si le moteur/gabarit a changé.
 9. **Commit + push.**
 
+## Pipeline ΔP : DONNEES_PDC → fiches → site (automatisé, 23/06/2026)
+
+**Source de vérité UNIQUE des pertes de charge = `DONNEES_PDC_Netair.xlsx`.** (`FORMULE_PDC.xlsx`
+= archive Titanair de référence, non utilisée par la chaîne.)
+
+**Workflow R&D :** quand une mesure de perte de charge évolue, on **ne touche qu'à l'Excel** :
+1. Ouvrir `DONNEES_PDC_Netair.xlsx`, trouver la ligne du produit (n° fiche / classe / longueur),
+   mettre à jour les **ΔP mesurées** dans les cases par débit (1000→4000). Enregistrer.
+2. **Double-cliquer `Mettre à jour les fiches.command`** (ou `cd Generateur && python3 maj_fiches.py`
+   pour l'aperçu, puis `--apply`).
+3. Tout se met à jour en cascade, automatiquement :
+   coefficients du polynôme (recalculés par le script, **indépendamment du recalcul Excel**) →
+   ΔP de référence (classes + tableau dimensions) → **version de la fiche bumpée (v1.x) + date du jour** →
+   fiche HTML régénérée (courbe + calculateur) → **copie publiée sur le site**.
+
+**Robustesse / garde-fous :**
+- Le polynôme est **recalculé par numpy** depuis les ΔP brutes (pas lu du cache Excel, peu fiable).
+- **Tolérance** : un changement n'est signalé que si la courbe ΔP bouge de **> 1 Pa** sur la plage
+  réelle du produit (`vmax`) → pas de bump de version pour du bruit d'arrondi. Test d'acceptation :
+  sur les données actuelles, `maj_fiches.py` affiche **0 changement** (idempotent).
+- Une ligne **sans ΔP brutes** (ex. NETCEL, saisi en coefficients directs) est **ignorée** : le JSON
+  n'est jamais écrasé faute de données. Idem variantes non-592×592 (gérées par le tableau dimensions).
+- `maj_fiches.py` seul = **aperçu** (n'écrit rien) ; `--apply` = applique + régénère + synchronise.
+
 ## Publication sur le site (synchro auto)
 
 Les fiches vivent à **deux endroits** : `Fiches_Netair/` (sortie du générateur) et
