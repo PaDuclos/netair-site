@@ -176,4 +176,14 @@ du débit et contredisent le calculateur.
   **PIÈGES** : (1) PRISME P : F8=F9 (copier-collé) → écarté, PRISME A où F8≠F9 ; (2) PRISME A **ep48 : F9 = F8 + 10 Pa exact**
   (offset suspect, À VALIDER) ; (3) F8 ep98 = 6 pts, 7e (≈137 Pa @3,17) extrapolé. Vmax 3,17 · nominal 3400 m³/h · axe Y 200 Pa.
   Nom validé par PA via skill `netair-naming` (CILIA = cils vibratiles, pas de chevauchement PRISME). Photo = TITAPAK PRISME A HD détourée sur blanc pur (cadre acier + plissage), à reshooter Netair à terme.
-- Suivants : NETPAK S BORA/AZUR/LUMEN/DUO, NETCEL…, NETCARB… (cf. Bibliothèque / CHECKLIST)
+- **NETCARB CILIA** — filtre **compact à charbon actif** (équiv. PRISME CARB), **filtration moléculaire** ✅
+  1ʳᵉ fiche de gaz : **pas de classe particulaire** (ni ISO 16890 ni EN 779) → cadre **ISO 10121** (-1/-2 essai média/dispositif
+  GPACD ; **-3:2022** classification LD/MD/HD + % vs O₃/SO₂/NO₂/toluène). Titanair < 2022 ne donne **aucune** classe LD/MD/HD →
+  marquée « à déterminer par essai », **non inventée**. Seule donnée quantitative = **capacité d'adsorption 15 % masse**.
+  ΔP **réelles** (caches Excel `CARB/PRISME CARB 48 & 98.xlsx`, cohérentes 48 > 98), polynômes 7 pts grille standard
+  (`DONNEES_PDC` l.59-60) : 48 mm 4,851·v²+14,299·v−1,143 / 98 mm 5,458·v²+10,995·v−2,500 (ΔP@3400 ≈ 73 / 67 Pa).
+  T° **40 °C**, HR **50 %**, feu **NA**. **3 nouveaux drapeaux moteur** (additifs, identité NETPLY préservée) :
+  `deux_epaisseurs` (1 famille × 2 épaisseurs, toggle classe masqué + sélecteur épaisseur conservé),
+  `dp_final_mode:"const"` (filtre **non colmatant** → ΔP finale = moyenne = initiale, remplacement à saturation),
+  `ref_simple` (code `NETCARB-CILIA-LxHxP` + ΔP par ligne + en-tête tableau « Filtration »). Photo `CARB.png` (grains) placeholder.
+- Suivants : NETCARB AZUR/NIVAL/BAG, autres (cf. Bibliothèque / CHECKLIST)
