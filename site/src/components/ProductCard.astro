@@ -16,7 +16,7 @@ const img = photo ? `/produits/${photo}` : null;
   class="group flex flex-col overflow-hidden rounded-2xl border border-soft bg-blanc transition-all hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgba(8,151,165,0.4)]"
 >
   {img && (
-    <div class="aspect-[4/3] overflow-hidden bg-mist p-4">
+    <div class="aspect-[4/3] overflow-hidden bg-white p-4">
       <img
         src={img}
         alt={produit.data.photo_alt ?? `Filtre ${nom}`}
