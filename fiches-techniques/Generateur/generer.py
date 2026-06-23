@@ -84,8 +84,11 @@ def build_specs(specs):
 def build_dimensions(d):
     nom = d["nom"]
     low, high = d["classes"]["low"], d["classes"]["high"]
-    mono = d.get("mono_classe", False)
+    mono = d.get("mono_classe", False) or d.get("deux_epaisseurs", False)
     facteur = d.get("surface_facteur", 2)
+    # ref_simple : code article = [NOM sans espaces]-[L]x[H]x[P] (codification charbon /
+    #   produit sans classe particulaire) ; eff = libellé de classe seul. Défaut : legacy.
+    simple = d.get("ref_simple", False)
     rows = []
     i = 0  # index global (striping continu sur toutes les lignes de données)
 
@@ -97,8 +100,13 @@ def build_dimensions(d):
         L, H, P = dim["L"], dim["H"], dim["P"]
         surface = fr_surface(L, H, facteur)
         debit = fr_debit(dim["debit"])
-        eff = f'{cls["iso"]} ({cls["label"]})'
-        ref = f'{nom}-{cls["iso"]}-{cls["label"]}-{L}x{H}x{P}'
+        dp = dim.get("dp", cls["dp"])     # ΔP de référence par ligne (sinon celle de la classe)
+        if simple:
+            eff = cls["label"]
+            ref = f'{nom.replace(" ", "-")}-{L}x{H}x{P}'
+        else:
+            eff = f'{cls["iso"]} ({cls["label"]})'
+            ref = f'{nom}-{cls["iso"]}-{cls["label"]}-{L}x{H}x{P}'
         c = "padding:4px 7px;"
         cref = ("padding:4px 7px; font-family:'IBM Plex Mono',monospace; "
                 "color:#0F3261;")
@@ -109,7 +117,7 @@ def build_dimensions(d):
             f'<td style="{c}">{P}</td>'
             f'<td style="{c}">{surface}</td>'
             f'<td style="{c}">{debit}</td>'
-            f'<td style="{c}">{cls["dp"]}</td>'
+            f'<td style="{c}">{dp}</td>'
             f'<td style="{c}">{eff}</td>'
             f'<td style="{cref}">{ref}</td>'
             f'</tr>'
@@ -1346,6 +1354,16 @@ def generer(d, html):
         html = html.replace(
             'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span>',
             'ΔP finale = 2 × ΔP initiale<span id="effAdd" style="display:none;"></span> <span style="color:#b9c2cd;">— EN 1822 · <span id="effRule"></span></span>')
+    elif d.get("dp_final_mode") == "const":
+        # filtre moléculaire (charbon actif) : pas de colmatage poussière → ΔP ≈ constante
+        # (remplacement à saturation d'adsorption). ΔP finale = moyenne = initiale.
+        html = html.replace("var dpFinalNum = Math.min(dpInitNum + ADD[eff], dpInitNum * 3);",
+                            "var dpFinalNum = dpInitNum;")
+        html = html.replace("var dpAvgNum = (dpFinalNum / 2) * 0.85;",
+                            "var dpAvgNum = dpInitNum;")
+        html = html.replace(
+            'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span>',
+            'ΔP finale ≈ ΔP initiale<span id="effAdd" style="display:none;"></span> <span style="color:#b9c2cd;">— filtre non colmatant · remplacement à saturation<span id="effRule" style="display:none;"></span></span>')
 
     # --- échelle de l'axe Y / perte de charge (optionnel ; NETPLY garde 120 Pa)
     if "pmax" in d:
@@ -1380,6 +1398,30 @@ def generer(d, html):
         # masquer la ligne de contrôles « Afficher : … »
         html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
                             'align-items:center; gap:18px; margin-top:7px; display:none;">')
+
+    # --- mode "1 famille × 2 épaisseurs" (opt-in) : on garde la classe basse avec
+    #     ses 2 courbes d'épaisseur (48/98 mm) et on masque la classe haute + le
+    #     sélecteur de classe (le sélecteur d'épaisseur reste). Additif : ne s'active
+    #     que sur la clé "deux_epaisseurs" → chemin legacy/NETPLY inchangé (identité OK).
+    #     Utilisé par la famille charbon actif (NETCARB), 1 seule famille moléculaire.
+    if d.get("deux_epaisseurs"):
+        css = ("\n<style>/* 1 famille, 2 épaisseurs : pas de classe haute ni de toggle classe */\n"
+               "#pathM548,#pathM598,#cM548,#cM598,#tM548,#tM598,#legM5a,#legM5b,"
+               "#hd3,#hh3,#ht3,#hd4,#hh4,#ht4{display:none!important;}\n"
+               "</style>\n</head>")
+        html = html.replace("</head>", css, 1)
+        # ligne « Afficher : <classe> » inutile (une seule famille)
+        html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
+                            'align-items:center; gap:18px; margin-top:7px; display:none;">')
+        # calculateur : la grille passe en 1 colonne et le bloc « Classe d'efficacité »
+        # est masqué (ses boutons restent dans le DOM pour ne pas casser le JS)
+        html = html.replace('grid-template-columns:1.7fr 1fr; gap:12px;">',
+                            'grid-template-columns:1fr; gap:12px;">')
+        html = html.replace(
+            '              <div>\n                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d\'efficacité</div>',
+            '              <div style="display:none;">\n                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d\'efficacité</div>')
+        # en-tête du tableau dimensions : pas de classe ISO 16890 pour un filtre moléculaire
+        html = html.replace(">Efficacité ISO 16890<", ">Filtration<")
 
     # --- page 1 compacte (par produit) : réduit les marges verticales pour
     #     faire tenir un contenu plus dense sur l'A4, sans toucher les autres fiches.

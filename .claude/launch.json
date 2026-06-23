@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev", "--prefix", "site", "--", "--host"],
       "port": 4321
+    },
+    {
+      "name": "fiches-statique",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["fiches-techniques/.preview-server.mjs"],
+      "port": 8099
     }
   ]
 }
