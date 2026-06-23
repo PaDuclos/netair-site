@@ -185,6 +185,161 @@ def build_xlabels(vmax):
     return "\n".join("            " + l for l in out)
 
 
+# ====================================================== axe X en DÉBIT (m³/h) ==
+# Opt-in via la clé JSON "axe_debit". L'axe horizontal de la courbe passe de la
+# vitesse (m/s) au débit d'air (m³/h), gradué de 500 en 500 jusqu'à un plafond
+# fixe (4500 m³/h par défaut). La courbe reste calculée sur le polynôme ΔP(v) :
+# seul l'axe change (débit = v × surface frontale × 3600). Réservé aux familles
+# dièdre / compact rigide / HEPA (AZUR, LUMEN, NETCEL, NETCARB dièdre) où le débit
+# est l'unité de dimensionnement naturelle. Les préfiltres plans (NETPLY, CILIA…)
+# gardent l'axe vitesse → chemin legacy inchangé, test d'identité préservé.
+
+AXE_DEBIT_DMAX = 4500   # plafond de l'axe débit (m³/h)
+AXE_DEBIT_STEP = 500    # pas de graduation (m³/h)
+
+
+def _mapx_debit(dbt, dmax):
+    return 52 + (dbt / dmax) * 528
+
+
+def build_gridlines_debit(dmax, dnom, step=AXE_DEBIT_STEP):
+    """Graduations verticales (500, 1000, …) + ligne pointillée du débit nominal."""
+    out, dd = [], step
+    while dd < dmax - 1e-9:
+        x = f"{_mapx_debit(dd, dmax):.1f}"
+        out.append(f'<line x1="{x}" y1="16" x2="{x}" y2="250" stroke="#EDF1F6" stroke-width="1"></line>')
+        dd += step
+    xn = f"{_mapx_debit(dnom, dmax):.1f}"
+    out.append(f'<line x1="{xn}" y1="16" x2="{xn}" y2="250" stroke="#0F3261" '
+               f'stroke-width="1" stroke-dasharray="2 3" opacity="0.4"></line>')
+    return "\n".join("            " + l for l in out)
+
+
+def build_xlabels_debit(dmax, step=AXE_DEBIT_STEP):
+    """Étiquettes de l'axe débit : 0, 500, … (centrées) puis le plafond (aligné à droite)."""
+    out, dd = [], 0
+    base = ('font-family="\'IBM Plex Mono\',monospace" font-size="11" fill="#5A6573"')
+    while dd < dmax - 1e-9:
+        x = "52" if dd == 0 else f"{_mapx_debit(dd, dmax):.1f}"
+        out.append(f'<text x="{x}" y="265" text-anchor="middle" {base}>{dd}</text>')
+        dd += step
+    out.append(f'<text x="580" y="265" text-anchor="end" {base}>{dmax}</text>')
+    return "\n".join("            " + l for l in out)
+
+
+def apply_axe_debit_svg(html, dnom, dmax=AXE_DEBIT_DMAX, step=AXE_DEBIT_STEP):
+    """Bascule l'axe X statique (SVG) de la vitesse au débit : graduations, étiquettes,
+    titre d'axe et annotation du point nominal. Anchors de comment communs au gabarit."""
+    html = sub1(html, r"(<!-- vertical gridlines -->\n)(.*?)(\n            <!-- 4 courbes)",
+                lambda m: m.group(1) + build_gridlines_debit(dmax, dnom, step) + m.group(3),
+                flags=re.DOTALL)
+    html = sub1(html, r"(<!-- x tick labels -->\n)(.*?)(\n            <!-- axis titles)",
+                lambda m: m.group(1) + build_xlabels_debit(dmax, step) + m.group(3),
+                flags=re.DOTALL)
+    html = html.replace(">Vitesse d'air (m/s)</text>", ">Débit d'air (m³/h)</text>")
+    html = html.replace(">Courbe vitesse / perte de charge</span>",
+                        ">Courbe débit / perte de charge</span>")
+    xn = f"{_mapx_debit(dnom, dmax):.1f}"
+    html = sub1(html, r'(<text x=")[\d.]+(" y="11"[^>]*>)[^<]*(</text>)',
+                lambda m: m.group(1) + xn + m.group(2) + f"Débit nominal {dnom} m³/h" + m.group(3))
+    return html
+
+
+def apply_axe_debit_js(s, dmax=AXE_DEBIT_DMAX):
+    """Bascule l'axe X dynamique (JS) : mapX passe en débit, le survol affiche le débit
+    en premier. Cibles : les lignes canoniques partagées gabarit legacy / SERIES_JS."""
+    s = s.replace(
+        "var mapX = function (v) { return 52 + (v / Vmax) * 528; };",
+        f"var Dmax = {dmax}; var mapX = function (v) {{ return 52 + ((v * Aref * 3600) / Dmax) * 528; }};")
+    s = s.replace(
+        "var v = (x - 52) / 528 * Vmax;",
+        "var v = (x - 52) / 528 * Dmax / (Aref * 3600);")
+    s = re.sub(
+        r"hv\.textContent = (v\.toLocaleString\([^;]*?maximumFractionDigits: 2 \}\)) \+ ' m/s - ' \+ "
+        r"(fr\(v / Vnom \* [^)]*\)) \+ ' m³/h';",
+        r"hv.textContent = \2 + ' m³/h - ' + \1 + ' m/s';",
+        s)
+    return s
+
+
+# ============================================ courbes lissées partant de l'origine ==
+# Règle générale : toute courbe ΔP doit être LISSE et démarrer à 0 (ΔP = 0 à débit nul).
+# Un polynôme mesuré a·v²+b·v+c a un terme constant c ≠ 0 (artefact d'extrapolation,
+# physiquement nul à débit nul) qui crée une « bosse »/un saut au départ. On reformule
+# donc chaque courbe en a'·v²+b'·v (passage par l'origine), ajustée sur la plage de
+# mesure [0.25·vmax, vmax] : courbe convexe, sans bosse, fidèle au nominal (écart < 2 Pa).
+
+def _fit_origin(samples):
+    """Moindres carrés à 2 paramètres : ΔP = a·v² + b·v (sans constante). Pur Python."""
+    S4 = S3 = S2 = Yv2 = Yv = 0.0
+    for v, y in samples:
+        v2 = v * v
+        S4 += v2 * v2; S3 += v2 * v; S2 += v2
+        Yv2 += y * v2; Yv += y * v
+    det = S4 * S2 - S3 * S3
+    if abs(det) < 1e-12:
+        return None
+    return (Yv2 * S2 - Yv * S3) / det, (Yv * S4 - Yv2 * S3) / det
+
+
+def force_origin(a, b, c, vmax, n=24):
+    """Reformule a·v²+b·v+c en a'·v²+b'·v passant par l'origine (cf. en-tête de section)."""
+    if abs(c) < 1e-9:
+        return a, b, 0.0
+    vlo = 0.25 * vmax
+    samples = [(vlo + (vmax - vlo) * i / n,
+               max(0.0, a * (vlo + (vmax - vlo) * i / n) ** 2 + b * (vlo + (vmax - vlo) * i / n) + c))
+              for i in range(n + 1)]
+    res = _fit_origin(samples)
+    return (res[0], res[1], 0.0) if res else (a, b, 0.0)
+
+
+def smooth_curves_origin(d):
+    """Force toutes les courbes de la fiche à partir de l'origine et recalcule la perte de
+    charge nominale (dp) affichée pour rester cohérente. Désactivable par "no_smooth_origin"
+    (réservé à l'ANCRE du test d'identité, qui doit reproduire le gabarit à l'octet près)."""
+    if d.get("no_smooth_origin"):
+        return
+    vmax = d.get("vmax", 3.17)
+    vnom = (d.get("debit_nom", 3400) / 3600) / d.get("aref", AREF)
+    nom = lambda co: int(round(co["a"] * vnom * vnom + co["b"] * vnom))
+
+    for s in d.get("courbes", []):
+        a, b, _ = force_origin(s["a"], s["b"], s["c"], vmax)
+        s["a"], s["b"], s["c"] = round(a, 4), round(b, 4), 0.0
+        if "dp" in s:
+            s["dp"] = nom(s)
+
+    # multi-classes (NETPAK CILIA…) : poly par classe × épaisseur. Le tableau ΔP
+    # reste basé sur les points mesurés ("points") ; seule la courbe (poly) est lissée.
+    for s in d.get("classes_list", []):
+        poly = s.get("poly") if isinstance(s, dict) else None
+        if isinstance(poly, dict):
+            for co in poly.values():
+                a, b, _ = force_origin(co["a"], co["b"], co["c"], vmax)
+                co["a"], co["b"], co["c"] = round(a, 4), round(b, 4), 0.0
+
+    ref_co = None
+    cl = d.get("classes")
+    if isinstance(cl, dict):
+        for v in cl.values():
+            poly = v.get("poly") if isinstance(v, dict) else None
+            if not isinstance(poly, dict):
+                continue
+            for co in poly.values():
+                a, b, _ = force_origin(co["a"], co["b"], co["c"], vmax)
+                co["a"], co["b"], co["c"] = round(a, 4), round(b, 4), 0.0
+            co_ref = poly.get("48") or next(iter(poly.values()))
+            ref_co = ref_co or co_ref
+            if "dp" in v:
+                v["dp"] = nom(co_ref)
+
+    if ref_co is not None:
+        for dim in d.get("dimensions", []):
+            if isinstance(dim, dict) and "dp" in dim:
+                dim["dp"] = nom(ref_co)
+
+
 def build_poly_block(low, high):
     """Bloc de constantes JS — polynômes ΔP = a·v² + b·v + c. Espacement exact du gabarit."""
     return (
@@ -298,22 +453,35 @@ def build_series_selector(d):
 def build_dimensions_series(d):
     nom = d["nom"]; cdef = d["classes_def"]; dnom = d.get("debit_nom", 3400)
     rows = []
-    for i, s in enumerate(d["courbes"], start=1):
+    c = "padding:4px 7px;"
+    cref = ("padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;")
+
+    def emit(i, L, H, s, debit):
         grey = (i % 2 == 0)
         tr = ' style="background:#F2F6FB;"' if grey else ""
         cl = cdef[s["cls"]]
-        L, H, P = 592, 592, s["len"]
+        P = s["len"]
         surf = f'{s["surface"]:.2f}'.replace(".", ",") if "surface" in s else "n.c."
-        debit = fr_debit(dnom)
         eff = f'{cl["iso"]} ({cl["label"]})'
         ref = f'{nom}-{cl["iso"]}-{cl["label"]}-{L}x{H}x{P}'
         dp = f'{s["dp"]}*' if s.get("avalider") else f'{s["dp"]}'
-        c = "padding:4px 7px;"
-        cref = ("padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;")
         rows.append(
             f'<tr{tr}><td style="{c}">{L}</td><td style="{c}">{H}</td><td style="{c}">{P}</td>'
-            f'<td style="{c}">{surf}</td><td style="{c}">{debit}</td><td style="{c}">{dp}</td>'
+            f'<td style="{c}">{surf}</td><td style="{c}">{fr_debit(debit)}</td><td style="{c}">{dp}</td>'
             f'<td style="{c}">{eff}</td><td style="{cref}">{ref}</td></tr>')
+
+    # Mode multi-tailles (opt-in "tailles") : pour chaque cadre standard, les N classes.
+    # Le débit nominal est propre à la taille (proportionnel à la section). Sinon : 1 ligne
+    # par classe au cadre 592×592 (comportement d'origine, autres fiches série inchangées).
+    if d.get("tailles"):
+        i = 0
+        for t in d["tailles"]:
+            for s in d["courbes"]:
+                i += 1
+                emit(i, t["L"], t["H"], s, t.get("debit", dnom))
+    else:
+        for i, s in enumerate(d["courbes"], start=1):
+            emit(i, 592, 592, s, dnom)
     rows.append(
         '<tr style="background:#E6F5F7;">'
         '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="7">Sur mesure</td>'
@@ -341,12 +509,20 @@ SERIES_JS = r"""<script>
   var mapX = function (v) { return 52 + (v / Vmax) * 528; };
   var mapY = function (p) { return 250 - (Math.min(p, Pmax) / Pmax) * 234; };
   function pdc(co, v) { return Math.max(0, co.a * v * v + co.b * v + co.c); }
+  // Rendu lissé : la courbe part de (0,0) et rejoint le polynôme réel dès le 1er
+  // point mesuré (≈ 25 % de Vmax). Sous ce seuil — zone non mesurée — le terme
+  // constant c est fondu progressivement (smoothstep), ce qui supprime la « bosse »
+  // à l'origine SANS modifier aucune valeur mesurée.
+  var Vblend = Vmax * 0.25;
+  function pdcD(co, v) {
+    if (v >= Vblend) return pdc(co, v);
+    var t = v / Vblend, g = t * t * (3 - 2 * t);
+    return Math.max(0, co.a * v * v + co.b * v + co.c * g);
+  }
   function curve(co) {
-    // ancrage à l'origine : à débit nul, ΔP = 0 (le terme constant c du polynôme,
-    // extrapolé hors plage mesurée, ne doit pas faire « flotter » le départ des courbes).
-    var pts = [mapX(0).toFixed(1) + ',' + mapY(0).toFixed(1)], v;
-    for (v = 0.1; v <= Vmax - 1e-9; v += 0.1) pts.push(mapX(v).toFixed(1) + ',' + mapY(pdc(co, v)).toFixed(1));
-    pts.push(mapX(Vmax).toFixed(1) + ',' + mapY(pdc(co, Vmax)).toFixed(1));
+    var pts = [], v;
+    for (v = 0; v <= Vmax - 1e-9; v += 0.05) pts.push(mapX(v).toFixed(1) + ',' + mapY(pdcD(co, v)).toFixed(1));
+    pts.push(mapX(Vmax).toFixed(1) + ',' + mapY(pdcD(co, Vmax)).toFixed(1));
     return 'M' + pts.join(' L');
   }
   function lengthsFor(cls) { var o = []; for (var i = 0; i < SERIES.length; i++) if (SERIES[i].cls === cls) o.push(SERIES[i].len); return o; }
@@ -458,10 +634,10 @@ SERIES_JS = r"""<script>
     for (var i = 0; i < SERIES.length; i++) {
       var s = SERIES[i], L = lanes[s.k], show = state.disp[s.cls] !== false;
       if (!show) { L.hd.setAttribute('r', 0); L.hh.style.display = 'none'; L.ht.textContent = ''; continue; }
-      var y = mapY(pdc(s.co, v));
+      var y = mapY(pdcD(s.co, v));
       L.hd.setAttribute('cx', x.toFixed(1)); L.hd.setAttribute('cy', y.toFixed(1)); L.hd.setAttribute('r', 2.6);
       L.hh.style.display = ''; L.hh.setAttribute('x2', x.toFixed(1)); L.hh.setAttribute('y1', y.toFixed(1)); L.hh.setAttribute('y2', y.toFixed(1));
-      L.ht.setAttribute('x', (x + 6).toFixed(1)); L.ht.setAttribute('y', (y + 3).toFixed(1)); L.ht.textContent = fr(pdc(s.co, v)) + ' Pa';
+      L.ht.setAttribute('x', (x + 6).toFixed(1)); L.ht.setAttribute('y', (y + 3).toFixed(1)); L.ht.textContent = fr(pdcD(s.co, v)) + ' Pa';
     }
     var hv = $('hvel'); hv.setAttribute('x', x.toFixed(1));
     hv.textContent = v.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' m/s - ' + fr(v / Vnom * Dnom) + ' m³/h';
@@ -494,6 +670,8 @@ def build_series_script(d):
     js = js.replace("__EFF0__", _json.dumps(d.get("eff0", order[0])))
     js = js.replace("__LEN0__", str(d.get("len0", d["courbes"][0]["len"])))
     js = js.replace("__DISP0__", _json.dumps(disp0))
+    if d.get("axe_debit"):
+        js = apply_axe_debit_js(js, d.get("axe_debit_max", AXE_DEBIT_DMAX))
     return js
 
 
@@ -556,6 +734,12 @@ def generer_series(d, html):
         lab = _frnum(round(val, 1)) if abs(val - round(val)) > 1e-9 else str(int(round(val)))
         html = sub1(html, r'(x="46" y="' + re.escape(ypos) + r'"[^>]*>)[^<]*(</text>)',
                     lambda m, l=lab: m.group(1) + l + m.group(2))
+
+    # --- axe X en débit (m³/h) au lieu de la vitesse (opt-in) : graduations,
+    #     étiquettes, titre d'axe et annotation nominale. Le script série gère mapX.
+    if d.get("axe_debit"):
+        html = apply_axe_debit_svg(html, d.get("debit_nom", 3400),
+                                   d.get("axe_debit_max", AXE_DEBIT_DMAX))
 
     # --- bloc « Afficher : » (cases par classe)
     html = sub1(
@@ -1003,10 +1187,18 @@ def build_multi_js(d):
   var mapX = function (v) {{ return 52 + (v / Vmax) * 528; }};
   var mapY = function (p) {{ return 250 - (Math.min(p, Pmax) / Pmax) * 234; }};
   function pdc(co, v) {{ return Math.max(0, co.a * v * v + co.b * v + co.c); }}
+  // Rendu lissé : courbe partant de (0,0), terme constant c fondu (smoothstep)
+  // sous le 1er point mesuré (≈ 25 % de Vmax) → pas de « bosse », valeurs intactes.
+  var Vblend = Vmax * 0.25;
+  function pdcD(co, v) {{
+    if (v >= Vblend) return pdc(co, v);
+    var t = v / Vblend, g = t * t * (3 - 2 * t);
+    return Math.max(0, co.a * v * v + co.b * v + co.c * g);
+  }}
   function curve(co) {{
     var pts = [], v;
-    for (v = 0; v <= Vmax - 1e-9; v += 0.1) pts.push(mapX(v).toFixed(1) + ',' + mapY(pdc(co, v)).toFixed(1));
-    pts.push(mapX(Vmax).toFixed(1) + ',' + mapY(pdc(co, Vmax)).toFixed(1));
+    for (v = 0; v <= Vmax - 1e-9; v += 0.05) pts.push(mapX(v).toFixed(1) + ',' + mapY(pdcD(co, v)).toFixed(1));
+    pts.push(mapX(Vmax).toFixed(1) + ',' + mapY(pdcD(co, Vmax)).toFixed(1));
     return 'M' + pts.join(' L');
   }}
 
@@ -1112,8 +1304,8 @@ def build_multi_js(d):
       hh.style.display = ''; hh.setAttribute('x2', x.toFixed(1)); hh.setAttribute('y1', y.toFixed(1)); hh.setAttribute('y2', y.toFixed(1));
       ht.setAttribute('x', (x + 7).toFixed(1)); ht.setAttribute('y', (y + dy).toFixed(1)); ht.textContent = fr(yPa) + ' Pa';
     }}
-    lane(1, pdc(POLY[eff][48], v), -5);
-    lane(2, pdc(POLY[eff][98], v), 13);
+    lane(1, pdcD(POLY[eff][48], v), -5);
+    lane(2, pdcD(POLY[eff][98], v), 13);
     var hv = $('hvel');
     hv.setAttribute('x', x.toFixed(1));
     hv.textContent = v.toLocaleString('fr-FR', {{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}) + ' m/s - ' + fr(v / Vnom * Dnom) + ' m³/h';
@@ -1339,15 +1531,20 @@ def generer(d, html):
                             f'id="inDebit" min="{dmin}" max="{dmax}" step="{dstep}" value="{dnom}"')
         html = html.replace("debit: 3400,", f"debit: {dnom},")
         # axe X : graduations, point nominal, étiquettes, annotation
-        html = sub1(html, r"(<!-- vertical gridlines -->\n)(.*?)(\n            <!-- 4 courbes)",
-                    lambda m: m.group(1) + build_gridlines(vmax, vnom) + m.group(3), flags=re.DOTALL)
-        html = sub1(html, r"(<!-- x tick labels -->\n)(.*?)(\n            <!-- axis titles)",
-                    lambda m: m.group(1) + build_xlabels(vmax) + m.group(3), flags=re.DOTALL)
-        _prec = 2 if vmax <= 1 else 1     # HEPA basse vitesse : 2 décimales
-        annot = f"{vnom:.{_prec}f}".replace(".", ",") + f" m/s ≈ {dnom} m³/h · {dim_ref}"
-        xn = f"{_mapx(vnom, vmax):.1f}"
-        html = sub1(html, r'(<text x=")[\d.]+(" y="11"[^>]*>)[^<]*(</text>)',
-                    lambda m: m.group(1) + xn + m.group(2) + annot + m.group(3))
+        if d.get("axe_debit"):
+            # axe en débit (m³/h) : SVG statique + bascule mapX/survol côté JS
+            html = apply_axe_debit_svg(html, dnom, d.get("axe_debit_max", AXE_DEBIT_DMAX))
+            html = apply_axe_debit_js(html, d.get("axe_debit_max", AXE_DEBIT_DMAX))
+        else:
+            html = sub1(html, r"(<!-- vertical gridlines -->\n)(.*?)(\n            <!-- 4 courbes)",
+                        lambda m: m.group(1) + build_gridlines(vmax, vnom) + m.group(3), flags=re.DOTALL)
+            html = sub1(html, r"(<!-- x tick labels -->\n)(.*?)(\n            <!-- axis titles)",
+                        lambda m: m.group(1) + build_xlabels(vmax) + m.group(3), flags=re.DOTALL)
+            _prec = 2 if vmax <= 1 else 1     # HEPA basse vitesse : 2 décimales
+            annot = f"{vnom:.{_prec}f}".replace(".", ",") + f" m/s ≈ {dnom} m³/h · {dim_ref}"
+            xn = f"{_mapx(vnom, vmax):.1f}"
+            html = sub1(html, r'(<text x=")[\d.]+(" y="11"[^>]*>)[^<]*(</text>)',
+                        lambda m: m.group(1) + xn + m.group(2) + annot + m.group(3))
 
     # --- mode ΔP finale HEPA : 2 × ΔP initiale (EN 1822), au lieu de min(init+ADD ; 3×init)
     if d.get("dp_final_mode") == "x2":
@@ -1470,6 +1667,7 @@ def main():
 
     with open(json_path, encoding="utf-8") as f:
         d = json.load(f)
+    smooth_curves_origin(d)   # courbes lisses partant de 0 (sauf ancre du test d'identité)
     with open(BASE, encoding="utf-8") as f:
         html = f.read()
 

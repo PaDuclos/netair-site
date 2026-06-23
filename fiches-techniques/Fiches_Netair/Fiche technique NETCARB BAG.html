@@ -142,7 +142,7 @@
             </thead>
             <tbody>
               <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">520</td><td style="padding:4px 7px;">0,35</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">229</td><td style="padding:4px 7px;">F9 + charbon actif</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETCARB-BAG-592x592x520</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">287</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">520</td><td style="padding:4px 7px;">0,17</td><td style="padding:4px 7px;">1&nbsp;700</td><td style="padding:4px 7px;">239</td><td style="padding:4px 7px;">F9 + charbon actif</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETCARB-BAG-287x592x520</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">287</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">520</td><td style="padding:4px 7px;">0,17</td><td style="padding:4px 7px;">1&nbsp;700</td><td style="padding:4px 7px;">229</td><td style="padding:4px 7px;">F9 + charbon actif</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETCARB-BAG-287x592x520</td></tr>
               <tr style="background:#E6F5F7;"><td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="7">Sur mesure</td><td style="padding:4px 7px; color:#5A6573; font-style:italic;">sur demande — délai à confirmer</td></tr>
             </tbody>
           </table>
@@ -416,8 +416,8 @@
 
   // ---- Modèle de données — polynômes ΔP = a·v² + b·v + c (mesures R&D, DONNEES_PDC) ----
   var POLY = {
-    g4: { 48: { a: 9.172, b: 64.135, c: -10.429 }, 98: { a: 9.172, b: 64.135, c: -10.429 } },   // F9 + charbon actif · ePM1 80%
-    m5: { 48: { a: 9.172, b: 64.135, c: -10.429 }, 98: { a: 9.172, b: 64.135, c: -10.429 } }    // F9 + charbon actif · ePM1 80%
+    g4: { 48: { a: 11.8171, b: 53.0303, c: 0.0 }, 98: { a: 11.8171, b: 53.0303, c: 0.0 } },   // F9 + charbon actif · ePM1 80%
+    m5: { 48: { a: 11.8171, b: 53.0303, c: 0.0 }, 98: { a: 11.8171, b: 53.0303, c: 0.0 } }    // F9 + charbon actif · ePM1 80%
   };
   var ADD  = { g4: 100,   m5: 100 };           // EN 13053 : +50 Pa (Coarse) / +100 Pa (ePM)
   var RULE = { g4: 'classe ePM1', m5: 'classe ePM1' };
@@ -436,12 +436,21 @@
   var mapY = function (p) { return 250 - (Math.min(p, 300) / 300) * 234; };
 
   function pdc(co, v) { return Math.max(0, co.a * v * v + co.b * v + co.c); }
+  // Rendu lissé : courbe partant de (0,0), terme constant c fondu (smoothstep)
+  // sous le 1er point mesuré (≈ 25 % de Vmax) → pas de « bosse » à l'origine,
+  // aucune valeur mesurée modifiée.
+  var Vblend = Vmax * 0.25;
+  function pdcD(co, v) {
+    if (v >= Vblend) return pdc(co, v);
+    var t = v / Vblend, g = t * t * (3 - 2 * t);
+    return Math.max(0, co.a * v * v + co.b * v + co.c * g);
+  }
   function curve(co) {
     var pts = [], v;
-    for (v = 0; v <= Vmax - 1e-9; v += 0.1) {
-      pts.push(mapX(v).toFixed(1) + ',' + mapY(pdc(co, v)).toFixed(1));
+    for (v = 0; v <= Vmax - 1e-9; v += 0.05) {
+      pts.push(mapX(v).toFixed(1) + ',' + mapY(pdcD(co, v)).toFixed(1));
     }
-    pts.push(mapX(Vmax).toFixed(1) + ',' + mapY(pdc(co, Vmax)).toFixed(1));
+    pts.push(mapX(Vmax).toFixed(1) + ',' + mapY(pdcD(co, Vmax)).toFixed(1));
     return 'M' + pts.join(' L');
   }
 
@@ -593,10 +602,10 @@
       hh.style.display = ''; hh.setAttribute('x2', x.toFixed(1)); hh.setAttribute('y1', y.toFixed(1)); hh.setAttribute('y2', y.toFixed(1));
       ht.setAttribute('x', (x + 7).toFixed(1)); ht.setAttribute('y', (y + dy).toFixed(1)); ht.textContent = fr(yPa) + ' Pa';
     }
-    lane(1, pdc(POLY.g4[48], v), showG4, -5);
-    lane(2, pdc(POLY.g4[98], v), showG4, 13);
-    lane(3, pdc(POLY.m5[48], v), showM5, -5);
-    lane(4, pdc(POLY.m5[98], v), showM5, 13);
+    lane(1, pdcD(POLY.g4[48], v), showG4, -5);
+    lane(2, pdcD(POLY.g4[98], v), showG4, 13);
+    lane(3, pdcD(POLY.m5[48], v), showM5, -5);
+    lane(4, pdcD(POLY.m5[98], v), showM5, 13);
     var hv = $('hvel');
     hv.setAttribute('x', x.toFixed(1));
     hv.textContent = v.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' m/s - ' + fr(v / Vnom * 3400) + ' m³/h';

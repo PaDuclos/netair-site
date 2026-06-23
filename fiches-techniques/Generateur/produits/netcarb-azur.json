@@ -8,6 +8,7 @@
   "dp_final_mode": "const",
   "ref_simple": true,
   "surface_facteur": 1,
+  "axe_debit": true,
   "vmax": 2.78,
   "pmax": 120,
   "debit_nom": 3400,

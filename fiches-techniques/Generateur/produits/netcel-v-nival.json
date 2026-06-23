@@ -7,6 +7,7 @@
   "series": true,
   "hepa": true,
   "compact_p1": true,
+  "axe_debit": true,
   "vmax": 3.05,
   "pmax": 330,
   "debit_nom": 3400,

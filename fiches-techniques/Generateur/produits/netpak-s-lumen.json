@@ -6,6 +6,7 @@
   "soustitre": "Filtre compact polydièdre rechargeable — Éco-conception",
   "series": true,
   "compact_p1": true,
+  "axe_debit": true,
   "vmax": 3.17,
   "pmax": 125,
   "debit_nom": 3400,
