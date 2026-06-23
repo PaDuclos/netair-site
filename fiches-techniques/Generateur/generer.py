@@ -342,8 +342,10 @@ SERIES_JS = r"""<script>
   var mapY = function (p) { return 250 - (Math.min(p, Pmax) / Pmax) * 234; };
   function pdc(co, v) { return Math.max(0, co.a * v * v + co.b * v + co.c); }
   function curve(co) {
-    var pts = [], v;
-    for (v = 0; v <= Vmax - 1e-9; v += 0.1) pts.push(mapX(v).toFixed(1) + ',' + mapY(pdc(co, v)).toFixed(1));
+    // ancrage à l'origine : à débit nul, ΔP = 0 (le terme constant c du polynôme,
+    // extrapolé hors plage mesurée, ne doit pas faire « flotter » le départ des courbes).
+    var pts = [mapX(0).toFixed(1) + ',' + mapY(0).toFixed(1)], v;
+    for (v = 0.1; v <= Vmax - 1e-9; v += 0.1) pts.push(mapX(v).toFixed(1) + ',' + mapY(pdc(co, v)).toFixed(1));
     pts.push(mapX(Vmax).toFixed(1) + ',' + mapY(pdc(co, Vmax)).toFixed(1));
     return 'M' + pts.join(' L');
   }
@@ -1413,10 +1415,11 @@ def generer(d, html):
         # ligne « Afficher : <classe> » inutile (une seule famille)
         html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
                             'align-items:center; gap:18px; margin-top:7px; display:none;">')
-        # calculateur : la grille passe en 1 colonne et le bloc « Classe d'efficacité »
-        # est masqué (ses boutons restent dans le DOM pour ne pas casser le JS)
+        # calculateur : le bloc « Classe d'efficacité » est masqué (ses boutons restent
+        # dans le DOM pour ne pas casser le JS) ; le sélecteur d'épaisseur reste COMPACT
+        # (colonne de largeur fixe, aligné à gauche) au lieu de s'étirer sur toute la largeur.
         html = html.replace('grid-template-columns:1.7fr 1fr; gap:12px;">',
-                            'grid-template-columns:1fr; gap:12px;">')
+                            'grid-template-columns:170px; gap:12px;">')
         html = html.replace(
             '              <div>\n                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d\'efficacité</div>',
             '              <div style="display:none;">\n                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d\'efficacité</div>')
