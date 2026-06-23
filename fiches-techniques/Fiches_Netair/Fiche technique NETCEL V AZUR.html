@@ -388,8 +388,10 @@
   var mapY = function (p) { return 250 - (Math.min(p, Pmax) / Pmax) * 234; };
   function pdc(co, v) { return Math.max(0, co.a * v * v + co.b * v + co.c); }
   function curve(co) {
-    var pts = [], v;
-    for (v = 0; v <= Vmax - 1e-9; v += 0.1) pts.push(mapX(v).toFixed(1) + ',' + mapY(pdc(co, v)).toFixed(1));
+    // ancrage à l'origine : à débit nul, ΔP = 0 (le terme constant c du polynôme,
+    // extrapolé hors plage mesurée, ne doit pas faire « flotter » le départ des courbes).
+    var pts = [mapX(0).toFixed(1) + ',' + mapY(0).toFixed(1)], v;
+    for (v = 0.1; v <= Vmax - 1e-9; v += 0.1) pts.push(mapX(v).toFixed(1) + ',' + mapY(pdc(co, v)).toFixed(1));
     pts.push(mapX(Vmax).toFixed(1) + ',' + mapY(pdc(co, Vmax)).toFixed(1));
     return 'M' + pts.join(' L');
   }

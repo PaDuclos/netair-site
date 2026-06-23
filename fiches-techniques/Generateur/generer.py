@@ -1466,6 +1466,7 @@ def main():
     out = None
     if "--out" in args:
         out = args[args.index("--out") + 1]
+    to_site = out is None and "--no-site" not in args   # synchro site (sauf --out / --no-site)
 
     with open(json_path, encoding="utf-8") as f:
         d = json.load(f)
@@ -1497,6 +1498,19 @@ def main():
     else:
         warn = "  ⚠️ photo absente de Generateur/assets/ !"
     print(f"✅ {os.path.basename(out)} → {os.path.relpath(outdir)}{warn}")
+
+    # Synchro vers la copie publiée du site Astro (site/public/fiches-techniques/),
+    # servie sur le dev server. Évite que la version en ligne reste périmée.
+    # Désactivable avec --no-site ; ignorée si le dossier du site n'existe pas.
+    if to_site:
+        site_dir = os.path.abspath(os.path.join(ROOT, "..", "..", "site", "public", "fiches-techniques"))
+        if os.path.isdir(site_dir):
+            shutil.copy(out, os.path.join(site_dir, os.path.basename(out)))
+            if os.path.exists(src_photo):
+                site_assets = os.path.join(site_dir, "assets")
+                os.makedirs(site_assets, exist_ok=True)
+                shutil.copy(src_photo, os.path.join(site_assets, d["photo"]))
+            print(f"   ↪ site/public/fiches-techniques/ synchronisé")
 
 
 if __name__ == "__main__":
