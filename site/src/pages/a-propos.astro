@@ -38,7 +38,7 @@ const engagements = [
 >
   <section class="mx-auto max-w-[1140px] px-7 pt-10 pb-4">
     <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'À propos' }]} />
-    <h1 class="display mt-5 text-4xl sm:text-5xl font-bold text-marine max-w-3xl">
+    <h1 class="display mt-5 text-4xl sm:text-5xl font-normal text-marine max-w-3xl">
       Un fabricant français de filtres pour le traitement d'air
     </h1>
   </section>
@@ -54,7 +54,7 @@ const engagements = [
   </section>
 
   <section class="mx-auto max-w-[1140px] px-7 py-8">
-    <h2 class="display text-3xl font-bold text-marine">Nos engagements</h2>
+    <h2 class="display text-3xl font-normal text-marine">Nos engagements</h2>
     <div class="mt-8 grid gap-4 md:grid-cols-3">
       {engagements.map((e, i) => (
         <div class="rounded-2xl border border-soft bg-blanc p-6">
@@ -68,10 +68,10 @@ const engagements = [
 
   <section class="mx-auto max-w-[1140px] px-7 py-12">
     <div class="rounded-3xl border border-soft bg-mist px-8 py-14 text-center">
-      <p class="display text-2xl sm:text-3xl font-bold text-marine">L'air propre, notre engagement.</p>
+      <p class="display text-2xl sm:text-3xl font-normal text-marine">L'air propre, notre engagement.</p>
       <a
         href="/contact"
-        class="mt-7 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+        class="mt-7 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
         style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
       >
         Demander un devis →

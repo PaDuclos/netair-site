@@ -33,7 +33,7 @@ const { famille, produits } = Astro.props;
       ]}
     />
     <span class="eyebrow mt-5 inline-block text-xs text-turquoise">{famille.tag}</span>
-    <h1 class="display mt-2 text-4xl sm:text-5xl font-bold text-marine">{famille.titre}</h1>
+    <h1 class="display mt-2 text-4xl sm:text-5xl font-normal text-marine">{famille.titre}</h1>
     <p class="mt-4 max-w-2xl text-lg text-muted">{famille.desc}</p>
   </section>
 
@@ -44,14 +44,14 @@ const { famille, produits } = Astro.props;
       </div>
     ) : (
       <div class="rounded-2xl border border-soft bg-mist p-10 text-center">
-        <p class="text-marine font-medium">Références en cours de référencement.</p>
+        <p class="text-marine font-normal">Références en cours de référencement.</p>
         <p class="mt-2 text-sm text-muted">
           Cette famille fait partie de notre gamme. Pour une demande précise,
           contactez-nous : nous étudions chaque cas.
         </p>
         <a
           href="/contact"
-          class="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-blanc"
+          class="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-normal text-blanc"
           style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
         >
           Demander un devis →

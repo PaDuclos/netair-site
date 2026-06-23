@@ -58,7 +58,7 @@ h1, h2, h3, .display {
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-weight: 600;
+  font-weight: 400; /* aligné sur l'original (pas de graisse) */
 }
 
 /* Apparition douce au défilement (respecte prefers-reduced-motion) */

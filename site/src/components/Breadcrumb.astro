@@ -16,7 +16,7 @@ const { items } = Astro.props;
         {c.href && i < items.length - 1 ? (
           <a href={c.href} class="hover:text-marine transition-colors">{c.label}</a>
         ) : (
-          <span class="text-marine font-medium">{c.label}</span>
+          <span class="text-marine font-normal">{c.label}</span>
         )}
         {i < items.length - 1 && <span class="text-soft">/</span>}
       </li>
