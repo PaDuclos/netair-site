@@ -14,7 +14,7 @@
 
   /* Gris neutres (texte secondaire, filets) */
   --color-secondary: #4A5E7A; /* texte courant (identique à l'ancienne page) */
-  --color-muted: #5B6B82;
+  --color-muted: #4A5E7A; /* aligné sur le gris de l'accueil (secondary) */
   --color-soft: #E2E8F0;
   --color-mist: #F8FAFC;
 
@@ -50,10 +50,9 @@ h1, h2, h3, .display {
   letter-spacing: -0.01em;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+/* Pas de `color: inherit` ici : cela écraserait les utilitaires de couleur
+   (text-secondary, text-white…) sur les liens et boutons. Tailwind Preflight
+   gère déjà l'héritage par défaut des liens. */
 
 /* Titres de section en capitales condensées à filets fins */
 .eyebrow {
