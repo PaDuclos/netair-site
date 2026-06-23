@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const stats = [
+  { n: 'EN ISO 16890 + EN 779', l: 'double classification' },
+  { n: '7', l: 'familles de filtres' },
+  { n: 'Sur mesure', l: 'devis au cas par cas' },
+];
+
+const familles = [
+  { slug: 'prefiltres', tag: 'ISO Coarse', titre: 'Préfiltres', desc: "Première barrière contre les grosses poussières. Cellules métalliques, médias synthétiques en panneau ou en rouleau, et filtres plissés." },
+  { slug: 'filtres-plans', tag: 'G3 · G4', titre: 'Filtres plans', desc: "Filtration générale en faible épaisseur, pour les caissons à l'encombrement limité." },
+  { slug: 'poches-souples', tag: 'G4 → F9', titre: 'Poches souples', desc: "Grande surface filtrante développée sur plusieurs poches, pour une longue durée de service à perte de charge maîtrisée." },
+  { slug: 'compacts', tag: 'ePM10 → ePM1', titre: 'Compacts / poches rigides', desc: "Filtration fine à très fine sous faible encombrement, en mini-plis ou poches rigides. Gamme NETPAK." },
+  { slug: 'hepa', tag: 'E10 → H14', titre: 'HEPA / T.H.E', desc: "Filtration absolue pour les environnements maîtrisés : salles propres, santé, process sensibles. Gamme NETCEL." },
+  { slug: 'charbon-actif', tag: 'Gaz · odeurs', titre: 'Charbon actif', desc: "Traitement des gaz et des odeurs par adsorption. Cellules compactes, dièdres ou poches imprégnées. Gamme NETCARB." },
+  { slug: 'combines', tag: 'Particules + gaz', titre: 'Combinés', desc: "Un étage particulaire associé au charbon actif, pour traiter l'air en une seule passe lorsque la place manque." },
+];
+
+const preuves = [
+  { titre: 'Performance mesurée', desc: "Les classes, pertes de charge et durées de service sont issues de nos données d'essai, pas d'estimations. Le calculateur chiffre l'écart d'énergie pour votre débit." },
+  { titre: 'Accompagnement technique', desc: "Un doute sur une classe, une dimension, une compatibilité ? Nous répondons en termes techniques, entre professionnels." },
+  { titre: 'Réactivité sur mesure', desc: "Une référence introuvable ailleurs, une cote particulière : nous étudions chaque demande et revenons avec une proposition adaptée." },
+];
+
+const mosaic = [
+  { src: '/produits/netply.jpg', nom: 'NETPLY', type: 'Filtre plissé' },
+  { src: '/produits/netpak-s-cilia.jpg', nom: 'NETPAK S CILIA', type: 'Compact' },
+  { src: '/produits/netcel-v-nival.jpg', nom: 'NETCEL V NIVAL', type: 'HEPA / T.H.E' },
+];
+---
+
+<BaseLayout
+  title="Netair — Filtres pour centrales de traitement d'air (CTA)"
+  description="Fabricant français de filtres pour la ventilation générale : préfiltres, poches, compacts F9, HEPA H14. Double classification EN ISO 16890 et EN 779. Devis sur mesure."
+>
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div class="mesh absolute inset-0 -z-10" aria-hidden="true"></div>
+    <div class="mx-auto max-w-[1140px] px-7 pt-20 pb-16 grid items-center gap-12 lg:grid-cols-2">
+      <div>
+        <span class="eyebrow inline-flex items-center gap-2 rounded-full bg-turquoise/10 px-3.5 py-1.5 text-xs text-turquoise">
+          <span class="h-1.5 w-1.5 rounded-full bg-turquoise"></span>
+          Fabricant de filtres pour CTA
+        </span>
+        <h1 class="mt-5 text-5xl sm:text-6xl font-bold leading-[1.02] text-marine">
+          Des filtres pour le traitement d'air, conçus pour durer.
+        </h1>
+        <p class="mt-5 max-w-xl text-lg text-muted">
+          Du préfiltre métallique au compact F9 : une gamme complète pour la ventilation
+          générale, en double classification EN ISO 16890 et EN 779. Chaque référence,
+          sa fiche technique et son calculateur énergétique.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3.5">
+          <a
+            href="/contact"
+            class="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+            style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
+          >
+            Demander un devis →
+          </a>
+          <a
+            href="/gammes"
+            class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-5 py-3 text-sm font-semibold text-marine transition-colors hover:border-turquoise"
+          >
+            Voir les gammes
+          </a>
+        </div>
+      </div>
+
+      <!-- Mosaïque de 3 filtres -->
+      <div class="grid grid-cols-2 gap-4">
+        <figure class="row-span-2 rounded-2xl border border-soft bg-blanc p-4 shadow-[0_24px_50px_-30px_rgba(15,50,97,0.45)]">
+          <img src={mosaic[0].src} alt={`${mosaic[0].nom} — ${mosaic[0].type}`} class="h-full w-full rounded-lg object-cover" loading="eager" width="520" height="640" />
+          <figcaption class="mt-3 text-sm"><span class="font-semibold text-marine">{mosaic[0].nom}</span> · <span class="text-muted">{mosaic[0].type}</span></figcaption>
+        </figure>
+        {mosaic.slice(1).map((m) => (
+          <figure class="rounded-2xl border border-soft bg-blanc p-3 shadow-[0_18px_40px_-30px_rgba(15,50,97,0.4)]">
+            <img src={m.src} alt={`${m.nom} — ${m.type}`} class="aspect-square w-full rounded-lg object-cover" loading="lazy" width="320" height="320" />
+            <figcaption class="mt-2 text-xs"><span class="font-semibold text-marine">{m.nom}</span><br /><span class="text-muted">{m.type}</span></figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+
+    <!-- Bande chiffres-preuves -->
+    <div class="mx-auto max-w-[1140px] px-7 pb-6">
+      <div class="flex flex-wrap gap-x-12 gap-y-4 border-t border-soft pt-6">
+        {stats.map((s) => (
+          <div>
+            <div class="display text-2xl font-bold text-marine">{s.n}</div>
+            <div class="text-sm text-muted">{s.l}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTRE MÉTIER -->
+  <section class="mx-auto max-w-[1140px] px-7 py-16 reveal">
+    <span class="eyebrow text-xs text-turquoise">Notre métier</span>
+    <p class="mt-3 max-w-3xl text-2xl leading-snug text-marine">
+      Netair fabrique et assemble des filtres pour centrales de traitement d'air.
+      Production interne et sous-traitance maîtrisée nous permettent de couvrir le
+      catalogue standard comme le sur-mesure. Livraison par transporteur, partout en France.
+    </p>
+  </section>
+
+  <!-- NOS GAMMES -->
+  <section class="mx-auto max-w-[1140px] px-7 py-8 reveal">
+    <div class="flex items-end justify-between gap-6">
+      <div>
+        <h2 class="display text-3xl font-bold text-marine">Nos gammes</h2>
+        <p class="mt-2 max-w-2xl text-muted">
+          Sept familles, du préfiltre à la filtration absolue. Chaque produit est documenté :
+          classes de filtration, perte de charge et durée de service sur sa fiche technique.
+        </p>
+      </div>
+      <a href="/gammes" class="hidden sm:inline text-sm font-semibold text-turquoise hover:text-marine transition-colors">Tout voir →</a>
+    </div>
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {familles.map((f) => (
+        <a
+          href={`/gammes/${f.slug}`}
+          class="group rounded-2xl border border-soft bg-blanc p-6 transition-all hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgba(8,151,165,0.4)]"
+        >
+          <span class="inline-block rounded-lg bg-bleu/8 px-2.5 py-1 text-xs font-semibold text-bleu">{f.tag}</span>
+          <h3 class="display mt-4 text-xl text-marine">{f.titre}</h3>
+          <p class="mt-2 text-sm text-muted">{f.desc}</p>
+          <span class="mt-4 inline-block text-sm font-semibold text-turquoise opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0">Découvrir →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- POURQUOI NETAIR -->
+  <section class="mx-auto max-w-[1140px] px-7 py-16 reveal">
+    <h2 class="display text-3xl font-bold text-marine">Pourquoi Netair</h2>
+    <div class="mt-8 grid gap-8 md:grid-cols-3">
+      {preuves.map((p, i) => (
+        <div class="relative pl-5">
+          <span class="absolute left-0 top-1 bottom-1 w-[3px] rounded-full bg-turquoise"></span>
+          <div class="display text-sm text-muted">0{i + 1}</div>
+          <h3 class="display mt-1 text-xl text-marine">{p.titre}</h3>
+          <p class="mt-2 text-sm text-muted">{p.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- APPEL FINAL -->
+  <section class="mx-auto max-w-[1140px] px-7 py-8 reveal">
+    <div class="relative overflow-hidden rounded-3xl border border-soft bg-mist px-8 py-14 text-center">
+      <div class="mesh absolute inset-0 -z-10" aria-hidden="true"></div>
+      <h2 class="display text-3xl font-bold text-marine">Un besoin précis ? Un devis précis.</h2>
+      <p class="mx-auto mt-3 max-w-xl text-muted">
+        Indiquez vos références ou vos dimensions ; nous revenons avec une proposition
+        adaptée à votre installation.
+      </p>
+      <a
+        href="/contact"
+        class="mt-7 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+        style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
+      >
+        Demander un devis →
+      </a>
+    </div>
+  </section>
+</BaseLayout>

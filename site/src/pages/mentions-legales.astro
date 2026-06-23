@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+const maj = '23 juin 2026';
+---
+
+<BaseLayout
+  title="Mentions légales — Netair"
+  description="Mentions légales du site netair.fr : éditeur, hébergeur, propriété intellectuelle."
+>
+  <section class="mx-auto max-w-3xl px-7 pt-10 pb-16">
+    <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'Mentions légales' }]} />
+    <h1 class="display mt-5 text-4xl font-bold text-marine">Mentions légales</h1>
+    <p class="mt-3 text-sm text-muted">Dernière mise à jour : {maj}</p>
+
+    <div class="mt-8 space-y-8 text-[15px] leading-relaxed text-marine">
+      <div>
+        <h2 class="display text-xl text-marine">Éditeur du site</h2>
+        <p class="mt-2 text-muted">
+          NETAIR — [À COMPLÉTER : forme juridique], au capital de [À COMPLÉTER : montant] €.<br />
+          Siège social : [À COMPLÉTER : adresse complète].<br />
+          SIREN [À COMPLÉTER] — RCS [À COMPLÉTER : ville] — N° TVA intracommunautaire : FR [À COMPLÉTER].<br />
+          Téléphone : [À COMPLÉTER] — Email : contact@netair.fr<br />
+          Directeur de la publication : Pierre-Alain Duclos.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="display text-xl text-marine">Hébergeur</h2>
+        <p class="mt-2 text-muted">
+          [À CONFIRMER une fois l'hébergement souscrit. Hébergeur envisagé : OVH SAS,
+          2 rue Kellermann, 59100 Roubaix, France — téléphone : 1007.]
+        </p>
+      </div>
+
+      <div>
+        <h2 class="display text-xl text-marine">Propriété intellectuelle</h2>
+        <p class="mt-2 text-muted">
+          L'ensemble des contenus de ce site (textes, visuels, photographies, logo,
+          fiches techniques, mise en page) est la propriété de Netair ou de ses ayants
+          droit et est protégé par le droit de la propriété intellectuelle. Toute
+          reproduction, représentation ou diffusion, totale ou partielle, sans
+          autorisation écrite préalable, est interdite.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="display text-xl text-marine">Données personnelles</h2>
+        <p class="mt-2 text-muted">
+          Le traitement des données collectées via ce site est décrit dans notre <a href="/confidentialite" class="font-medium text-turquoise hover:text-marine">politique de confidentialité</a>.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="display text-xl text-marine">Crédits</h2>
+        <p class="mt-2 text-muted">
+          Conception et réalisation : Netair. Polices de caractères : Barlow Condensed
+          et Inter (licence SIL Open Font), auto-hébergées.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

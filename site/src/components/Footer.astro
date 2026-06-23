@@ -1,0 +1,55 @@
+---
+// Pied de page : slogan officiel + liens.
+const year = new Date().getFullYear();
+const cols = [
+  {
+    title: 'Gammes',
+    links: [
+      { href: '/gammes/prefiltres', label: 'Préfiltres' },
+      { href: '/gammes/poches-souples', label: 'Poches souples' },
+      { href: '/gammes/compacts', label: 'Compacts / poches rigides' },
+      { href: '/gammes/hepa', label: 'HEPA / T.H.E' },
+    ],
+  },
+  {
+    title: 'Netair',
+    links: [
+      { href: '/a-propos', label: 'À propos' },
+      { href: '/contact', label: 'Contact / devis' },
+    ],
+  },
+  {
+    title: 'Informations',
+    links: [
+      { href: '/mentions-legales', label: 'Mentions légales' },
+      { href: '/confidentialite', label: 'Politique de confidentialité' },
+    ],
+  },
+];
+---
+
+<footer class="mt-24 border-t border-soft bg-mist">
+  <div class="mx-auto max-w-[1140px] px-7 py-14">
+    <div class="grid gap-10 md:grid-cols-4">
+      <div>
+        <img src="/brand/logo.svg" alt="Netair" class="h-8 w-auto" />
+        <p class="mt-4 text-sm text-muted max-w-xs">L'air propre, notre engagement.</p>
+      </div>
+      {cols.map((c) => (
+        <div>
+          <h3 class="eyebrow text-xs text-marine">{c.title}</h3>
+          <ul class="mt-4 space-y-2.5">
+            {c.links.map((l) => (
+              <li>
+                <a href={l.href} class="text-sm text-muted hover:text-marine transition-colors">{l.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <div class="mt-12 pt-6 border-t border-soft text-xs text-muted">
+      © {year} Netair — Fabricant de filtres pour centrales de traitement d'air.
+    </div>
+  </div>
+</footer>
