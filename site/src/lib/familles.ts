@@ -10,7 +10,10 @@ export type Produit = CollectionEntry<'produits'>;
 export interface Famille {
   slug: string;
   titre: string;
+  /** Badge — 1re ligne : classe ISO 16890 (norme primaire). */
   tag: string;
+  /** Badge — 2e ligne : classe EN 779 (ancienne norme), si applicable. */
+  tagEn?: string;
   desc: string;
   /** Photo détourée (PNG transparent) représentative de la famille. */
   photo?: string;
@@ -20,21 +23,24 @@ export const FAMILLES: Famille[] = [
   {
     slug: 'prefiltres',
     titre: 'Préfiltres',
-    tag: 'ISO Coarse',
+    tag: 'Coarse → ePM10',
+    tagEn: 'G3 → M5',
     photo: '/produits/detour/netply-v6-photo.png',
     desc: "Première barrière contre les grosses poussières, en protection des étages fins. Filtres plissés et plans, cellules métalliques, médias synthétiques en panneau ou en rouleau.",
   },
   {
     slug: 'poches-souples',
     titre: 'Poches souples',
-    tag: 'G4 → F9',
+    tag: 'ePM10 → ePM1',
+    tagEn: 'G4 → F9',
     photo: '/produits/detour/netbag-s-photo.png',
     desc: "Grande surface filtrante développée sur plusieurs poches, pour une longue durée de service à perte de charge maîtrisée.",
   },
   {
     slug: 'compacts',
     titre: 'Compacts / poches rigides',
-    tag: 'ePM10 → ePM1',
+    tag: 'ePM10 50% → ePM1 80%',
+    tagEn: 'M5 → F9',
     photo: '/produits/detour/netpak-s-cilia-photo.png',
     desc: "Filtration fine à très fine sous faible encombrement, en mini-plis ou poches rigides. Gamme NETPAK.",
   },
@@ -115,15 +121,17 @@ export async function getProduitsByFamille(familleSlug: string): Promise<Produit
     });
 }
 
-/** Badge de classe court pour les cartes (1ère ligne de badges_p1, nettoyée). */
-export function badgeClasse(p: Produit): string | undefined {
-  const tag = familleBadge(p);
-  return tag;
-}
-
-function familleBadge(p: Produit): string | undefined {
-  const b = p.data.badges_p1?.[0];
-  if (!b) return undefined;
-  // « ISO 16890 : Coarse 65% / ePM10 50% » → « Coarse 65% / ePM10 50% »
-  return b.replace(/^ISO\s*16890\s*:\s*/i, '').trim();
+/**
+ * Classes du produit pour le badge des cartes :
+ * - `iso` (1re ligne) = classe ISO 16890 (norme primaire) ou EN 1822 pour les HEPA.
+ * - `en`  (2e ligne)  = classe EN 779 (ancienne norme), si applicable.
+ * Source : badges_p1 du JSON, ex. ["ISO 16890 : Coarse 65% / ePM10 50%", "EN 779 : G4 / M5", …].
+ */
+export function classesProduit(p: Produit): { iso?: string; en?: string } {
+  const arr: string[] = p.data.badges_p1 ?? [];
+  const clean = (s: string) => s.replace(/^(ISO\s*16890|EN\s*779|EN\s*1822)\s*:\s*/i, '').trim();
+  const iso = arr[0] ? clean(arr[0]) : undefined;
+  const enLine = arr.find((b) => /^EN\s*779/i.test(b));
+  const en = enLine ? clean(enLine) : undefined;
+  return { iso, en };
 }

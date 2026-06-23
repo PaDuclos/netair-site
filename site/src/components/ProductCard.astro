@@ -1,13 +1,13 @@
 ---
 import type { Produit } from '../lib/familles';
-import { badgeClasse } from '../lib/familles';
+import { classesProduit } from '../lib/familles';
 
 interface Props {
   produit: Produit;
 }
 const { produit } = Astro.props;
 const { nom, soustitre, photo } = produit.data;
-const badge = badgeClasse(produit);
+const { iso, en } = classesProduit(produit);
 // Photo détourée (PNG transparent) générée dans /produits/detour/.
 const img = photo ? `/produits/detour/${photo.replace(/\.jpg$/i, '.png')}` : null;
 ---
@@ -29,8 +29,11 @@ const img = photo ? `/produits/detour/${photo.replace(/\.jpg$/i, '.png')}` : nul
     </div>
   )}
   <div class="flex flex-1 flex-col p-5">
-    {badge && (
-      <span class="mb-3 inline-block w-fit rounded-lg bg-bleu/8 px-2.5 py-1 text-xs font-normal text-bleu">{badge}</span>
+    {iso && (
+      <span class="mb-3 inline-block w-fit rounded-lg bg-bleu/8 px-2.5 py-1 text-xs text-bleu leading-tight">
+        {iso}
+        {en && <><br /><span class="text-bleu/70">{en}</span></>}
+      </span>
     )}
     <h3 class="display text-lg font-normal text-marine">{nom}</h3>
     {soustitre && <p class="mt-1 text-sm text-muted">{soustitre}</p>}
