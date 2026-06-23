@@ -3,7 +3,7 @@
 
   "slug": "netbag-s",
   "nom": "NETBAG S",
-  "soustitre": "Filtre à poches souples — Moyenne et haute efficacité",
+  "soustitre": "Filtre à poches souples — Préfiltration à filtration fine",
   "series": true,
   "compact_p1": true,
   "vmax": 3.17,
@@ -17,7 +17,7 @@
   "photo": "netbag-s-photo.jpg",
   "photo_alt": "Filtre à poches souples NETBAG S",
 
-  "description": "Le NETBAG S est un filtre à poches souples conçu pour la filtration moyenne à fine des centrales de traitement d'air. Son média synthétique à densité croissante développe une grande surface filtrante répartie sur plusieurs poches, gage d'une forte capacité de rétention et d'une longue durée de vie à faible perte de charge. Les coutures sont tenues par des écarteurs thermosoudés, sans colle, pour une résistance mécanique renforcée et un encrassement régulier. Disponible de M5 à F9 (et G4 en préfiltration) selon EN 779 / EN ISO 16890, en plusieurs profondeurs de poche (380 à 650 mm), sur cadre acier galvanisé ou polypropylène, en 592×592 ou 287×592 mm.",
+  "description": "Le NETBAG S est un filtre à poches souples conçu pour la filtration moyenne à fine des centrales de traitement d'air. Son média synthétique à densité croissante développe une grande surface filtrante répartie sur plusieurs poches, gage d'une forte capacité de rétention et d'une longue durée de vie à faible perte de charge. Les coutures sont tenues par des écarteurs thermosoudés, sans colle, pour une résistance mécanique renforcée et un encrassement régulier. Disponible de G4 (préfiltration) à F9 (haute efficacité) selon EN 779 / EN ISO 16890, en plusieurs profondeurs de poche (380 à 650 mm), sur cadre acier galvanisé ou polypropylène, en 592×592 ou 287×592 mm. La classe G4 (Coarse, poche 380 mm) est proposée en préfiltration ; sa courbe de perte de charge est fournie sur demande.",
 
   "points_cles": [
     "Grande surface filtrante (multi-poches)",
@@ -32,23 +32,23 @@
     ["Type", "Poches souples (multi-poches)"],
     ["Cadre", "Acier galvanisé (option polypropylène) — ép. 25 mm"],
     ["Écarteurs / séparateurs", "Thermosoudés (sans colle)"],
-    ["Efficacités EN 779", "M5 · M6 · F7 · F8 · F9 (+ G4 préfiltration)"],
-    ["Efficacités ISO 16890", "ePM10 50% · ePM2,5 50% · ePM1 55% → 80%"],
-    ["Profondeurs de poche", "380 · 500 · 550 · 650 mm"],
+    ["Efficacités EN 779", "G4 · M5 · M6 · F7 · F8 · F9"],
+    ["Efficacités ISO 16890", "Coarse 65% (G4) · ePM10 50% · ePM2,5 50% · ePM1 55% → 80%"],
+    ["Profondeurs de poche", "380 (G4) · 500 · 550 · 650 mm"],
     ["Dimensions cadre", "592×592 · 287×592 mm"],
     ["Classement au feu", "M1"],
     ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
-    ["ΔP finale recommandée", "min(ΔP initiale + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"]
+    ["ΔP finale recommandée", "min(ΔP initiale + 50 Pa [Coarse G4] / + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"]
   ],
 
   "badges_p1": [
-    "ISO 16890 : ePM10 50% → ePM1 80%",
-    "EN 779 : M5 → F9 (+ G4)",
+    "ISO 16890 : Coarse 65% → ePM1 80%",
+    "EN 779 : G4 → F9",
     "EN 13053"
   ],
   "badges_p2": [
-    "ISO 16890 : ePM10 50% → ePM1 80%",
-    "EN 779 : M5 → F9 (+ G4)",
+    "ISO 16890 : Coarse 65% → ePM1 80%",
+    "EN 779 : G4 → F9",
     "EN 13053"
   ],
 

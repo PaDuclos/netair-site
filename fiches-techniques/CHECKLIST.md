@@ -18,7 +18,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETMETAL | 🟡 | ΔP > 2,38 m/s non mesurée · ~~classe~~ ✅ G2/G3 (déc. PA) |
 | NETFIL | 🟡 | épaisseur/profondeur · ~~G3/G4~~ ✅ G3 confirmé (PA) |
 | NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) |
-| NETBAG S | 🟡 | Anomalie M5 550/650 · G4 non mesuré · 287×592 & humidité · photo |
+| NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
 | NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé) · M6 non mesurée · surface média n.c. · photo |
@@ -114,7 +114,7 @@ Surface média (cadre 592×592) : 380 → 3,46 m² · 500 = 550 → 5,11 m² · 
       - **Décision actée (22/06/2026)** : on **garde la donnée brute en l'état**, sans supposition. Les 2 courbes
         sont affichées, **M5 550 en pointillé « à valider »** (fiche + légende), note « ⚠ À VALIDER » dans
         `DONNEES_PDC` l.29. **À trancher par une mesure banc R&D** (M5 550 et 650) → puis MAJ DONNEES_PDC + fiche.
-- [ ] **Classe G4** (préfiltration) annoncée (livret/plaquette) mais **aucune fiche 2018** → courbe à mesurer.
+- [x] **Classe G4 intégrée** (23/06/2026, décision PA : specs/gamme **sans courbe**) — Coarse 65% (G4), poche **380 mm**, ADD +50, badges/sous-titre/description/specs mis à jour. ⚠ **Courbe ΔP G4 toujours à mesurer** (aucune donnée TITABAG/FORMULE_PDC ; non tracée au graphe, « sur demande »).
 - [ ] **Combinaisons classe × longueur manquantes** : M5/M6/F7 en 500 ; M6/F8/F9 en 550/650 ; F9 en 380/550/650 ;
       M6 en 500/550/650 (cf. matrice).
 - [ ] **Longueur 300 / 600 mm** (livret_2023) vs **380/550/650** (fiches 2018) : nomenclature à clarifier.
