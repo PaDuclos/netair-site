@@ -194,4 +194,10 @@ du débit et contredisent le calculateur.
   (`DONNEES_PDC` l.61), ΔP@3400 ≈ 98 Pa (les 3 tailles ≈ 97-102 Pa ; doc 2015 « 85 Pa » écarté). Parois **POLYESTER**, feu NA.
   T° **40 °C** (efficacité d'adsorption — décision PA ; la fiche 2018 dit 80 °C = tenue structure polyester). HR **70 %**.
   Capacité d'adsorption **non communiquée** (≠ CILIA 15 %) → R&D. Option combinée F7/F9+charbon (non chiffrée). Photo `CARB_BLEND` placeholder.
-- Suivants : NETCARB NIVAL/BAG, autres (cf. Bibliothèque / CHECKLIST)
+- **NETCARB NIVAL** — **polydièdre à charbon actif** (équiv. V-CARB / forme « V »), moléculaire, **mono-classe** ✅
+  292 mm, nominal **3000**. ⚠ **V-CARB n'a aucune courbe ΔP mesurée** (doc = « 85 Pa » plat ; aucun Excel) → **décision PA** :
+  réutiliser la **courbe du pack charbon 292 mm de SV-GD/QL-CARB** (= AZUR), assumée **« partagée »** (`DONNEES_PDC` l.62 ↔ l.61),
+  **courbe V-CARB propre à mesurer R&D**. ΔP@3000 ≈ 80 Pa. Parois polyester (repris SV-GD, à confirmer), T° 40 °C, HR 70 %, feu NA.
+  ⚠ **NIVAL ≈ AZUR** côté aéraulique (même pack) → SKU distincts par la forme (dièdre vs polydièdre) ; redondance à trancher (gamme).
+  Photo `Q-carb.jpg` (code visible → remplacer). `mono_classe`+`dp_final_mode:const`+`ref_simple`.
+- Suivants : NETCARB BAG (poches charbon, moteur `series`), autres (cf. Bibliothèque / CHECKLIST)
