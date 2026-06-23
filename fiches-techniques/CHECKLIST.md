@@ -31,7 +31,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETCARB CILIA | 🟡 | ✅ créée (charbon actif, ISO 10121, 2 épaisseurs) · classe LD/MD/HD à déterminer par essai · capacité/durée de vie gaz R&D · photo (grains) |
 | NETCARB AZUR | 🟡 | ✅ créée (charbon dièdre, mono-classe 292) · courbe 2020 QL-CARB (piège 2023 F7=F8 écarté) · classe LD/MD/HD & capacité R&D · photo blend placeholder |
 | NETCARB NIVAL | 🟡 | ✅ créée (polydièdre, mono 292) · ⚠ courbe ΔP partagée AZUR (V-CARB sans courbe propre → R&D) · parois polyester à confirmer · photo Q-carb (code visible→remplacer) |
-| NETCARB BAG | ⬜ | Tout · nom validé · réf poches charbon à préciser |
+| NETCARB BAG | 🟡 | ✅ créée (poches souples F9 + charbon imprégné, COMBINÉ colmatant) · HR n.c. · capacité/classe 10121 R&D · photo forme NETBAG (média à reshooter) |
 
 ---
 
@@ -221,6 +221,17 @@ Drapeaux : `mono_classe` + `dp_final_mode:const` + `ref_simple`.
 - [ ] **Classe ISO 10121-3 & capacité d'adsorption** : à déterminer/préciser R&D (idem famille).
 - [ ] **Photo** : `Q-carb.jpg` (forme polydièdre charbon) — **code « Q-carb » visible** → à remplacer en priorité par visuel produit Netair (cf. pattern LUMEN).
 
+### NETCARB BAG 🟡
+**Poches souples F9 (ePM1 80 %) à charbon actif imprégné** — **COMBINÉ** particules + gaz (≠ charbon grains), équiv. TITABAG F9 CARB. **Mono-classe**, profondeur 520 mm.
+Courbe **réelle** (`DONNEES_PDC` l.63) : 9,172·v²+64,135·v−10,429 (R²≈1), ΔP@3400 ≈ 229 Pa. Drapeaux : `mono_classe` + `ref_simple` (PAS `dp_final_mode:const`).
+
+- [ ] **Filtre COLMATANT** : c'est d'abord un F9 (média synthétique imprégné) → règle ΔP **ePM +100** appliquée (la fiche dit « 2× PDC initiale »). Ne PAS confondre avec les charbons en grains (non colmatants).
+- [ ] **Classe ISO 10121-3** (volet moléculaire de l'imprégnation) : très inférieure à un lit de grains → à déterminer/qualifier R&D (l'imprégnation capte odeurs/COV légers, pas un traitement gaz lourd).
+- [ ] **Capacité d'adsorption 15 %** (donnée fiche) ; durée de vie gaz selon charge → R&D.
+- [ ] **Humidité relative max. non communiquée** par la fiche 2021 → omise (à préciser).
+- [ ] **Surface média** : poches souples ≈ 5 m² (ordre de grandeur d'après NETBAG F9 ; exacte non communiquée pour la version imprégnée).
+- [ ] **Photo** : forme poches souples (placeholder `netbag-s`) — le média imprégné réel est **plus sombre** → à reshooter en visuel produit Netair.
+
 ---
 
 ## Fiches à créer — données à rassembler
@@ -237,7 +248,9 @@ _(NIVAL et AZUR créées — voir ci-dessus)_
 - [x] **NETCARB CILIA** (compact CA) — réf. PRISME CARB → **créée** (voir ci-dessus)
 - [x] **NETCARB AZUR** (dièdre CA) — réf. SV GD CARB → **créée** (voir ci-dessous)
 - [x] **NETCARB NIVAL** (polydièdre CA) — réf. V-CARB → **créée** (voir ci-dessous)
-- [ ] **NETCARB BAG** (poches CA imprégné) — réf. à préciser · modèle moteur NETBAG S (series)
+- [x] **NETCARB BAG** (poches CA imprégné) — réf. TITABAG F9 CARB → **créée** (voir ci-dessous)
+
+**Famille NETCARB : 4/4 fiches créées ✅** (CILIA, AZUR, NIVAL = charbon grains/moléculaire pur ; BAG = combiné F9+charbon colmatant).
 
 **Paradigme charbon (acté CILIA) à réappliquer :** filtration **moléculaire** (gaz), **pas** ISO 16890 → cadre **ISO 10121** (-1/-2 essai, **-3:2022 classes LD/MD/HD** vs O₃/SO₂/NO₂/toluène). Titanair (fiches < 2022) ne donne **aucune classe LD/MD/HD** → ne pas inventer. Feu **NA**, T° **40 °C**, HR **50 %**. ΔP **non colmatante** (`dp_final_mode:const`) : remplacement à saturation (capacité ≈ 15 % masse) — pas la règle ePM +100. Drapeaux moteur dédiés : `deux_epaisseurs`, `dp_final_mode:const`, `ref_simple`.
 

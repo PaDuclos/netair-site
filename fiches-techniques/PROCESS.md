@@ -200,4 +200,17 @@ du débit et contredisent le calculateur.
   **courbe V-CARB propre à mesurer R&D**. ΔP@3000 ≈ 80 Pa. Parois polyester (repris SV-GD, à confirmer), T° 40 °C, HR 70 %, feu NA.
   ⚠ **NIVAL ≈ AZUR** côté aéraulique (même pack) → SKU distincts par la forme (dièdre vs polydièdre) ; redondance à trancher (gamme).
   Photo `Q-carb.jpg` (code visible → remplacer). `mono_classe`+`dp_final_mode:const`+`ref_simple`.
-- Suivants : NETCARB BAG (poches charbon, moteur `series`), autres (cf. Bibliothèque / CHECKLIST)
+- **NETCARB BAG** — **poches souples F9 (ePM1 80 %) à charbon actif IMPRÉGNÉ** (équiv. TITABAG F9 CARB), **COMBINÉ** ✅
+  ⚠ Paradigme **différent** des 3 charbons en grains : vraie classe **ISO 16890 F9 primaire** + charbon imprégné (odeurs/COV) ;
+  média synthétique **qui SE COLMATE** → règle ΔP **ePM +100** (PAS `dp_final_mode:const` ; la fiche dit « 2× PDC initiale »).
+  Comme NETPAK S DUO mais en poches souples. Source TITABAG F9 CARB 2021 (cache Excel), polynôme 9,172·v²+64,135·v−10,429
+  (`DONNEES_PDC` l.63), ΔP@3400 ≈ 229 Pa (520 mm + charbon). Capacité 15 %, cadre acier, T° 40 °C, feu NA, HR n.c.
+  `mono_classe`+`ref_simple` (header « Filtration », code NETCARB-BAG-LxHxP). Photo forme poches NETBAG placeholder.
+- **Famille NETCARB : 4/4 créées** (CILIA · AZUR · NIVAL = moléculaire pur grains ; BAG = combiné F9+charbon colmatant).
+- Suivants : autres familles (cf. Bibliothèque / CHECKLIST)
+
+### Récap moteur — options ajoutées pour la famille charbon (juin 2026)
+Trois drapeaux **additifs** (n'altèrent que leur clé ; **test d'identité NETPLY préservé à l'octet près**) :
+- `deux_epaisseurs` : 1 famille × 2 épaisseurs (toggle classe masqué, sélecteur épaisseur conservé). — CILIA.
+- `dp_final_mode:"const"` : filtre **non colmatant** (ΔP finale = moyenne = initiale ; remplacement à saturation). — CILIA, AZUR, NIVAL.
+- `ref_simple` : code article `[NOM sans espaces]-LxHxP` + ΔP par ligne de dimension + en-tête tableau « Filtration ». — toute la famille.
