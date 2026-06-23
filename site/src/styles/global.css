@@ -13,13 +13,14 @@
   --color-blanc: #FFFFFF;
 
   /* Gris neutres (texte secondaire, filets) */
+  --color-secondary: #4A5E7A; /* texte courant (identique à l'ancienne page) */
   --color-muted: #5B6B82;
   --color-soft: #E2E8F0;
   --color-mist: #F8FAFC;
 
   /* Polices auto-hébergées (importées dans BaseLayout) */
-  --font-display: "Barlow Condensed", system-ui, sans-serif; /* titres */
-  --font-body: "Inter Variable", "Inter", system-ui, sans-serif; /* corps */
+  --font-display: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif; /* titres */
+  --font-body: "DM Sans Variable", "DM Sans", system-ui, sans-serif; /* corps */
 }
 
 /* ---- Base ---- */
@@ -48,9 +49,8 @@ a {
 
 /* Titres de section en capitales condensées à filets fins */
 .eyebrow {
-  font-family: var(--font-display);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   font-weight: 600;
 }
 
