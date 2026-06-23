@@ -3,7 +3,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 export type Produit = CollectionEntry<'produits'>;
 
 /**
- * Taxonomie des 7 familles (ordre d'affichage).
+ * Taxonomie des 6 familles (ordre d'affichage).
  * Les JSON produits ne portent pas de champ « famille » : on garde la
  * correspondance ici, côté site, sans modifier les fichiers source.
  */
@@ -12,6 +12,8 @@ export interface Famille {
   titre: string;
   tag: string;
   desc: string;
+  /** Photo détourée (PNG transparent) représentative de la famille. */
+  photo?: string;
 }
 
 export const FAMILLES: Famille[] = [
@@ -19,30 +21,28 @@ export const FAMILLES: Famille[] = [
     slug: 'prefiltres',
     titre: 'Préfiltres',
     tag: 'ISO Coarse',
-    desc: "Première barrière contre les grosses poussières, en protection des étages fins. Cellules métalliques, médias synthétiques en panneau ou en rouleau, et filtres plissés.",
-  },
-  {
-    slug: 'filtres-plans',
-    titre: 'Filtres plans',
-    tag: 'G3 · G4',
-    desc: "Filtration générale en faible épaisseur, pour les caissons à l'encombrement limité.",
+    photo: '/produits/detour/netply-v6-photo.png',
+    desc: "Première barrière contre les grosses poussières, en protection des étages fins. Filtres plissés et plans, cellules métalliques, médias synthétiques en panneau ou en rouleau.",
   },
   {
     slug: 'poches-souples',
     titre: 'Poches souples',
     tag: 'G4 → F9',
+    photo: '/produits/detour/netbag-s-photo.png',
     desc: "Grande surface filtrante développée sur plusieurs poches, pour une longue durée de service à perte de charge maîtrisée.",
   },
   {
     slug: 'compacts',
     titre: 'Compacts / poches rigides',
     tag: 'ePM10 → ePM1',
+    photo: '/produits/detour/netpak-s-cilia-photo.png',
     desc: "Filtration fine à très fine sous faible encombrement, en mini-plis ou poches rigides. Gamme NETPAK.",
   },
   {
     slug: 'hepa',
     titre: 'HEPA / T.H.E',
     tag: 'E10 → H14',
+    photo: '/produits/detour/netcel-v-nival-photo.png',
     desc: "Filtration absolue pour les environnements maîtrisés : salles propres, santé, process sensibles. Gamme NETCEL.",
   },
   {
@@ -55,6 +55,7 @@ export const FAMILLES: Famille[] = [
     slug: 'combines',
     titre: 'Combinés',
     tag: 'Particules + gaz',
+    photo: '/produits/detour/netpak-s-duo-photo.png',
     desc: "Un étage particulaire associé au charbon actif, pour traiter l'air en une seule passe lorsque la place manque.",
   },
 ];
@@ -65,7 +66,7 @@ export const SLUG_FAMILLE: Record<string, string> = {
   netfil: 'prefiltres',
   netfibre: 'prefiltres',
   netply: 'prefiltres',
-  netplan: 'filtres-plans',
+  netplan: 'prefiltres',
   'netbag-s': 'poches-souples',
   'netpak-s-bora': 'compacts',
   'netpak-s-cilia': 'compacts',
@@ -75,6 +76,20 @@ export const SLUG_FAMILLE: Record<string, string> = {
   'netcel-v-azur': 'hepa',
   'netcel-v-nival': 'hepa',
   'netpak-s-duo': 'combines',
+};
+
+/**
+ * Ordre d'affichage explicite des produits dans leur famille.
+ * Plus le nombre est petit, plus le produit apparaît tôt (en haut à gauche).
+ * Les produits absents de cette table passent après, triés par nom.
+ */
+export const ORDRE_PRODUITS: Record<string, number> = {
+  // Préfiltres : NETPLY d'abord, puis NETPLAN, puis la suite.
+  netply: 1,
+  netplan: 2,
+  netmetal: 3,
+  netfil: 4,
+  netfibre: 5,
 };
 
 export function familleBySlug(slug: string): Famille | undefined {
@@ -90,7 +105,14 @@ export async function getProduits(): Promise<Produit[]> {
 /** Produits d'une famille donnée. */
 export async function getProduitsByFamille(familleSlug: string): Promise<Produit[]> {
   const all = await getProduits();
-  return all.filter((p) => SLUG_FAMILLE[p.id] === familleSlug);
+  return all
+    .filter((p) => SLUG_FAMILLE[p.id] === familleSlug)
+    .sort((a, b) => {
+      const oa = ORDRE_PRODUITS[a.id] ?? 999;
+      const ob = ORDRE_PRODUITS[b.id] ?? 999;
+      if (oa !== ob) return oa - ob;
+      return a.data.nom.localeCompare(b.data.nom, 'fr');
+    });
 }
 
 /** Badge de classe court pour les cartes (1ère ligne de badges_p1, nettoyée). */

@@ -12,7 +12,7 @@ const familles = FAMILLES.map((f, i) => ({ ...f, count: counts[i] }));
 
 <BaseLayout
   title="Nos gammes de filtres CTA — Netair"
-  description="Sept familles de filtres pour centrales de traitement d'air : préfiltres, filtres plans, poches souples, compacts, HEPA, charbon actif, combinés. Double classification EN ISO 16890 et EN 779."
+  description="Six familles de filtres pour centrales de traitement d'air : préfiltres, poches souples, compacts, HEPA, charbon actif, combinés. Double classification EN ISO 16890 et EN 779."
 >
   <section class="mx-auto max-w-[1140px] px-7 pt-10 pb-4">
     <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'Gammes' }]} />
@@ -29,19 +29,29 @@ const familles = FAMILLES.map((f, i) => ({ ...f, count: counts[i] }));
       {familles.map((f) => (
         <a
           href={`/gammes/${f.slug}`}
-          class="group flex flex-col rounded-2xl border border-soft bg-blanc p-6 transition-all hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgba(8,151,165,0.4)]"
+          class="group flex flex-col overflow-hidden rounded-2xl border border-soft bg-white transition-all hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgba(8,151,165,0.4)]"
         >
-          <div class="flex items-center justify-between">
-            <span class="inline-block rounded-lg bg-bleu/8 px-2.5 py-1 text-xs font-semibold text-bleu">{f.tag}</span>
-            {f.count > 0 && (
-              <span class="text-xs text-muted">{f.count} {f.count > 1 ? 'références' : 'référence'}</span>
+          <!-- Style A : photo détourée fondue dans un halo coloré -->
+          <div class="relative h-44 overflow-hidden" style="background:radial-gradient(95% 90% at 50% 35%, rgba(8,151,165,0.18), rgba(0,112,200,0.12) 55%, rgba(255,255,255,0) 100%);">
+            {f.photo ? (
+              <img src={f.photo} alt={`Filtre ${f.titre}`} class="absolute inset-0 m-auto h-[80%] w-[80%] object-contain drop-shadow-[0_12px_18px_rgba(15,50,97,0.18)] transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+            ) : (
+              <svg class="absolute inset-0 m-auto h-12 w-12 text-turquoise/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9l6 3"/></svg>
             )}
           </div>
-          <h2 class="display mt-4 text-xl text-marine">{f.titre}</h2>
-          <p class="mt-2 flex-1 text-sm text-muted">{f.desc}</p>
-          <span class="mt-4 inline-block text-sm font-semibold text-turquoise opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0">
-            {f.count > 0 ? 'Découvrir →' : 'Bientôt disponible'}
-          </span>
+          <div class="flex flex-1 flex-col p-6">
+            <div class="flex items-center justify-between">
+              <span class="inline-block rounded-lg bg-bleu/10 px-2.5 py-1 text-xs font-semibold text-bleu">{f.tag}</span>
+              {f.count > 0 && (
+                <span class="text-xs text-muted">{f.count} {f.count > 1 ? 'références' : 'référence'}</span>
+              )}
+            </div>
+            <h2 class="display mt-4 text-xl text-marine">{f.titre}</h2>
+            <p class="mt-2 flex-1 text-sm text-muted">{f.desc}</p>
+            <span class="mt-4 inline-block text-sm font-semibold text-turquoise opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0">
+              {f.count > 0 ? 'Découvrir →' : 'Bientôt disponible'}
+            </span>
+          </div>
         </a>
       ))}
     </div>
