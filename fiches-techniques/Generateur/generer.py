@@ -1420,7 +1420,10 @@ def generer(d, html):
         html = html.replace(
             '              <div>\n                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d\'efficacité</div>',
             '              <div style="display:none;">\n                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d\'efficacité</div>')
-        # en-tête du tableau dimensions : pas de classe ISO 16890 pour un filtre moléculaire
+
+    # --- tableau dimensions : en-tête « Filtration » au lieu de « Efficacité ISO 16890 »
+    #     pour les produits sans classe particulaire (charbon / moléculaire → ref_simple).
+    if d.get("ref_simple"):
         html = html.replace(">Efficacité ISO 16890<", ">Filtration<")
 
     # --- page 1 compacte (par produit) : réduit les marges verticales pour

@@ -186,4 +186,12 @@ du débit et contredisent le calculateur.
   `deux_epaisseurs` (1 famille × 2 épaisseurs, toggle classe masqué + sélecteur épaisseur conservé),
   `dp_final_mode:"const"` (filtre **non colmatant** → ΔP finale = moyenne = initiale, remplacement à saturation),
   `ref_simple` (code `NETCARB-CILIA-LxHxP` + ΔP par ligne + en-tête tableau « Filtration »). Photo `CARB.png` (grains) placeholder.
-- Suivants : NETCARB AZUR/NIVAL/BAG, autres (cf. Bibliothèque / CHECKLIST)
+- **NETCARB AZUR** — **poches rigides / dièdre à charbon actif** (équiv. SV-GD CARB), moléculaire, **mono-classe** ✅
+  Une seule épaisseur 292 mm → `mono_classe` (+ `dp_final_mode:const` + `ref_simple`). Source = dossier `SV GD CARB` :
+  **courbe 2020 « QL-CARB »** [débits 1000-3500 → 18,31,45,61,79,103] retenue car **cohérente avec la fiche 2018**
+  (`SV-GD CARB.pdf` : classe EN779 NA, axe Y 0-120, débit 1000-3500). **PIÈGE écarté** : `…F7 2023.xlsx` = `…F8 2023.xlsx`
+  = `…2023.xlsx` base [22…155] (copier-collé, la classe ne change pas la ΔP, hors axe 2018). Polynôme 8,073·v²+13,383·v+2,929
+  (`DONNEES_PDC` l.61), ΔP@3400 ≈ 98 Pa (les 3 tailles ≈ 97-102 Pa ; doc 2015 « 85 Pa » écarté). Parois **POLYESTER**, feu NA.
+  T° **40 °C** (efficacité d'adsorption — décision PA ; la fiche 2018 dit 80 °C = tenue structure polyester). HR **70 %**.
+  Capacité d'adsorption **non communiquée** (≠ CILIA 15 %) → R&D. Option combinée F7/F9+charbon (non chiffrée). Photo `CARB_BLEND` placeholder.
+- Suivants : NETCARB NIVAL/BAG, autres (cf. Bibliothèque / CHECKLIST)
