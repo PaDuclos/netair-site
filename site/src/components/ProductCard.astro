@@ -8,7 +8,8 @@ interface Props {
 const { produit } = Astro.props;
 const { nom, soustitre, photo } = produit.data;
 const badge = badgeClasse(produit);
-const img = photo ? `/produits/${photo}` : null;
+// Photo détourée (PNG transparent) générée dans /produits/detour/.
+const img = photo ? `/produits/detour/${photo.replace(/\.jpg$/i, '.png')}` : null;
 ---
 
 <a
@@ -16,11 +17,11 @@ const img = photo ? `/produits/${photo}` : null;
   class="group flex flex-col overflow-hidden rounded-2xl border border-soft bg-blanc transition-all hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgba(8,151,165,0.4)]"
 >
   {img && (
-    <div class="aspect-[4/3] overflow-hidden bg-white p-4">
+    <div class="relative aspect-[4/3] overflow-hidden" style="background:radial-gradient(95% 90% at 50% 35%, rgba(8,151,165,0.18), rgba(0,112,200,0.12) 55%, rgba(255,255,255,0) 100%);">
       <img
         src={img}
         alt={produit.data.photo_alt ?? `Filtre ${nom}`}
-        class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+        class="absolute inset-0 m-auto h-[82%] w-[82%] object-contain drop-shadow-[0_12px_18px_rgba(15,50,97,0.18)] transition-transform duration-300 group-hover:scale-105"
         loading="lazy"
         width="400"
         height="300"
