@@ -56,8 +56,10 @@ puis `maj_fiches.py`. Ici, **on ne touche qu'au TEXTE** (nom, descriptif, points
 
 ### Étape A — lancer l'aperçu
 Double-cliquez **`Apercu_site.command`**.
-→ Une fenêtre noire s'ouvre. Patientez quelques secondes, puis ouvrez
-**http://localhost:4321** dans votre navigateur.
+→ Une fenêtre noire s'ouvre, prépare le site quelques secondes, puis le navigateur
+s'ouvre tout seul sur **http://localhost:4321**.
+(Pas de bouton « Modifier le texte » ici, contrairement aux fiches : sur le site, on
+édite directement les fichiers ci-dessous.)
 
 ### Étape B — changer le texte
 Les textes des pages sont dans `site/src/pages/` :

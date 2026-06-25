@@ -16,5 +16,5 @@ if [ ! -f "$d/site/package.json" ]; then
 fi
 cd "$d/site" || exit 1
 echo "Démarrage de l'aperçu du site web…"
-echo "Ouvrez http://localhost:4321 dans votre navigateur une fois prêt."
-npm run dev
+echo "Le navigateur va s'ouvrir tout seul sur http://localhost:4321"
+npm run dev -- --open
