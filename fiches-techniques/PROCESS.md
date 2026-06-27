@@ -255,3 +255,26 @@ Trois drapeaux **additifs** (n'altèrent que leur clé ; **test d'identité NETP
 - `deux_epaisseurs` : 1 famille × 2 épaisseurs (toggle classe masqué, sélecteur épaisseur conservé). — CILIA.
 - `dp_final_mode:"const"` : filtre **non colmatant** (ΔP finale = moyenne = initiale ; remplacement à saturation). — CILIA, AZUR, NIVAL.
 - `ref_simple` : code article `[NOM sans espaces]-LxHxP` + ΔP par ligne de dimension + en-tête tableau « Filtration ». — toute la famille.
+
+## Documentation générale « livre » des fiches — À FAIRE EN FIN DE PROJET
+
+> ⚠️ **Seulement quand les 18 fiches sont finalisées** (données R&D validées + photos Netair).
+> Sinon il faut tout ré-exporter à chaque modification d'une fiche.
+
+**Objectif** : réunir toutes les fiches en un « livre » avec **sommaire cliquable** (liens directs vers
+chaque fiche) et navigation fluide.
+
+**Architecture conseillée — HTML = source, PDF = export :**
+1. **Livre HTML interactif** (en ligne, dans le site) : page-sommaire listant les 18 fiches → clic = saut
+   à la fiche. C'est la version vitrine. Peut tout faire (sommaire cliquable **et** animation).
+2. **Catalogue PDF unique** : toutes les fiches reliées, sommaire cliquable (signets) + pagination.
+   Version portable (email, impression, joint à un devis). Pas d'animation (PDF = figé).
+3. **18 PDF individuels** : une fiche = un PDF (envoyer un seul produit à un client).
+
+**Effet « pages qui se tournent » (feuilletage)** : faisable en HTML, mais **option de 2ᵉ étape**.
+Réserves : (a) peut jurer avec la sobriété « Precision Blanche » et l'usage B2B (les BE/installateurs
+veulent trouver vite, pas feuilleter) ; (b) demande une lib externe (contre la règle « zéro dépendance »)
+ou du code sur-mesure. → privilégier d'abord la version **propre et cliquable**, comparer ensuite.
+
+**Faisabilité** : les fiches sont déjà compatibles impression/PDF (stack autoportante) → l'assemblage
+en catalogue unique et l'export PDF sont directs le moment venu. Voir aussi `PLAN.md` (BLOC 5).
