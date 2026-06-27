@@ -504,7 +504,7 @@
     var velNum = (state.debit / 3600) / areaNum;
     var dpInitNum = pdc(co, velNum);
     var dpFinalNum = Math.min(dpInitNum + ADD[ceff], dpInitNum * 3);
-    var dpAvgNum = (dpFinalNum / 2) * 0.85;
+    var dpAvgNum = ((dpInitNum + dpFinalNum) / 2) * 0.85;
 
     $('p48').setAttribute('d', curve(co48));
     $('p98').setAttribute('d', curve(co98));

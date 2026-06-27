@@ -465,7 +465,7 @@
     var cs = curSeries(), co = cs.co, add = CLS[cs.cls].add, rule = CLS[cs.cls].rule;
     var areaNum = (Math.max(50, state.flen) / 1000) * (Math.max(50, state.fwid) / 1000);
     var velNum = (state.debit / 3600) / areaNum;
-    var dpInit = pdc(co, velNum), dpFinal = HEPA ? dpInit * 2 : Math.min(dpInit + add, dpInit * 3), dpAvg = (dpFinal / 2) * 0.85;
+    var dpInit = pdc(co, velNum), dpFinal = HEPA ? dpInit * 2 : Math.min(dpInit + add, dpInit * 3), dpAvg = ((dpInit + dpFinal) / 2) * 0.85;
     $('dpInit').textContent = fr(dpInit); $('dpFinal').textContent = fr(dpFinal); $('dpAvg').textContent = fr(dpAvg);
     $('effAdd').textContent = add; $('effRule').textContent = rule;
     $('area').textContent = areaNum.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

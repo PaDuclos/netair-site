@@ -587,7 +587,7 @@ SERIES_JS = r"""<script>
     var cs = curSeries(), co = cs.co, add = CLS[cs.cls].add, rule = CLS[cs.cls].rule;
     var areaNum = (Math.max(50, state.flen) / 1000) * (Math.max(50, state.fwid) / 1000);
     var velNum = (state.debit / 3600) / areaNum;
-    var dpInit = pdc(co, velNum), dpFinal = HEPA ? dpInit * 2 : Math.min(dpInit + add, dpInit * 3), dpAvg = (dpFinal / 2) * 0.85;
+    var dpInit = pdc(co, velNum), dpFinal = HEPA ? dpInit * 2 : Math.min(dpInit + add, dpInit * 3), dpAvg = ((dpInit + dpFinal) / 2) * 0.85;
     $('dpInit').textContent = fr(dpInit); $('dpFinal').textContent = fr(dpFinal); $('dpAvg').textContent = fr(dpAvg);
     $('effAdd').textContent = add; $('effRule').textContent = rule;
     $('area').textContent = areaNum.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1218,7 +1218,7 @@ def build_multi_js(d):
     var velNum = (state.debit / 3600) / areaNum;
     var dpInitNum = pdc(co, velNum);
     var dpFinalNum = Math.min(dpInitNum + ADD[ceff], dpInitNum * 3);
-    var dpAvgNum = (dpFinalNum / 2) * 0.85;
+    var dpAvgNum = ((dpInitNum + dpFinalNum) / 2) * 0.85;
 
     $('p48').setAttribute('d', curve(co48));
     $('p98').setAttribute('d', curve(co98));
@@ -1558,7 +1558,7 @@ def generer(d, html):
         # (remplacement à saturation d'adsorption). ΔP finale = moyenne = initiale.
         html = html.replace("var dpFinalNum = Math.min(dpInitNum + ADD[eff], dpInitNum * 3);",
                             "var dpFinalNum = dpInitNum;")
-        html = html.replace("var dpAvgNum = (dpFinalNum / 2) * 0.85;",
+        html = html.replace("var dpAvgNum = ((dpInitNum + dpFinalNum) / 2) * 0.85;",
                             "var dpAvgNum = dpInitNum;")
         html = html.replace(
             'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span>',

@@ -87,20 +87,28 @@ ou si le dossier du site est absent. (Avant cette date, la copie publiée pouvai
 Calculateur = **polynôme `ΔP = a·v² + b·v + c`** (mesures R&D), source `DONNEES_PDC`.
 Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 €, 250 j).
 
-## Calculateur énergétique — formule de ΔP moyenne (IMPÉRATIVE, validée 22/06/2026)
+## Calculateur énergétique — formule de ΔP moyenne (IMPÉRATIVE, corrigée 27/06/2026)
 
-> **ΔP moyenne = (ΔP finale ⁄ 2) × 0,85** — **alignée sur le calculateur de référence
-> `Classement énergétique GT_CARRIER` (Titanair/Carrier).**
-> (et **non** `(ΔP initiale + ΔP finale) ⁄ 2`).
+> **ΔP moyenne = ((ΔP initiale + ΔP finale) ⁄ 2) × 0,85**
+> = moyenne entre l'état propre et l'état colmaté, **rabaissée de 15 %** pour approcher l'intégrale
+> de la courbe de colmatage (convexe / exponentielle : la perte de charge reste basse longtemps,
+> puis grimpe vite → la moyenne réelle est tirée vers le bas).
 
+- **Correction du 27/06/2026** : l'ancienne formule `(ΔP finale ⁄ 2) × 0,85` **oubliait le terme
+  ΔP initiale** → elle partait implicitement de zéro et pouvait afficher une **moyenne < initiale**
+  (physiquement impossible : la perte de charge ne fait que monter à partir du propre). La nouvelle
+  formule reste **toujours entre l'initiale et la finale**, donc ≥ initiale. Décision du dirigeant.
 - Énergie : `kWh = (Débit⁄3600) × ΔP moyenne ⁄ η × heures ⁄ 1000`, avec η = rendement
   moto-ventilateur (curseur, **défaut 55 %**), heures = `durée × jours` (défaut 24 × 250 = 6 000 h).
 - ΔP finale = `min(ΔP initiale + ADD ; 3 × ΔP initiale)` (cf. règle ci-dessus, ADD = +50 Coarse / +100 ePM).
-- Présente dans **les 3 moteurs** : gabarit legacy (`gabarit_base.html`), série N-classes (`SERIES_JS`),
-  multi compact (`generer_multi`). Toute fiche régénérée applique la formule.
-- Le **croisement GT/Carrier** a aussi confirmé : constantes alignées (η÷, 6000 h, CO₂ 0,079 RE2020,
-  ΔP finale EN 13053). Seuls le prix (GT 0,15 vs nous 0,18) et le débit défaut (GT 3000 vs nous 3400) diffèrent encore.
-- ⚠️ Conséquence assumée : la **ΔP moyenne affichée peut être < ΔP initiale** (propre à la formule GT).
+  Cas HEPA : ΔP finale = `2 × ΔP initiale`. Cas charbon non-colmatant : ΔP moyenne = ΔP initiale (pas de colmatage).
+- Présente dans **les 3 moteurs** : gabarit legacy (`gabarit_base.html:487`), série N-classes
+  (`generer.py:590`), multi compact (`generer.py:1221`) + chaîne de recherche du cas charbon
+  (`generer.py:1561`). Toute fiche régénérée applique la formule.
+- Constantes conservées (croisement GT/Carrier — Carrier était **client** de Titanair, pas concurrent) :
+  η÷, 6000 h, CO₂ 0,079 RE2020, ΔP finale EN 13053, prix 0,18 €, débit défaut 3400.
+- ⚠️ Le facteur **−15 %** est une approximation d'ingénieur de la convexité du colmatage (faute de
+  la courbe d'essai ISO 16890-3) — bon ordre de grandeur, à affiner si des données de colmatage réelles arrivent.
 
 ## Étiquette énergétique Eurovent 4/21 (spec prête — à implémenter)
 
