@@ -69,7 +69,12 @@ Cinq briques, construites dans cet ordre :
    - Réplique les tables Excel : `Prix_L_et_l`, `Prix_Surface`, `Prix_Surface_HF` (prix au dm² hors format),
      `Prix_Pièce`, paliers de quantité (0/6/20/500), `Poids_filtres`, `Tableau_Tarifs_Expédition`, `Tableau_franco`.
    - **Validable contre l'Excel** (mêmes entrées → mêmes prix), comme l'audit du calculateur énergétique.
-   - **Réutilisable par le pipeline DEVIS AUTO** → valeur immédiate, même avant la boutique.
+   - ⚠️ **Distinct de DEVIS AUTO** (vérifié 27/06/2026) : DEVIS AUTO ne calcule **pas** le prix de *vente*
+     (il le prend dans l'historique réel ou via marge humaine — « jamais de prix inventé »). Il possède
+     déjà son propre `cost_calculator.py` qui calcule le **coût de revient** depuis les dimensions. Notre
+     moteur calcule, lui, le **tarif de vente** depuis les tables tarif. Les deux partagent la **même
+     logique géométrique** (surface, périmètre/mL, pièce, ×2 plissé) → `cost_calculator.py` est une bonne
+     **référence** pour porter le nôtre, mais ce sont **deux moteurs distincts** (deux nombres, deux bases de code).
 
 2. **🛒 Boutique (front)** *(brique 2)*
    - Pages produits + **configurateur de dimensions** (saisie L×H×P → prix instantané) + panier.
@@ -102,8 +107,9 @@ Cinq briques, construites dans cet ordre :
 | **Fiches non finalisées** | Le catalogue marchand a besoin des fiches finies (données + photos Netair). | 🟠 Dépendance |
 
 **Conclusion de faisabilité** : le projet est **faisable**. Le **seul vrai blocage** est *légal/temporel*
-(immatriculation) pour la **mise en vente**, pas pour la **construction**. La brique la plus risquée
-(le moteur de prix) est sans blocage et réutilisable → **on commence par elle**.
+(immatriculation) pour la **mise en vente**, pas pour la **construction**. La brique la plus risquée et la
+plus structurante (le moteur de prix) est **sans blocage légal** → **on commence par elle** (la décision
+ne dépend pas de DEVIS AUTO ; voir la mise au point §4 brique 1).
 
 ---
 
@@ -186,6 +192,7 @@ développement** (construction des briques), pas l'abonnement mensuel. Les coût
 | Sécurité des comptes / RGPD (données clients) | 🟠 | Auth déléguée à un service éprouvé ; mentions légales + registre RGPD (skill `netair-juridique-fr`) |
 | Dépendance INCWO (API) | 🟡 | Confirmer les capacités API en amont de B4/B5 |
 | Doublon de données (prix/clients hors INCWO) | 🟡 | INCWO = source unique ; le site lit, ne duplique pas |
+| Divergence de logique avec `cost_calculator.py` de DEVIS AUTO (même Excel répliqué 2× : tarif web + coût Python) | 🟡 | Garder l'Excel comme source unique ; tests croisés ; envisager une logique géométrique partagée à terme |
 
 ---
 

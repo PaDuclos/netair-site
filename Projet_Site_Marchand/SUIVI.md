@@ -44,6 +44,7 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 - [ ] **CGV de vente en ligne** + mentions e-commerce + RGPD (→ skill `netair-juridique-fr`).
 - [ ] Bornes **min/max de dimensions** fabricables par gamme (pour le configurateur).
 - [ ] Politique de **délais de fabrication** à afficher pour le sur-mesure.
+- [ ] **Cohérence avec DEVIS AUTO** : le moteur tarif (web) et `cost_calculator.py` (Python, coût) répliquent le même Excel → définir comment éviter la divergence (source unique, tests croisés, logique partagée ?).
 
 ---
 
