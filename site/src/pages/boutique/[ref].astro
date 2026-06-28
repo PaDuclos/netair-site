@@ -1,0 +1,253 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import {
+  getProduits,
+  familleBySlug,
+  SLUG_FAMILLE,
+  type Produit,
+} from '../../lib/familles';
+
+export async function getStaticPaths() {
+  const produits = await getProduits();
+  return produits.map((p) => ({ params: { ref: p.id }, props: { produit: p } }));
+}
+
+interface Props {
+  produit: Produit;
+}
+const { produit } = Astro.props;
+const d = produit.data;
+
+const famille = familleBySlug(SLUG_FAMILLE[produit.id] ?? '');
+const img = d.photo ? `/produits/${d.photo}` : null;
+const ficheHref = `/fiches-techniques/${encodeURIComponent(`Fiche technique ${d.nom}.html`)}`;
+const badges: string[] = d.badges_p1 ?? [];
+const codeBase = d.nom.replace(/\s+/g, '');
+---
+
+<BaseLayout
+  title={`${d.nom} — Boutique (maquette) | Netair`}
+  description={`Configurez et commandez ${d.nom} sur mesure.`}
+  ogImage={img ?? '/brand/logo.png'}
+>
+  <!-- Bandeau maquette -->
+  <div class="bg-marine text-blanc">
+    <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
+      Maquette boutique — démonstration · les prix affichés sont <strong>fictifs et non contractuels</strong>
+    </div>
+  </div>
+
+  <section class="mx-auto max-w-[1140px] px-7 pt-8">
+    <Breadcrumb
+      items={[
+        { href: '/', label: 'Accueil' },
+        { href: '/gammes', label: 'Gammes' },
+        ...(famille ? [{ href: `/gammes/${famille.slug}`, label: famille.titre }] : []),
+        { label: `${d.nom} — boutique` },
+      ]}
+    />
+  </section>
+
+  <!-- En-tête produit -->
+  <section class="mx-auto max-w-[1140px] px-7 py-6 grid items-start gap-10 lg:grid-cols-2">
+    {img && (
+      <div class="rounded-2xl border border-soft bg-white p-6">
+        <img src={img} alt={d.photo_alt ?? `Filtre ${d.nom}`} class="mx-auto h-auto w-full max-w-md object-contain" width="520" height="400" />
+      </div>
+    )}
+    <div>
+      {famille && <span class="eyebrow text-xs text-turquoise">{famille.titre}</span>}
+      <h1 class="display mt-2 text-4xl sm:text-5xl font-normal text-marine">{d.nom}</h1>
+      {d.soustitre && <p class="mt-2 text-lg text-muted">{d.soustitre}</p>}
+      {badges.length > 0 && (
+        <div class="mt-5 flex flex-wrap gap-2">
+          {badges.map((b) => (
+            <span class="rounded-lg bg-bleu/8 px-3 py-1.5 text-xs font-normal text-bleu">{b}</span>
+          ))}
+        </div>
+      )}
+      <p class="mt-6 max-w-prose text-sm leading-relaxed text-muted">
+        Indiquez vos dimensions exactes : le prix se calcule instantanément. Filtre fabriqué sur mesure.
+      </p>
+      <a href={ficheHref} class="mt-4 inline-flex items-center gap-1.5 text-sm font-normal text-bleu link-underline">
+        Voir la fiche technique →
+      </a>
+    </div>
+  </section>
+
+  <!-- Configurateur + Panier -->
+  <section class="mx-auto max-w-[1140px] px-7 py-6" id="boutique" data-nom={d.nom} data-code={codeBase}>
+    <div class="grid gap-7 lg:grid-cols-[1.3fr_1fr]">
+
+      <!-- Configurateur -->
+      <div class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
+        <h2 class="display text-2xl font-normal text-marine">Configurez votre filtre</h2>
+        <p class="mt-1 text-sm text-muted">Dimensions sur mesure (en millimètres).</p>
+
+        <div class="mt-6 grid gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Largeur (mm)</span>
+            <input id="inL" type="number" value="592" min="100" max="2000" step="1"
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Hauteur (mm)</span>
+            <input id="inH" type="number" value="592" min="100" max="2000" step="1"
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
+            <select id="inEp"
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise">
+              <option value="25">25 mm</option>
+              <option value="48" selected>48 mm</option>
+              <option value="98">98 mm</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Cadre</span>
+            <select id="inCadre"
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise">
+              <option value="galva">Acier galvanisé</option>
+              <option value="pp">Polypropylène</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Quantité</span>
+            <input id="inQ" type="number" value="6" min="1" max="100000" step="1"
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise" />
+          </label>
+          <div class="block">
+            <span class="eyebrow text-[11px] text-muted">Référence générée</span>
+            <div id="genRef" class="mt-1.5 w-full rounded-xl border border-dashed border-soft bg-mist px-4 py-2.5 font-mono text-sm text-marine"></div>
+          </div>
+        </div>
+
+        <!-- Prix -->
+        <div class="mt-7 flex flex-wrap items-end justify-between gap-4 rounded-2xl bg-mist px-6 py-5">
+          <div>
+            <span class="eyebrow text-[11px] text-muted">Prix unitaire HT</span>
+            <div class="display text-3xl font-normal text-marine"><span id="pUnit">—</span> €</div>
+            <p class="mt-1 text-xs text-muted">Total (<span id="pQty">6</span> u.) : <span id="pTotal" class="font-medium text-marine">—</span> € HT</p>
+          </div>
+          <button id="addBtn" type="button"
+            class="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+            style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+            Ajouter au panier
+          </button>
+        </div>
+        <p class="mt-3 text-xs text-muted">Prix de démonstration (fictif). Le vrai calcul tarifaire sera branché ensuite.</p>
+      </div>
+
+      <!-- Panier -->
+      <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft lg:sticky lg:top-24 self-start">
+        <div class="flex items-center justify-between">
+          <h2 class="display text-xl font-normal text-marine">Panier</h2>
+          <span id="cartCount" class="rounded-full bg-bleu/10 px-2.5 py-0.5 text-xs font-medium text-bleu">0</span>
+        </div>
+        <div id="cartEmpty" class="mt-6 rounded-xl border border-dashed border-soft bg-mist px-4 py-8 text-center text-sm text-muted">
+          Votre panier est vide.<br />Configurez un filtre puis « Ajouter au panier ».
+        </div>
+        <ul id="cartList" class="mt-5 hidden divide-y divide-soft"></ul>
+        <div id="cartFooter" class="mt-5 hidden">
+          <div class="flex items-center justify-between border-t border-soft pt-4">
+            <span class="text-sm text-muted">Total HT</span>
+            <span class="display text-2xl font-normal text-marine"><span id="grandTotal">0</span> €</span>
+          </div>
+          <p class="mt-1 text-right text-xs text-muted">TVA et frais de port calculés à l'étape suivante.</p>
+          <button type="button"
+            class="mt-4 w-full rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+            style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+            Passer commande <span class="opacity-70">(maquette)</span>
+          </button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      const root = document.getElementById('boutique');
+      if (!root) return;
+      const nom = root.dataset.nom || 'Filtre';
+      const code = root.dataset.code || 'NET';
+      const $ = (id) => document.getElementById(id);
+      const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      // Prix de DÉMONSTRATION (fictif) — surface × épaisseur × paliers de quantité.
+      function fakeUnit(L, H, ep, qty) {
+        const surf = (L / 1000) * (H / 1000);
+        const epF = ep >= 98 ? 1.6 : ep >= 48 ? 1.2 : 1.0;
+        let u = (6 + surf * 42) * epF;
+        if (qty >= 500) u *= 0.75; else if (qty >= 20) u *= 0.85; else if (qty >= 6) u *= 0.93;
+        return Math.round(u * 100) / 100;
+      }
+
+      const cart = [];
+
+      function readCfg() {
+        const L = Math.max(100, +$('inL').value || 0);
+        const H = Math.max(100, +$('inH').value || 0);
+        const ep = +$('inEp').value;
+        const cadre = $('inCadre').value === 'pp' ? 'P' : 'A';
+        const qty = Math.max(1, +$('inQ').value || 1);
+        return { L, H, ep, cadre, qty };
+      }
+
+      function refresh() {
+        const c = readCfg();
+        const unit = fakeUnit(c.L, c.H, c.ep, c.qty);
+        $('pUnit').textContent = eur(unit);
+        $('pQty').textContent = c.qty;
+        $('pTotal').textContent = eur(unit * c.qty);
+        $('genRef').textContent = `${code}-${c.L}x${c.H}x${c.ep}-${c.cadre}`;
+        return { c, unit };
+      }
+
+      function renderCart() {
+        const count = cart.reduce((s, i) => s + i.qty, 0);
+        $('cartCount').textContent = count;
+        const empty = cart.length === 0;
+        $('cartEmpty').classList.toggle('hidden', !empty);
+        $('cartList').classList.toggle('hidden', empty);
+        $('cartFooter').classList.toggle('hidden', empty);
+        const list = $('cartList');
+        list.innerHTML = '';
+        let grand = 0;
+        cart.forEach((it, idx) => {
+          grand += it.unit * it.qty;
+          const li = document.createElement('li');
+          li.className = 'flex items-start justify-between gap-3 py-3';
+          li.innerHTML =
+            '<div class="min-w-0">' +
+              '<p class="font-mono text-xs text-marine">' + it.ref + '</p>' +
+              '<p class="text-xs text-muted">' + it.qty + ' u. × ' + eur(it.unit) + ' €</p>' +
+            '</div>' +
+            '<div class="flex items-center gap-3 shrink-0">' +
+              '<span class="text-sm font-medium text-marine">' + eur(it.unit * it.qty) + ' €</span>' +
+              '<button data-rm="' + idx + '" class="text-muted hover:text-bleu" aria-label="Retirer">✕</button>' +
+            '</div>';
+          list.appendChild(li);
+        });
+        $('grandTotal').textContent = eur(grand);
+        list.querySelectorAll('[data-rm]').forEach((b) =>
+          b.addEventListener('click', () => { cart.splice(+b.dataset.rm, 1); renderCart(); })
+        );
+      }
+
+      ['inL', 'inH', 'inEp', 'inCadre', 'inQ'].forEach((id) =>
+        $(id).addEventListener('input', refresh)
+      );
+
+      $('addBtn').addEventListener('click', () => {
+        const { c, unit } = refresh();
+        cart.push({ ref: `${code}-${c.L}x${c.H}x${c.ep}-${c.cadre}`, qty: c.qty, unit });
+        renderCart();
+      });
+
+      refresh();
+      renderCart();
+    })();
+  </script>
+</BaseLayout>
