@@ -21,14 +21,19 @@ const d = produit.data;
 
 const famille = familleBySlug(SLUG_FAMILLE[produit.id] ?? '');
 const img = d.photo ? `/produits/${d.photo}` : null;
+
+// Lien vers la fiche technique générée (servie depuis /public/fiches-techniques/).
 const ficheHref = `/fiches-techniques/${encodeURIComponent(`Fiche technique ${d.nom}.html`)}`;
+
 const badges: string[] = d.badges_p1 ?? [];
+const specs: string[][] = d.specs ?? [];
+const points: string[] = d.points_cles ?? [];
 const codeBase = d.nom.replace(/\s+/g, '');
 ---
 
 <BaseLayout
-  title={`${d.nom} — Boutique (maquette) | Netair`}
-  description={`Configurez et commandez ${d.nom} sur mesure.`}
+  title={`${d.nom} — ${d.soustitre ?? 'Filtre CTA'} | Netair`}
+  description={(d.description ?? `${d.nom}, filtre pour centrale de traitement d'air.`).slice(0, 300)}
   ogImage={img ?? '/brand/logo.png'}
 >
   <!-- Bandeau maquette -->
@@ -38,19 +43,19 @@ const codeBase = d.nom.replace(/\s+/g, '');
     </div>
   </div>
 
-  <section class="mx-auto max-w-[1140px] px-7 pt-8">
+  <section class="mx-auto max-w-[1140px] px-7 pt-10">
     <Breadcrumb
       items={[
         { href: '/', label: 'Accueil' },
         { href: '/gammes', label: 'Gammes' },
         ...(famille ? [{ href: `/gammes/${famille.slug}`, label: famille.titre }] : []),
-        { label: `${d.nom} — boutique` },
+        { label: d.nom },
       ]}
     />
   </section>
 
   <!-- En-tête produit -->
-  <section class="mx-auto max-w-[1140px] px-7 py-6 grid items-start gap-10 lg:grid-cols-2">
+  <section class="mx-auto max-w-[1140px] px-7 py-8 grid items-start gap-10 lg:grid-cols-2">
     {img && (
       <div class="rounded-2xl border border-soft bg-white p-6">
         <img src={img} alt={d.photo_alt ?? `Filtre ${d.nom}`} class="mx-auto h-auto w-full max-w-md object-contain" width="520" height="400" />
@@ -60,6 +65,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
       {famille && <span class="eyebrow text-xs text-turquoise">{famille.titre}</span>}
       <h1 class="display mt-2 text-4xl sm:text-5xl font-normal text-marine">{d.nom}</h1>
       {d.soustitre && <p class="mt-2 text-lg text-muted">{d.soustitre}</p>}
+
       {badges.length > 0 && (
         <div class="mt-5 flex flex-wrap gap-2">
           {badges.map((b) => (
@@ -67,25 +73,82 @@ const codeBase = d.nom.replace(/\s+/g, '');
           ))}
         </div>
       )}
-      <p class="mt-6 max-w-prose text-sm leading-relaxed text-muted">
-        Indiquez vos dimensions exactes : le prix se calcule instantanément. Filtre fabriqué sur mesure.
-      </p>
-      <a href={ficheHref} class="mt-4 inline-flex items-center gap-1.5 text-sm font-normal text-bleu link-underline">
-        Voir la fiche technique →
-      </a>
+
+      {points.length > 0 && (
+        <ul class="mt-6 grid gap-2 sm:grid-cols-2">
+          {points.map((pt) => (
+            <li class="flex items-start gap-2 text-sm text-marine">
+              <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-turquoise"></span>
+              {pt}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href="#boutique"
+          class="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+          style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
+        >
+          Configurer & commander →
+        </a>
+        <a
+          href="#boutique"
+          class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-5 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise"
+        >
+          Demander un devis
+        </a>
+        <a
+          href={ficheHref}
+          class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-5 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise"
+        >
+          Fiche technique
+        </a>
+      </div>
     </div>
   </section>
 
-  <!-- Configurateur + Panier -->
-  <section class="mx-auto max-w-[1140px] px-7 py-6" id="boutique" data-nom={d.nom} data-code={codeBase}>
-    <div class="grid gap-7 lg:grid-cols-[1.3fr_1fr]">
+  <!-- Description -->
+  {d.description && (
+    <section class="mx-auto max-w-[1140px] px-7 py-6">
+      <h2 class="eyebrow text-xs text-turquoise">Description</h2>
+      <p class="mt-3 max-w-3xl text-lg leading-relaxed text-marine">{d.description}</p>
+    </section>
+  )}
+
+  <!-- Caractéristiques -->
+  {specs.length > 0 && (
+    <section class="mx-auto max-w-[1140px] px-7 py-6">
+      <h2 class="display text-2xl font-normal text-marine">Caractéristiques</h2>
+      <div class="mt-5 overflow-hidden rounded-2xl border border-soft">
+        <table class="w-full text-sm">
+          <tbody>
+            {specs.map((row, i) => (
+              <tr class={i % 2 ? 'bg-mist' : 'bg-blanc'}>
+                <th scope="row" class="w-1/3 px-5 py-3 text-left font-normal text-muted align-top">{row[0]}</th>
+                <td class="px-5 py-3 text-marine">{row[1]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-3 text-xs text-muted">
+        Valeurs issues de la fiche technique du produit. Perte de charge et classement énergétique détaillés sur la fiche.
+      </p>
+    </section>
+  )}
+
+  <!-- Configurateur + Panier + Demande de devis -->
+  <section class="mx-auto max-w-[1140px] px-7 py-6 scroll-mt-24" id="boutique" data-nom={d.nom} data-code={codeBase}>
+    <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
+    <p class="mt-1 text-sm text-muted">Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.</p>
+
+    <div class="mt-6 grid gap-7 lg:grid-cols-[1.3fr_1fr]">
 
       <!-- Configurateur -->
       <div class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
-        <h2 class="display text-2xl font-normal text-marine">Configurez votre filtre</h2>
-        <p class="mt-1 text-sm text-muted">Dimensions sur mesure (en millimètres).</p>
-
-        <div class="mt-6 grid gap-5 sm:grid-cols-2">
+        <div class="grid gap-5 sm:grid-cols-2">
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Largeur (mm)</span>
             <input id="inL" type="number" value="592" min="100" max="2000" step="1"
@@ -124,45 +187,140 @@ const codeBase = d.nom.replace(/\s+/g, '');
           </div>
         </div>
 
-        <!-- Prix -->
-        <div class="mt-7 flex flex-wrap items-end justify-between gap-4 rounded-2xl bg-mist px-6 py-5">
-          <div>
-            <span class="eyebrow text-[11px] text-muted">Prix unitaire HT</span>
-            <div class="display text-3xl font-normal text-marine"><span id="pUnit">—</span> €</div>
-            <p class="mt-1 text-xs text-muted">Total (<span id="pQty">6</span> u.) : <span id="pTotal" class="font-medium text-marine">—</span> € HT</p>
+        <!-- Prix + actions -->
+        <div class="mt-7 rounded-2xl bg-mist px-6 py-5">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <span class="eyebrow text-[11px] text-muted">Prix unitaire HT</span>
+              <div class="display text-3xl font-normal text-marine"><span id="pUnit">—</span> €</div>
+              <p class="mt-1 text-xs text-muted">Total (<span id="pQty">6</span> u.) : <span id="pTotal" class="font-medium text-marine">—</span> € HT</p>
+            </div>
           </div>
-          <button id="addBtn" type="button"
-            class="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
-            style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
-            Ajouter au panier
-          </button>
+          <div class="mt-4 flex flex-col gap-3 border-t border-soft pt-4 sm:flex-row">
+            <button id="addBtn" type="button"
+              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+              Ajouter au panier
+            </button>
+            <button id="addDevisBtn" type="button"
+              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise">
+              Ajouter à ma demande de devis
+            </button>
+          </div>
         </div>
         <p class="mt-3 text-xs text-muted">Prix de démonstration (fictif). Le vrai calcul tarifaire sera branché ensuite.</p>
       </div>
 
-      <!-- Panier -->
-      <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft lg:sticky lg:top-24 self-start">
-        <div class="flex items-center justify-between">
-          <h2 class="display text-xl font-normal text-marine">Panier</h2>
-          <span id="cartCount" class="rounded-full bg-bleu/10 px-2.5 py-0.5 text-xs font-medium text-bleu">0</span>
-        </div>
-        <div id="cartEmpty" class="mt-6 rounded-xl border border-dashed border-soft bg-mist px-4 py-8 text-center text-sm text-muted">
-          Votre panier est vide.<br />Configurez un filtre puis « Ajouter au panier ».
-        </div>
-        <ul id="cartList" class="mt-5 hidden divide-y divide-soft"></ul>
-        <div id="cartFooter" class="mt-5 hidden">
-          <div class="flex items-center justify-between border-t border-soft pt-4">
-            <span class="text-sm text-muted">Total HT</span>
-            <span class="display text-2xl font-normal text-marine"><span id="grandTotal">0</span> €</span>
+      <!-- Panneau latéral : panier d'achat + demande de devis -->
+      <div class="flex flex-col gap-6 lg:sticky lg:top-24 self-start">
+
+        <!-- Panier d'achat -->
+        <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
+          <div class="flex items-center justify-between">
+            <h3 class="display text-xl font-normal text-marine">Panier d'achat</h3>
+            <span id="cartCount" class="rounded-full bg-bleu/10 px-2.5 py-0.5 text-xs font-medium text-bleu">0</span>
           </div>
-          <p class="mt-1 text-right text-xs text-muted">TVA et frais de port calculés à l'étape suivante.</p>
-          <button type="button"
-            class="mt-4 w-full rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
-            style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
-            Passer commande <span class="opacity-70">(maquette)</span>
-          </button>
-        </div>
-      </aside>
+          <div id="cartEmpty" class="mt-6 rounded-xl border border-dashed border-soft bg-mist px-4 py-6 text-center text-sm text-muted">
+            Panier vide.<br />Configurez un filtre puis « Ajouter au panier ».
+          </div>
+          <ul id="cartList" class="mt-5 hidden divide-y divide-soft"></ul>
+          <div id="cartFooter" class="mt-5 hidden">
+            <div class="flex items-center justify-between border-t border-soft pt-4">
+              <span class="text-sm text-muted">Total HT</span>
+              <span class="display text-2xl font-normal text-marine"><span id="grandTotal">0</span> €</span>
+            </div>
+            <p class="mt-1 text-right text-xs text-muted">TVA et frais de port calculés à l'étape suivante.</p>
+            <button type="button"
+              class="mt-4 w-full rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+              Passer commande <span class="opacity-70">(maquette)</span>
+            </button>
+          </div>
+        </aside>
+
+        <!-- Demande de devis (liste multi-produits) -->
+        <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
+          <div class="flex items-center justify-between">
+            <h3 class="display text-xl font-normal text-marine">Ma demande de devis</h3>
+            <span id="devisCount" class="rounded-full bg-turquoise/10 px-2.5 py-0.5 text-xs font-medium text-turquoise">0</span>
+          </div>
+          <p class="mt-1 text-xs text-muted">Plusieurs filtres possibles · prix étudié sur devis.</p>
+
+          <div id="devisEmpty" class="mt-5 rounded-xl border border-dashed border-soft bg-mist px-4 py-6 text-center text-sm text-muted">
+            Aucun filtre dans la demande.<br />Configurez un filtre puis « Ajouter à ma demande de devis ».
+          </div>
+          <ul id="devisList" class="mt-5 hidden divide-y divide-soft"></ul>
+
+          <!-- Étape 1 : récapitulatif + bouton vers le formulaire -->
+          <div id="devisStep1" class="mt-5 hidden">
+            <button id="toFormBtn" type="button"
+              class="w-full rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+              Demander le devis →
+            </button>
+          </div>
+
+          <!-- Étape 2 : coordonnées -->
+          <form id="devisForm" class="mt-5 hidden space-y-3">
+            <p class="text-sm font-medium text-marine">Vos coordonnées</p>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Société</span>
+              <input name="societe" type="text" required
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+            </label>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Nom</span>
+              <input name="nom" type="text" required
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+            </label>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Email</span>
+              <input name="email" type="email" required
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+            </label>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Téléphone</span>
+              <input name="tel" type="tel"
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+            </label>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Message (optionnel)</span>
+              <textarea name="message" rows="2"
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise"></textarea>
+            </label>
+            <button type="submit"
+              class="w-full rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+              Envoyer ma demande de devis
+            </button>
+            <p class="text-xs text-muted">Maquette : l'envoi réel (email / DEVIS AUTO) sera branché ensuite.</p>
+          </form>
+
+          <!-- Étape 3 : confirmation -->
+          <div id="devisDone" class="mt-5 hidden rounded-xl border border-turquoise/30 bg-turquoise/5 px-4 py-5 text-sm text-marine">
+            <p class="font-medium">Demande enregistrée ✓</p>
+            <p id="devisDoneMsg" class="mt-1 text-xs text-muted"></p>
+            <div id="devisDoneRecap" class="mt-3 space-y-1 text-xs"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Appel final -->
+  <section class="mx-auto max-w-[1140px] px-7 py-8">
+    <div class="rounded-3xl border border-soft bg-mist px-8 py-12 text-center">
+      <h2 class="display text-2xl font-normal text-marine">Un projet plus large autour de {d.nom} ?</h2>
+      <p class="mx-auto mt-2 max-w-xl text-muted">
+        Pour les gros volumes, appels d'offres ou conditions négociées, constituez votre demande de devis ci-dessus.
+      </p>
+      <a
+        href="#boutique"
+        class="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+        style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
+      >
+        Configurer ma demande de devis →
+      </a>
     </div>
   </section>
 
@@ -184,15 +342,22 @@ const codeBase = d.nom.replace(/\s+/g, '');
         return Math.round(u * 100) / 100;
       }
 
-      const cart = [];
+      const cart = [];   // achat (avec prix)
+      const devis = [];  // demande de devis (sans prix)
 
       function readCfg() {
         const L = Math.max(100, +$('inL').value || 0);
         const H = Math.max(100, +$('inH').value || 0);
         const ep = +$('inEp').value;
-        const cadre = $('inCadre').value === 'pp' ? 'P' : 'A';
+        const cadreVal = $('inCadre').value;
+        const cadre = cadreVal === 'pp' ? 'P' : 'A';
+        const cadreLabel = cadreVal === 'pp' ? 'Polypropylène' : 'Acier galvanisé';
         const qty = Math.max(1, +$('inQ').value || 1);
-        return { L, H, ep, cadre, qty };
+        return { L, H, ep, cadre, cadreLabel, qty };
+      }
+
+      function refRef(c) {
+        return `${code}-${c.L}x${c.H}x${c.ep}-${c.cadre}`;
       }
 
       function refresh() {
@@ -201,10 +366,11 @@ const codeBase = d.nom.replace(/\s+/g, '');
         $('pUnit').textContent = eur(unit);
         $('pQty').textContent = c.qty;
         $('pTotal').textContent = eur(unit * c.qty);
-        $('genRef').textContent = `${code}-${c.L}x${c.H}x${c.ep}-${c.cadre}`;
+        $('genRef').textContent = refRef(c);
         return { c, unit };
       }
 
+      // ---- Panier d'achat ----
       function renderCart() {
         const count = cart.reduce((s, i) => s + i.qty, 0);
         $('cartCount').textContent = count;
@@ -236,18 +402,89 @@ const codeBase = d.nom.replace(/\s+/g, '');
         );
       }
 
+      // ---- Demande de devis (liste multi-produits, sans prix) ----
+      function renderDevis() {
+        const count = devis.reduce((s, i) => s + i.qty, 0);
+        $('devisCount').textContent = count;
+        const empty = devis.length === 0;
+        $('devisEmpty').classList.toggle('hidden', !empty);
+        $('devisList').classList.toggle('hidden', empty);
+        $('devisStep1').classList.toggle('hidden', empty);
+        if (empty) {
+          $('devisForm').classList.add('hidden');
+          $('devisDone').classList.add('hidden');
+        }
+        const list = $('devisList');
+        list.innerHTML = '';
+        devis.forEach((it, idx) => {
+          const li = document.createElement('li');
+          li.className = 'flex items-start justify-between gap-3 py-3';
+          li.innerHTML =
+            '<div class="min-w-0">' +
+              '<p class="font-mono text-xs text-marine">' + it.ref + '</p>' +
+              '<p class="text-xs text-muted">' + it.qty + ' u. · ' + it.cadreLabel + ' · prix sur devis</p>' +
+            '</div>' +
+            '<button data-rmd="' + idx + '" class="shrink-0 text-muted hover:text-turquoise" aria-label="Retirer">✕</button>';
+          list.appendChild(li);
+        });
+        list.querySelectorAll('[data-rmd]').forEach((b) =>
+          b.addEventListener('click', () => { devis.splice(+b.dataset.rmd, 1); renderDevis(); })
+        );
+      }
+
       ['inL', 'inH', 'inEp', 'inCadre', 'inQ'].forEach((id) =>
         $(id).addEventListener('input', refresh)
       );
 
       $('addBtn').addEventListener('click', () => {
         const { c, unit } = refresh();
-        cart.push({ ref: `${code}-${c.L}x${c.H}x${c.ep}-${c.cadre}`, qty: c.qty, unit });
+        cart.push({ ref: refRef(c), qty: c.qty, unit });
         renderCart();
+      });
+
+      $('addDevisBtn').addEventListener('click', () => {
+        const { c } = refresh();
+        devis.push({
+          ref: refRef(c), produit: nom, L: c.L, H: c.H, ep: c.ep,
+          cadreLabel: c.cadreLabel, qty: c.qty,
+        });
+        // Si on revenait du formulaire/confirmation, on repart à l'étape liste.
+        $('devisForm').classList.add('hidden');
+        $('devisDone').classList.add('hidden');
+        $('devisStep1').classList.remove('hidden');
+        renderDevis();
+      });
+
+      // Étape liste → formulaire
+      $('toFormBtn').addEventListener('click', () => {
+        $('devisStep1').classList.add('hidden');
+        $('devisForm').classList.remove('hidden');
+      });
+
+      // Envoi (maquette) → confirmation
+      $('devisForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        const societe = data.get('societe') || '';
+        const lignes = devis.length;
+        const total = devis.reduce((s, i) => s + i.qty, 0);
+        $('devisForm').classList.add('hidden');
+        $('devisDoneMsg').textContent =
+          `Merci ${societe}. Votre demande (${lignes} filtre${lignes > 1 ? 's' : ''}, ${total} unité${total > 1 ? 's' : ''}) a bien été prise en compte. Netair revient vers vous avec un devis chiffré.`;
+        const recap = $('devisDoneRecap');
+        recap.innerHTML = devis.map((it) =>
+          '<p class="font-mono text-marine">' + it.ref + ' — ' + it.qty + ' u.</p>'
+        ).join('');
+        devis.length = 0;
+        renderDevis();
+        // renderDevis() réaffiche le bloc « vide » : on le masque tant que la confirmation est à l'écran.
+        $('devisEmpty').classList.add('hidden');
+        $('devisDone').classList.remove('hidden');
       });
 
       refresh();
       renderCart();
+      renderDevis();
     })();
   </script>
 </BaseLayout>

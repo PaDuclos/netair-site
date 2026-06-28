@@ -15,7 +15,7 @@
 | Bloc | Description | Statut | Bloqué par |
 |---|---|---|---|
 | **B1 — Moteur de prix** | Réplique des tables Excel + tests | ⏳ À spécifier | — (constructible) |
-| **B2 — Configurateur & pages produits** | Saisie dimensions → prix instantané | 🔄 Maquette faite (prix fictif) | B1 pour le vrai prix |
+| **B2 — Configurateur & pages produits** | Saisie dimensions → prix instantané | 🔄 Maquette enrichie (fiche complète + achat + demande de devis multi-produits ; prix fictif) | B1 pour le vrai prix |
 | **B3 — Panier & paiement** | Panier + Stripe (invité) | ⏳ À venir | Immatriculation |
 | **B4 — Comptes & remises** | Auth + % client depuis INCWO | ⏳ À venir | Immatriculation, INCWO |
 | **B5 — Synchro INCWO** | Commande → INCWO | ⏳ À venir | INCWO souscrit |
@@ -44,6 +44,9 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | **28/06/2026** | **Skills qualité** | Créer une version **Netair** (reviewer code + **validator métier**, qa optionnel) **au démarrage du Bloc 1** — s'inspirer des skills DEVIS AUTO (utiles, dans `DEVIS AUTO/_corbeille/`) sans les copier (marqués Titanair) |
 | **28/06/2026** | **Un seul site** | Vitrine + boutique = une seule application déployée une fois (pas de site V2 séparé) |
 | **28/06/2026** | **Ordre de démarrage** | Maquette (fiche produit + panier, faux prix) **d'abord** → puis moteur de prix B1 + skills |
+| **29/06/2026** | **Page produit unifiée** | Une seule page = descriptif + caractéristiques + fiche technique **+** configurateur (plus de doublon vitrine/boutique) |
+| **29/06/2026** | **Devis via le configurateur** | « Demander un devis » mène au configurateur (pas à la page contact générique) → capture produit/dimensions/quantité |
+| **29/06/2026** | **Demande de devis multi-produits** | Liste « façon liste de courses » : plusieurs filtres + quantités, **sans prix affiché** (« prix sur devis »), puis mini-formulaire coordonnées → confirmation |
 
 ---
 
@@ -71,8 +74,9 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 
 ## Prochaine action
 
-➡️ **Pierre-Alain relit/corrige la maquette** (`/boutique/netply`) — emplacement, champs, parcours, boutons.
-Une fois validée → **moteur de prix (B1)** + création des **skills qualité** Netair.
+✅ Maquette relue et **validée par Pierre-Alain** (29/06/2026).
+➡️ **Moteur de prix (B1)** — spécification détaillée + réplique des tables Excel + tests — **et** création des **skills qualité** Netair (reviewer + validator métier) au démarrage du B1.
+🔁 À brancher plus tard (après serveur/immatriculation) : envoi réel de la demande de devis (email / DEVIS AUTO), vrai calcul tarifaire, pré-remplissage côté contact.
 
 ---
 
@@ -82,3 +86,4 @@ Une fois validée → **moteur de prix (B1)** + création des **skills qualité*
 |---|---|
 | 27/06/2026 | Brainstorm initial + rédaction du cahier des charges v0.1 + ce suivi |
 | 28/06/2026 | Politique de prix affinée (2 canaux) · un seul site · ordre maquette→moteur · **maquette fiche produit créée** (branche `feature/boutique-maquette`) |
+| 29/06/2026 | **Maquette enrichie & validée par Pierre-Alain** : page produit unifiée (descriptif + specs + fiche technique réintégrés), configurateur avec **2 canaux** (panier d'achat + demande de devis), **demande de devis multi-produits** (liste sans prix → mini-formulaire → confirmation). Parcours testés OK. |
