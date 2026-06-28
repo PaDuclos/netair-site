@@ -28,11 +28,14 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 |---|---|---|
 | 27/06/2026 | Modèle d'achat | Hybride (carte invité + comptes validés) |
 | 27/06/2026 | Sur-mesure | Prix instantané public |
-| 27/06/2026 | Remises | Public = catalogue ; client connecté = ×(1 − %) |
-| 27/06/2026 | Type de remise | % par client, stocké dans INCWO |
+| 27/06/2026 | ~~Type de remise~~ | ~~% par client~~ — **annulé le 28/06** (données : remises irrégulières par produit) |
 | 27/06/2026 | Accès | Mixte (invité par carte + comptes validés Netair) |
 | 27/06/2026 | Approche technique | Sur-mesure léger (Stripe direct, pas Snipcart) |
 | 27/06/2026 | Séquencement | Par phases, moteur de prix d'abord |
+| **28/06/2026** | **Prix en boutique** | **Tarif catalogue propre et cohérent** ; la boutique ne reproduit pas le pricing négocié |
+| **28/06/2026** | **Deux canaux** | Boutique (libre-service, prix propre) **vs** Devis (négocié, humain + DEVIS AUTO) |
+| **28/06/2026** | **Clients historiques** | Gérés en **canal devis/humain**, pas via la boutique |
+| **28/06/2026** | **Remises comptes** | Au plus une remise **simple par famille** pour les nouveaux clients |
 
 ---
 

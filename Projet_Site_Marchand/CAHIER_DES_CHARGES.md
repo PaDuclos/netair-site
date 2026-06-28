@@ -22,36 +22,66 @@ le même esprit sobre et technique.
 
 ---
 
-## 2. Décisions validées (brainstorm du 27/06/2026)
+## 2. Décisions validées (brainstorm des 27–28/06/2026)
 
 | # | Décision | Choix retenu |
 |---|---|---|
 | D1 | Modèle d'achat | **Hybride** : carte bancaire en *invité* pour tous + comptes *validés* pour les réguliers |
 | D2 | Prix sur-mesure | **Instantané à l'écran** (logique du calculateur portée sur le web) |
-| D3 | Prix & remises | **Public = tarif catalogue** ; client connecté = tarif × (1 − sa remise) |
-| D4 | Type de remise | **Un % par client** (éventuellement par famille), **stocké dans INCWO** |
-| D5 | Accès & comptes | **Mixte** : achat invité par carte pour tous ; comptes (avec remise) réservés aux clients **validés par Netair** |
+| D3 | Prix en boutique | **Tarif catalogue propre et cohérent** (même base pour tous). La boutique **ne reproduit pas** le pricing négocié. *(révisé 28/06 — voir §2bis)* |
+| D4 | Remises comptes | Pour les comptes : **remise simple optionnelle par famille** (ex. NETPLY −X %), **pas** de % global ni de grille par produit. *(révisé 28/06)* |
+| D5 | Accès & comptes | **Mixte** : achat invité par carte pour tous ; comptes réservés aux **nouveaux clients réguliers validés** par Netair |
 | D6 | Approche technique | **Sur-mesure léger** (vs brique louée Snipcart / vs plateforme B2B lourde) — contrôle de l'expérience et de la marque |
 | D7 | Source de vérité | **INCWO** pour les clients, remises et commandes (pas de base concurrente sur le site → pas de doublon) |
 | D8 | Séquencement | **Par phases** ; **commencer par le moteur de prix** (aucun blocage légal, réutilisable) |
+| D9 | **Deux canaux de vente** | **Boutique** (prix propre, libre-service) **vs Devis** (négocié/concurrentiel, humain + DEVIS AUTO). La boutique **ne modélise jamais** le pricing négocié. *(28/06)* |
+| D10 | **Clients historiques** | Gérés dans le **canal devis/humain** (prix hérités irréguliers), **pas** via la boutique. *(28/06)* |
+
+---
+
+## 2bis. Politique de prix & canaux de vente *(clé du projet — 28/06/2026)*
+
+### Le constat (vérifié sur les données réelles)
+Analyse de l'historique `DEVIS AUTO/reference/historique_prix.json` (**34 232 prix réels**) croisée avec
+le calculateur : pour un **filtre identique**, les prix payés vont de **~5 € à ~45 €** selon le client
+(×9), et **un même client** a des remises **différentes d'un produit à l'autre** (de 0 % à 80 %).
+→ **Il n'existe pas de « remise % par client » cohérente.** Le prix réel est **piloté par la négociation
+et la concurrence** (s'aligner sous le devis d'un concurrent ligne par ligne ; sacrifier la marge sur
+2-3 produits pour gagner tout le panier). **Ce pricing est, par nature, non automatisable en libre-service.**
+
+### La conséquence : deux canaux de vente distincts
+| | **Canal Devis** (négocié) | **Canal Boutique** (libre-service) |
+|---|---|---|
+| Pour qui | Gros deals, appels d'offres, **clients historiques**, comparaisons concurrent | Réassorts, petites commandes, clients de passage, **nouveaux clients** |
+| Prix | Négocié, réactif au concurrent, **par deal** | **Tarif catalogue propre et cohérent** |
+| Qui fixe le prix | Pierre-Alain + **DEVIS AUTO** | Le **moteur de prix** (catalogue) |
+| Cohérence | Volontairement irrégulière | **Stable et affichée** |
+
+**Règle d'or** : la **boutique ne reproduit jamais** le pricing négocié. Elle porte la **politique de prix
+propre** que Netair veut pour repartir sain. Toute négociation/alignement concurrentiel **reste au canal devis**.
+
+### Effet sur le projet
+Cette segmentation **dérisque fortement** le marchand : le moteur de prix n'a qu'à calculer le **tarif
+catalogue** (bien défini), pas à deviner des deals. Les comptes clients deviennent **légers** (au plus
+une remise simple par famille pour les nouveaux). Les clients historiques **ne passent pas par la boutique**.
 
 ---
 
 ## 3. Périmètre
 
 ### Dans le périmètre
-- Moteur de calcul de prix (standard + sur-mesure) répliquant la logique Excel.
+- Moteur de calcul de **tarif catalogue** (standard + sur-mesure) répliquant la logique Excel.
 - Pages produits marchandes + configurateur de dimensions.
 - Panier + paiement carte (Stripe) en mode invité.
-- Comptes clients + remise % (Phase 2).
+- Comptes clients (nouveaux) + remise simple par famille (Phase 2, optionnel).
 - Synchronisation des commandes vers INCWO.
 - Catalogue marchand (navigation, présentation produits).
 
-### Hors périmètre (pour l'instant)
+### Hors périmètre (canal devis, pas boutique — cf. §2bis)
+- **Pricing négocié / alignement concurrentiel** (ligne par ligne, par deal) → reste **humain + DEVIS AUTO**.
+- **Clients historiques** et leurs prix irréguliers hérités → **canal devis**.
 - Gestion de stock temps réel (les sur-mesure sont fabriqués à la commande).
-- Marketplace / multi-vendeurs.
-- Application mobile native.
-- Comptabilité (gérée par INCWO).
+- Marketplace / multi-vendeurs · Application mobile native · Comptabilité (gérée par INCWO).
 
 ---
 
@@ -84,9 +114,11 @@ Cinq briques, construites dans cet ordre :
    - **Stripe** en mode invité. Stripe porte toute la sécurité/conformité carte → **Netair ne stocke
      jamais de données bancaires**.
 
-4. **👤 Comptes + remise %** *(brique 4 — Phase 2)*
-   - Connexion client → lecture du **% de remise depuis INCWO** → prix remisé affiché.
-   - Comptes créés/validés par Netair (clients réguliers).
+4. **👤 Comptes (légers) + remise par famille** *(brique 4 — Phase 2, optionnel)*
+   - Pour les **nouveaux** clients réguliers validés par Netair. Connexion → éventuelle **remise simple
+     par famille** (lue dans INCWO) → prix remisé.
+   - ⚠️ **Pas** de remise % par client ni de grille par produit (les données prouvent l'incohérence d'un %).
+     Le pricing négocié et les **clients historiques** **ne sont pas ici** → canal devis (cf. §2bis).
 
 5. **🔄 Synchro INCWO** *(brique 5)*
    - À la commande : création du devis/commande dans INCWO (source de vérité), via son API.
@@ -148,7 +180,7 @@ ne dépend pas de DEVIS AUTO ; voir la mise au point §4 brique 1).
 | **B1 — Moteur de prix** | Réplique des tables Excel + tests de validation + (option) API interne | Aucune | ❌ non |
 | **B2 — Configurateur & pages produits** | UI de saisie dimensions + prix instantané, charte | B1 | ❌ non |
 | **B3 — Panier & paiement** | Panier + Stripe (invité) | B2 | 🔴 immatriculation |
-| **B4 — Comptes & remises** | Auth + lecture % INCWO + prix remisé | B2, INCWO | 🔴 immatriculation |
+| **B4 — Comptes & remise famille** | Auth (nouveaux clients) + remise simple par famille (INCWO) | B2, INCWO | 🔴 immatriculation |
 | **B5 — Synchro INCWO** | Commande → devis/commande INCWO | B3, INCWO | 🟠 INCWO souscrit |
 | **B6 — Catalogue & design** | Navigation, intégration design, raccord fiches | B2 | ❌ non |
 
