@@ -229,6 +229,14 @@ développement** (construction des briques), pas l'abonnement mensuel. Les coût
 
 ---
 
+### Garantie de non-régression (sécurité de la vitrine)
+La vitrine n'est **jamais en danger** : le marchand se développe sur une **branche Git séparée** + une
+**URL d'aperçu** distincte, la vitrine reste sur `main`. **GitHub** conserve tout l'historique → **retour
+arrière possible à tout moment**, aucun chemin irréversible. *(Note : au 28/06/2026 la vitrine n'est pas
+encore déployée — netair.fr affiche la page OVH « en construction ».)*
+
+---
+
 ## 10. Prérequis & dépendances
 
 - ✅ Calculateur Excel disponible (source de la logique de prix).
