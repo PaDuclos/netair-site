@@ -17,8 +17,10 @@ permettant :
 - un **panier + paiement** ;
 - des **comptes clients** avec remise personnalisée.
 
-**Principe directeur** : on ne remplace pas la vitrine, on construit la couche marchande à côté, dans
-le même esprit sobre et technique.
+**Principe directeur** : **un seul site** — la vitrine actuelle **enrichie** d'une couche boutique
+(pages produits, configurateur, panier, comptes), dans le même esprit sobre « Precision Blanche ».
+Déployé **une seule fois** (la vitrine n'a donc pas besoin d'un déploiement séparé). La sécurité de
+développement passe par les **branches Git** (cf. §9 « Garantie de non-régression »), **pas** par un site séparé.
 
 ---
 
@@ -36,6 +38,8 @@ le même esprit sobre et technique.
 | D8 | Séquencement | **Par phases** ; **commencer par le moteur de prix** (aucun blocage légal, réutilisable) |
 | D9 | **Deux canaux de vente** | **Boutique** (prix propre, libre-service) **vs Devis** (négocié/concurrentiel, humain + DEVIS AUTO). La boutique **ne modélise jamais** le pricing négocié. *(28/06)* |
 | D10 | **Clients historiques** | Leurs **tarifs négociés restent au devis** (humain + DEVIS AUTO). Ils peuvent acheter au **catalogue en ligne** comme tout le monde, mais on ne les y **pousse pas** → *« le prix est segmenté, pas la personne »*. *(28/06)* |
+| D11 | **Un seul site** | La vitrine actuelle **+** la boutique = **une seule application**, déployée une fois. Pas de site « V2 » séparé, pas de doublon. *(28/06)* |
+| D12 | **Ordre de démarrage** | **Maquette d'abord** (fiche produit + configurateur + panier, avec **faux prix**) pour valider l'expérience → **puis** le moteur de prix (B1) + création des **skills qualité** à ce moment. *(28/06)* |
 
 ---
 

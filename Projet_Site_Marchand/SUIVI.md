@@ -39,6 +39,8 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | **28/06/2026** | **Accès compte** | **Compte ouvert à tous** ; invité possible ; la validation Netair débloque la remise famille |
 | **28/06/2026** | **Historiques & boutique** | Pas bannis : ils peuvent acheter au catalogue ; seuls leurs tarifs négociés restent au devis (« prix segmenté, pas la personne ») |
 | **28/06/2026** | **Skills qualité** | Créer une version **Netair** (reviewer code + **validator métier**, qa optionnel) **au démarrage du Bloc 1** — s'inspirer des skills DEVIS AUTO (utiles, dans `DEVIS AUTO/_corbeille/`) sans les copier (marqués Titanair) |
+| **28/06/2026** | **Un seul site** | Vitrine + boutique = une seule application déployée une fois (pas de site V2 séparé) |
+| **28/06/2026** | **Ordre de démarrage** | Maquette (fiche produit + panier, faux prix) **d'abord** → puis moteur de prix B1 + skills |
 
 ---
 
@@ -66,7 +68,7 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 
 ## Prochaine action
 
-➡️ **Relecture du cahier des charges par Pierre-Alain**, puis **spécification détaillée du Bloc 1 (moteur de prix)**.
+➡️ **Relecture du cahier des charges par Pierre-Alain**, puis **maquette d'une fiche produit** (configurateur + panier, faux prix) pour valider l'expérience — **avant** le moteur de prix (B1).
 
 ---
 
