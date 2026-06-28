@@ -30,12 +30,12 @@ le même esprit sobre et technique.
 | D2 | Prix sur-mesure | **Instantané à l'écran** (logique du calculateur portée sur le web) |
 | D3 | Prix en boutique | **Tarif catalogue propre et cohérent** (même base pour tous). La boutique **ne reproduit pas** le pricing négocié. *(révisé 28/06 — voir §2bis)* |
 | D4 | Remises comptes | Pour les comptes : **remise simple optionnelle par famille** (ex. NETPLY −X %), **pas** de % global ni de grille par produit. *(révisé 28/06)* |
-| D5 | Accès & comptes | **Mixte** : achat invité par carte pour tous ; comptes réservés aux **nouveaux clients réguliers validés** par Netair |
+| D5 | Accès & comptes | **Mixte** : achat **invité** par carte (sans compte) **OU compte ouvert à tous** (réassort, historique, adresses). La **validation Netair** ne sert qu'à débloquer une **remise famille** optionnelle. *(28/06)* |
 | D6 | Approche technique | **Sur-mesure léger** (vs brique louée Snipcart / vs plateforme B2B lourde) — contrôle de l'expérience et de la marque |
 | D7 | Source de vérité | **INCWO** pour les clients, remises et commandes (pas de base concurrente sur le site → pas de doublon) |
 | D8 | Séquencement | **Par phases** ; **commencer par le moteur de prix** (aucun blocage légal, réutilisable) |
 | D9 | **Deux canaux de vente** | **Boutique** (prix propre, libre-service) **vs Devis** (négocié/concurrentiel, humain + DEVIS AUTO). La boutique **ne modélise jamais** le pricing négocié. *(28/06)* |
-| D10 | **Clients historiques** | Gérés dans le **canal devis/humain** (prix hérités irréguliers), **pas** via la boutique. *(28/06)* |
+| D10 | **Clients historiques** | Leurs **tarifs négociés restent au devis** (humain + DEVIS AUTO). Ils peuvent acheter au **catalogue en ligne** comme tout le monde, mais on ne les y **pousse pas** → *« le prix est segmenté, pas la personne »*. *(28/06)* |
 
 ---
 
@@ -73,7 +73,7 @@ une remise simple par famille pour les nouveaux). Les clients historiques **ne p
 - Moteur de calcul de **tarif catalogue** (standard + sur-mesure) répliquant la logique Excel.
 - Pages produits marchandes + configurateur de dimensions.
 - Panier + paiement carte (Stripe) en mode invité.
-- Comptes clients (nouveaux) + remise simple par famille (Phase 2, optionnel).
+- Comptes clients (**ouverts à tous**) + remise simple par famille pour comptes validés (Phase 2, optionnel).
 - Synchronisation des commandes vers INCWO.
 - Catalogue marchand (navigation, présentation produits).
 
@@ -115,10 +115,11 @@ Cinq briques, construites dans cet ordre :
      jamais de données bancaires**.
 
 4. **👤 Comptes (légers) + remise par famille** *(brique 4 — Phase 2, optionnel)*
-   - Pour les **nouveaux** clients réguliers validés par Netair. Connexion → éventuelle **remise simple
-     par famille** (lue dans INCWO) → prix remisé.
+   - **Comptes ouverts à tous** (réassort, historique de commandes, adresses/factures). Achat **invité**
+     possible sans compte.
+   - La **validation Netair** d'un compte débloque une éventuelle **remise simple par famille** (lue dans INCWO).
    - ⚠️ **Pas** de remise % par client ni de grille par produit (les données prouvent l'incohérence d'un %).
-     Le pricing négocié et les **clients historiques** **ne sont pas ici** → canal devis (cf. §2bis).
+     Le pricing négocié reste au **canal devis** (cf. §2bis).
 
 5. **🔄 Synchro INCWO** *(brique 5)*
    - À la commande : création du devis/commande dans INCWO (source de vérité), via son API.

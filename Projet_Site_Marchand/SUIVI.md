@@ -36,6 +36,8 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | **28/06/2026** | **Deux canaux** | Boutique (libre-service, prix propre) **vs** Devis (négocié, humain + DEVIS AUTO) |
 | **28/06/2026** | **Clients historiques** | Gérés en **canal devis/humain**, pas via la boutique |
 | **28/06/2026** | **Remises comptes** | Au plus une remise **simple par famille** pour les nouveaux clients |
+| **28/06/2026** | **Accès compte** | **Compte ouvert à tous** ; invité possible ; la validation Netair débloque la remise famille |
+| **28/06/2026** | **Historiques & boutique** | Pas bannis : ils peuvent acheter au catalogue ; seuls leurs tarifs négociés restent au devis (« prix segmenté, pas la personne ») |
 
 ---
 
