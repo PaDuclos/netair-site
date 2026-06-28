@@ -3,7 +3,7 @@
 > Tableau de bord vivant du projet. Mis à jour à chaque avancée.
 > Cahier des charges : [`CAHIER_DES_CHARGES.md`](CAHIER_DES_CHARGES.md)
 
-**État global : 🟡 Conception + 1ʳᵉ maquette** — cahier des charges rédigé ; **maquette de fiche produit boutique créée** (branche `feature/boutique-maquette`), en attente de relecture/corrections de Pierre-Alain.
+**État global : 🟢 Maquette validée → Bloc B1 (moteur de prix) spécifié** — cahier des charges rédigé ; maquette validée (branche `feature/boutique-maquette`) ; **spécification du moteur de prix rédigée + 3 skills qualité créés** (branche `feature/moteur-prix`), prêt à coder.
 
 > **Reprise rapide (nouvelle session)** : lire ce fichier + [`CAHIER_DES_CHARGES.md`](CAHIER_DES_CHARGES.md).
 > Maquette = `site/src/pages/boutique/[ref].astro` sur la branche `feature/boutique-maquette` ; à voir sur `http://localhost:4321/boutique/netply` (prix **fictifs**). Prochaine action ci-dessous.
@@ -14,7 +14,7 @@
 
 | Bloc | Description | Statut | Bloqué par |
 |---|---|---|---|
-| **B1 — Moteur de prix** | Réplique des tables Excel + tests | ⏳ À spécifier | — (constructible) |
+| **B1 — Moteur de prix** | Réplique des tables Excel + tests | 🔄 Spécifié ([`SPEC_B1`](SPEC_B1_MOTEUR_PRIX.md)) + 3 skills qualité créés — prêt à coder | — (constructible) |
 | **B2 — Configurateur & pages produits** | Saisie dimensions → prix instantané | 🔄 Maquette enrichie (fiche complète + achat + demande de devis multi-produits ; prix fictif) | B1 pour le vrai prix |
 | **B3 — Panier & paiement** | Panier + Stripe (invité) | ⏳ À venir | Immatriculation |
 | **B4 — Comptes & remises** | Auth + % client depuis INCWO | ⏳ À venir | Immatriculation, INCWO |
@@ -47,6 +47,10 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | **29/06/2026** | **Page produit unifiée** | Une seule page = descriptif + caractéristiques + fiche technique **+** configurateur (plus de doublon vitrine/boutique) |
 | **29/06/2026** | **Devis via le configurateur** | « Demander un devis » mène au configurateur (pas à la page contact générique) → capture produit/dimensions/quantité |
 | **29/06/2026** | **Demande de devis multi-produits** | Liste « façon liste de courses » : plusieurs filtres + quantités, **sans prix affiché** (« prix sur devis »), puis mini-formulaire coordonnées → confirmation |
+| **29/06/2026** | **Techno moteur de prix** | **TypeScript** — un seul module utilisable navigateur (prix instantané) **et** serveur (recalcul de sécurité avant paiement) |
+| **29/06/2026** | **Définition du prix boutique** | **Prix HT = coût (tables Excel) × « Ratio prix tarif »** (onglet `Tableau_Gammes`) ; remises par famille reportées au B4 |
+| **29/06/2026** | **Source des tables** | **Export Excel → JSON versionné** + **test de conformité** permanent « entrées Excel = sorties moteur » (garde anti-divergence sur la version Excel) |
+| **29/06/2026** | **Skills qualité Netair** | **3 skills créés** dans `.claude/skills/` : `netair-site-reviewer` (code), `netair-pricing-validator` (métier), `netair-pricing-qa` (conformité Excel) — inspirés de DEVIS AUTO, **ré-écrits Netair** (aucune copie) |
 
 ---
 
@@ -75,8 +79,10 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 ## Prochaine action
 
 ✅ Maquette relue et **validée par Pierre-Alain** (29/06/2026).
-➡️ **Moteur de prix (B1)** — spécification détaillée + réplique des tables Excel + tests — **et** création des **skills qualité** Netair (reviewer + validator métier) au démarrage du B1.
-🔁 À brancher plus tard (après serveur/immatriculation) : envoi réel de la demande de devis (email / DEVIS AUTO), vrai calcul tarifaire, pré-remplissage côté contact.
+✅ **Spécification B1 rédigée** ([`SPEC_B1_MOTEUR_PRIX.md`](SPEC_B1_MOTEUR_PRIX.md)) + **3 skills qualité créés** (branche `feature/moteur-prix`).
+➡️ **Relire la SPEC_B1** (notamment §3 méthodes, §6 plan, §10 points à confirmer), puis **lancer le codage** (phase Code/Haiku) : T1 export Excel→JSON, puis lookups, méthodes, port, poids, tests dorés.
+⚠️ **Point à trancher pendant le codage** : verrouiller le ratio coût→tarif et la définition exacte du « coût » en croisant 3-4 lignes réelles de l'Excel (cf. SPEC_B1 §10).
+🔁 À brancher plus tard (après serveur/immatriculation) : envoi réel de la demande de devis (email / DEVIS AUTO), pré-remplissage côté contact.
 
 ---
 
@@ -87,3 +93,4 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | 27/06/2026 | Brainstorm initial + rédaction du cahier des charges v0.1 + ce suivi |
 | 28/06/2026 | Politique de prix affinée (2 canaux) · un seul site · ordre maquette→moteur · **maquette fiche produit créée** (branche `feature/boutique-maquette`) |
 | 29/06/2026 | **Maquette enrichie & validée par Pierre-Alain** : page produit unifiée (descriptif + specs + fiche technique réintégrés), configurateur avec **2 canaux** (panier d'achat + demande de devis), **demande de devis multi-produits** (liste sans prix → mini-formulaire → confirmation). Parcours testés OK. |
+| 29/06/2026 | **Démarrage Bloc B1 (moteur de prix)** : analyse complète des 12 onglets de `Calculateur_Netair.xlsx` (6 méthodes de calcul identifiées) ; **spécification détaillée rédigée** (`SPEC_B1_MOTEUR_PRIX.md`) ; **4 décisions de cadrage** (TypeScript · prix = coût × ratio tarif · export Excel→JSON + tests · 3 skills) ; **3 skills qualité Netair créés** (`netair-site-reviewer`, `netair-pricing-validator`, `netair-pricing-qa`). Branche `feature/moteur-prix`. |
