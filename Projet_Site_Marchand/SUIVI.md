@@ -3,7 +3,10 @@
 > Tableau de bord vivant du projet. Mis à jour à chaque avancée.
 > Cahier des charges : [`CAHIER_DES_CHARGES.md`](CAHIER_DES_CHARGES.md)
 
-**État global : 🟡 Conception** — brainstorm fait, cahier des charges rédigé, en attente de relecture.
+**État global : 🟡 Conception + 1ʳᵉ maquette** — cahier des charges rédigé ; **maquette de fiche produit boutique créée** (branche `feature/boutique-maquette`), en attente de relecture/corrections de Pierre-Alain.
+
+> **Reprise rapide (nouvelle session)** : lire ce fichier + [`CAHIER_DES_CHARGES.md`](CAHIER_DES_CHARGES.md).
+> Maquette = `site/src/pages/boutique/[ref].astro` sur la branche `feature/boutique-maquette` ; à voir sur `http://localhost:4321/boutique/netply` (prix **fictifs**). Prochaine action ci-dessous.
 
 ---
 
@@ -12,7 +15,7 @@
 | Bloc | Description | Statut | Bloqué par |
 |---|---|---|---|
 | **B1 — Moteur de prix** | Réplique des tables Excel + tests | ⏳ À spécifier | — (constructible) |
-| **B2 — Configurateur & pages produits** | Saisie dimensions → prix instantané | ⏳ À venir | B1 |
+| **B2 — Configurateur & pages produits** | Saisie dimensions → prix instantané | 🔄 Maquette faite (prix fictif) | B1 pour le vrai prix |
 | **B3 — Panier & paiement** | Panier + Stripe (invité) | ⏳ À venir | Immatriculation |
 | **B4 — Comptes & remises** | Auth + % client depuis INCWO | ⏳ À venir | Immatriculation, INCWO |
 | **B5 — Synchro INCWO** | Commande → INCWO | ⏳ À venir | INCWO souscrit |
@@ -68,7 +71,8 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 
 ## Prochaine action
 
-➡️ **Relecture du cahier des charges par Pierre-Alain**, puis **maquette d'une fiche produit** (configurateur + panier, faux prix) pour valider l'expérience — **avant** le moteur de prix (B1).
+➡️ **Pierre-Alain relit/corrige la maquette** (`/boutique/netply`) — emplacement, champs, parcours, boutons.
+Une fois validée → **moteur de prix (B1)** + création des **skills qualité** Netair.
 
 ---
 
@@ -77,3 +81,4 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | Date | Événement |
 |---|---|
 | 27/06/2026 | Brainstorm initial + rédaction du cahier des charges v0.1 + ce suivi |
+| 28/06/2026 | Politique de prix affinée (2 canaux) · un seul site · ordre maquette→moteur · **maquette fiche produit créée** (branche `feature/boutique-maquette`) |
