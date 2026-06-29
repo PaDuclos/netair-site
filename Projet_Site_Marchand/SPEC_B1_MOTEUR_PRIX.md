@@ -246,8 +246,8 @@ par `export-excel.mjs`. Le moteur ne lit jamais l'Excel directement (robustesse,
 | T3 | ✅ **FAIT** — Lookups (L×l, surface, HF, pièce, paliers) | `lookups.ts` + `tests/pricing/lookups.test.ts` (20 tests, Vitest) | `netair-site-reviewer` 🔧→✅ (réserve ÉLEVÉE `ep: number\|null` corrigée) |
 | T4 | **Méthodes A→F + dispatcher** _(en 2 étapes)_ | **A ✅** aiguillage · **B ✅** `engine.ts` (6 méthodes + prix), 34 tests, relu (reviewer + validator) — ⚠️ 2 dettes T8 : prouver B→F vs Excel + cas hors-format | reviewer + validator |
 | T5 | ✅ **FAIT** — Port & franco | `shipping.ts` + tests (11) | `netair-site-reviewer` ✅ (port/franco data-driven ; dépt inconnu → sur devis ; seuil franco isolé pour future Corse) |
-| T6 | **Poids** | `weight.ts` | reviewer |
-| T7 | **Point d'entrée** `calculerPrix()` | `index.ts` | reviewer |
+| T6 | ~~**Poids** `weight.ts`~~ — **ABANDONNÉ (29/06)** | — | décision PA : le port est par **département** (pas au kilo) → le poids n'influence aucun prix ; donnée interne (devis interne), `tables.poids` reste exportée si besoin futur. Champ `poidsTotalKg` du contrat = optionnel non rempli. |
+| T7 | ✅ **FAIT** — Point d'entrée `calculerPrix()` (assemble prix + port) | `index.ts` + tests (8) | reviewer ✅ + validator **CONFORME** |
 | T8 | **Vecteurs dorés** (extraits de l'Excel) | `golden-vectors.json` | validator métier |
 | T9 | **Tests de conformité + cas limites** | `golden.test.ts`, `edge.test.ts` | `netair-pricing-qa` |
 | T10 | **Revue finale + verdict** | rapport reviewer + validator + qa | les 3 skills |
