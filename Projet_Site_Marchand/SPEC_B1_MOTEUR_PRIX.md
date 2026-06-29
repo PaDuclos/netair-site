@@ -15,6 +15,7 @@
 | C2 | Définition du prix boutique | **Prix HT = coût × « Ratio prix tarif » de l'Excel** (onglet `Tableau_Gammes`). Les remises par famille (comptes validés) sont **reportées au Bloc B4** |
 | C3 | Synchronisation avec l'Excel | **Export Excel → fichier de données versionné (JSON)** + **test de conformité** permanent « entrées Excel = sorties moteur » |
 | C4 | Skills qualité | **3 skills** créés au démarrage : `netair-site-reviewer`, `netair-pricing-validator`, `netair-pricing-qa` |
+| C5 | Mise à jour des tarifs | **Deux leviers** : un **% de revalorisation générale** (une seule case dans l'Excel) **+** la modification de **cases ciblées**. La publication vers le site est un **geste manuel contrôlé** (une commande), pas un direct automatique (voir §11) |
 
 ---
 
@@ -265,4 +266,47 @@ toute divergence de la logique géométrique commune (risque 🟡 du cahier).
 - [ ] **Classes « Caractéristiques non assurées par le fournisseur »** → renvoyer `classe_indisponible`
       (ne jamais proposer une combinaison non fabriquée).
 - [ ] **Arrondi** : règle d'arrondi du prix final (2 décimales) et de la TVA (HT only ici).
+- [ ] **Revalorisation** : emplacement de la case « % de revalorisation générale » dans l'Excel et son ordre
+      d'application (avant ou après le ratio prix tarif) — voir §11.
+
+---
+
+## 11. Mise à jour des tarifs (hausses de prix) — décision C5
+
+### Le principe : pas de « direct » automatique, une publication contrôlée
+Le site ne lit **pas** l'Excel en direct. Il lit une **copie figée** (`tables.json`) générée depuis l'Excel.
+Une modification de tarif dans l'Excel n'apparaît donc sur le site **qu'après une étape de publication**.
+
 ```
+Excel modifié  →  [commande de publication]  →  tables.json régénéré
+                                              →  tests de conformité rejoués
+                                              →  mise en ligne
+```
+
+**Pourquoi ce n'est pas live (3 garde-fous)** :
+1. **Sécurité** — une faute de frappe dans l'Excel ne part pas instantanément chez les clients.
+2. **Filet de test** — à chaque publication, le contrôle « Excel = site » se relance et bloque toute incohérence.
+3. **Rapidité** — lire une petite copie est instantané ; lire un gros Excel à chaque visite serait lent et fragile.
+
+### Les deux leviers de hausse (décision C5 : « les deux »)
+
+| Levier | Usage | Où dans l'Excel |
+|---|---|---|
+| **% de revalorisation générale** | Hausse globale (ex. +3 % annuel sur tout le catalogue) — **une seule case à changer** | onglet `Paramètres unitaires` : nouvelle ligne **« Revalorisation générale »** (ex. `1,03`) |
+| **Cases ciblées** | Hausse fine sur une gamme / un fournisseur précis | les valeurs des tables `Prix_*` et/ou le `Ratio prix tarif` de `Tableau_Gammes` |
+
+Formule de prix mise à jour :
+```
+prix unitaire HT = coût × ratio_prix_tarif × revalorisation_générale
+```
+*(L'ordre exact d'application de la revalorisation — sur le coût ou sur le tarif — est à figer dans le test de conformité, cf. §10.)*
+
+### La publication = une commande simple (décision C5)
+Un raccourci unique (dans l'esprit des fichiers `.command` existants du dépôt, ex. `Apercu_site.command`),
+qui en un geste :
+1. relit l'Excel et régénère `tables.json` (+ `tables.meta.json`) ;
+2. **rejoue les tests de conformité** (refus si un écart apparaît) ;
+3. prépare la mise en ligne.
+
+> Pierre-Alain garde **le contrôle du moment** où les nouveaux prix deviennent publics. Tant que la commande
+> n'est pas lancée, le site continue d'afficher les anciens prix — aucune surprise.

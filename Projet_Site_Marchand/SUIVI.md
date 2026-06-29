@@ -51,6 +51,7 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | **29/06/2026** | **Définition du prix boutique** | **Prix HT = coût (tables Excel) × « Ratio prix tarif »** (onglet `Tableau_Gammes`) ; remises par famille reportées au B4 |
 | **29/06/2026** | **Source des tables** | **Export Excel → JSON versionné** + **test de conformité** permanent « entrées Excel = sorties moteur » (garde anti-divergence sur la version Excel) |
 | **29/06/2026** | **Skills qualité Netair** | **3 skills créés** dans `.claude/skills/` : `netair-site-reviewer` (code), `netair-pricing-validator` (métier), `netair-pricing-qa` (conformité Excel) — inspirés de DEVIS AUTO, **ré-écrits Netair** (aucune copie) |
+| **29/06/2026** | **Mise à jour des tarifs** | **Deux leviers** : `% de revalorisation générale` (une case dans l'Excel) **+** cases ciblées. Publication vers le site = **commande manuelle contrôlée** (régénère + rejoue les tests), **pas de direct automatique** — 3 garde-fous (sécurité, test, rapidité). Détail : [`SPEC_B1`](SPEC_B1_MOTEUR_PRIX.md) §11 |
 
 ---
 
