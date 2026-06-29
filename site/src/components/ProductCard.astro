@@ -37,8 +37,9 @@ const img = photo ? `/produits/detour/${photo.replace(/\.jpg$/i, '.png')}` : nul
     )}
     <h3 class="display text-lg font-normal text-marine">{nom}</h3>
     {soustitre && <p class="mt-1 text-sm text-muted">{soustitre}</p>}
-    <span class="mt-4 inline-block text-sm font-normal text-turquoise opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0">
-      Voir le produit →
+    <span class="mt-4 inline-flex items-center gap-1 text-sm font-normal text-turquoise">
+      Voir le produit
+      <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
     </span>
   </div>
 </a>
