@@ -81,6 +81,9 @@ export interface SourceTable {
   index: number;
 }
 
+/** Les 6 méthodes de calcul du coût (cf. SPEC_B1 §3). Source unique du type. */
+export type MethodeCalcul = "A" | "B" | "C" | "D" | "E" | "F";
+
 /**
  * Traçabilité complète du calcul (la « preuve de calcul »). Renseignée quand le
  * statut est `ok` ; c'est sur ce détail que s'appuient le validator (plausibilité)
@@ -88,8 +91,8 @@ export interface SourceTable {
  */
 export interface DetailCalcul {
   /** Méthode de calcul appliquée — A→F selon SPEC §3. */
-  methode: "A" | "B" | "C" | "D" | "E" | "F";
-  /** Briques de coût (leur somme = `coutHT`). */
+  methode: MethodeCalcul;
+  /** Briques de coût (somme des briques d'assemblage + charge gamme ≈ `coutHT`). */
   composantsCout: ComposantCout[];
   /** Coût de revient unitaire HT assemblé (= `PRU HT`, avant ratio). */
   coutHT: number;

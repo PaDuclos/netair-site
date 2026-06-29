@@ -107,8 +107,15 @@ coût = prix pièce (lecture directe, G4)
 coût = case Prix_L_et_l (NETBAG, NETCEL, NETPAK LUMEN/LAM, recharges…)
 ```
 
-> **Du coût au prix de vente (décision C2 — confirmé le 29/06/2026)** :
-> `prix_unitaire_HT = coût × ratio_prix_tarif[gamme]` (ex. NETPLY ratio = 3,333).
+> **Du coût au prix de vente (décision C2 — confirmé le 29/06/2026 ; précisé le 29/06 en T4)** :
+> `coût (PRU HT) = arrondi2( (1 + charge_gamme) × assemblage_géométrique )` puis
+> `prix_unitaire_HT = arrondi2( coût × ratio_prix_tarif[gamme] )` (ex. NETPLY ratio = 3,333).
+>
+> ⚠️ **Facteur de charge `(1 + charge_gamme)` — découvert en codant T4 (29/06)** : le `PRU HT` de la
+> référence `cost_calculator.py` (validé contre de vrais devis) **multiplie l'assemblage par `(1 + charge)`**,
+> où `charge` = colonne **`Frais de livraison`** du `Tableau_Gammes` (NETPLY +10 %, NETFIL/NETPLAN +10 %,
+> LUMEN +5 %, beaucoup à 0). Malgré son intitulé, **ce n'est pas le port** (le port est l'onglet expédition) :
+> c'est une **charge incluse dans le coût de revient**. L'exemple ci-dessous l'illustre.
 >
 > Confirmé en traçant le **calculateur DEVIS AUTO**, onglet **« Devis interne »** (table `Tableau_calculateur`) :
 > - **`PRU HT`** (col. DB) = le **coût de revient** unitaire = `ROUND(PU{code gamme} ; 2)`, c.-à-d. l'assemblage
@@ -122,16 +129,25 @@ coût = case Prix_L_et_l (NETBAG, NETCEL, NETPAK LUMEN/LAM, recharges…)
 > du calculateur sont des outils de **négociation** → **canal devis**, **hors** boutique (cf. cahier §2bis, D9).
 > Aucune valeur n'est inventée ; le ratio et l'assemblage du coût sont **verrouillés par le test de conformité** (§7).
 
-### Exemple illustratif (à verrouiller par le test)
-NETPLY · 287 × 592 × 48 · classe **G4** · quantité **10** · livraison dép. 35 :
+### Exemple illustratif (✅ VÉRIFIÉ par le test — T4 étape B)
+NETPLY · 287 × 592 × 48 · classe **G4** · quantité **10** :
 1. surface = 287 × 592 / 10000 = **16,99 dm²** → pas de renfort (≤ 50 dm² et < 800), pas de surcoût (48 mm)
-2. case `Prix_L_et_l` (285-289 × 590-594, palier 6-19, G4) = **3,44 € (coût)**
-3. prix unitaire HT = 3,44 × 3,333 ≈ **11,47 €**
-4. total HT = 11,47 × 10 = **114,70 €** → < 750 € → port dû
-5. poids = 4,5 kg/m² × 16,99 dm² /100 × 10 ≈ … → port dép. 35 = **75 €**
-6. **Total = 114,70 € HT + 75 € port** · valable **30 jours**
+2. case `Prix_L_et_l` (285-289 × 590-594, palier 6-19, G4) = **3,44 €** (assemblage)
+3. coût (PRU HT) = (1 + **0,10**) × 3,44 = **3,78 €** ← *le facteur charge, oublié dans l'ancienne version*
+4. prix unitaire HT = 3,78 × 3,333 = **12,60 €** *(et non 11,47 € — l'ancien exemple sautait l'étape 3)*
+5. total HT = 12,60 × 10 = **126,00 €** → < 750 € → port dû (calculé en T5)
+6. valable **30 jours**
 
-*(Chiffres à confirmer par le test ; ils illustrent le pipeline, pas une grille définitive.)*
+*Valeurs **verrouillées** par `tests/pricing/engine.test.ts` (ancre validée par `cost_calculator.py`).
+Le port et le poids (ancien §5) relèvent de T5/T6.*
+
+> **Écarts spec ↔ référence relevés en T4 (à trancher en T8) :**
+> - **Hors-format (`Prix_Surface_HF`)** : la méthode A le mentionnait (« + HF si surface > 50 dm² »), mais la
+>   **référence validée ne l'applique pas** → le moteur non plus. **À confirmer par vecteurs dorés avec surface > 50 dm²** ;
+>   si l'Excel l'applique, risque d'undercharge sur grands filtres → implémenter alors.
+> - **Méthode A (renfort)** : le jeu de paramètres NETPLY vs NETPLAN est résolu par le **nom** de la gamme
+>   (seul point non 100 % piloté par les données) → cible propre = config renfort par gamme dans l'Excel au retravail.
+> - **Méthodes B→F** : prouvées en **cohérence** seulement ; preuve « Excel = moteur » au centime = **T8**.
 
 ---
 
@@ -228,7 +244,7 @@ par `export-excel.mjs`. Le moteur ne lit jamais l'Excel directement (robustesse,
 | T1 | ✅ **FAIT** — Export Excel → JSON | `site/scripts/export_excel.py` (Python) + `tables.json` + `tables.meta.json` | vérif humaine + `netair-site-reviewer` |
 | T2 | ✅ **FAIT** — Types & contrat | `types.ts` | `netair-site-reviewer` ⚠️ validé avec réserves (spec alignée : `codeGamme` string) |
 | T3 | ✅ **FAIT** — Lookups (L×l, surface, HF, pièce, paliers) | `lookups.ts` + `tests/pricing/lookups.test.ts` (20 tests, Vitest) | `netair-site-reviewer` 🔧→✅ (réserve ÉLEVÉE `ep: number\|null` corrigée) |
-| T4 | **Méthodes A→F + dispatcher** _(en 2 étapes)_ | **A ✅** aiguillage (champ `methode` par gamme, lu d'`Infos_Netair` → export) · **B** `engine.ts` (6 méthodes + prix) | reviewer + validator |
+| T4 | **Méthodes A→F + dispatcher** _(en 2 étapes)_ | **A ✅** aiguillage · **B ✅** `engine.ts` (6 méthodes + prix), 34 tests, relu (reviewer + validator) — ⚠️ 2 dettes T8 : prouver B→F vs Excel + cas hors-format | reviewer + validator |
 | T5 | **Port & franco** | `shipping.ts` | reviewer + validator |
 | T6 | **Poids** | `weight.ts` | reviewer |
 | T7 | **Point d'entrée** `calculerPrix()` | `index.ts` | reviewer |

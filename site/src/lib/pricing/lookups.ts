@@ -13,6 +13,7 @@
  * - Une fonction qui ne trouve rien renvoie `undefined` — jamais une valeur inventée.
  */
 
+import type { MethodeCalcul } from "./types";
 import tablesData from "./data/tables.json";
 
 // --- Formes des données (internes ; distinctes du contrat public de types.ts) ---
@@ -20,9 +21,7 @@ import tablesData from "./data/tables.json";
 /** Prix par classe d'efficacité : nombre si fabriqué, `null` si non assuré pour ce format. */
 export type PrixParClasse = Record<string, number | null>;
 
-/** Les 6 méthodes de calcul du coût (cf. SPEC_B1 §3). */
-export type MethodeCalcul = "A" | "B" | "C" | "D" | "E" | "F";
-/** Méthode d'une gamme : une des 6, ou `sur_devis` (gamme non calculable en boutique). */
+/** Méthode d'une gamme : une des 6 (cf. `MethodeCalcul` dans types.ts), ou `sur_devis`. */
 export type MethodeGamme = MethodeCalcul | "sur_devis";
 
 /** Une ligne de la table maîtresse des gammes. */
@@ -147,6 +146,15 @@ function dansPalier(ligne: LigneAvecPalier, quantite: number): boolean {
 }
 
 /**
+ * Épaisseur de ligne compatible avec celle demandée ? Une ligne à `ep` nul couvre
+ * TOUTES les épaisseurs (gammes à média : NETFIL, NETFIBRE, recharges) ; on n'écarte
+ * que si les deux sont renseignées et diffèrent. (Sémantique du calculateur de référence.)
+ */
+function epCompatible(epLigne: Epaisseur, epDemande: Epaisseur): boolean {
+  return epLigne === null || epDemande === null || epLigne === epDemande;
+}
+
+/**
  * Le couple de dimensions tombe-t-il dans la case ? La grille se lit en
  * « petit côté × grand côté » ; les bornes sont incluses.
  */
@@ -192,7 +200,7 @@ export function trouverLigneLxL(
   return tables.prix_l_et_l.find(
     (r) =>
       r.code === code &&
-      r.ep === ep &&
+      epCompatible(r.ep, ep) &&
       dansBornesDim(r, petite, grande) &&
       dansPalier(r, quantite),
   );
@@ -210,7 +218,7 @@ export function trouverLignePiece(
   return tables.prix_piece.find(
     (r) =>
       r.code === code &&
-      r.ep === ep &&
+      epCompatible(r.ep, ep) &&
       dansBornesDim(r, petite, grande) &&
       dansPalier(r, quantite),
   );
@@ -226,7 +234,7 @@ export function trouverLigneSurface(
   return tables.prix_surface.find(
     (r) =>
       r.code === code &&
-      r.ep === ep &&
+      epCompatible(r.ep, ep) &&
       surface_dm2 >= r.surf_min &&
       surface_dm2 <= r.surf_max &&
       dansPalier(r, quantite),
@@ -240,13 +248,13 @@ export function trouverLigneSurfaceHF(
   quantite: number,
 ): PrixSurfaceHFRow | undefined {
   return tables.prix_surface_hf.find(
-    (r) => r.code === code && r.ep === ep && dansPalier(r, quantite),
+    (r) => r.code === code && epCompatible(r.ep, ep) && dansPalier(r, quantite),
   );
 }
 
 /** Ligne de poids pour (code, épaisseur), ou `undefined`. */
 export function trouverPoids(code: string, ep: Epaisseur): PoidsRow | undefined {
-  return tables.poids.find((r) => r.code === code && r.ep === ep);
+  return tables.poids.find((r) => r.code === code && epCompatible(r.ep, ep));
 }
 
 /**
