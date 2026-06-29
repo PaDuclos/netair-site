@@ -245,7 +245,7 @@ par `export-excel.mjs`. Le moteur ne lit jamais l'Excel directement (robustesse,
 | T2 | ✅ **FAIT** — Types & contrat | `types.ts` | `netair-site-reviewer` ⚠️ validé avec réserves (spec alignée : `codeGamme` string) |
 | T3 | ✅ **FAIT** — Lookups (L×l, surface, HF, pièce, paliers) | `lookups.ts` + `tests/pricing/lookups.test.ts` (20 tests, Vitest) | `netair-site-reviewer` 🔧→✅ (réserve ÉLEVÉE `ep: number\|null` corrigée) |
 | T4 | **Méthodes A→F + dispatcher** _(en 2 étapes)_ | **A ✅** aiguillage · **B ✅** `engine.ts` (6 méthodes + prix), 34 tests, relu (reviewer + validator) — ⚠️ 2 dettes T8 : prouver B→F vs Excel + cas hors-format | reviewer + validator |
-| T5 | **Port & franco** | `shipping.ts` | reviewer + validator |
+| T5 | ✅ **FAIT** — Port & franco | `shipping.ts` + tests (11) | `netair-site-reviewer` ✅ (port/franco data-driven ; dépt inconnu → sur devis ; seuil franco isolé pour future Corse) |
 | T6 | **Poids** | `weight.ts` | reviewer |
 | T7 | **Point d'entrée** `calculerPrix()` | `index.ts` | reviewer |
 | T8 | **Vecteurs dorés** (extraits de l'Excel) | `golden-vectors.json` | validator métier |
