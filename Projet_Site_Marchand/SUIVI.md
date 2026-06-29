@@ -55,6 +55,7 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | **29/06/2026** | **Règle prix boutique (point §10.1 RÉSOLU)** | Tracé dans le calculateur DEVIS AUTO (onglet « Devis interne ») : coût = `PRU HT` (col. DB, assemblage géométrique) → × `Ratio prix tarif` (DD) = `PTU HT` (DE) = **col. DR en mode tarif pur**. La boutique prend ce **tarif pur** ; marges/catégories/remises manuelles = canal devis, exclues. Détail : [`SPEC_B1`](SPEC_B1_MOTEUR_PRIX.md) §3 |
 | **29/06/2026** | **Points §10.3/4/5 RÉSOLUS** | **Gammes hors calculateur** → statut `sur_devis` (pas d'achat, demande de devis seulement, architecture identique). **Efficacités non fabriquées** → non proposées (absentes du menu) ; sinon `classe_indisponible`. **Arrondi** classique à 2 décimales. |
 | **29/06/2026** | **Cadre par famille (§10.2) élargi** | Le « cadre » à fournir = **(a) dimensions mini/maxi** **et (b) quantité minimale de commande**, par famille (≠ paliers de prix). Sous le mini de quantité → **achat bloqué + message « quantité minimale : X »** (statut `quantite_insuffisante`). **En attente** : les valeurs (Pierre-Alain). |
+| **29/06/2026** | **Modèle pour le codage du moteur** | **Tout en Opus** (choix de Pierre-Alain — sécurité maximale sur un sujet critique). **Déroge** volontairement au `CLAUDE.md` du site (« code en Haiku ») ; les 3 skills relisent quand même tout. CLAUDE.md à mettre à jour pour cohérence. |
 
 ---
 
