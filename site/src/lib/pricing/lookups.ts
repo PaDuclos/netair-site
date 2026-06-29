@@ -133,6 +133,8 @@ interface Tables {
   franco: number;
   /** Durée de validité de l'offre (jours). */
   validite_jours: number;
+  /** Correspondance EN 779 → libellé ISO 16890 (classe → ex. "COARSE 65%"). */
+  iso16890: Record<string, string>;
 }
 
 /** Données chargées une seule fois ; source unique de chiffres pour tout le moteur. */

@@ -7,6 +7,8 @@ import {
   SLUG_FAMILLE,
   type Produit,
 } from '../../lib/familles';
+import { gammeDuProduit } from '../../lib/pricing/produits-gammes';
+import { optionsDuCode } from '../../lib/pricing/options';
 
 export async function getStaticPaths() {
   const produits = await getProduits();
@@ -29,6 +31,28 @@ const badges: string[] = d.badges_p1 ?? [];
 const specs: string[][] = d.specs ?? [];
 const points: string[] = d.points_cles ?? [];
 const codeBase = d.nom.replace(/\s+/g, '');
+
+// --- Pont vers le moteur de prix (Bloc B2) ---
+// On relie le produit du site à sa gamme tarifaire. `mode` = "calcul" (prix instantané)
+// ou "devis" (gamme hors calculateur → demande de devis seule). Produit non répertorié
+// → on reste prudent : pas de prix public.
+const gamme = gammeDuProduit(produit.id);
+const modeProduit: 'calcul' | 'devis' = gamme?.mode ?? 'devis';
+const codeGamme = gamme?.code ?? '';
+
+// Menus adaptés : pour un produit calculable, on ne propose QUE les efficacités et
+// épaisseurs réellement tarifées (lues dans les tables). Pour un produit sur devis,
+// on garde un repli générique (la classe sert alors juste à préciser la demande, sans prix).
+const REPLI_DEVIS = {
+  classes: [
+    { valeur: 'G4', libelle: 'Coarse 65 % (G4)' },
+    { valeur: 'M5', libelle: 'ePM10 50 % (M5)' },
+    { valeur: 'F7', libelle: 'ePM1 55 % (F7)' },
+  ],
+  epaisseurs: [48, 98] as number[],
+};
+const optsReelles = modeProduit === 'calcul' && codeGamme ? optionsDuCode(codeGamme) : null;
+const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPLI_DEVIS;
 ---
 
 <BaseLayout
@@ -39,7 +63,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
   <!-- Bandeau maquette -->
   <div class="bg-marine text-blanc">
     <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
-      Maquette boutique — démonstration · les prix affichés sont <strong>fictifs et non contractuels</strong>
+      Aperçu boutique · prix catalogue HT réels mais <strong>indicatifs et non contractuels</strong> (avant mise en ligne)
     </div>
   </div>
 
@@ -140,7 +164,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
   )}
 
   <!-- Configurateur + Panier + Demande de devis -->
-  <section class="mx-auto max-w-[1140px] px-7 py-6 scroll-mt-24" id="boutique" data-nom={d.nom} data-code={codeBase}>
+  <section class="mx-auto max-w-[1140px] px-7 py-6 scroll-mt-24" id="boutique" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit}>
     <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
     <p class="mt-1 text-sm text-muted">Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.</p>
 
@@ -163,17 +187,18 @@ const codeBase = d.nom.replace(/\s+/g, '');
             <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
             <select id="inEp"
               class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
-              <option value="25">25 mm</option>
-              <option value="48" selected>48 mm</option>
-              <option value="98">98 mm</option>
+              {menus.epaisseurs.map((ep, i) => (
+                <option value={ep} selected={i === 0}>{ep} mm</option>
+              ))}
             </select>
           </label>
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Efficacité</span>
             <select id="inEff"
               class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
-              <option value="G4" selected>Coarse 65 % (G4)</option>
-              <option value="M5">ePM10 50 % (M5)</option>
+              {menus.classes.map((c, i) => (
+                <option value={c.valeur} selected={i === 0}>{c.libelle}</option>
+              ))}
             </select>
           </label>
           <label class="block">
@@ -216,7 +241,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
             </button>
           </div>
         </div>
-        <p class="mt-3 text-xs text-muted">Prix de démonstration (fictif). Le vrai calcul tarifaire sera branché ensuite.</p>
+        <p id="priceMsg" class="mt-3 text-xs text-muted"></p>
       </div>
 
       <!-- Panneau latéral : panier d'achat + demande de devis -->
@@ -332,23 +357,45 @@ const codeBase = d.nom.replace(/\s+/g, '');
     </div>
   </section>
 
-  <script is:inline>
+  <script>
+    // Bloc B2 : le configurateur appelle le VRAI moteur de prix (calculerPrix).
+    // Ce <script> est groupé/empaqueté par Astro (pas `is:inline`) afin de pouvoir
+    // importer le moteur — qui embarque les tables tarifaires pour un calcul instantané.
+    import { calculerPrix } from '../../lib/pricing';
+
     (function () {
       const root = document.getElementById('boutique');
       if (!root) return;
       const nom = root.dataset.nom || 'Filtre';
       const code = root.dataset.code || 'NET';
+      const codeGamme = root.dataset.codegamme || '';
+      const mode = root.dataset.mode || 'devis';   // "calcul" = prix instantané · "devis" = sur devis
       const $ = (id) => document.getElementById(id);
       const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-      // Prix de DÉMONSTRATION (fictif) — surface × épaisseur × efficacité × paliers de quantité.
-      function fakeUnit(L, H, ep, qty, eff) {
-        const surf = (L / 1000) * (H / 1000);
-        const epF = ep >= 98 ? 1.6 : ep >= 48 ? 1.2 : 1.0;
-        const effF = eff === 'M5' ? 1.15 : 1.0;   // M5 plus filtrant que G4 (démo)
-        let u = (6 + surf * 42) * epF * effF;
-        if (qty >= 500) u *= 0.75; else if (qty >= 20) u *= 0.85; else if (qty >= 6) u *= 0.93;
-        return Math.round(u * 100) / 100;
+      // Message lisible pour un statut non vendable renvoyé par le moteur.
+      function messageStatut(r) {
+        if (r.message) return r.message;
+        switch (r.statut) {
+          case 'sur_devis': return 'Produit proposé sur devis — ajoutez-le à votre demande.';
+          case 'classe_indisponible': return "Cette efficacité n'est pas disponible dans ce format.";
+          case 'hors_fabrication': return 'Dimensions hors des limites de fabrication.';
+          case 'quantite_insuffisante': return r.quantiteMini ? ('Quantité minimale : ' + r.quantiteMini + '.') : 'Quantité insuffisante.';
+          case 'gamme_inconnue': return 'Produit non disponible à la commande en ligne.';
+          default: return '';
+        }
+      }
+
+      // Affiche (ou efface) le prix et pilote l'état du bouton « Ajouter au panier ».
+      function afficherPrix(unit, total, msg) {
+        const ok = unit != null;
+        $('pUnit').textContent = ok ? eur(unit) : '—';
+        $('pTotal').textContent = ok ? eur(total) : '—';
+        $('priceMsg').textContent = msg || '';
+        const btn = $('addBtn');
+        btn.disabled = !ok;
+        btn.classList.toggle('opacity-40', !ok);
+        btn.classList.toggle('cursor-not-allowed', !ok);
       }
 
       const cart = [];   // achat (avec prix)
@@ -357,7 +404,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
       function readCfg() {
         const L = Math.max(100, +$('inL').value || 0);
         const H = Math.max(100, +$('inH').value || 0);
-        const ep = +$('inEp').value;
+        const ep = +$('inEp').value || 48;
         const eff = $('inEff').value;
         const effLabel = $('inEff').selectedOptions[0].text;
         const cadreVal = $('inCadre').value;
@@ -371,14 +418,39 @@ const codeBase = d.nom.replace(/\s+/g, '');
         return `${code}-${c.eff}-${c.L}x${c.H}x${c.ep}-${c.cadre}`;
       }
 
+      // Calcule et affiche le prix réel via le moteur. Renvoie { c, unit, ok }.
       function refresh() {
         const c = readCfg();
-        const unit = fakeUnit(c.L, c.H, c.ep, c.qty, c.eff);
-        $('pUnit').textContent = eur(unit);
         $('pQty').textContent = c.qty;
-        $('pTotal').textContent = eur(unit * c.qty);
         $('genRef').textContent = refRef(c);
-        return { c, unit };
+
+        // Produit « sur devis » : aucun prix public, on oriente vers la demande de devis.
+        if (mode !== 'calcul') {
+          afficherPrix(null, null, 'Ce produit est proposé sur devis. Ajoutez-le à votre demande de devis.');
+          return { c, unit: null, ok: false };
+        }
+
+        const r = calculerPrix({
+          codeGamme,
+          largeur_mm: c.L,
+          hauteur_mm: c.H,
+          profondeur_mm: c.ep,
+          classe: c.eff,
+          quantite: c.qty,
+        });
+
+        if (r.statut === 'ok') {
+          const total = r.prixUnitaireHT * c.qty;
+          afficherPrix(
+            r.prixUnitaireHT, total,
+            'Prix unitaire HT valable ' + r.dureeValiditeJours + " jours · TVA et frais de port à l'étape suivante.",
+          );
+          return { c, unit: r.prixUnitaireHT, ok: true };
+        }
+
+        // Statut non vendable (sur devis, hors format, classe indisponible…) : pas de prix inventé.
+        afficherPrix(null, null, messageStatut(r));
+        return { c, unit: null, ok: false };
       }
 
       // ---- Panier d'achat ----
@@ -448,7 +520,8 @@ const codeBase = d.nom.replace(/\s+/g, '');
       );
 
       $('addBtn').addEventListener('click', () => {
-        const { c, unit } = refresh();
+        const { c, unit, ok } = refresh();
+        if (!ok || unit == null) return;   // pas d'ajout sans prix (sur devis, hors format, classe indispo…)
         cart.push({ ref: refRef(c), qty: c.qty, unit });
         renderCart();
       });
