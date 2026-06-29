@@ -248,9 +248,9 @@ par `export-excel.mjs`. Le moteur ne lit jamais l'Excel directement (robustesse,
 | T5 | ✅ **FAIT** — Port & franco | `shipping.ts` + tests (11) | `netair-site-reviewer` ✅ (port/franco data-driven ; dépt inconnu → sur devis ; seuil franco isolé pour future Corse) |
 | T6 | ~~**Poids** `weight.ts`~~ — **ABANDONNÉ (29/06)** | — | décision PA : le port est par **département** (pas au kilo) → le poids n'influence aucun prix ; donnée interne (devis interne), `tables.poids` reste exportée si besoin futur. Champ `poidsTotalKg` du contrat = optionnel non rempli. |
 | T7 | ✅ **FAIT** — Point d'entrée `calculerPrix()` (assemble prix + port) | `index.ts` + tests (8) | reviewer ✅ + validator **CONFORME** |
-| T8 | **Vecteurs dorés** (extraits de l'Excel) | `golden-vectors.json` | validator métier |
-| T9 | **Tests de conformité + cas limites** | `golden.test.ts`, `edge.test.ts` | `netair-pricing-qa` |
-| T10 | **Revue finale + verdict** | rapport reviewer + validator + qa | les 3 skills |
+| T8 | ✅ **FAIT** — Vecteurs dorés | `scripts/generate_golden.py` + `golden-vectors.json` (**1221 vecteurs**, juge = géométrie validée + vraie formule Excel) | validator métier |
+| T9 | ✅ **FAIT** — Tests de conformité + cas limites | `golden.test.ts` (1221/1221 au centime + garde anti-divergence), `edge.test.ts` | `netair-pricing-qa` **VALIDE avec réserves** |
+| T10 | ✅ **Verdict rendu** | reviewer ✅ · validator CONFORME · qa VALIDE avec réserves (réserve = hors-format > 50 dm²) | les 3 skills |
 
 > Workflow : **Spec → Code → Review**. ⚠️ Décision 29/06 : le **code se fait en Opus** (et non Haiku),
 > choix de Pierre-Alain pour la sécurité maximale sur un sujet critique (déroge au `CLAUDE.md` du site).
