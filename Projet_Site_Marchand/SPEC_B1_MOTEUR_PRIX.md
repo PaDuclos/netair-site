@@ -153,7 +153,7 @@ interface DemandePrix {
 ### Sortie
 ```ts
 interface ResultatPrix {
-  statut: "ok" | "hors_fabrication" | "classe_indisponible" | "gamme_inconnue";
+  statut: "ok" | "hors_fabrication" | "classe_indisponible" | "gamme_inconnue" | "sur_devis";
   prixUnitaireHT?: number;     // arrondi 2 décimales
   prixTotalHT?: number;        // unitaire × quantité
   fraisPortHT?: number;        // selon département + franco
@@ -169,6 +169,17 @@ interface ResultatPrix {
 > **Règle d'or (héritée des skills DEVIS AUTO)** : **jamais de prix inventé**. Si une dimension/classe
 > n'a pas de prix dans les tables → statut explicite (`hors_fabrication` / `classe_indisponible`),
 > **jamais** un prix approximatif ou 0 €.
+
+**Les statuts (décidés le 29/06/2026) :**
+- `ok` — prix calculé normalement (achat possible).
+- `hors_fabrication` — dimension hors des bornes fabricables (cf. §10, bornes à fournir).
+- `classe_indisponible` — efficacité non fabriquée pour ce produit/format → **l'efficacité n'est pas proposée**
+  dans le menu ; si l'indisponibilité dépend de la dimension saisie, message « non disponible dans ce format ».
+- `gamme_inconnue` — code gamme non reconnu.
+- `sur_devis` — gamme **« hors calculateur »** (`Tableau_Gammes` famille 4 : NETMETAL, NETPAK S BORA,
+  NETCARB AZUR, NETPAK S DUO…) : **pas de prix instantané ni d'achat**, seul le parcours **demande de devis**
+  est actif. La page et le configurateur restent **identiques** (mêmes champs) → réactivation simple si une
+  méthode de prix est ajoutée plus tard.
 
 ---
 
@@ -275,13 +286,14 @@ toute divergence de la logique géométrique commune (risque 🟡 du cahier).
       « coût » = `PRU HT` (col. DB de l'onglet « Devis interne » : l'assemblage géométrique par gamme, renforts +
       MO inclus). Le prix catalogue = `PTU HT` (col. DE) = `PT : PVU HT` en **mode tarif pur** (col. DR), **sans**
       marge manuelle / catégorie client / remise manuelle (celles-ci = canal devis). Détail : §3.
-- [ ] **Bornes min/max** de dimensions fabricables par gamme (pour le statut `hors_fabrication`) — cf. question
-      ouverte du SUIVI.
-- [ ] **Gammes « hors calculateur »** (`Tableau_Gammes` famille 4 : NETMETAL, NETPAK S BORA, NETCARB AZUR…) :
-      pas de méthode tarifaire → boutique en **« prix sur devis »** ou méthode dédiée à définir.
-- [ ] **Classes « Caractéristiques non assurées par le fournisseur »** → renvoyer `classe_indisponible`
-      (ne jamais proposer une combinaison non fabriquée).
-- [ ] **Arrondi** : règle d'arrondi du prix final (2 décimales) et de la TVA (HT only ici).
+- [ ] **Bornes min/max** de dimensions fabricables par gamme (pour le statut `hors_fabrication`) —
+      ⏳ **EN ATTENTE** : Pierre-Alain fournira le « cadre » (dimensions mini/maxi par gamme). Ne bloque pas le reste.
+- [x] **Gammes « hors calculateur »** — ✅ **RÉSOLU (29/06/2026)**. Statut **`sur_devis`** : pas d'achat ni de prix
+      instantané, seul le parcours **demande de devis** reste actif ; page + configurateur **identiques** (cf. §4).
+- [x] **Classes « non assurées par le fournisseur »** — ✅ **RÉSOLU (29/06/2026)**. On **ne propose pas** l'efficacité
+      infabricable (absente du menu) ; si l'indisponibilité dépend de la dimension → `classe_indisponible` + message
+      « non disponible dans ce format ». Jamais de prix sur une combinaison non fabriquée.
+- [x] **Arrondi** — ✅ **RÉSOLU (29/06/2026)**. **Arrondi classique à 2 décimales** sur le prix final (HT).
 - [ ] **Revalorisation** : emplacement de la case « % de revalorisation générale » dans l'Excel et son ordre
       d'application (avant ou après le ratio prix tarif) — voir §11.
 

@@ -53,6 +53,7 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | **29/06/2026** | **Skills qualité Netair** | **3 skills créés** dans `.claude/skills/` : `netair-site-reviewer` (code), `netair-pricing-validator` (métier), `netair-pricing-qa` (conformité Excel) — inspirés de DEVIS AUTO, **ré-écrits Netair** (aucune copie) |
 | **29/06/2026** | **Mise à jour des tarifs** | **Deux leviers** : `% de revalorisation générale` (une case dans l'Excel) **+** cases ciblées. Publication vers le site = **commande manuelle contrôlée** (régénère + rejoue les tests), **pas de direct automatique** — 3 garde-fous (sécurité, test, rapidité). Détail : [`SPEC_B1`](SPEC_B1_MOTEUR_PRIX.md) §11 |
 | **29/06/2026** | **Règle prix boutique (point §10.1 RÉSOLU)** | Tracé dans le calculateur DEVIS AUTO (onglet « Devis interne ») : coût = `PRU HT` (col. DB, assemblage géométrique) → × `Ratio prix tarif` (DD) = `PTU HT` (DE) = **col. DR en mode tarif pur**. La boutique prend ce **tarif pur** ; marges/catégories/remises manuelles = canal devis, exclues. Détail : [`SPEC_B1`](SPEC_B1_MOTEUR_PRIX.md) §3 |
+| **29/06/2026** | **Points §10.3/4/5 RÉSOLUS** | **Gammes hors calculateur** → statut `sur_devis` (pas d'achat, demande de devis seulement, architecture identique). **Efficacités non fabriquées** → non proposées (absentes du menu) ; sinon `classe_indisponible`. **Arrondi** classique à 2 décimales. **Reste en attente** : bornes dimensions mini/maxi par gamme (Pierre-Alain fournit le « cadre »). |
 
 ---
 
