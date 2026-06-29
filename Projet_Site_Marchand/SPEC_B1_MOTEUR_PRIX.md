@@ -227,7 +227,7 @@ par `export-excel.mjs`. Le moteur ne lit jamais l'Excel directement (robustesse,
 |---|---|---|---|
 | T1 | ✅ **FAIT** — Export Excel → JSON | `site/scripts/export_excel.py` (Python) + `tables.json` + `tables.meta.json` | vérif humaine + `netair-site-reviewer` |
 | T2 | ✅ **FAIT** — Types & contrat | `types.ts` | `netair-site-reviewer` ⚠️ validé avec réserves (spec alignée : `codeGamme` string) |
-| T3 | **Lookups** (L×l, surface, HF, pièce, paliers) | `lookups.ts` | tests unitaires + reviewer |
+| T3 | ✅ **FAIT** — Lookups (L×l, surface, HF, pièce, paliers) | `lookups.ts` + `tests/pricing/lookups.test.ts` (20 tests, Vitest) | `netair-site-reviewer` 🔧→✅ (réserve ÉLEVÉE `ep: number\|null` corrigée) |
 | T4 | **Méthodes A→F + dispatcher** | `engine.ts` | reviewer |
 | T5 | **Port & franco** | `shipping.ts` | reviewer + validator |
 | T6 | **Poids** | `weight.ts` | reviewer |

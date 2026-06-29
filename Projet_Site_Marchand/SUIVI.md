@@ -14,7 +14,7 @@
 
 | Bloc | Description | Statut | Bloqué par |
 |---|---|---|---|
-| **B1 — Moteur de prix** | Réplique des tables Excel + tests | 🔄 Spécifié + 3 skills + **T1+T2 faits** (export `tables.json` + `types.ts`, relus) — reste T3-T9 (lookups + moteur + tests) | — (constructible) |
+| **B1 — Moteur de prix** | Réplique des tables Excel + tests | 🔄 Spécifié + 3 skills + **T1+T2+T3 faits** (export `tables.json` + `types.ts` + `lookups.ts` & Vitest 20 tests, relus) — reste T4-T9 (méthodes + port/poids + tests) | — (constructible) |
 | **B2 — Configurateur & pages produits** | Saisie dimensions → prix instantané | 🔄 Maquette enrichie (fiche complète + achat + demande de devis multi-produits ; prix fictif) | B1 pour le vrai prix |
 | **B3 — Panier & paiement** | Panier + Stripe (invité) | ⏳ À venir | Immatriculation |
 | **B4 — Comptes & remises** | Auth + % client depuis INCWO | ⏳ À venir | Immatriculation, INCWO |
@@ -57,6 +57,7 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | **29/06/2026** | **Cadre par famille (§10.2) élargi** | Le « cadre » à fournir = **(a) dimensions mini/maxi** **et (b) quantité minimale de commande**, par famille (≠ paliers de prix). Sous le mini de quantité → **achat bloqué + message « quantité minimale : X »** (statut `quantite_insuffisante`). **En attente** : les valeurs (Pierre-Alain). |
 | **29/06/2026** | **Modèle pour le codage du moteur** | **Tout en Opus** (choix de Pierre-Alain — sécurité maximale sur un sujet critique). **Déroge** volontairement au `CLAUDE.md` du site (« code en Haiku ») ; les 3 skills relisent quand même tout. CLAUDE.md à mettre à jour pour cohérence. |
 | **29/06/2026** | **T1 — export Excel → données** | `site/scripts/export_excel.py` (Python/openpyxl, 0 dépendance npm) lit `Calculateur_Netair.xlsx` → `site/src/lib/pricing/data/tables.json` + `tables.meta.json` (carte d'identité : source, version interne, empreinte sha256). Classes/paliers lus dynamiquement (rien en dur), cases « non assurées » → `null`. **Vérifié** (comptages = onglets ; NETPLY 3,44 €, ratio 3,333, franco 750…) et **relu** (`netair-site-reviewer` : ⚠️ validé avec réserves → réserve MOYEN corrigée : erreurs claires si onglet/colonne renommé). |
+| **29/06/2026** | **T3 — lookups.ts + Vitest** | `site/src/lib/pricing/lookups.ts` : recherche dans les grilles (gamme, L×l, surface, hors-format, pièce, poids, paliers, `prixPourClasse` à 3 issues), **rien en dur**. **Outil de test Vitest** ajouté (devDependency — jamais livré ; cache npm système corrompu → installé via cache dédié) + script `npm test` ; **20 tests** (valeurs issues de l'Excel) **verts**. Relu (`netair-site-reviewer` : 🔧 À CORRIGER → **corrigé** : `ep` peut être `null` pour NETFIL/recharges/etc. → type `Epaisseur = number\|null`, +2 tests) → ✅. |
 | **29/06/2026** | **T2 — types.ts (contrat du moteur)** | `site/src/lib/pricing/types.ts` : `DemandePrix`, `StatutPrix` (6 statuts), `ResultatPrix`, `DetailCalcul` (traçabilité pour validator/qa). **Décision appliquée** : `codeGamme` en **texte** (codes gamme **non figés** : calculateur pas encore retravaillé, filtres à ajouter/retirer → rien en dur). Spec §4/§10 **et** `PLAN.md` (BLOC 1) alignés. Relu (`netair-site-reviewer` : ⚠️ validé avec réserves — écart spec corrigé ; `paletteQuantite` laissé tel quel). Compile (esbuild OK). |
 
 ---
@@ -88,7 +89,8 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 ✅ **Spec B1 complète** + **3 skills** + **§10 quasi tout résolu** (reste : le « cadre » = dimensions mini/maxi **et** quantité mini par famille → Pierre-Alain fournira les valeurs ; ne bloque pas).
 ✅ **T1 fait** : export Excel→`tables.json` (+meta), vérifié + relu. Branche `feature/moteur-prix`.
 ✅ **T2 fait** : `types.ts` (contrat : `DemandePrix` / `ResultatPrix` / 6 statuts / `DetailCalcul`), relu, spec + `PLAN.md` alignés (`codeGamme` texte, codes non figés).
-➡️ **Prochaine étape = T3** : `lookups.ts` (recherche dans les grilles : L×l, surface, hors-format, pièce, + paliers de quantité). Puis T4 (6 méthodes), T5 port/franco, T6 poids, T7 point d'entrée, T8/T9 tests « Excel = moteur ».
+✅ **T3 fait** : `lookups.ts` (recherche dans les grilles, `prixPourClasse` à 3 issues, `ep` nullable) + **Vitest** (20 tests verts) ; relu et corrigé (réserve ÉLEVÉE levée).
+➡️ **Prochaine étape = T4** : `engine.ts` — les **6 méthodes A→F** + le dispatcher (choix de la méthode par code gamme, **lu dans les données**) → premier vrai prix = coût × ratio. ⚠️ Dès T4, le moteur **sort des prix** → déclencher aussi `netair-pricing-validator` (cadence §6). Puis T5 port/franco, T6 poids, T7 point d'entrée, T8/T9 tests « Excel = moteur ».
 🛠️ **Codage en Opus** (décision 29/06). Après chaque tâche → `netair-site-reviewer`. `validator` dès T4, `qa` à T8/T9 (cf. cadence SPEC_B1 §6).
 🔁 À brancher plus tard (après serveur/immatriculation) : envoi réel de la demande de devis, pré-remplissage côté contact. **Maquette** (sélecteur efficacité + configurateur compact) sur branche `feature/boutique-maquette`.
 
