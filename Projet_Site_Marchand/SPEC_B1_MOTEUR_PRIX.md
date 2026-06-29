@@ -219,7 +219,7 @@ par `export-excel.mjs`. Le moteur ne lit jamais l'Excel directement (robustesse,
 
 | # | Tâche | Livrable | Validé par |
 |---|---|---|---|
-| T1 | **Export Excel → JSON** | `export-excel.mjs` + `tables.json` + `tables.meta.json` | relecture humaine d'un échantillon |
+| T1 | ✅ **FAIT** — Export Excel → JSON | `site/scripts/export_excel.py` (Python) + `tables.json` + `tables.meta.json` | vérif humaine + `netair-site-reviewer` |
 | T2 | **Types & contrat** | `types.ts` | `netair-site-reviewer` |
 | T3 | **Lookups** (L×l, surface, HF, pièce, paliers) | `lookups.ts` | tests unitaires + reviewer |
 | T4 | **Méthodes A→F + dispatcher** | `engine.ts` | reviewer |
@@ -230,8 +230,20 @@ par `export-excel.mjs`. Le moteur ne lit jamais l'Excel directement (robustesse,
 | T9 | **Tests de conformité + cas limites** | `golden.test.ts`, `edge.test.ts` | `netair-pricing-qa` |
 | T10 | **Revue finale + verdict** | rapport reviewer + validator + qa | les 3 skills |
 
-> Workflow CLAUDE.md respecté : **Spec (ce doc, Sonnet) → Code (Haiku) → Review (Sonnet)**.
+> Workflow : **Spec → Code → Review**. ⚠️ Décision 29/06 : le **code se fait en Opus** (et non Haiku),
+> choix de Pierre-Alain pour la sécurité maximale sur un sujet critique (déroge au `CLAUDE.md` du site).
 > Chaque tâche de code passe par le `netair-site-reviewer` avant d'être considérée terminée.
+
+### Quand déclencher les skills (cadence qualité — verrouillée le 29/06/2026)
+
+| Skill | Déclencheur | Vérifie |
+|---|---|---|
+| `netair-site-reviewer` | **après chaque tâche de code** (T1 ✅ … T7) + tout code du site | le **code** (bugs, robustesse, rien en dur, conformité spec) |
+| `netair-pricing-validator` | dès que le moteur **sort des prix** (**à partir de T4**, et au branchement réel en B2) | la **plausibilité métier** d'un prix (pas de 0 €, bon palier, port cohérent) |
+| `netair-pricing-qa` | **T8/T9**, **avant toute mise en ligne**, et **à chaque republication** après MAJ tarif (§11) | le verdict **« Excel = moteur au centime »**, preuves à l'appui |
+
+Règle courte : *j'écris du code → reviewer · le moteur sort un prix → validator · avant de publier → qa*.
+**Pas de skill « auditeur »** dans la panoplie Netair (jugé redondant avec `qa` + `reviewer`).
 
 ---
 

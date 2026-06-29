@@ -84,11 +84,11 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 
 ## Prochaine action
 
-✅ Maquette relue et **validée par Pierre-Alain** (29/06/2026).
-✅ **Spécification B1 rédigée** ([`SPEC_B1_MOTEUR_PRIX.md`](SPEC_B1_MOTEUR_PRIX.md)) + **3 skills qualité créés** (branche `feature/moteur-prix`).
-➡️ **Relire la SPEC_B1** (notamment §3 méthodes, §6 plan, §10 points à confirmer), puis **lancer le codage** (phase Code/Haiku) : T1 export Excel→JSON, puis lookups, méthodes, port, poids, tests dorés.
-⚠️ **Point à trancher pendant le codage** : verrouiller le ratio coût→tarif et la définition exacte du « coût » en croisant 3-4 lignes réelles de l'Excel (cf. SPEC_B1 §10).
-🔁 À brancher plus tard (après serveur/immatriculation) : envoi réel de la demande de devis (email / DEVIS AUTO), pré-remplissage côté contact.
+✅ **Spec B1 complète** + **3 skills** + **§10 quasi tout résolu** (reste : le « cadre » = dimensions mini/maxi **et** quantité mini par famille → Pierre-Alain fournira les valeurs ; ne bloque pas).
+✅ **T1 fait** : export Excel→`tables.json` (+meta), vérifié + relu. Branche `feature/moteur-prix`.
+➡️ **Prochaine étape = T2 + T3** : `types.ts` (contrat du moteur, cf. SPEC_B1 §4) puis `lookups.ts` (recherche dans les grilles : L×l, surface, hors-format, pièce, paliers de quantité). Puis T4 (6 méthodes), T5 port/franco, T6 poids, T7 point d'entrée, T8/T9 tests « Excel = moteur ».
+🛠️ **Codage en Opus** (décision 29/06). Après chaque tâche → `netair-site-reviewer`. `validator` dès T4, `qa` à T8/T9 (cf. cadence SPEC_B1 §6).
+🔁 À brancher plus tard (après serveur/immatriculation) : envoi réel de la demande de devis, pré-remplissage côté contact. **Maquette** (sélecteur efficacité + configurateur compact) sur branche `feature/boutique-maquette`.
 
 ---
 
