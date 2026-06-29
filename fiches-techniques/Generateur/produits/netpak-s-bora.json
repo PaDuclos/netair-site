@@ -3,7 +3,7 @@
 
   "slug": "netpak-s-bora",
   "nom": "NETPAK S BORA",
-  "soustitre": "Panneau compact à brides GREENTEX — Filtration fine",
+  "soustitre": "Panneau compact à brides — Filtration fine",
   "mono_classe": true,
   "no_dimensions": true,
   "surface_facteur": 1,
@@ -17,19 +17,19 @@
   "photo": "netpak-s-bora-photo.jpg",
   "photo_alt": "Panneau compact à brides NETPAK S BORA",
 
-  "description": "Le NETPAK S BORA est un panneau filtrant compact à brides, de 100 mm d'épaisseur, conçu pour remplacer les filtres à poches souples en filtration fine des centrales de traitement d'air. Son média GREENTEX, en microfibres synthétiques recyclées, s'inscrit dans une démarche d'éco-conception. Grâce à la technologie D.S.K, la poussière pénètre dans toute l'épaisseur du média : la surface filtrante est pleinement exploitée, sans préfiltre, pour une grande capacité de rétention et une faible perte de charge. Sans microfibre de verre. Classe F7 / ePM1 50 % selon EN 779 / EN ISO 16890, épaisseur 100 mm, cadre 592×592 mm.",
+  "description": "Le NETPAK S BORA est un panneau filtrant compact à brides, de 100 mm d'épaisseur, conçu pour remplacer les filtres à poches souples en filtration fine des centrales de traitement d'air. Son média en microfibres synthétiques exploite toute son épaisseur : la poussière pénètre dans la profondeur du média et la surface filtrante est pleinement utilisée, sans préfiltre, pour une grande capacité de rétention et une faible perte de charge. Sans microfibre de verre. Classe F7 / ePM1 50 % selon EN 779 / EN ISO 16890, épaisseur 100 mm, cadre 592×592 mm.",
 
   "points_cles": [
-    "Média GREENTEX recyclé — éco-conception",
+    "Filtration en profondeur du média",
     "Remplace les filtres à poches",
-    "Pleine surface sans préfiltre (D.S.K)",
+    "Pleine surface sans préfiltre",
     "Faible perte de charge",
     "Sans fibre de verre"
   ],
 
   "specs": [
-    ["Média filtrant", "Microfibres synthétiques GREENTEX (recyclées)"],
-    ["Type", "Panneau compact à brides — technologie D.S.K"],
+    ["Média filtrant", "Microfibres synthétiques"],
+    ["Type", "Panneau compact à brides — filtration en profondeur"],
     ["Épaisseur", "100 mm"],
     ["Parois cellule", "Polystyrène"],
     ["Efficacité EN 779", "F7"],
@@ -44,12 +44,12 @@
   "badges_p1": [
     "ISO 16890 : ePM1 50%",
     "EN 779 : F7",
-    "GREENTEX · éco"
+    "EN 13053"
   ],
   "badges_p2": [
     "ISO 16890 : ePM1 50%",
     "EN 779 : F7",
-    "GREENTEX · éco"
+    "EN 13053"
   ],
 
   "classes": {

@@ -1,0 +1,21 @@
+{
+  "excel_sha256": "acc52b3795e41d2005169fa59d1d1287392c13cc25bbef1fa8e38a6855f46a4f",
+  "exporte_le": "2026-06-29",
+  "lignes_par_table": {
+    "expedition": 100,
+    "franco": 1,
+    "gammes": 34,
+    "iso16890": 17,
+    "params": 16,
+    "poids": 44,
+    "prix_l_et_l": 440,
+    "prix_piece": 36,
+    "prix_surface": 429,
+    "prix_surface_hf": 48,
+    "validite_jours": 1
+  },
+  "source": "Calculateur_Netair.xlsx",
+  "tables_sha256": "3071a53b0f0215a0c8a73200e23493ac8bc69cb6557d476f1ef9e54867aab0e7",
+  "version_excel": "v1.0 — 2026-06-25",
+  "version_outil": "1.0"
+}

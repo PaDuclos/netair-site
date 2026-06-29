@@ -1,0 +1,67 @@
+{
+  "_commentaire": "NETCARB CILIA — filtre COMPACT À CHARBON ACTIF (filtration moléculaire), équiv. Titanair PRISME CARB. Nom validé PA (23/06/2026, skill netair-naming : CILIA = forme compacte mini-plis, déjà utilisée NETPAK S CILIA / NETPAK S DUO). C'est un filtre de GAZ (adsorption COV/ozone/SO2/NO2), PAS un filtre à particules → AUCUNE classe ePM/EN ISO 16890. Cadre normatif réel = série ISO 10121 (10121-1 média, 10121-2 dispositif GPACD, 10121-3:2022 classification LD/MD/HD + % vs 4 polluants de réf. O3/SO2/NO2/toluène). La fiche Titanair 2018 (antérieure à 2022) ne donne AUCUNE classe LD/MD/HD → on ne l'invente pas (marquée 'à déterminer par essai'). Seule donnée quantitative Titanair = capacité d'adsorption 15% max (en masse). DEUX épaisseurs réelles, courbes ΔP RÉELLES (caches Excel CARB/PRISME CARB 48.xlsx & 98.xlsx, YGLA 2017, cohérentes 48>98) : v=[0,4..3,17] / 48mm ΔP=[5,13,23,34,46,60,76,93], 98mm=[5,10,18,28,41,55,70,87]. Polynômes ajustés sur la grille standard DONNEES_PDC (débits 1000→4000, 7 pts, source de vérité) : 48mm 4,851·v²+14,299·v−1,143 (R²=0,9999) ; 98mm 5,458·v²+10,995·v−2,500 (R²=0,9998). ΔP@3400 m³/h ≈ 73 Pa (48) / 67 Pa (98). Moteur : nouveau drapeau 'deux_epaisseurs' (1 famille, sélecteur 48/98, classe haute masquée) + 'dp_final_mode:const' (filtre NON colmatant → ΔP finale ≈ moyenne ≈ initiale, remplacement à saturation d'adsorption — choix PA). Specs PROPRES au charbon : T° continue 40°C (max 50°C/1h), HR max 50%, classement feu NA, parois acier galvanisé (ou cellulose pelliculée incinérable). Le 'GR' de la fiche = média grains. Note du titre de série 'CARB48' présent aussi dans le fichier 98 (libellé copié-collé) mais DONNÉES distinctes et cohérentes → RAS. PHOTO = placeholder (CARB.png détouré, à remplacer par visuel Netair).",
+
+  "slug": "netcarb-cilia",
+  "nom": "NETCARB CILIA",
+  "soustitre": "Filtre compact à charbon actif — filtration moléculaire",
+  "deux_epaisseurs": true,
+  "dp_final_mode": "const",
+  "ref_simple": true,
+  "surface_facteur": 1,
+  "vmax": 3.17,
+  "pmax": 100,
+  "debit_nom": 3400,
+  "compact_p1": true,
+  "compact_p2": true,
+
+  "fiche": { "num": "FT-NETCARB-CILIA-001", "version": "v1.0", "date": "23/06/2026" },
+
+  "photo": "netcarb-cilia-photo.jpg",
+  "photo_alt": "Filtre compact à charbon actif NETCARB CILIA",
+
+  "description": "Le NETCARB CILIA est un filtre compact de filtration moléculaire au charbon actif. Il est conçu pour les ambiances chargées en gaz et en odeurs — air urbain pollué par l'ozone, les oxydes de soufre (SOx) et d'azote (NOx), composés organiques volatils (COV). Sur un lit de micro-grains de charbon actif plissé, il adsorbe ces molécules là où un filtre à particules reste sans effet. Sa structure mini-plis développe une large surface de contact, gage d'une faible perte de charge et d'une bonne capacité d'adsorption. Cadre acier galvanisé (ou cellulose pelliculée, incinérable), en épaisseurs 48 et 98 mm. Le NETCARB CILIA traite les gaz : il complète un filtre à particules, dont il ne remplace pas la fonction.",
+
+  "points_cles": [
+    "Adsorbe gaz, odeurs & COV",
+    "Air urbain — ozone, SOx, NOx",
+    "Micro-grains de charbon actif",
+    "Faible perte de charge (mini-plis)",
+    "Média incinérable"
+  ],
+
+  "specs": [
+    ["Type", "Compact à charbon actif (mini-plis)"],
+    ["Média filtrant", "Micro-grains de charbon actif"],
+    ["Fonction", "Adsorption moléculaire — COV · ozone · SO₂ · NO₂"],
+    ["Normes", "ISO 10121-1/-2 (essai) · classe 10121-3 (LD·MD·HD) à déterminer"],
+    ["Capacité d'adsorption", "≈ 15 % en masse (charge maximale)"],
+    ["Parois cellule", "Acier galvanisé (option cellulose pelliculée, incinérable)"],
+    ["Classement au feu", "NA — non classé (charbon actif)"],
+    ["Température de service", "40 °C (max. 50 °C / 1 h)"],
+    ["Humidité relative max.", "50 %"],
+    ["ΔP finale", "≈ ΔP initiale — remplacement à saturation (non colmatant)"]
+  ],
+
+  "badges_p1": [
+    "Filtration moléculaire",
+    "ISO 10121",
+    "COV · O₃ · SO₂ · NO₂"
+  ],
+  "badges_p2": [
+    "Filtration moléculaire",
+    "ISO 10121",
+    "COV · O₃ · SO₂ · NO₂"
+  ],
+
+  "classes": {
+    "low":  { "label": "Charbon actif", "iso": "ISO 10121", "poly": { "48": { "a": 4.851, "b": 14.299, "c": -1.143 }, "98": { "a": 5.458, "b": 10.995, "c": -2.500 } }, "add": 0, "rule": "non colmatant", "dp": 73, "epaisseur": 48 },
+    "high": { "label": "Charbon actif", "iso": "ISO 10121", "poly": { "48": { "a": 4.851, "b": 14.299, "c": -1.143 }, "98": { "a": 5.458, "b": 10.995, "c": -2.500 } }, "add": 0, "rule": "non colmatant", "dp": 73, "epaisseur": 48 }
+  },
+
+  "note_dimensions": "Surface indiquée = surface frontale ; le média mini-plis charbon développe une surface de contact supérieure (surface développée non communiquée par le fournisseur). ΔP de référence donnée pour l'épaisseur 48 mm (≈ 73 Pa à 3 400 m³/h) ; le 98 mm est moins résistant (≈ 67 Pa — voir la courbe). Code article complet selon la codification NETCARB : NETCARB-CILIA-[L]x[H]x[P]. Capacité d'adsorption ≈ 15 % en masse ; la durée de vie réelle dépend de la charge polluante (à préciser R&D).",
+  "dimensions": [
+    { "L": 592, "H": 592, "P": 48, "debit": 3400, "dp": 73 },
+    { "L": 592, "H": 592, "P": 98, "debit": 3400, "dp": 67 },
+    { "L": 287, "H": 592, "P": 48, "debit": 1700, "dp": 76 }
+  ]
+}

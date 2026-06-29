@@ -49,25 +49,66 @@ l'octet près (test d'identité — à relancer après toute modif du moteur ou 
    NETPLY si le moteur/gabarit a changé.
 9. **Commit + push.**
 
+## Pipeline ΔP : DONNEES_PDC → fiches → site (automatisé, 23/06/2026)
+
+**Source de vérité UNIQUE des pertes de charge = `DONNEES_PDC_Netair.xlsx`.** (`FORMULE_PDC.xlsx`
+= archive Titanair de référence, non utilisée par la chaîne.)
+
+**Workflow R&D :** quand une mesure de perte de charge évolue, on **ne touche qu'à l'Excel** :
+1. Ouvrir `DONNEES_PDC_Netair.xlsx`, trouver la ligne du produit (n° fiche / classe / longueur),
+   mettre à jour les **ΔP mesurées** dans les cases par débit (1000→4000). Enregistrer.
+2. **Double-cliquer `Mettre à jour les fiches.command`** (ou `cd Generateur && python3 maj_fiches.py`
+   pour l'aperçu, puis `--apply`).
+3. Tout se met à jour en cascade, automatiquement :
+   coefficients du polynôme (recalculés par le script, **indépendamment du recalcul Excel**) →
+   ΔP de référence (classes + tableau dimensions) → **version de la fiche bumpée (v1.x) + date du jour** →
+   fiche HTML régénérée (courbe + calculateur) → **copie publiée sur le site**.
+
+**Robustesse / garde-fous :**
+- Le polynôme est **recalculé par numpy** depuis les ΔP brutes (pas lu du cache Excel, peu fiable).
+- **Tolérance** : un changement n'est signalé que si la courbe ΔP bouge de **> 1 Pa** sur la plage
+  réelle du produit (`vmax`) → pas de bump de version pour du bruit d'arrondi. Test d'acceptation :
+  sur les données actuelles, `maj_fiches.py` affiche **0 changement** (idempotent).
+- Une ligne **sans ΔP brutes** (ex. NETCEL, saisi en coefficients directs) est **ignorée** : le JSON
+  n'est jamais écrasé faute de données. Idem variantes non-592×592 (gérées par le tableau dimensions).
+- `maj_fiches.py` seul = **aperçu** (n'écrit rien) ; `--apply` = applique + régénère + synchronise.
+
+## Publication sur le site (synchro auto)
+
+Les fiches vivent à **deux endroits** : `Fiches_Netair/` (sortie du générateur) et
+`site/public/fiches-techniques/` (copie **servie par le site Astro**, port 4321, suivie par git).
+Depuis le 23/06/2026, `generer.py` **synchronise automatiquement** la fiche + sa photo vers
+`site/public/fiches-techniques/` à chaque génération (sortie par défaut). Donc : régénérer une
+fiche la publie aussitôt sur le site. Désactiver avec `--no-site` ; ignoré si `--out` est utilisé
+ou si le dossier du site est absent. (Avant cette date, la copie publiée pouvait rester périmée.)
+
 ## Modèle ΔP (validé)
 
 Calculateur = **polynôme `ΔP = a·v² + b·v + c`** (mesures R&D), source `DONNEES_PDC`.
 Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 €, 250 j).
 
-## Calculateur énergétique — formule de ΔP moyenne (IMPÉRATIVE, validée 22/06/2026)
+## Calculateur énergétique — formule de ΔP moyenne (IMPÉRATIVE, corrigée 27/06/2026)
 
-> **ΔP moyenne = (ΔP finale ⁄ 2) × 0,85** — **alignée sur le calculateur de référence
-> `Classement énergétique GT_CARRIER` (Titanair/Carrier).**
-> (et **non** `(ΔP initiale + ΔP finale) ⁄ 2`).
+> **ΔP moyenne = ((ΔP initiale + ΔP finale) ⁄ 2) × 0,85**
+> = moyenne entre l'état propre et l'état colmaté, **rabaissée de 15 %** pour approcher l'intégrale
+> de la courbe de colmatage (convexe / exponentielle : la perte de charge reste basse longtemps,
+> puis grimpe vite → la moyenne réelle est tirée vers le bas).
 
+- **Correction du 27/06/2026** : l'ancienne formule `(ΔP finale ⁄ 2) × 0,85` **oubliait le terme
+  ΔP initiale** → elle partait implicitement de zéro et pouvait afficher une **moyenne < initiale**
+  (physiquement impossible : la perte de charge ne fait que monter à partir du propre). La nouvelle
+  formule reste **toujours entre l'initiale et la finale**, donc ≥ initiale. Décision du dirigeant.
 - Énergie : `kWh = (Débit⁄3600) × ΔP moyenne ⁄ η × heures ⁄ 1000`, avec η = rendement
   moto-ventilateur (curseur, **défaut 55 %**), heures = `durée × jours` (défaut 24 × 250 = 6 000 h).
 - ΔP finale = `min(ΔP initiale + ADD ; 3 × ΔP initiale)` (cf. règle ci-dessus, ADD = +50 Coarse / +100 ePM).
-- Présente dans **les 3 moteurs** : gabarit legacy (`gabarit_base.html`), série N-classes (`SERIES_JS`),
-  multi compact (`generer_multi`). Toute fiche régénérée applique la formule.
-- Le **croisement GT/Carrier** a aussi confirmé : constantes alignées (η÷, 6000 h, CO₂ 0,079 RE2020,
-  ΔP finale EN 13053). Seuls le prix (GT 0,15 vs nous 0,18) et le débit défaut (GT 3000 vs nous 3400) diffèrent encore.
-- ⚠️ Conséquence assumée : la **ΔP moyenne affichée peut être < ΔP initiale** (propre à la formule GT).
+  Cas HEPA : ΔP finale = `2 × ΔP initiale`. Cas charbon non-colmatant : ΔP moyenne = ΔP initiale (pas de colmatage).
+- Présente dans **les 3 moteurs** : gabarit legacy (`gabarit_base.html:487`), série N-classes
+  (`generer.py:590`), multi compact (`generer.py:1221`) + chaîne de recherche du cas charbon
+  (`generer.py:1561`). Toute fiche régénérée applique la formule.
+- Constantes conservées (croisement GT/Carrier — Carrier était **client** de Titanair, pas concurrent) :
+  η÷, 6000 h, CO₂ 0,079 RE2020, ΔP finale EN 13053, prix 0,18 €, débit défaut 3400.
+- ⚠️ Le facteur **−15 %** est une approximation d'ingénieur de la convexité du colmatage (faute de
+  la courbe d'essai ISO 16890-3) — bon ordre de grandeur, à affiner si des données de colmatage réelles arrivent.
 
 ## Étiquette énergétique Eurovent 4/21 (spec prête — à implémenter)
 
@@ -176,4 +217,64 @@ du débit et contredisent le calculateur.
   **PIÈGES** : (1) PRISME P : F8=F9 (copier-collé) → écarté, PRISME A où F8≠F9 ; (2) PRISME A **ep48 : F9 = F8 + 10 Pa exact**
   (offset suspect, À VALIDER) ; (3) F8 ep98 = 6 pts, 7e (≈137 Pa @3,17) extrapolé. Vmax 3,17 · nominal 3400 m³/h · axe Y 200 Pa.
   Nom validé par PA via skill `netair-naming` (CILIA = cils vibratiles, pas de chevauchement PRISME). Photo = TITAPAK PRISME A HD détourée sur blanc pur (cadre acier + plissage), à reshooter Netair à terme.
-- Suivants : NETPAK S BORA/AZUR/LUMEN/DUO, NETCEL…, NETCARB… (cf. Bibliothèque / CHECKLIST)
+- **NETCARB CILIA** — filtre **compact à charbon actif** (équiv. PRISME CARB), **filtration moléculaire** ✅
+  1ʳᵉ fiche de gaz : **pas de classe particulaire** (ni ISO 16890 ni EN 779) → cadre **ISO 10121** (-1/-2 essai média/dispositif
+  GPACD ; **-3:2022** classification LD/MD/HD + % vs O₃/SO₂/NO₂/toluène). Titanair < 2022 ne donne **aucune** classe LD/MD/HD →
+  marquée « à déterminer par essai », **non inventée**. Seule donnée quantitative = **capacité d'adsorption 15 % masse**.
+  ΔP **réelles** (caches Excel `CARB/PRISME CARB 48 & 98.xlsx`, cohérentes 48 > 98), polynômes 7 pts grille standard
+  (`DONNEES_PDC` l.59-60) : 48 mm 4,851·v²+14,299·v−1,143 / 98 mm 5,458·v²+10,995·v−2,500 (ΔP@3400 ≈ 73 / 67 Pa).
+  T° **40 °C**, HR **50 %**, feu **NA**. **3 nouveaux drapeaux moteur** (additifs, identité NETPLY préservée) :
+  `deux_epaisseurs` (1 famille × 2 épaisseurs, toggle classe masqué + sélecteur épaisseur conservé),
+  `dp_final_mode:"const"` (filtre **non colmatant** → ΔP finale = moyenne = initiale, remplacement à saturation),
+  `ref_simple` (code `NETCARB-CILIA-LxHxP` + ΔP par ligne + en-tête tableau « Filtration »). Photo `CARB.png` (grains) placeholder.
+- **NETCARB AZUR** — **poches rigides / dièdre à charbon actif** (équiv. SV-GD CARB), moléculaire, **mono-classe** ✅
+  Une seule épaisseur 292 mm → `mono_classe` (+ `dp_final_mode:const` + `ref_simple`). Source = dossier `SV GD CARB` :
+  **courbe 2020 « QL-CARB »** [débits 1000-3500 → 18,31,45,61,79,103] retenue car **cohérente avec la fiche 2018**
+  (`SV-GD CARB.pdf` : classe EN779 NA, axe Y 0-120, débit 1000-3500). **PIÈGE écarté** : `…F7 2023.xlsx` = `…F8 2023.xlsx`
+  = `…2023.xlsx` base [22…155] (copier-collé, la classe ne change pas la ΔP, hors axe 2018). Polynôme 8,073·v²+13,383·v+2,929
+  (`DONNEES_PDC` l.61), ΔP@3400 ≈ 98 Pa (les 3 tailles ≈ 97-102 Pa ; doc 2015 « 85 Pa » écarté). Parois **POLYESTER**, feu NA.
+  T° **40 °C** (efficacité d'adsorption — décision PA ; la fiche 2018 dit 80 °C = tenue structure polyester). HR **70 %**.
+  Capacité d'adsorption **non communiquée** (≠ CILIA 15 %) → R&D. Option combinée F7/F9+charbon (non chiffrée). Photo `CARB_BLEND` placeholder.
+- **NETCARB NIVAL** — **polydièdre à charbon actif** (équiv. V-CARB / forme « V »), moléculaire, **mono-classe** ✅
+  292 mm, nominal **3000**. ⚠ **V-CARB n'a aucune courbe ΔP mesurée** (doc = « 85 Pa » plat ; aucun Excel) → **décision PA** :
+  réutiliser la **courbe du pack charbon 292 mm de SV-GD/QL-CARB** (= AZUR), assumée **« partagée »** (`DONNEES_PDC` l.62 ↔ l.61),
+  **courbe V-CARB propre à mesurer R&D**. ΔP@3000 ≈ 80 Pa. Parois polyester (repris SV-GD, à confirmer), T° 40 °C, HR 70 %, feu NA.
+  ⚠ **NIVAL ≈ AZUR** côté aéraulique (même pack) → SKU distincts par la forme (dièdre vs polydièdre) ; redondance à trancher (gamme).
+  Photo `Q-carb.jpg` (code visible → remplacer). `mono_classe`+`dp_final_mode:const`+`ref_simple`.
+- **NETCARB BAG** — **poches souples F9 (ePM1 80 %) à charbon actif IMPRÉGNÉ** (équiv. TITABAG F9 CARB), **COMBINÉ** ✅
+  ⚠ Paradigme **différent** des 3 charbons en grains : vraie classe **ISO 16890 F9 primaire** + charbon imprégné (odeurs/COV) ;
+  média synthétique **qui SE COLMATE** → règle ΔP **ePM +100** (PAS `dp_final_mode:const` ; la fiche dit « 2× PDC initiale »).
+  Comme NETPAK S DUO mais en poches souples. Source TITABAG F9 CARB 2021 (cache Excel), polynôme 9,172·v²+64,135·v−10,429
+  (`DONNEES_PDC` l.63), ΔP@3400 ≈ 229 Pa (520 mm + charbon). Capacité 15 %, cadre acier, T° 40 °C, feu NA, HR n.c.
+  `mono_classe`+`ref_simple` (header « Filtration », code NETCARB-BAG-LxHxP). Photo forme poches NETBAG placeholder.
+- **Famille NETCARB : 4/4 créées** (CILIA · AZUR · NIVAL = moléculaire pur grains ; BAG = combiné F9+charbon colmatant).
+- Suivants : autres familles (cf. Bibliothèque / CHECKLIST)
+
+### Récap moteur — options ajoutées pour la famille charbon (juin 2026)
+Trois drapeaux **additifs** (n'altèrent que leur clé ; **test d'identité NETPLY préservé à l'octet près**) :
+- `deux_epaisseurs` : 1 famille × 2 épaisseurs (toggle classe masqué, sélecteur épaisseur conservé). — CILIA.
+- `dp_final_mode:"const"` : filtre **non colmatant** (ΔP finale = moyenne = initiale ; remplacement à saturation). — CILIA, AZUR, NIVAL.
+- `ref_simple` : code article `[NOM sans espaces]-LxHxP` + ΔP par ligne de dimension + en-tête tableau « Filtration ». — toute la famille.
+
+## Documentation générale « livre » des fiches — À FAIRE EN FIN DE PROJET
+
+> ⚠️ **Seulement quand les 18 fiches sont finalisées** (données R&D validées + photos Netair).
+> Sinon il faut tout ré-exporter à chaque modification d'une fiche.
+
+**Objectif** : réunir toutes les fiches en un « livre » avec **sommaire cliquable** (liens directs vers
+chaque fiche) et navigation fluide.
+
+**Architecture conseillée — HTML = source, PDF = export :**
+1. **Livre HTML interactif** (en ligne, dans le site) : page-sommaire listant les 18 fiches → clic = saut
+   à la fiche. C'est la version vitrine. Peut tout faire (sommaire cliquable **et** animation).
+2. **Catalogue PDF unique** : toutes les fiches reliées, sommaire cliquable (signets) + pagination.
+   Version portable (email, impression, joint à un devis). Pas d'animation (PDF = figé).
+3. **18 PDF individuels** : une fiche = un PDF (envoyer un seul produit à un client).
+
+**Effet « pages qui se tournent » (feuilletage)** : faisable en HTML, mais **option de 2ᵉ étape**.
+Réserves : (a) peut jurer avec la sobriété « Precision Blanche » et l'usage B2B (les BE/installateurs
+veulent trouver vite, pas feuilleter) ; (b) demande une lib externe (contre la règle « zéro dépendance »)
+ou du code sur-mesure. → privilégier d'abord la version **propre et cliquable**, comparer ensuite.
+
+**Faisabilité** : les fiches sont déjà compatibles impression/PDF (stack autoportante) → l'assemblage
+en catalogue unique et l'export PDF sont directs le moment venu. Voir aussi `PLAN.md` (BLOC 5).

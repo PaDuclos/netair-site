@@ -1,0 +1,68 @@
+{
+  "_commentaire": "NETCARB NIVAL — filtre POLYDIÈDRE à CHARBON ACTIF (filtration moléculaire), équiv. Titanair V-CARB (TITACARB V / forme 'V' = polydièdre, cf. NETCEL V NIVAL = TITACEL V). Nom validé PA (23/06/2026). Filtre de GAZ → AUCUNE classe particulaire ; cadre ISO 10121 (LD/MD/HD à déterminer, non inventée). MONO-CLASSE (1 épaisseur 292 mm). ⚠ DÉCISION PA (23/06/2026) : V-CARB N'A AUCUNE COURBE ΔP MESURÉE propre (le doc V-CARB 2018 ne donne que la valeur plate '85 Pa' ; aucun Excel V-CARB/TITACEL CARB). V-CARB partage vraisemblablement le MÊME PACK CHARBON 292 mm que SV-GD CARB/QL-CARB (= NETCARB AZUR) : même 85 Pa annoncé, même forme poches rigides. → On RÉUTILISE la courbe du pack charbon 292 mm (QL-CARB 2020 : 8,073·v²+13,383·v+2,929, DONNEES_PDC l.61=AZUR) en l'assumant 'COURBE PARTAGÉE — courbe V-CARB propre À MESURER R&D'. Seules différences vs AZUR : débit nominal 3000 (V-CARB) au lieu de 3400, positionnement polydièdre. ΔP@3000 ≈ 80 Pa (les 3 tailles ~80-84 Pa au même régime ≈ 2,4 m/s ; doc annonce 85). Specs (doc V-CARB 2018) : micro-grains charbon, T° efficacité 40 °C, HR 70 %, combinable F7+charbon (option), incinérable, feu NA. Parois : non précisées dans le doc V-CARB → 'polyester' par cohérence avec SV-GD CARB (à confirmer). Drapeaux moteur : mono_classe + dp_final_mode:const + ref_simple. PHOTO = Q-carb.jpg (forme polydièdre charbon, CODE 'Q-carb' visible → à remplacer en priorité par visuel Netair, cf. pattern LUMEN).",
+
+  "slug": "netcarb-nival",
+  "nom": "NETCARB NIVAL",
+  "soustitre": "Polydièdre à charbon actif — filtration moléculaire",
+  "mono_classe": true,
+  "dp_final_mode": "const",
+  "ref_simple": true,
+  "surface_facteur": 1,
+  "axe_debit": true,
+  "vmax": 2.78,
+  "pmax": 120,
+  "debit_nom": 3000,
+  "compact_p1": true,
+  "compact_p2": true,
+
+  "fiche": { "num": "FT-NETCARB-NIVAL-001", "version": "v1.0", "date": "23/06/2026" },
+
+  "photo": "netcarb-nival-photo.jpg",
+  "photo_alt": "Filtre polydièdre à charbon actif NETCARB NIVAL",
+
+  "description": "Le NETCARB NIVAL est un filtre polydièdre à charbon actif, dédié à la filtration moléculaire des gaz. Ses cellules en dièdres multiples développent une très grande surface d'adsorption sur un faible encombrement, pour traiter les polluants des environnements urbains — ozone, oxydes de soufre (SOx) et d'azote (NOx), composés organiques volatils (COV). Le média à micro-grains de charbon actif adsorbe les molécules que ne retiennent pas les filtres à particules. Profondeur 292 mm, sur cadre 592×592 (et 490×592, 287×592), débit nominal 3 000 m³/h. Une version combinée F7 + charbon actif est disponible sur demande. Le NETCARB NIVAL traite les gaz : il complète un filtre à particules, dont il ne remplace pas la fonction.",
+
+  "points_cles": [
+    "Adsorbe gaz, odeurs & COV",
+    "Air urbain — ozone, SOx, NOx",
+    "Forme polydièdre (grande surface)",
+    "Faible encombrement",
+    "Combinable F7 + charbon (option)"
+  ],
+
+  "specs": [
+    ["Type", "Polydièdre à charbon actif"],
+    ["Média filtrant", "Micro-grains de charbon actif"],
+    ["Fonction", "Adsorption moléculaire — COV · ozone · SO₂ · NO₂"],
+    ["Normes", "ISO 10121-1/-2 (essai) · classe 10121-3 (LD·MD·HD) à déterminer"],
+    ["Capacité d'adsorption", "Non communiquée — à préciser R&D"],
+    ["Parois cellule", "Polyester (292 mm) — à confirmer"],
+    ["Classement au feu", "NA — non classé (charbon actif)"],
+    ["Température de service", "40 °C (efficacité d'adsorption)"],
+    ["Humidité relative max.", "70 %"],
+    ["ΔP finale", "≈ ΔP initiale — remplacement à saturation (non colmatant)"]
+  ],
+
+  "badges_p1": [
+    "Filtration moléculaire",
+    "ISO 10121",
+    "COV · O₃ · SO₂ · NO₂"
+  ],
+  "badges_p2": [
+    "Filtration moléculaire",
+    "ISO 10121",
+    "COV · O₃ · SO₂ · NO₂"
+  ],
+
+  "classes": {
+    "low":  { "label": "Charbon actif", "iso": "ISO 10121", "poly": { "48": { "a": 8.073, "b": 13.383, "c": 2.929 }, "98": { "a": 8.073, "b": 13.383, "c": 2.929 } }, "add": 0, "rule": "non colmatant", "dp": 80, "epaisseur": 292 },
+    "high": { "label": "Charbon actif", "iso": "ISO 10121", "poly": { "48": { "a": 8.073, "b": 13.383, "c": 2.929 }, "98": { "a": 8.073, "b": 13.383, "c": 2.929 } }, "add": 0, "rule": "non colmatant", "dp": 80, "epaisseur": 292 }
+  },
+
+  "note_dimensions": "⚠ Courbe ΔP = pack charbon 292 mm PARTAGÉ avec NETCARB AZUR (SV-GD/QL-CARB) — la courbe propre au V-CARB reste à mesurer (R&D). Surface indiquée = surface frontale (la surface d'adsorption développée du polydièdre est supérieure, non communiquée). ΔP de référence par taille (régime ≈ 2,4 m/s) : 592×592 ≈ 80 Pa @3 000 m³/h · 490×592 ≈ 81 Pa @2 500 · 287×592 ≈ 84 Pa @1 500 (le doc 2015 arrondissait à 85). Code article selon la codification NETCARB : NETCARB-NIVAL-[L]x[H]x[P]. Capacité d'adsorption et durée de vie gaz : à préciser R&D.",
+  "dimensions": [
+    { "L": 592, "H": 592, "P": 292, "debit": 3000, "dp": 80 },
+    { "L": 490, "H": 592, "P": 292, "debit": 2500, "dp": 81 },
+    { "L": 287, "H": 592, "P": 292, "debit": 1500, "dp": 84 }
+  ]
+}

@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+
+// Adresse de destination du formulaire — À CONFIRMER (boîte contact Netair).
+const CONTACT_EMAIL = 'contact@netair.fr';
+---
+
+<BaseLayout
+  title="Demander un devis — Netair"
+  description="Demandez un devis pour vos filtres de centrale de traitement d'air. Indiquez vos références ou dimensions ; nous revenons avec une proposition adaptée."
+>
+  <section class="mx-auto max-w-[1140px] px-7 pt-10 pb-4">
+    <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'Contact / devis' }]} />
+    <h1 class="display mt-5 text-4xl sm:text-5xl font-normal text-marine">Demander un devis</h1>
+    <p class="mt-4 max-w-2xl text-lg text-muted">
+      Indiquez vos références ou vos dimensions, le débit et la classe visée si vous les
+      connaissez. Nous revenons avec une proposition adaptée à votre installation. Pour une
+      demande sur mesure, joignez vos cotes : nous étudions chaque cas.
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-[1140px] px-7 py-8 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+    <!-- Formulaire -->
+    <form id="devis" class="rounded-2xl border border-soft bg-blanc p-6 sm:p-8">
+      <div class="grid gap-5">
+        <div>
+          <label for="nom" class="block text-sm font-normal text-marine">Nom / société <span class="text-bleu">*</span></label>
+          <input id="nom" name="nom" type="text" required autocomplete="organization"
+            class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-3 text-sm text-marine outline-none focus:border-turquoise focus:bg-blanc" />
+        </div>
+        <div>
+          <label for="email" class="block text-sm font-normal text-marine">Email professionnel <span class="text-bleu">*</span></label>
+          <input id="email" name="email" type="email" required autocomplete="email"
+            class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-3 text-sm text-marine outline-none focus:border-turquoise focus:bg-blanc" />
+        </div>
+        <div>
+          <label for="tel" class="block text-sm font-normal text-marine">Téléphone <span class="text-muted font-normal">(facultatif)</span></label>
+          <input id="tel" name="tel" type="tel" autocomplete="tel"
+            class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-3 text-sm text-marine outline-none focus:border-turquoise focus:bg-blanc" />
+        </div>
+        <div>
+          <label for="besoin" class="block text-sm font-normal text-marine">Votre besoin <span class="text-bleu">*</span></label>
+          <textarea id="besoin" name="besoin" rows="5" required placeholder="Références, dimensions, débit, classe visée…"
+            class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-3 text-sm text-marine outline-none focus:border-turquoise focus:bg-blanc"></textarea>
+        </div>
+        <label class="flex items-start gap-3 text-sm text-muted">
+          <input id="rgpd" name="rgpd" type="checkbox" required class="mt-1 h-4 w-4 shrink-0 accent-[var(--color-turquoise)]" />
+          <span>J'accepte que mes données soient utilisées pour traiter ma demande. <span class="text-bleu">*</span></span>
+        </label>
+        <div>
+          <button type="submit"
+            class="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+            style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+            Envoyer ma demande →
+          </button>
+          <p id="devis-note" class="mt-3 text-xs text-muted">
+            À l'envoi, votre messagerie s'ouvre avec votre demande pré-remplie.
+          </p>
+        </div>
+      </div>
+    </form>
+
+    <!-- Coordonnées -->
+    <aside class="space-y-6">
+      <div class="rounded-2xl border border-soft bg-mist p-6">
+        <h2 class="eyebrow text-xs text-turquoise">Contact direct</h2>
+        <p class="mt-3 text-sm text-muted">Par email :</p>
+        <a href={`mailto:${CONTACT_EMAIL}`} class="text-sm font-normal text-marine hover:text-turquoise">{CONTACT_EMAIL}</a>
+      </div>
+      <div class="rounded-2xl border border-soft bg-blanc p-6">
+        <h2 class="eyebrow text-xs text-turquoise">Ce qui aide à chiffrer vite</h2>
+        <ul class="mt-3 space-y-2 text-sm text-muted">
+          <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-turquoise"></span>Dimensions (L × H × P)</li>
+          <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-turquoise"></span>Classe de filtration visée</li>
+          <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-turquoise"></span>Débit d'air (m³/h)</li>
+          <li class="flex gap-2"><span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-turquoise"></span>Quantités et fréquence</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <script define:vars={{ CONTACT_EMAIL }}>
+    const form = document.getElementById('devis');
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const get = (id) => (document.getElementById(id)?.value || '').trim();
+      const nom = get('nom');
+      const email = get('email');
+      const tel = get('tel');
+      const besoin = get('besoin');
+      const subject = `Demande de devis — ${nom}`;
+      const body =
+        `Nom / société : ${nom}\n` +
+        `Email : ${email}\n` +
+        `Téléphone : ${tel || '—'}\n\n` +
+        `Besoin :\n${besoin}\n`;
+      window.location.href =
+        `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+  </script>
+</BaseLayout>

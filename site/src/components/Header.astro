@@ -1,0 +1,33 @@
+---
+// En-tête commun — IDENTIQUE à celui de la page d'accueil (index.astro).
+// Les liens d'ancre pointent vers la page d'accueil (/#...) pour fonctionner
+// depuis n'importe quelle page intérieure.
+---
+
+<header id="nav" class="fixed inset-x-0 top-0 z-40 transition-all duration-300">
+  <div class="mx-auto max-w-7xl px-5 sm:px-8">
+    <div id="nav-inner" class="mt-3 flex h-16 items-center justify-between rounded-2xl glass px-4 shadow-soft transition-all duration-300">
+      <a href="/" class="flex items-center cursor-pointer" aria-label="Netair, accueil">
+        <img src="/brand/logo.svg" alt="Netair" class="h-8 w-auto" />
+      </a>
+
+      <nav class="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
+        <a href="/#solutions" class="link-underline text-sm font-normal text-secondary hover:text-primary">Solutions</a>
+        <a href="/gammes" class="link-underline text-sm font-normal text-secondary hover:text-primary">Catalogue</a>
+        <a href="/#performance" class="link-underline text-sm font-normal text-secondary hover:text-primary">Performance</a>
+        <a href="/#secteurs" class="link-underline text-sm font-normal text-secondary hover:text-primary">Secteurs</a>
+        <a href="/#process" class="link-underline text-sm font-normal text-secondary hover:text-primary">Notre approche</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="/contact" class="hidden text-sm font-normal text-secondary hover:text-primary sm:block link-underline">Nous contacter</a>
+        <a href="/contact" class="group inline-flex items-center gap-1.5 rounded-xl brand-gradient px-4 py-2.5 text-sm font-normal text-white shadow-soft transition-all duration-200 hover:shadow-lift cursor-pointer">
+          Demander un devis
+          <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Cale pour compenser l'en-tête fixe -->
+<div class="h-[88px]" aria-hidden="true"></div>

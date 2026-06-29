@@ -1,0 +1,45 @@
+---
+import type { Produit } from '../lib/familles';
+import { classesProduit } from '../lib/familles';
+
+interface Props {
+  produit: Produit;
+}
+const { produit } = Astro.props;
+const { nom, soustitre, photo } = produit.data;
+const { iso, en } = classesProduit(produit);
+// Photo détourée (PNG transparent) générée dans /produits/detour/.
+const img = photo ? `/produits/detour/${photo.replace(/\.jpg$/i, '.png')}` : null;
+---
+
+<a
+  href={`/produits/${produit.id}`}
+  class="group flex flex-col overflow-hidden rounded-2xl border border-soft bg-blanc transition-all hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgba(8,151,165,0.4)]"
+>
+  {img && (
+    <div class="relative aspect-[4/3] overflow-hidden" style="background:radial-gradient(95% 90% at 50% 35%, rgba(8,151,165,0.18), rgba(0,112,200,0.12) 55%, rgba(255,255,255,0) 100%);">
+      <img
+        src={img}
+        alt={produit.data.photo_alt ?? `Filtre ${nom}`}
+        class="absolute inset-0 m-auto h-[82%] w-[82%] object-contain drop-shadow-[0_12px_18px_rgba(15,50,97,0.18)] transition-transform duration-300 group-hover:scale-105"
+        loading="lazy"
+        width="400"
+        height="300"
+      />
+    </div>
+  )}
+  <div class="flex flex-1 flex-col p-5">
+    {iso && (
+      <span class="mb-3 inline-block w-fit rounded-lg bg-bleu/8 px-2.5 py-1 text-xs text-bleu leading-tight">
+        {iso}
+        {en && <><br /><span class="text-bleu/70">{en}</span></>}
+      </span>
+    )}
+    <h3 class="display text-lg font-normal text-marine">{nom}</h3>
+    {soustitre && <p class="mt-1 text-sm text-muted">{soustitre}</p>}
+    <span class="mt-4 inline-flex items-center gap-1 text-sm font-normal text-turquoise">
+      Voir le produit
+      <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+    </span>
+  </div>
+</a>

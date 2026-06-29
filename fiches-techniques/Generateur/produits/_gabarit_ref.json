@@ -1,6 +1,8 @@
 {
   "_commentaire": "ANCRE DU TEST D'IDENTITÉ — contenu placeholder du gabarit NETPLY d'origine. NE PAS générer en sortie par défaut (ce n'est pas la fiche produit, qui est produits/netply.json). Usage : python3 generer.py produits/_gabarit_ref.json --out _t.html ; diff avec gabarit_base.html doit être vide.",
 
+  "no_smooth_origin": true,
+
   "slug": "netply",
   "nom": "NETPLY",
   "soustitre": "Filtre plissé — Préfiltre synthétique",

@@ -1,13 +1,14 @@
 {
-  "_commentaire": "NETPAK S AZUR — compact à polydièdres rigides (équiv. Titanair TITAPAK SV-GD). Fiche MULTI-CLASSES (moteur série). Données ΔP RÉELLES : caches Excel des fiches 2018 SV-GD (F9 592 = [19,31,45,60,80,100,122] @1000-4000 m³/h ; F9 490 = [22,38,55,74,96,119,142]) + FORMULE_PDC pour F7 ([11,17,26,37,51,67,85]). ⚠️ PIÈGE : F8 = F9 × 0,95 EXACTEMENT (dérivé, non mesuré) — affiché normalement sur décision dirigeant, mais noté à mesurer dans CHECKLIST. M6 ePM2,5 50% annoncée (livret DEHS) mais sans courbe 2018 → specs/badges seulement. Surface média non documentée par Titanair → 'n.c.'. Descriptif reformulé du livret (poches rigides PP, incinérable, sans fibre de verre). Specs fiches 2018 : parois polystyrène, média PP, séparateurs hot melt, M1, 60°C, EN13053 init+100. Profondeur 292, largeurs 592/490/287. Photo SV-GD réelle = placeholder.",
+  "_commentaire": "NETPAK S AZUR — compact à polydièdres rigides (équiv. Titanair TITAPAK SV-GD). Fiche MULTI-CLASSES (moteur série). Données ΔP RÉELLES, caches Excel des fiches 2018 SV-GD 592 @1000-4000 m³/h : F7=[11,17,26,37,51,67,85], F8=[18,29,43,57,76,95,116], F9=[19,31,45,60,80,100,122] (refit polynômes a·v²+b·v+c, R²≈1, err≤1 Pa). NB : F8 vérifié = vraies mesures fiche SV-GD F8.xlsx (et non plus dérivé F9×0,95 ; les deux coïncident à ~1 Pa près, F8 et F9 sont génuinement proches). Axe X en DÉBIT (m³/h) comme la fiche Titanair d'origine. pmax porté à 160 Pa (au lieu de 130) pour aérer le haut du graphe (pointe F9 = 122 Pa). M6 ePM2,5 50% annoncée (livret DEHS) mais sans courbe 2018 → specs/badges seulement. Surface média non documentée par Titanair → 'n.c.'. Descriptif reformulé du livret (poches rigides PP, incinérable, sans fibre de verre). Specs fiches 2018 : parois polystyrène, média PP, séparateurs hot melt, M1, 60°C, EN13053 init+100. Tableau dimensions : 3 cadres standard (592/490/287 ×592×292) × 3 classes. Débit nominal par taille RELEVÉ sur les courbes mesurées SV-GD par taille au point ΔP≈95 Pa (F9) : 592→3400, 490→2977≈3000, 287→1688≈1700 m³/h (et NON la simple proportion largeur 3400/2814/1648 — les courbes par taille ne sont pas exactement homothétiques). ΔP nominale 63/91/95 conservée (média à vitesse nominale). Surface filtrante ABSENTE des fiches SV-GD 2018 (vérifié cellule par cellule) → 'n.c.' justifié, pas un oubli. Photo SV-GD réelle = placeholder.",
 
   "slug": "netpak-s-azur",
   "nom": "NETPAK S AZUR",
   "soustitre": "Filtre compact polydièdre — Haute efficacité",
   "series": true,
   "compact_p1": true,
+  "axe_debit": true,
   "vmax": 3.17,
-  "pmax": 130,
+  "pmax": 160,
   "debit_nom": 3400,
   "eff0": "f7",
   "len0": 292,
@@ -65,5 +66,11 @@
     { "cls": "f9", "len": 292, "a": 6.82, "b": 16.40, "c": 1.71, "dp": 95, "color": "#C0392B" }
   ],
 
-  "note_dimensions": "Profondeur 292 mm. Aussi disponible en 490×592×292 et 287×592×292 mm (débit nominal proportionnel à la section). Surface média développée non communiquée (n.c.). F8 (ePM1 70 %) : courbe estimée — à confirmer."
+  "tailles": [
+    { "L": 592, "H": 592, "debit": 3400 },
+    { "L": 490, "H": 592, "debit": 3000 },
+    { "L": 287, "H": 592, "debit": 1700 }
+  ],
+
+  "note_dimensions": "Profondeur 292 mm. Le débit nominal est propre à chaque cadre (592×592 → 3400, 490×592 → 3000, 287×592 → 1700 m³/h), pour une perte de charge nominale équivalente. Surface média développée non communiquée (n.c.). La courbe ci-dessus est tracée pour le cadre de référence 592×592."
 }

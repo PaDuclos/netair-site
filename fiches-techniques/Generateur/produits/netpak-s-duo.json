@@ -16,23 +16,23 @@
   "photo": "netpak-s-duo-photo.jpg",
   "photo_alt": "Filtre compact combiné NETPAK S DUO (F7 + charbon actif)",
 
-  "description": "Le NETPAK S DUO combine en une seule cellule la filtration fine des particules et le traitement des gaz. Son média mini-plis F7 GREENTEX (basse résistance) retient les poussières fines (ePM1 50 %), tandis qu'une couche de charbon actif adsorbe les odeurs et composés organiques volatils (COV). Cette double action en fait la solution idéale pour les ambiances chargées en gaz et odeurs — cuisines, laboratoires, ateliers, air urbain — sans multiplier les étages de filtration. Cadre acier galvanisé, profondeur 48 mm, sur cadre 592×592 (et 287×592).",
+  "description": "Le NETPAK S DUO combine en une seule cellule la filtration fine des particules et le traitement des gaz. Son média mini-plis F7 basse résistance retient les poussières fines (ePM1 50 %), tandis qu'une couche de charbon actif adsorbe les odeurs et composés organiques volatils (COV). Cette double action en fait la solution idéale pour les ambiances chargées en gaz et odeurs — cuisines, laboratoires, ateliers, air urbain — sans multiplier les étages de filtration. Cadre acier galvanisé, profondeur 48 mm, sur cadre 592×592 (et 287×592).",
 
   "points_cles": [
     "Double filtration : particules + gaz",
     "Charbon actif — odeurs & COV",
-    "Média F7 GREENTEX basse résistance",
+    "Média F7 basse résistance",
     "Une seule cellule (gain d'encombrement)",
     "Cadre acier galvanisé"
   ],
 
   "specs": [
     ["Type", "Compact mini-plis + couche charbon actif"],
-    ["Média filtrant", "Polypropylène GREENTEX + charbon actif"],
+    ["Média filtrant", "Polypropylène + charbon actif"],
     ["Fonction charbon actif", "Adsorption gaz · odeurs · COV"],
     ["Parois cellule", "Acier galvanisé"],
     ["Séparateur", "Intercalaire (INT)"],
-    ["Efficacité EN 779", "F7 (GREENTEX) + charbon actif"],
+    ["Efficacité EN 779", "F7 + charbon actif"],
     ["Efficacité ISO 16890", "ePM1 50 % + charbon actif"],
     ["Surface média développée", "≈ 12,6 m² (592×592, 48 mm)"],
     ["Classement au feu", "NA — non classé (charbon actif)"],
@@ -57,7 +57,7 @@
     "high": { "label": "F7 +CA", "iso": "ePM1 50%", "poly": { "48": { "a": 15.013, "b": 28.882, "c": 3.537 }, "98": { "a": 15.013, "b": 28.882, "c": 3.537 } }, "add": 100, "rule": "classe ePM1", "dp": 190, "epaisseur": 48 }
   },
 
-  "note_dimensions": "Surface = surface média développée (mini-plis F7 GREENTEX) ; la couche de charbon actif s'ajoute au pack. ΔP de référence ≈ 190 Pa à 3400 m³/h sur 592×592 (la perte de charge intègre le charbon, d'où une valeur plus élevée qu'un F7 seul). Profondeur 48 mm.",
+  "note_dimensions": "Surface = surface média développée (mini-plis F7) ; la couche de charbon actif s'ajoute au pack. ΔP de référence ≈ 190 Pa à 3400 m³/h sur 592×592 (la perte de charge intègre le charbon, d'où une valeur plus élevée qu'un F7 seul). Profondeur 48 mm.",
   "dimensions": [
     { "L": 592, "H": 592, "P": 48, "debit": 3400 },
     { "L": 287, "H": 592, "P": 48, "debit": 1650 }

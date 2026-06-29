@@ -18,7 +18,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETMETAL | 🟡 | ΔP > 2,38 m/s non mesurée · ~~classe~~ ✅ G2/G3 (déc. PA) |
 | NETFIL | 🟡 | épaisseur/profondeur · ~~G3/G4~~ ✅ G3 confirmé (PA) |
 | NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) |
-| NETBAG S | 🟡 | Anomalie M5 550/650 · G4 non mesuré · 287×592 & humidité · photo |
+| NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
 | NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé) · M6 non mesurée · surface média n.c. · photo |
@@ -28,7 +28,10 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK V LAM | 🟡 | ✅ créée (HEPA H14, flux laminaire, A4 OK) · capacité/colmatage à confirmer · photo HEPA |
 | NETCEL V NIVAL | 🟡 | E10 & H14 sans courbe (H14 = copie H13) · 610×610 sur moteur 592 · photo |
 | NETCEL V AZUR | 🟡 | H13 extrapolé >2400 m³/h · curseur débit init 3400 (calc OK 2400) · photo = idem NETPAK AZUR · nom à valider |
-| NETCARB CILIA/AZUR/NIVAL/BAG | ⬜ | Tout · noms à valider (sauf BAG) |
+| NETCARB CILIA | 🟡 | ✅ créée (charbon actif, ISO 10121, 2 épaisseurs) · classe LD/MD/HD à déterminer par essai · capacité/durée de vie gaz R&D · photo (grains) |
+| NETCARB AZUR | 🟡 | ✅ créée (charbon dièdre, mono-classe 292) · courbe 2020 QL-CARB (piège 2023 F7=F8 écarté) · classe LD/MD/HD & capacité R&D · photo blend placeholder |
+| NETCARB NIVAL | 🟡 | ✅ créée (polydièdre, mono 292) · ⚠ courbe ΔP partagée AZUR (V-CARB sans courbe propre → R&D) · parois polyester à confirmer · photo Q-carb (code visible→remplacer) |
+| NETCARB BAG | 🟡 | ✅ créée (poches souples F9 + charbon imprégné, COMBINÉ colmatant) · HR n.c. · capacité/classe 10121 R&D · photo forme NETBAG (média à reshooter) |
 
 ---
 
@@ -111,7 +114,7 @@ Surface média (cadre 592×592) : 380 → 3,46 m² · 500 = 550 → 5,11 m² · 
       - **Décision actée (22/06/2026)** : on **garde la donnée brute en l'état**, sans supposition. Les 2 courbes
         sont affichées, **M5 550 en pointillé « à valider »** (fiche + légende), note « ⚠ À VALIDER » dans
         `DONNEES_PDC` l.29. **À trancher par une mesure banc R&D** (M5 550 et 650) → puis MAJ DONNEES_PDC + fiche.
-- [ ] **Classe G4** (préfiltration) annoncée (livret/plaquette) mais **aucune fiche 2018** → courbe à mesurer.
+- [x] **Classe G4 intégrée** (23/06/2026, décision PA : specs/gamme **sans courbe**) — Coarse 65% (G4), poche **380 mm**, ADD +50, badges/sous-titre/description/specs mis à jour. ⚠ **Courbe ΔP G4 toujours à mesurer** (aucune donnée TITABAG/FORMULE_PDC ; non tracée au graphe, « sur demande »).
 - [ ] **Combinaisons classe × longueur manquantes** : M5/M6/F7 en 500 ; M6/F8/F9 en 550/650 ; F9 en 380/550/650 ;
       M6 en 500/550/650 (cf. matrice).
 - [ ] **Longueur 300 / 600 mm** (livret_2023) vs **380/550/650** (fiches 2018) : nomenclature à clarifier.
@@ -182,6 +185,53 @@ Courbes **E10 + H13** réelles (caches Excel) : `DONNEES_PDC` l.57-58.
 - [ ] **Photo = même polydièdre SV-GD que NETPAK S AZUR** → trouver/faire une photo distincte du V-GD HEPA.
 - [ ] **Nom « AZUR »** partagé avec NETPAK S AZUR (familles différentes, OK par convention) → confirmer.
 
+### NETCARB CILIA 🟡
+Filtre **compact à charbon actif** (filtration moléculaire), équiv. PRISME CARB. **PAS de classe particulaire** (filtre de gaz) → cadre **ISO 10121**.
+ΔP **réelles** (caches Excel `CARB/PRISME CARB 48.xlsx` & `98.xlsx`, YGLA 2017, cohérentes 48 > 98) : `DONNEES_PDC` l.59-60.
+Polynômes 7 pts grille standard : 48 mm 4,851·v²+14,299·v−1,143 ; 98 mm 5,458·v²+10,995·v−2,500 (R²≈1). ΔP@3400 ≈ 73 / 67 Pa.
+Moteur : nouveaux drapeaux `deux_epaisseurs` (1 famille × 2 épaisseurs) + `dp_final_mode:const` (non colmatant) + `ref_simple` (code `NETCARB-CILIA-LxHxP`). Identité NETPLY revérifiée OK.
+
+- [ ] **🟠 Classe ISO 10121-3 (LD/MD/HD + %)** : non fournie par Titanair (fiche < 2022) → marquée « à déterminer par essai ». **À mesurer / faire certifier** (essai GPACD ISO 10121-2) avant toute revendication de classe.
+- [ ] **Capacité d'adsorption / durée de vie** : 15 % en masse (charge max., donnée Titanair) ; durée de vie réelle = fonction de la charge polluante → **à préciser R&D** (grammage/type de charbon).
+- [ ] **T° 40 °C / HR 50 %** : limites propres au charbon (≠ média synthétique 60 °C) — confirmer sur média Netair.
+- [ ] **Surface média** : tableau = surface **frontale** (le mini-plis charbon développe davantage ; surface développée non communiquée par le fournisseur).
+- [ ] **Page 2** : 1167 px (≈ +44 px / A4) — léger débord, **bien inférieur** aux fiches multi-courbes déjà tolérées (NETPLY 1344, AZUR 1375). Laissé tel quel (cohérent décision PA 22/06).
+- [ ] **Photo** : `CARB.png` (grains de charbon) aplatie sur blanc = placeholder → visuel produit Netair (cellule PRISME CARB).
+
+### NETCARB AZUR 🟡
+Filtre **poches rigides / dièdre à charbon actif** (filtration moléculaire), équiv. SV-GD CARB. **Mono-classe** (1 épaisseur 292 mm).
+Courbe **2020 « QL-CARB »** (`DONNEES_PDC` l.61) : 8,073·v²+13,383·v+2,929 (R²=0,999), ΔP@3400 ≈ 98 Pa.
+Drapeaux moteur : `mono_classe` + `dp_final_mode:const` + `ref_simple`.
+
+- [ ] **🟠 Piège source écarté** : dans le dossier SV GD CARB, les fichiers `…F7 2023.xlsx` et `…F8 2023.xlsx` sont des **copies exactes** du `…2023.xlsx` base `[22,38,56,77,101,128,155]` (la classe combinée n'y change pas la ΔP) **et dépassent l'axe Y 0-120 de la fiche 2018** → 2023 **non retenue**. Courbe **2020 QL-CARB** conservée (cohérente fiche officielle 2018). À reconfirmer si le média actuel a changé depuis 2020.
+- [ ] **Classe ISO 10121-3 (LD/MD/HD)** : non fournie → à déterminer par essai (idem CILIA).
+- [ ] **Capacité d'adsorption** : **non communiquée** par Titanair (≠ CILIA qui donnait 15 %) → à préciser R&D.
+- [ ] **T° 40 °C** retenue (efficacité d'adsorption, choix PA) alors que la **fiche 2018 indique 80 °C** (tenue structure polyester) → l'adsorption chute > 40 °C. HR max **70 %**.
+- [ ] **Option combinée F7/F9 + charbon** : annoncée (doc 2015) mais ΔP combinée non fiable (fichiers 2023 copiés) → courbe combinée à mesurer si commercialisée.
+- [ ] **ΔP réelle ~97-102 Pa** sur les 3 tailles (même régime ≈ 2,7 m/s) ; le doc 2015 arrondissait à **85 Pa** (écarté).
+- [ ] **Photo** : `CARB_BLEND.png` (charbon + alumine permanganate) sur blanc = placeholder → visuel produit Netair (dièdre SV-GD).
+
+### NETCARB NIVAL 🟡
+Filtre **polydièdre à charbon actif** (filtration moléculaire), équiv. **V-CARB** (forme « V », cf. NETCEL V NIVAL). **Mono-classe** 292 mm, nominal **3000**.
+Drapeaux : `mono_classe` + `dp_final_mode:const` + `ref_simple`.
+
+- [ ] **🔴 Aucune courbe ΔP V-CARB mesurée** (doc 2018 = « 85 Pa » plat ; aucun Excel V-CARB/TITACEL CARB). **Décision PA (23/06)** : réutiliser la courbe du **pack charbon 292 mm de SV-GD/QL-CARB** (= AZUR, `DONNEES_PDC` l.62 ↔ l.61), assumée **« partagée »**. → **Courbe propre au V-CARB à mesurer R&D** (priorité si on distingue commercialement AZUR et NIVAL).
+- [ ] **Redondance AZUR ↔ NIVAL** : aérodynamiquement quasi identiques (même pack charbon). À trancher : garder 2 SKU distincts (formes dièdre vs polydièdre) ou fusionner ? (question gamme/naming).
+- [ ] **Parois polyester** : non précisé dans le doc V-CARB → repris de SV-GD CARB par cohérence → **à confirmer**.
+- [ ] **Classe ISO 10121-3 & capacité d'adsorption** : à déterminer/préciser R&D (idem famille).
+- [ ] **Photo** : `Q-carb.jpg` (forme polydièdre charbon) — **code « Q-carb » visible** → à remplacer en priorité par visuel produit Netair (cf. pattern LUMEN).
+
+### NETCARB BAG 🟡
+**Poches souples F9 (ePM1 80 %) à charbon actif imprégné** — **COMBINÉ** particules + gaz (≠ charbon grains), équiv. TITABAG F9 CARB. **Mono-classe**, profondeur 520 mm.
+Courbe **réelle** (`DONNEES_PDC` l.63) : 9,172·v²+64,135·v−10,429 (R²≈1), ΔP@3400 ≈ 229 Pa. Drapeaux : `mono_classe` + `ref_simple` (PAS `dp_final_mode:const`).
+
+- [ ] **Filtre COLMATANT** : c'est d'abord un F9 (média synthétique imprégné) → règle ΔP **ePM +100** appliquée (la fiche dit « 2× PDC initiale »). Ne PAS confondre avec les charbons en grains (non colmatants).
+- [ ] **Classe ISO 10121-3** (volet moléculaire de l'imprégnation) : très inférieure à un lit de grains → à déterminer/qualifier R&D (l'imprégnation capte odeurs/COV légers, pas un traitement gaz lourd).
+- [ ] **Capacité d'adsorption 15 %** (donnée fiche) ; durée de vie gaz selon charge → R&D.
+- [ ] **Humidité relative max. non communiquée** par la fiche 2021 → omise (à préciser).
+- [ ] **Surface média** : poches souples ≈ 5 m² (ordre de grandeur d'après NETBAG F9 ; exacte non communiquée pour la version imprégnée).
+- [ ] **Photo** : forme poches souples (placeholder `netbag-s`) — le média imprégné réel est **plus sombre** → à reshooter en visuel produit Netair.
+
 ---
 
 ## Fiches à créer — données à rassembler
@@ -194,11 +244,15 @@ Courbes **E10 + H13** réelles (caches Excel) : `DONNEES_PDC` l.57-58.
 ### HEPA / T.H.E — famille NETCEL
 _(NIVAL et AZUR créées — voir ci-dessus)_
 
-### Charbon actif — famille NETCARB (noms ⚠ à valider sauf BAG)
-- [ ] **NETCARB CILIA** (compact CA) — réf. PRISME CARB
-- [ ] **NETCARB AZUR** (multidièdre CA) — réf. SV GD CARB
-- [ ] **NETCARB NIVAL** (polydièdre CA) — réf. TITACEL CARB
-- [ ] **NETCARB BAG** (poches CA imprégné) — réf. à préciser · nom validé
+### Charbon actif — famille NETCARB (noms validés PA 23/06/2026)
+- [x] **NETCARB CILIA** (compact CA) — réf. PRISME CARB → **créée** (voir ci-dessus)
+- [x] **NETCARB AZUR** (dièdre CA) — réf. SV GD CARB → **créée** (voir ci-dessous)
+- [x] **NETCARB NIVAL** (polydièdre CA) — réf. V-CARB → **créée** (voir ci-dessous)
+- [x] **NETCARB BAG** (poches CA imprégné) — réf. TITABAG F9 CARB → **créée** (voir ci-dessous)
+
+**Famille NETCARB : 4/4 fiches créées ✅** (CILIA, AZUR, NIVAL = charbon grains/moléculaire pur ; BAG = combiné F9+charbon colmatant).
+
+**Paradigme charbon (acté CILIA) à réappliquer :** filtration **moléculaire** (gaz), **pas** ISO 16890 → cadre **ISO 10121** (-1/-2 essai, **-3:2022 classes LD/MD/HD** vs O₃/SO₂/NO₂/toluène). Titanair (fiches < 2022) ne donne **aucune classe LD/MD/HD** → ne pas inventer. Feu **NA**, T° **40 °C**, HR **50 %**. ΔP **non colmatante** (`dp_final_mode:const`) : remplacement à saturation (capacité ≈ 15 % masse) — pas la règle ePM +100. Drapeaux moteur dédiés : `deux_epaisseurs`, `dp_final_mode:const`, `ref_simple`.
 
 ---
 
