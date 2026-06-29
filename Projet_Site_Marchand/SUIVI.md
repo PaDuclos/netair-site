@@ -14,7 +14,7 @@
 
 | Bloc | Description | Statut | Bloqué par |
 |---|---|---|---|
-| **B1 — Moteur de prix** | Réplique des tables Excel + tests | 🔄 Spécifié ([`SPEC_B1`](SPEC_B1_MOTEUR_PRIX.md)) + 3 skills qualité créés — prêt à coder | — (constructible) |
+| **B1 — Moteur de prix** | Réplique des tables Excel + tests | 🔄 Spécifié + 3 skills + **T1 fait** (export Excel→`tables.json`, vérifié + relu) — reste T2-T9 (moteur + tests) | — (constructible) |
 | **B2 — Configurateur & pages produits** | Saisie dimensions → prix instantané | 🔄 Maquette enrichie (fiche complète + achat + demande de devis multi-produits ; prix fictif) | B1 pour le vrai prix |
 | **B3 — Panier & paiement** | Panier + Stripe (invité) | ⏳ À venir | Immatriculation |
 | **B4 — Comptes & remises** | Auth + % client depuis INCWO | ⏳ À venir | Immatriculation, INCWO |
@@ -56,6 +56,7 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 | **29/06/2026** | **Points §10.3/4/5 RÉSOLUS** | **Gammes hors calculateur** → statut `sur_devis` (pas d'achat, demande de devis seulement, architecture identique). **Efficacités non fabriquées** → non proposées (absentes du menu) ; sinon `classe_indisponible`. **Arrondi** classique à 2 décimales. |
 | **29/06/2026** | **Cadre par famille (§10.2) élargi** | Le « cadre » à fournir = **(a) dimensions mini/maxi** **et (b) quantité minimale de commande**, par famille (≠ paliers de prix). Sous le mini de quantité → **achat bloqué + message « quantité minimale : X »** (statut `quantite_insuffisante`). **En attente** : les valeurs (Pierre-Alain). |
 | **29/06/2026** | **Modèle pour le codage du moteur** | **Tout en Opus** (choix de Pierre-Alain — sécurité maximale sur un sujet critique). **Déroge** volontairement au `CLAUDE.md` du site (« code en Haiku ») ; les 3 skills relisent quand même tout. CLAUDE.md à mettre à jour pour cohérence. |
+| **29/06/2026** | **T1 — export Excel → données** | `site/scripts/export_excel.py` (Python/openpyxl, 0 dépendance npm) lit `Calculateur_Netair.xlsx` → `site/src/lib/pricing/data/tables.json` + `tables.meta.json` (carte d'identité : source, version interne, empreinte sha256). Classes/paliers lus dynamiquement (rien en dur), cases « non assurées » → `null`. **Vérifié** (comptages = onglets ; NETPLY 3,44 €, ratio 3,333, franco 750…) et **relu** (`netair-site-reviewer` : ⚠️ validé avec réserves → réserve MOYEN corrigée : erreurs claires si onglet/colonne renommé). |
 
 ---
 
