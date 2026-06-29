@@ -123,7 +123,7 @@ export interface ResultatPrix {
   /** Poids total de la commande, en kg. */
   poidsTotalKg?: number;
   /** Palier de quantité (tranche de prix) appliqué — ex. "6-19". */
-  paletteQuantite?: string;
+  palierQuantite?: string;
   /** Plancher de commande de la famille, si statut = `quantite_insuffisante`. */
   quantiteMini?: number;
   /** Durée de validité de l'offre, en jours (30). */

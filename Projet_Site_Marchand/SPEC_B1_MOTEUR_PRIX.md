@@ -165,7 +165,7 @@ interface ResultatPrix {
   fraisPortHT?: number;        // selon département + franco
   francoApplique?: boolean;    // true si total ≥ 750 € → port offert
   poidsTotalKg?: number;
-  paletteQuantite?: string;    // tranche/palier de prix appliqué, ex. "6-19"
+  palierQuantite?: string;     // tranche/palier de prix appliqué, ex. "6-19"
   quantiteMini?: number;       // plancher de commande de la famille (si statut "quantite_insuffisante")
   dureeValiditeJours: number;  // 30
   detail?: DetailCalcul;       // traçabilité : renfort, base, ratio, table source…
