@@ -140,7 +140,7 @@ NETPLY · 287 × 592 × 48 · classe **G4** · quantité **10** · livraison dé
 ### Entrée
 ```ts
 interface DemandePrix {
-  codeGamme: number;        // ex. 1 (NETPLY) — la gamme commandée
+  codeGamme: string;        // ex. "1" (NETPLY) — tel quel dans tables.json ; codes NON figés (cf. note ci-dessous)
   largeur_mm: number;       // L
   hauteur_mm: number;       // H
   profondeur_mm: number;    // P (épaisseur)
@@ -149,6 +149,12 @@ interface DemandePrix {
   departement?: string;     // "35" — pour le port ; optionnel (prix nu sans port si absent)
 }
 ```
+
+> **Codes gamme NON figés (29/06/2026)** : `codeGamme` est une **chaîne** (ex. `"1"`, `"101"`, `"130"`), exactement
+> comme dans `tables.json`. Le calculateur n'est pas encore retravaillé : des filtres seront ajoutés/retirés et **les
+> codes changeront**. Conséquence pour le moteur : **aucun code n'est écrit en dur** — la méthode de calcul par code
+> est lue dans les données ; après chaque retravail de l'Excel, on régénère `tables.json` et on rejoue les tests.
+> *(Tracé aussi dans `PLAN.md`, BLOC 1.)*
 
 ### Sortie
 ```ts
@@ -220,7 +226,7 @@ par `export-excel.mjs`. Le moteur ne lit jamais l'Excel directement (robustesse,
 | # | Tâche | Livrable | Validé par |
 |---|---|---|---|
 | T1 | ✅ **FAIT** — Export Excel → JSON | `site/scripts/export_excel.py` (Python) + `tables.json` + `tables.meta.json` | vérif humaine + `netair-site-reviewer` |
-| T2 | **Types & contrat** | `types.ts` | `netair-site-reviewer` |
+| T2 | ✅ **FAIT** — Types & contrat | `types.ts` | `netair-site-reviewer` ⚠️ validé avec réserves (spec alignée : `codeGamme` string) |
 | T3 | **Lookups** (L×l, surface, HF, pièce, paliers) | `lookups.ts` | tests unitaires + reviewer |
 | T4 | **Méthodes A→F + dispatcher** | `engine.ts` | reviewer |
 | T5 | **Port & franco** | `shipping.ts` | reviewer + validator |
