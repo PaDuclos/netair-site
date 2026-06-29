@@ -30,7 +30,7 @@ export const FAMILLES: Famille[] = [
   },
   {
     slug: 'compacts-miniplis',
-    titre: 'Filtres compacts miniplis',
+    titre: 'Filtres miniplis',
     tag: 'ePM10 50% → ePM1 80%',
     tagEn: 'M5 → F9',
     photo: '/produits/detour/netpak-s-cilia-photo.png',
