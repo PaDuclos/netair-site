@@ -141,10 +141,11 @@ NETPLY · 287 × 592 × 48 · classe **G4** · quantité **10** :
 *Valeurs **verrouillées** par `tests/pricing/engine.test.ts` (ancre validée par `cost_calculator.py`).
 Le port et le poids (ancien §5) relèvent de T5/T6.*
 
-> **Écarts spec ↔ référence relevés en T4 (à trancher en T8) :**
-> - **Hors-format (`Prix_Surface_HF`)** : la méthode A le mentionnait (« + HF si surface > 50 dm² »), mais la
->   **référence validée ne l'applique pas** → le moteur non plus. **À confirmer par vecteurs dorés avec surface > 50 dm²** ;
->   si l'Excel l'applique, risque d'undercharge sur grands filtres → implémenter alors.
+> **Écarts spec ↔ référence relevés en T4 :**
+> - **Hors-format (`Prix_Surface_HF`)** : ✅ **RÉSOLU & IMPLÉMENTÉ (29/06)**. Règle lue dans la formule Excel
+>   (`base = Prix_Surface(50) + Prix_Surface_HF × (⌈surface⌉ − 50)`) et **validée au centime sur prix Excel réels**
+>   (NETPLY 900×600 = 37,67 € ; 1000×600 = 46,03 €). Conséquence : la méthode A chiffre toute surface → **pas de
+>   borne de dimension MAX** (comme l'Excel) ; borne « cadre » max par famille (§10.2) à ajouter ensuite.
 > - **Méthode A (renfort)** : le jeu de paramètres NETPLY vs NETPLAN est résolu par le **nom** de la gamme
 >   (seul point non 100 % piloté par les données) → cible propre = config renfort par gamme dans l'Excel au retravail.
 > - **Méthodes B→F** : prouvées en **cohérence** seulement ; preuve « Excel = moteur » au centime = **T8**.

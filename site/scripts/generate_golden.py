@@ -23,6 +23,7 @@ Usage : python3 generate_golden.py
 
 import decimal
 import json
+import math
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -143,6 +144,64 @@ def main():
             "coutAttendu": cout,
             "prixAttendu": prix,
         })
+
+    # ── Hors-format (> 50 dm²) : la référence Python NE le gère pas → on applique la
+    #    VRAIE formule Excel (lue dans « Devis interne »), validée sur prix réels :
+    #    NETPLY 900×600 = 37,67 € · 1000×600 = 46,03 €.
+    #    base = Prix_Surface(50) + Prix_Surface_HF × (⌈surface⌉ − 50) ; puis renfort + charge + ratio.
+    def getparam(lib):
+        for p in tables_data["params"]:
+            if p["libelle"] == lib:
+                return p["valeur"]
+        return 0
+
+    def surf_val(code, ep, surf, q, cl):
+        for r in tables_data["prix_surface"]:
+            if r["code"] == code and r["ep"] == ep and r["surf_min"] <= surf <= r["surf_max"] and r["qmin"] <= q <= r["qmax"]:
+                v = r["prix"].get(cl)
+                return v if isinstance(v, (int, float)) and v > 0 else None
+        return None
+
+    def hf_val(code, ep, q, cl):
+        for r in tables_data["prix_surface_hf"]:
+            if r["code"] == code and r["ep"] == ep and r["qmin"] <= q <= r["qmax"]:
+                v = r["prix"].get(cl)
+                return v if isinstance(v, (int, float)) and v > 0 else None
+        return None
+
+    Q_HF = 10
+    for g in gammes.values():
+        if g["methode"] != "A":
+            continue
+        code, nom = g["code"], g["nom"]
+        charge = g["frais_livraison"] if isinstance(g.get("frais_livraison"), (int, float)) else 0.0
+        plan = "PLAN" in nom.upper()
+        r_ext = getparam("NETPLAN renfort extérieur :" if plan else "TITAPLY renfort extérieur :")
+        r_int = getparam("NETPLAN renfort intérieur :" if plan else "TITAPLY renfort intérieur :")
+        eps = sorted({r["ep"] for r in tables_data["prix_surface"] if r["code"] == code and isinstance(r["ep"], int)})
+        for ep in eps:
+            for L, H in [(900, 600), (1000, 600), (900, 700)]:
+                surf = L * H / 10000
+                if surf <= 50:
+                    continue
+                petite, grande = min(L, H), max(L, H)
+                renfort = r_int if petite > 850 else (r_ext if (grande > 800 or surf > 50) else 0)
+                for cl in ["G2", "G3", "G4", "M5", "M6"]:
+                    s50 = surf_val(code, ep, 50, Q_HF, cl)
+                    hf = hf_val(code, ep, Q_HF, cl)
+                    if s50 is None or hf is None:
+                        continue
+                    base = s50 + hf * (math.ceil(surf) - 50)
+                    pru = excel_round((1 + charge) * (renfort + base), 2)
+                    ptu = excel_round(pru * g["ratio"], 2)
+                    cle = (code, L, H, ep, cl, Q_HF)
+                    if cle in vus:
+                        continue
+                    vus.add(cle)
+                    vecteurs.append({
+                        "codeGamme": code, "largeur_mm": L, "hauteur_mm": H, "profondeur_mm": ep,
+                        "classe": cl, "quantite": Q_HF, "coutAttendu": pru, "prixAttendu": ptu,
+                    })
 
     vecteurs.sort(key=lambda v: (int(v["codeGamme"]), v["largeur_mm"], v["hauteur_mm"], v["classe"], v["quantite"]))
 
