@@ -153,13 +153,14 @@ interface DemandePrix {
 ### Sortie
 ```ts
 interface ResultatPrix {
-  statut: "ok" | "hors_fabrication" | "classe_indisponible" | "gamme_inconnue" | "sur_devis";
+  statut: "ok" | "hors_fabrication" | "classe_indisponible" | "gamme_inconnue" | "sur_devis" | "quantite_insuffisante";
   prixUnitaireHT?: number;     // arrondi 2 décimales
   prixTotalHT?: number;        // unitaire × quantité
   fraisPortHT?: number;        // selon département + franco
   francoApplique?: boolean;    // true si total ≥ 750 € → port offert
   poidsTotalKg?: number;
-  paletteQuantite?: string;    // tranche appliquée, ex. "6-19"
+  paletteQuantite?: string;    // tranche/palier de prix appliqué, ex. "6-19"
+  quantiteMini?: number;       // plancher de commande de la famille (si statut "quantite_insuffisante")
   dureeValiditeJours: number;  // 30
   detail?: DetailCalcul;       // traçabilité : renfort, base, ratio, table source…
   message?: string;            // explication si statut ≠ "ok"
@@ -180,6 +181,9 @@ interface ResultatPrix {
   NETCARB AZUR, NETPAK S DUO…) : **pas de prix instantané ni d'achat**, seul le parcours **demande de devis**
   est actif. La page et le configurateur restent **identiques** (mêmes champs) → réactivation simple si une
   méthode de prix est ajoutée plus tard.
+- `quantite_insuffisante` — quantité saisie **sous le minimum de commande de la famille** : **achat bloqué**,
+  message « quantité minimale : X » (valeur dans `quantiteMini`). À distinguer des **paliers de prix** (qui, eux,
+  font seulement varier le prix unitaire). Minima à fournir (cf. §10, « cadre »).
 
 ---
 
@@ -286,8 +290,10 @@ toute divergence de la logique géométrique commune (risque 🟡 du cahier).
       « coût » = `PRU HT` (col. DB de l'onglet « Devis interne » : l'assemblage géométrique par gamme, renforts +
       MO inclus). Le prix catalogue = `PTU HT` (col. DE) = `PT : PVU HT` en **mode tarif pur** (col. DR), **sans**
       marge manuelle / catégorie client / remise manuelle (celles-ci = canal devis). Détail : §3.
-- [ ] **Bornes min/max** de dimensions fabricables par gamme (pour le statut `hors_fabrication`) —
-      ⏳ **EN ATTENTE** : Pierre-Alain fournira le « cadre » (dimensions mini/maxi par gamme). Ne bloque pas le reste.
+- [ ] **Le « cadre » par famille** (pour les statuts `hors_fabrication` et `quantite_insuffisante`) —
+      ⏳ **EN ATTENTE** : Pierre-Alain fournira **(a)** les **dimensions mini/maxi** fabricables **et (b)** la
+      **quantité minimale de commande**, par famille. Comportement décidé (29/06) : sous le mini de quantité →
+      **achat bloqué + message « quantité minimale : X »** (≠ paliers de prix). Ne bloque pas le reste du codage.
 - [x] **Gammes « hors calculateur »** — ✅ **RÉSOLU (29/06/2026)**. Statut **`sur_devis`** : pas d'achat ni de prix
       instantané, seul le parcours **demande de devis** reste actif ; page + configurateur **identiques** (cf. §4).
 - [x] **Classes « non assurées par le fournisseur »** — ✅ **RÉSOLU (29/06/2026)**. On **ne propose pas** l'efficacité
