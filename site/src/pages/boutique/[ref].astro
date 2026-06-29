@@ -147,22 +147,22 @@ const codeBase = d.nom.replace(/\s+/g, '');
     <div class="mt-6 grid gap-7 lg:grid-cols-[1.3fr_1fr]">
 
       <!-- Configurateur -->
-      <div class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
-        <div class="grid gap-5 sm:grid-cols-2">
+      <div class="rounded-2xl border border-soft bg-white p-5 shadow-soft">
+        <div class="grid gap-x-5 gap-y-3.5 sm:grid-cols-2">
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Largeur (mm)</span>
             <input id="inL" type="number" value="592" min="100" max="2000" step="1"
-              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise" />
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
           </label>
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Hauteur (mm)</span>
             <input id="inH" type="number" value="592" min="100" max="2000" step="1"
-              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise" />
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
           </label>
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
             <select id="inEp"
-              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise">
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
               <option value="25">25 mm</option>
               <option value="48" selected>48 mm</option>
               <option value="98">98 mm</option>
@@ -171,7 +171,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Efficacité</span>
             <select id="inEff"
-              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise">
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
               <option value="G4" selected>Coarse 65 % (G4)</option>
               <option value="M5">ePM10 50 % (M5)</option>
             </select>
@@ -179,7 +179,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Cadre</span>
             <select id="inCadre"
-              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise">
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
               <option value="galva">Acier galvanisé</option>
               <option value="pp">Polypropylène</option>
             </select>
@@ -187,16 +187,16 @@ const codeBase = d.nom.replace(/\s+/g, '');
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Quantité</span>
             <input id="inQ" type="number" value="6" min="1" max="100000" step="1"
-              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-marine outline-none focus:border-turquoise" />
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
           </label>
           <div class="block">
             <span class="eyebrow text-[11px] text-muted">Référence générée</span>
-            <div id="genRef" class="mt-1.5 w-full rounded-xl border border-dashed border-soft bg-mist px-4 py-2.5 font-mono text-sm text-marine"></div>
+            <div id="genRef" class="mt-1.5 w-full rounded-xl border border-dashed border-soft bg-mist px-4 py-2 font-mono text-sm text-marine"></div>
           </div>
         </div>
 
         <!-- Prix + actions -->
-        <div class="mt-7 rounded-2xl bg-mist px-6 py-5">
+        <div class="mt-5 rounded-2xl bg-mist px-5 py-4">
           <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span class="eyebrow text-[11px] text-muted">Prix unitaire HT</span>
@@ -206,12 +206,12 @@ const codeBase = d.nom.replace(/\s+/g, '');
           </div>
           <div class="mt-4 flex flex-col gap-3 border-t border-soft pt-4 sm:flex-row">
             <button id="addBtn" type="button"
-              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
               style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
               Ajouter au panier
             </button>
             <button id="addDevisBtn" type="button"
-              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise">
+              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-2.5 text-sm font-normal text-marine transition-colors hover:border-turquoise">
               Ajouter à ma demande de devis
             </button>
           </div>
@@ -239,7 +239,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
             </div>
             <p class="mt-1 text-right text-xs text-muted">TVA et frais de port calculés à l'étape suivante.</p>
             <button type="button"
-              class="mt-4 w-full rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+              class="mt-4 w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
               style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
               Passer commande <span class="opacity-70">(maquette)</span>
             </button>
@@ -262,7 +262,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
           <!-- Étape 1 : récapitulatif + bouton vers le formulaire -->
           <div id="devisStep1" class="mt-5 hidden">
             <button id="toFormBtn" type="button"
-              class="w-full rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+              class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
               style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
               Demander le devis →
             </button>
@@ -297,7 +297,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
                 class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise"></textarea>
             </label>
             <button type="submit"
-              class="w-full rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+              class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
               style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
               Envoyer ma demande de devis
             </button>
@@ -324,7 +324,7 @@ const codeBase = d.nom.replace(/\s+/g, '');
       </p>
       <a
         href="#boutique"
-        class="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+        class="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
         style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
       >
         Configurer ma demande de devis →
