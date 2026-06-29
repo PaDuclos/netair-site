@@ -19,7 +19,7 @@ interface Props {
 const { produit } = Astro.props;
 const d = produit.data;
 
-const famille = familleBySlug(SLUG_FAMILLE[produit.id] ?? '');
+const famille = familleBySlug(SLUG_FAMILLE[produit.id]?.[0] ?? '');
 const img = d.photo ? `/produits/${d.photo}` : null;
 
 // Lien vers la fiche technique générée (servie depuis /public/fiches-techniques/).
