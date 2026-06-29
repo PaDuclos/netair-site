@@ -42,11 +42,14 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   netply: { code: "1", mode: "calcul" }, // 🟢 plissé, méthode A
   netplan: { code: "3", mode: "calcul" }, // 🟢 plan, méthode A
   netfil: { code: "2", mode: "calcul" }, // 🟢 mètre linéaire, méthode B
-  netfibre: { code: "5", mode: "calcul" }, // 🟠 4 (NETFIBRE) vs 5 (NETFIBRE ROULEAU) → 5 retenu
+  netfibre: { code: "4", mode: "calcul" }, // panneau découpé (méthode C, surface) — la fiche du site décrit le panneau ; le rouleau (code 5) sera ajouté en variante (Option B)
   "netpak-s-cilia": { code: "7", mode: "calcul" }, // 🟢 cadre+média+pièce, méthode D
   "netcarb-cilia": { code: "8", mode: "calcul" }, // 🟢 méthode D
   "netpak-s-lumen": { code: "9", mode: "calcul" }, // 🟢 lecture L×l, méthode F
-  "netbag-s": { code: "17", mode: "calcul" }, // 🟠 11 (3 lignes) vs 17 (10 lignes) → 17 retenu
+  // 🟠 NETBAG S : DEUX produits distincts en tarif (11 = poches 292 mm, média lourd, M5, ~25-51 € ;
+  // 17 = poches 360-600 mm, média léger, sans M5, ~7-11 €), et la fiche annonce G4/M5 non tarifés.
+  // Contradiction fiche/tarif → sur devis tant que la R&D n'a pas tranché (CHECKLIST). Pas de prix devine.
+  "netbag-s": { code: "", mode: "devis" },
   "netcel-v-azur": { code: "13", mode: "calcul" }, // 🟢 méthode F (24 « AZUR » est vide)
   "netcel-v-nival": { code: "15", mode: "calcul" }, // 🟢 méthode F
   "netpak-v-lam": { code: "14", mode: "calcul" }, // 🟢 méthode F

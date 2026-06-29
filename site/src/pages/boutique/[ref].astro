@@ -183,15 +183,17 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
             <input id="inH" type="number" value="592" min="100" max="2000" step="1"
               class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
           </label>
-          <label class="block">
-            <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
-            <select id="inEp"
-              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
-              {menus.epaisseurs.map((ep, i) => (
-                <option value={ep} selected={i === 0}>{ep} mm</option>
-              ))}
-            </select>
-          </label>
+          {menus.epaisseurs.length > 0 && (
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
+              <select id="inEp"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
+                {menus.epaisseurs.map((ep, i) => (
+                  <option value={ep} selected={i === 0}>{ep} mm</option>
+                ))}
+              </select>
+            </label>
+          )}
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Efficacité</span>
             <select id="inEff"
@@ -404,7 +406,9 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
       function readCfg() {
         const L = Math.max(100, +$('inL').value || 0);
         const H = Math.max(100, +$('inH').value || 0);
-        const ep = +$('inEp').value || 48;
+        // Le menu Épaisseur peut être absent (gammes sans choix d'épaisseur, ex. NETFIL) → ep = null.
+        const epEl = $('inEp');
+        const ep = epEl ? (+epEl.value || null) : null;
         const eff = $('inEff').value;
         const effLabel = $('inEff').selectedOptions[0].text;
         const cadreVal = $('inCadre').value;
@@ -415,7 +419,8 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
       }
 
       function refRef(c) {
-        return `${code}-${c.eff}-${c.L}x${c.H}x${c.ep}-${c.cadre}`;
+        const epPart = c.ep != null ? ('x' + c.ep) : '';
+        return `${code}-${c.eff}-${c.L}x${c.H}${epPart}-${c.cadre}`;
       }
 
       // Calcule et affiche le prix réel via le moteur. Renvoie { c, unit, ok }.
@@ -434,7 +439,7 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
           codeGamme,
           largeur_mm: c.L,
           hauteur_mm: c.H,
-          profondeur_mm: c.ep,
+          profondeur_mm: c.ep ?? 48, // valeur positive neutre pour les gammes sans épaisseur (le moteur exige > 0 mais l'ignore ensuite via epCompatible)
           classe: c.eff,
           quantite: c.qty,
         });
@@ -516,7 +521,7 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
       }
 
       ['inL', 'inH', 'inEp', 'inEff', 'inCadre', 'inQ'].forEach((id) =>
-        $(id).addEventListener('input', refresh)
+        $(id)?.addEventListener('input', refresh)
       );
 
       $('addBtn').addEventListener('click', () => {

@@ -18,7 +18,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETMETAL | 🟡 | ΔP > 2,38 m/s non mesurée · ~~classe~~ ✅ G2/G3 (déc. PA) |
 | NETFIL | 🟡 | épaisseur/profondeur · ~~G3/G4~~ ✅ G3 confirmé (PA) |
 | NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) |
-| NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo |
+| NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo · **⚠️ TARIF (site B2) : 2 codes Excel pour « NETBAG S » — 11 (poches 292 mm, média 12 kg/m², M5, ~25-51 €) vs 17 (poches 360-600 mm, média 5,8 kg/m², sans M5, ~7-11 €) → quel code = produit du site ? Et la fiche annonce G4/M5 NON tarifés (tables = F7/F8/F9/M6, M5 sur 11 seul). Tant que non tranché → NETBAG S reste « sur devis » sur la boutique (pas de prix instantané).** |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
 | NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé) · M6 non mesurée · surface média n.c. · photo |
