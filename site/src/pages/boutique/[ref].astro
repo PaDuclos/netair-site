@@ -51,8 +51,37 @@ const REPLI_DEVIS = {
   ],
   epaisseurs: [48, 98] as number[],
 };
+// Produit sans cadre (média fibreux seul, ex. NETFIBRE) → on masque le choix « Cadre ».
+const sansCadre = gamme?.sansCadre ?? false;
+// Cadres proposés (par défaut : acier + PP). Surchargés par produit (ex. NETPLY = acier seul).
+const CADRES_DEFAUT = [
+  { valeur: 'galva', libelle: 'Acier galvanisé' },
+  { valeur: 'pp', libelle: 'Polypropylène' },
+];
+const cadres = gamme?.cadres ?? CADRES_DEFAUT;
+// Classes retirées de l'offre pour ce produit (tarif douteux non corrigé à la source — cf. CHECKLIST).
+const classesExclues = gamme?.classesExclues ?? [];
+const sansExclues = (classes: { valeur: string; libelle: string }[]) =>
+  classes.filter((c) => !classesExclues.includes(c.valeur));
+
 const optsReelles = modeProduit === 'calcul' && codeGamme ? optionsDuCode(codeGamme) : null;
-const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPLI_DEVIS;
+const menusBruts = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPLI_DEVIS;
+const menus = { ...menusBruts, classes: sansExclues(menusBruts.classes) };
+
+// Conditionnements multiples (ex. NETFIBRE panneau/rouleau). Pour chaque variante on
+// calcule ici (côté serveur) les efficacités tarifées, transmises au script via un
+// attribut de données. La variante par défaut alimente les menus rendus ci-dessous.
+const variantesConfig =
+  modeProduit === 'calcul' && gamme?.variantes
+    ? gamme.variantes.map((v) => ({
+        id: v.id,
+        label: v.label,
+        code: v.code,
+        saisie: v.saisie,
+        formats: v.formats ?? null,
+        classes: sansExclues(optionsDuCode(v.code).classes),
+      }))
+    : null;
 ---
 
 <BaseLayout
@@ -164,7 +193,7 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
   )}
 
   <!-- Configurateur + Panier + Demande de devis -->
-  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="boutique" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit}>
+  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="boutique" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined}>
     <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
     <p class="mt-1 text-sm text-muted">Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.</p>
 
@@ -173,12 +202,30 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
       <!-- Configurateur -->
       <div class="rounded-2xl border border-soft bg-white p-4 shadow-soft">
         <div class="grid gap-x-5 gap-y-2.5 sm:grid-cols-2">
-          <label class="block">
+          {variantesConfig && (
+            <label class="block sm:col-span-2">
+              <span class="eyebrow text-[11px] text-muted">Conditionnement</span>
+              <select id="inCond"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
+                {variantesConfig.map((v, i) => (
+                  <option value={v.id} selected={i === 0}>{v.label}</option>
+                ))}
+              </select>
+            </label>
+          )}
+          {variantesConfig && (
+            <label id="wrapFormat" class="block sm:col-span-2 hidden">
+              <span class="eyebrow text-[11px] text-muted">Format de rouleau</span>
+              <select id="inFormat"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise"></select>
+            </label>
+          )}
+          <label id="wrapL" class="block">
             <span class="eyebrow text-[11px] text-muted">Largeur (mm)</span>
             <input id="inL" type="number" value="592" min="100" max="2000" step="1"
               class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
           </label>
-          <label class="block">
+          <label id="wrapH" class="block">
             <span class="eyebrow text-[11px] text-muted">Hauteur (mm)</span>
             <input id="inH" type="number" value="592" min="100" max="2000" step="1"
               class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
@@ -203,14 +250,17 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
               ))}
             </select>
           </label>
-          <label class="block">
-            <span class="eyebrow text-[11px] text-muted">Cadre</span>
-            <select id="inCadre"
-              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
-              <option value="galva">Acier galvanisé</option>
-              <option value="pp">Polypropylène</option>
-            </select>
-          </label>
+          {!sansCadre && (
+            <label id="wrapCadre" class="block">
+              <span class="eyebrow text-[11px] text-muted">Cadre</span>
+              <select id="inCadre"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
+                {cadres.map((c, i) => (
+                  <option value={c.valeur} selected={i === 0}>{c.libelle}</option>
+                ))}
+              </select>
+            </label>
+          )}
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Quantité</span>
             <input id="inQ" type="number" value="6" min="1" max="100000" step="1"
@@ -375,6 +425,35 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
       const $ = (id) => document.getElementById(id);
       const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+      // --- Conditionnements multiples (ex. NETFIBRE : panneau / rouleau) ---
+      let variantes = null;
+      try { variantes = root.dataset.variantes ? JSON.parse(root.dataset.variantes) : null; } catch (e) { variantes = null; }
+      let activeVar = variantes && variantes.length ? variantes[0] : null;
+
+      function setEffOptions(classes) {
+        $('inEff').innerHTML = (classes || []).map((c, i) =>
+          '<option value="' + c.valeur + '"' + (i === 0 ? ' selected' : '') + '>' + c.libelle + '</option>'
+        ).join('');
+      }
+      function setFormatOptions(formats) {
+        $('inFormat').innerHTML = (formats || []).map((f, i) =>
+          '<option value="' + i + '"' + (i === 0 ? ' selected' : '') + '>' + f.label + '</option>'
+        ).join('');
+      }
+      // Bascule un conditionnement : montre/masque dimensions ↔ format, recharge les
+      // efficacités tarifées de la variante, puis recalcule le prix.
+      function applyVariante(v) {
+        activeVar = v;
+        const formats = v.saisie === 'formats';
+        $('wrapL') && $('wrapL').classList.toggle('hidden', formats);
+        $('wrapH') && $('wrapH').classList.toggle('hidden', formats);
+        $('wrapFormat') && $('wrapFormat').classList.toggle('hidden', !formats);
+        $('wrapCadre') && $('wrapCadre').classList.toggle('hidden', formats); // un rouleau n'a pas de cadre
+        if (formats) setFormatOptions(v.formats || []);
+        setEffOptions(v.classes || []);
+        refresh();
+      }
+
       // Message lisible pour un statut non vendable renvoyé par le moteur.
       function messageStatut(r) {
         if (r.message) return r.message;
@@ -404,23 +483,38 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
       const devis = [];  // demande de devis (sans prix)
 
       function readCfg() {
-        const L = Math.max(100, +$('inL').value || 0);
-        const H = Math.max(100, +$('inH').value || 0);
+        let L, H, formatLabel = null;
+        if (activeVar && activeVar.saisie === 'formats') {
+          // Rouleau : les dimensions viennent du format choisi (pas d'une saisie en mm).
+          const f = (activeVar.formats || [])[+(($('inFormat') || {}).value) || 0];
+          L = f ? f.largeur : 0;
+          H = f ? f.hauteur : 0;
+          formatLabel = f ? f.label : '';
+        } else {
+          L = Math.max(100, +$('inL').value || 0);
+          H = Math.max(100, +$('inH').value || 0);
+        }
         // Le menu Épaisseur peut être absent (gammes sans choix d'épaisseur, ex. NETFIL) → ep = null.
         const epEl = $('inEp');
         const ep = epEl ? (+epEl.value || null) : null;
         const eff = $('inEff').value;
-        const effLabel = $('inEff').selectedOptions[0].text;
-        const cadreVal = $('inCadre').value;
-        const cadre = cadreVal === 'pp' ? 'P' : 'A';
-        const cadreLabel = cadreVal === 'pp' ? 'Polypropylène' : 'Acier galvanisé';
+        const effOpt = $('inEff').selectedOptions[0];
+        const effLabel = effOpt ? effOpt.text : eff;
+        // Le champ Cadre peut être absent (produits sans cadre, ex. NETFIBRE).
+        const cadreEl = $('inCadre');
+        const cadreVal = cadreEl ? cadreEl.value : null;
+        const cadre = cadreVal === 'pp' ? 'P' : cadreVal === 'galva' ? 'A' : null;
+        const cadreLabel = cadreVal === 'pp' ? 'Polypropylène' : cadreVal === 'galva' ? 'Acier galvanisé' : null;
         const qty = Math.max(1, +$('inQ').value || 1);
-        return { L, H, ep, eff, effLabel, cadre, cadreLabel, qty };
+        const codeUsed = activeVar ? activeVar.code : codeGamme;
+        return { L, H, ep, eff, effLabel, cadre, cadreLabel, qty, codeUsed, formatLabel };
       }
 
       function refRef(c) {
+        if (c.formatLabel) return `${code}-${c.eff}-rouleau-${c.formatLabel.replace(/\s+/g, '')}`;
         const epPart = c.ep != null ? ('x' + c.ep) : '';
-        return `${code}-${c.eff}-${c.L}x${c.H}${epPart}-${c.cadre}`;
+        const cadrePart = c.cadre ? ('-' + c.cadre) : '';
+        return `${code}-${c.eff}-${c.L}x${c.H}${epPart}${cadrePart}`;
       }
 
       // Calcule et affiche le prix réel via le moteur. Renvoie { c, unit, ok }.
@@ -436,7 +530,7 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
         }
 
         const r = calculerPrix({
-          codeGamme,
+          codeGamme: c.codeUsed, // code de la variante active (ex. NETFIBRE panneau=4 / rouleau=5)
           largeur_mm: c.L,
           hauteur_mm: c.H,
           profondeur_mm: c.ep ?? 48, // valeur positive neutre pour les gammes sans épaisseur (le moteur exige > 0 mais l'ignore ensuite via epCompatible)
@@ -510,7 +604,7 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
           li.innerHTML =
             '<div class="min-w-0">' +
               '<p class="font-mono text-xs text-marine">' + it.ref + '</p>' +
-              '<p class="text-xs text-muted">' + it.qty + ' u. · ' + it.effLabel + ' · ' + it.cadreLabel + ' · prix sur devis</p>' +
+              '<p class="text-xs text-muted">' + [it.qty + ' u.', it.effLabel, it.cadreLabel, 'prix sur devis'].filter(Boolean).join(' · ') + '</p>' +
             '</div>' +
             '<button data-rmd="' + idx + '" class="shrink-0 text-muted hover:text-turquoise" aria-label="Retirer">✕</button>';
           list.appendChild(li);
@@ -520,9 +614,14 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
         );
       }
 
-      ['inL', 'inH', 'inEp', 'inEff', 'inCadre', 'inQ'].forEach((id) =>
+      ['inL', 'inH', 'inEp', 'inEff', 'inCadre', 'inQ', 'inFormat'].forEach((id) =>
         $(id)?.addEventListener('input', refresh)
       );
+      // Changer de conditionnement (panneau ↔ rouleau) bascule la saisie + les menus.
+      $('inCond')?.addEventListener('input', () => {
+        const v = (variantes || []).find((x) => x.id === $('inCond').value);
+        if (v) applyVariante(v);
+      });
 
       $('addBtn').addEventListener('click', () => {
         const { c, unit, ok } = refresh();
@@ -571,7 +670,9 @@ const menus = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPL
         $('devisDone').classList.remove('hidden');
       });
 
-      refresh();
+      // Démarrage : si le produit a des conditionnements, on applique celui par défaut
+      // (qui prépare la saisie + les menus puis recalcule) ; sinon simple premier calcul.
+      if (activeVar) applyVariante(activeVar); else refresh();
       renderCart();
       renderDevis();
     })();

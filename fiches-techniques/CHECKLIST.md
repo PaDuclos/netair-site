@@ -17,7 +17,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPLAN | 🟡 | Photo · ΔP extrapolée > 2 m/s à confirmer |
 | NETMETAL | 🟡 | ΔP > 2,38 m/s non mesurée · ~~classe~~ ✅ G2/G3 (déc. PA) |
 | NETFIL | 🟡 | épaisseur/profondeur · ~~G3/G4~~ ✅ G3 confirmé (PA) |
-| NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) |
+| NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) · **⚠️ TARIF (site B2) : G3 panneau = 0,015 €/dm² dans l'Excel = 5,7× moins cher que G4 (0,0856) → 1,51 € vs 8,57 € pour un 592×592. Jugé erroné (déc. PA 30/06) → G3 retiré de l'offre boutique (`classesExclues`). À corriger/supprimer à la SOURCE (Excel) après vérif R&D, puis ré-exporter.** |
 | NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo · **⚠️ TARIF (site B2) : 2 codes Excel pour « NETBAG S » — 11 (poches 292 mm, média 12 kg/m², M5, ~25-51 €) vs 17 (poches 360-600 mm, média 5,8 kg/m², sans M5, ~7-11 €) → quel code = produit du site ? Et la fiche annonce G4/M5 NON tarifés (tables = F7/F8/F9/M6, M5 sur 11 seul). Tant que non tranché → NETBAG S reste « sur devis » sur la boutique (pas de prix instantané).** |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
