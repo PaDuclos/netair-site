@@ -2,8 +2,10 @@
 
 > **Version 1.0 — 29/06/2026** · Statut : **spécification, à relire**
 > Cahier des charges : [`CAHIER_DES_CHARGES.md`](CAHIER_DES_CHARGES.md) (§4 brique 1, §7 bloc B1) · Suivi : [`SUIVI.md`](SUIVI.md)
-> Source de la logique : `BLOC1_Gamme_Produits/Grille_Couts_Internes/Calculateur_Netair.xlsx`
-> Référence géométrique : `DEVIS AUTO/src/cost_calculator.py` (**distinct** — voir §9)
+> Source des tables (données) : `BLOC1_Gamme_Produits/Grille_Couts_Internes/Calculateur_Netair.xlsx`
+> Source de la chaîne de calcul (formules) : `DEVIS AUTO/reference/Calculateur_devis_auto.xltm`, onglet
+> **« Devis interne »** — coût `PRU HT` (col. DB) → `Ratio prix tarif` (DD) → tarif `PTU HT` (DE) = `PT : PVU HT` mode tarif (col. **DR**)
+> Référence géométrique du coût : `DEVIS AUTO/src/cost_calculator.py` (**moteur distinct** — voir §9)
 
 ---
 
@@ -12,7 +14,7 @@
 | # | Décision | Choix |
 |---|---|---|
 | C1 | Technologie du moteur | **TypeScript** — module unique utilisable dans le navigateur (prix instantané) **et** côté serveur (recalcul de sécurité avant paiement) |
-| C2 | Définition du prix boutique | **Prix HT = coût × « Ratio prix tarif » de l'Excel** (onglet `Tableau_Gammes`). Les remises par famille (comptes validés) sont **reportées au Bloc B4** |
+| C2 | Définition du prix boutique | **Prix HT = coût × « Ratio prix tarif »** (= col. DR du calculateur en **mode tarif pur** = `PTU HT`). Coût = `PRU HT` (assemblage géométrique). Marges/catégories/remises manuelles = canal devis, **exclues**. Remises par famille = **Bloc B4**. *(confirmé 29/06)* |
 | C3 | Synchronisation avec l'Excel | **Export Excel → fichier de données versionné (JSON)** + **test de conformité** permanent « entrées Excel = sorties moteur » |
 | C4 | Skills qualité | **3 skills** créés au démarrage : `netair-site-reviewer`, `netair-pricing-validator`, `netair-pricing-qa` |
 | C5 | Mise à jour des tarifs | **Deux leviers** : un **% de revalorisation générale** (une seule case dans l'Excel) **+** la modification de **cases ciblées**. La publication vers le site est un **geste manuel contrôlé** (une commande), pas un direct automatique (voir §11) |
@@ -105,10 +107,20 @@ coût = prix pièce (lecture directe, G4)
 coût = case Prix_L_et_l (NETBAG, NETCEL, NETPAK LUMEN/LAM, recharges…)
 ```
 
-> **Du coût au prix de vente (décision C2)** :
+> **Du coût au prix de vente (décision C2 — confirmé le 29/06/2026)** :
 > `prix_unitaire_HT = coût × ratio_prix_tarif[gamme]` (ex. NETPLY ratio = 3,333).
-> Le **ratio exact** et la **définition précise du « coût »** (quels termes géométriques entrent) sont
-> **figés par le test de conformité** contre l'Excel (§7). Aucune valeur n'est inventée.
+>
+> Confirmé en traçant le **calculateur DEVIS AUTO**, onglet **« Devis interne »** (table `Tableau_calculateur`) :
+> - **`PRU HT`** (col. DB) = le **coût de revient** unitaire = `ROUND(PU{code gamme} ; 2)`, c.-à-d. l'assemblage
+>   géométrique par gamme (renfort + base + cadre + média + pièce). **C'est exactement le « coût » du moteur.**
+> - **`Ratio prix tarif`** (col. DD) = lu dans `Tableau_Gammes`.
+> - **`PTU HT`** (col. DE) = `PRU × Ratio` = le **prix tarif catalogue** → **c'est notre prix boutique**.
+> - **`PT : PVU HT`** (col. **DR**) = le prix de vente final affiché ; en **mode tarif pur** (sans marge manuelle,
+>   ni catégorie client, ni remise manuelle) **DR = PTU = PRU × Ratio**.
+>
+> La boutique prend **DR en mode tarif pur**. Les branches *marge manuelle / catégorie client / remise manuelle*
+> du calculateur sont des outils de **négociation** → **canal devis**, **hors** boutique (cf. cahier §2bis, D9).
+> Aucune valeur n'est inventée ; le ratio et l'assemblage du coût sont **verrouillés par le test de conformité** (§7).
 
 ### Exemple illustratif (à verrouiller par le test)
 NETPLY · 287 × 592 × 48 · classe **G4** · quantité **10** · livraison dép. 35 :
@@ -215,6 +227,8 @@ C'est le garde-fou n°1 contre une erreur de prix (risque 🔴 du cahier des cha
 1. **Génération des vecteurs dorés** : un script parcourt l'Excel et produit, pour un large échantillon
    (chaque gamme × plusieurs dimensions × chaque classe valide × chaque palier de quantité), le triplet
    `entrée → coût attendu → prix tarif attendu`. Ces valeurs **viennent de l'Excel**, pas du moteur.
+   **Référence de comparaison** = onglet « Devis interne » du calculateur : `PRU HT` (col. DB) pour le coût,
+   et `PTU HT` (col. DE) = `PT : PVU HT` en mode tarif (col. DR) pour le prix catalogue.
 2. **Comparaison** : `golden.test.ts` rejoue chaque vecteur dans le moteur et compare au centime
    (tolérance d'arrondi définie, ex. ±0,01 €).
 3. **Cas limites** (`edge.test.ts`) : dimension hors grille, classe non assurée par le fournisseur
@@ -257,8 +271,10 @@ toute divergence de la logique géométrique commune (risque 🟡 du cahier).
 
 ## 10. Points à confirmer (avant ou pendant l'implémentation)
 
-- [ ] **Ratio coût → tarif** : confirmer que `prix = coût × ratio_prix_tarif` (et la définition exacte du
-      « coût » : renforts + MO inclus ?) en croisant 3-4 lignes réelles de l'Excel.
+- [x] **Ratio coût → tarif** — ✅ **RÉSOLU (29/06/2026)**. Prix boutique = **coût × ratio prix tarif**, où le
+      « coût » = `PRU HT` (col. DB de l'onglet « Devis interne » : l'assemblage géométrique par gamme, renforts +
+      MO inclus). Le prix catalogue = `PTU HT` (col. DE) = `PT : PVU HT` en **mode tarif pur** (col. DR), **sans**
+      marge manuelle / catégorie client / remise manuelle (celles-ci = canal devis). Détail : §3.
 - [ ] **Bornes min/max** de dimensions fabricables par gamme (pour le statut `hors_fabrication`) — cf. question
       ouverte du SUIVI.
 - [ ] **Gammes « hors calculateur »** (`Tableau_Gammes` famille 4 : NETMETAL, NETPAK S BORA, NETCARB AZUR…) :
