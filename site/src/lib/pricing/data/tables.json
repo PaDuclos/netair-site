@@ -110,6 +110,7 @@
       "ep_defaut": 48,
       "famille": "1. Préfiltres",
       "frais_livraison": 0.1,
+      "methode": "A",
       "nom": "NETPLY",
       "ratio": 3.333333333333333,
       "remises": [
@@ -127,6 +128,7 @@
       "ep_defaut": 48,
       "famille": "1. Préfiltres",
       "frais_livraison": 0.1,
+      "methode": "sur_devis",
       "nom": "NETPLY (CIAT)",
       "ratio": 2.857142857142857,
       "remises": [
@@ -144,6 +146,7 @@
       "ep_defaut": null,
       "famille": "1. Préfiltres",
       "frais_livraison": 0.1,
+      "methode": "sur_devis",
       "nom": "NETFIL (CIAT)",
       "ratio": 2.857142857142857,
       "remises": [
@@ -161,6 +164,7 @@
       "ep_defaut": 20,
       "famille": "1. Préfiltres",
       "frais_livraison": 0.1,
+      "methode": "sur_devis",
       "nom": "NETPLAN (CIAT)",
       "ratio": 2.857142857142857,
       "remises": [
@@ -178,6 +182,7 @@
       "ep_defaut": null,
       "famille": "1. Préfiltres",
       "frais_livraison": 0.1,
+      "methode": "B",
       "nom": "NETFIL",
       "ratio": 2.857142857142857,
       "remises": [
@@ -195,6 +200,7 @@
       "ep_defaut": 20,
       "famille": "1. Préfiltres",
       "frais_livraison": 0.1,
+      "methode": "A",
       "nom": "NETPLAN",
       "ratio": 2.857142857142857,
       "remises": [
@@ -212,6 +218,7 @@
       "ep_defaut": null,
       "famille": "1. Préfiltres",
       "frais_livraison": null,
+      "methode": "C",
       "nom": "NETFIBRE",
       "ratio": 2.857142857142857,
       "remises": [
@@ -229,6 +236,7 @@
       "ep_defaut": null,
       "famille": "1. Préfiltres",
       "frais_livraison": null,
+      "methode": "E",
       "nom": "NETFIBRE ROULEAU",
       "ratio": 2.857142857142857,
       "remises": [
@@ -246,6 +254,7 @@
       "ep_defaut": null,
       "famille": "2. Filtres à poches / compacts",
       "frais_livraison": null,
+      "methode": "F",
       "nom": "RECHARGES NETPAK S LUMEN",
       "ratio": 4,
       "remises": [
@@ -263,6 +272,7 @@
       "ep_defaut": 292,
       "famille": "2. Filtres à poches / compacts",
       "frais_livraison": null,
+      "methode": "F",
       "nom": "NETBAG S",
       "ratio": 2.857142857142857,
       "remises": [
@@ -280,6 +290,7 @@
       "ep_defaut": 292,
       "famille": "2. Filtres à poches / compacts",
       "frais_livraison": null,
+      "methode": "F",
       "nom": "NETBAG S GREENTEX",
       "ratio": 2.857142857142857,
       "remises": [
@@ -297,6 +308,7 @@
       "ep_defaut": 48,
       "famille": "2. Filtres à poches / compacts",
       "frais_livraison": null,
+      "methode": "D",
       "nom": "NETPAK S CILIA",
       "ratio": 2.857142857142857,
       "remises": [
@@ -314,6 +326,7 @@
       "ep_defaut": 48,
       "famille": "2. Filtres à poches / compacts",
       "frais_livraison": null,
+      "methode": "D",
       "nom": "NETCARB CILIA",
       "ratio": 2.857142857142857,
       "remises": [
@@ -331,6 +344,7 @@
       "ep_defaut": 292,
       "famille": "2. Filtres à poches / compacts",
       "frais_livraison": 0.05,
+      "methode": "F",
       "nom": "NETPAK S LUMEN",
       "ratio": 2.857142857142857,
       "remises": [
@@ -348,6 +362,7 @@
       "ep_defaut": 380,
       "famille": "2. Filtres à poches / compacts",
       "frais_livraison": 0.1,
+      "methode": "F",
       "nom": "NETBAG S",
       "ratio": 2.857142857142857,
       "remises": [
@@ -365,6 +380,7 @@
       "ep_defaut": 292,
       "famille": "3. Filtres HEPA / T.H.E.",
       "frais_livraison": 0.2,
+      "methode": "F",
       "nom": "NETCEL V AZUR",
       "ratio": 2.857142857142857,
       "remises": [
@@ -382,6 +398,7 @@
       "ep_defaut": 292,
       "famille": "3. Filtres HEPA / T.H.E.",
       "frais_livraison": 0.25,
+      "methode": "sur_devis",
       "nom": "NETCEL V AZUR ECO",
       "ratio": 2.857142857142857,
       "remises": [
@@ -399,6 +416,7 @@
       "ep_defaut": 69,
       "famille": "3. Filtres HEPA / T.H.E.",
       "frais_livraison": 0.1,
+      "methode": "F",
       "nom": "NETPAK V LAM",
       "ratio": 2.857142857142857,
       "remises": [
@@ -416,6 +434,7 @@
       "ep_defaut": 292,
       "famille": "3. Filtres HEPA / T.H.E.",
       "frais_livraison": 0.15,
+      "methode": "F",
       "nom": "NETCEL V NIVAL",
       "ratio": 2.857142857142857,
       "remises": [
@@ -433,6 +452,7 @@
       "ep_defaut": 292,
       "famille": "3. Filtres HEPA / T.H.E.",
       "frais_livraison": 0.2,
+      "methode": "sur_devis",
       "nom": "NETCEL V NIVAL ECO",
       "ratio": 2.857142857142857,
       "remises": [
@@ -450,6 +470,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETMETAL (CIAT)",
       "ratio": 2.857142857142857,
       "remises": [
@@ -467,6 +488,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETPAK S BORA",
       "ratio": 2.857142857142857,
       "remises": [
@@ -484,6 +506,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETPAK S CILIA (C)",
       "ratio": 2.857142857142857,
       "remises": [
@@ -501,6 +524,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETPAK S CILIA (P)",
       "ratio": 2.857142857142857,
       "remises": [
@@ -518,6 +542,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETPAK S DUO",
       "ratio": 2.857142857142857,
       "remises": [
@@ -535,6 +560,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETCARB AZUR",
       "ratio": 2.857142857142857,
       "remises": [
@@ -552,6 +578,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETBAG S CARB",
       "ratio": 2.857142857142857,
       "remises": [
@@ -569,6 +596,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETCARB",
       "ratio": 2.857142857142857,
       "remises": [
@@ -586,6 +614,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETCEL V AZUR",
       "ratio": 2.857142857142857,
       "remises": [
@@ -603,6 +632,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETCEL V AZUR ABSOLU",
       "ratio": 2.857142857142857,
       "remises": [
@@ -620,6 +650,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "IXIA LITE",
       "ratio": 2.857142857142857,
       "remises": [
@@ -637,6 +668,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "IXIA",
       "ratio": 2.857142857142857,
       "remises": [
@@ -654,6 +686,7 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "IRIS",
       "ratio": 2.857142857142857,
       "remises": [
@@ -671,24 +704,8 @@
       "ep_defaut": null,
       "famille": "4. Hors calculateur",
       "frais_livraison": null,
+      "methode": "sur_devis",
       "nom": "NETMETAL",
-      "ratio": 2.857142857142857,
-      "remises": [
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "code": "0",
-      "coeff": 0.7,
-      "eff_defaut": null,
-      "ep_defaut": null,
-      "famille": "Libre",
-      "frais_livraison": null,
-      "nom": null,
       "ratio": 2.857142857142857,
       "remises": [
         null,

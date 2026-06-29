@@ -23,6 +23,7 @@ import hashlib
 import json
 import re
 import sys
+import unicodedata
 from datetime import date
 from pathlib import Path
 
@@ -177,16 +178,27 @@ def read_expedition(ws):
     return out
 
 
-def read_gammes(ws):
+def read_gammes(ws, methodes):
+    """`methodes` = {code: lettre} lu dans Infos_Netair. Règle de sécurité : famille
+    « hors calculateur » ou méthode inconnue/absente → sur_devis (jamais de prix deviné)."""
     headers = header_row(ws)
     cm = col_map(headers, ws.title)
     remise_cols = [h for h in headers if h and h.startswith("Remise sur catégorie tarif")]
     out = []
     for r in rows_after_header(ws):
+        nom = clean(r[cm["Nom de la gamme"]])
+        if nom is None:  # ligne « Libre » du calculateur (sur-mesure manuel) → pas un produit boutique
+            continue
+        code = code_str(r[cm["Code gamme"]])
+        famille = clean(r[cm["Famille de gamme"]])
+        methode = methodes.get(code)
+        if methode is None or (famille and "hors calculateur" in _sans_accents(famille)):
+            methode = "sur_devis"
         out.append({
-            "famille": clean(r[cm["Famille de gamme"]]),
-            "code": code_str(r[cm["Code gamme"]]),
-            "nom": clean(r[cm["Nom de la gamme"]]),
+            "famille": famille,
+            "code": code,
+            "nom": nom,
+            "methode": methode,
             "eff_defaut": clean(r[cm["Efficacité : Plus utilisé"]]),
             "ep_defaut": clean(r[cm["Epaisseur : Plus utilisé"]]),
             "coeff": clean(r[cm["Coeff pour ratio prix tarif"]]),
@@ -230,6 +242,73 @@ def first_value(ws):
     return None
 
 
+def _sans_accents(s):
+    """Minuscule sans accents — pour comparer des libellés robustement."""
+    s = unicodedata.normalize("NFKD", str(s))
+    return "".join(c for c in s if not unicodedata.combining(c)).lower().strip()
+
+
+# Méthode de calcul : 6 méthodes A→F (cf. SPEC_B1 §3) + sur_devis.
+#  A = renfort + L×l/surface · B = périmètre · C = surface · D = cadre+média+pièce
+#  E = prix pièce · F = lecture L×l directe. Tout libellé inconnu/absent → sur_devis.
+def methode_depuis_libelle(libelle):
+    """
+    Traduit le libellé « Méthode calcul » de l'Excel en lettre de méthode (ordre = priorité).
+    Sécurité : tout libellé non reconnu → sur_devis (jamais une fausse méthode). Un libellé
+    NON VIDE non reconnu (≠ « Hors calculateur », volontaire) déclenche un avertissement,
+    pour qu'une coquille future ne fasse pas disparaître une gamme en silence.
+    """
+    if libelle is None:
+        return "sur_devis"
+    t = _sans_accents(libelle)
+    if "hors calculateur" in t:
+        return "sur_devis"
+    if "renfort" in t:
+        return "A"
+    if "perim" in t:
+        return "B"
+    if "cadre" in t:
+        return "D"
+    if "piece" in t:
+        return "E"
+    if "simple" in t:
+        return "F"
+    if "surface" in t:
+        return "C"
+    print(f"AVERTISSEMENT : libellé de méthode non reconnu « {libelle} » → sur_devis. "
+          "Vérifier l'orthographe dans Infos_Netair si cette gamme devait être calculable.")
+    return "sur_devis"
+
+
+def read_methodes(ws):
+    """
+    Lit la correspondance code → méthode dans l'onglet Infos_Netair (tableau semi-libre :
+    on repère la ligne d'en-tête contenant « Code » et « Méthode calcul »). Tolérant :
+    si l'en-tête est introuvable, renvoie {} (toutes les gammes basculeront en sur_devis).
+    """
+    rows = list(ws.iter_rows(values_only=True))
+    code_idx = meth_idx = header_at = None
+    for n, r in enumerate(rows):
+        cells = [_sans_accents(c) if c is not None else "" for c in r]
+        if "code" in cells and any("methode" in c for c in cells):
+            code_idx = cells.index("code")
+            meth_idx = next(i for i, c in enumerate(cells) if "methode" in c)
+            header_at = n
+            break
+    if code_idx is None:
+        print("AVERTISSEMENT : en-tête « Code / Méthode calcul » introuvable dans Infos_Netair "
+              "→ toutes les gammes seront marquées sur_devis.")
+        return {}
+    out = {}
+    for r in rows[header_at + 1:]:
+        code = code_str(clean(r[code_idx])) if code_idx < len(r) else None
+        libelle = clean(r[meth_idx]) if meth_idx < len(r) else None
+        if code is None or libelle is None:  # ligne sans code ou sans méthode → ignorée
+            continue
+        out[code] = methode_depuis_libelle(libelle)
+    return out
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Programme principal
 # ─────────────────────────────────────────────────────────────────────────────
@@ -253,6 +332,8 @@ def main():
             f"{manquants}. Onglets présents : {wb.sheetnames}"
         )
 
+    methodes = read_methodes(wb["Infos_Netair"]) if "Infos_Netair" in wb.sheetnames else {}
+
     tables = {
         "prix_l_et_l": read_prix_grille(wb["Prix_L_et_l"], [
             ("pd_min", "Petite dimension mini"), ("pd_max", "Petite dimension maxi"),
@@ -266,7 +347,7 @@ def main():
         "poids": read_poids(wb["Poids_filtres"]),
         "expedition": read_expedition(wb["Tableau_Tarifs_Expédition"]),
         "franco": first_value(wb["Tableau_franco"]),
-        "gammes": read_gammes(wb["Tableau_Gammes"]),
+        "gammes": read_gammes(wb["Tableau_Gammes"], methodes),
         "params": read_params(wb["Paramètres unitaires"]),
         "iso16890": read_iso(wb["ISO_16890"]),
         "validite_jours": first_value(wb["Durée_validité"]),
@@ -307,6 +388,10 @@ def main():
     print("Lignes par table :")
     for k, n in meta["lignes_par_table"].items():
         print(f"  - {k:18s} : {n}")
+
+    print("Aiguillage des gammes (code → méthode) :")
+    for g in tables["gammes"]:
+        print(f"  - {str(g['code']):>4} {str(g['nom'])[:24]:24s} → {g['methode']}")
 
 
 if __name__ == "__main__":

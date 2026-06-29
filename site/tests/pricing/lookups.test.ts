@@ -29,6 +29,14 @@ describe("trouverGamme", () => {
   it("renvoie undefined pour un code inconnu", () => {
     expect(trouverGamme("999")).toBeUndefined();
   });
+
+  it("porte la méthode de calcul (aiguillage) : NETPLY = A", () => {
+    expect(trouverGamme("1")?.methode).toBe("A");
+  });
+
+  it("une gamme hors calculateur est marquée sur_devis (NETMETAL, code 29)", () => {
+    expect(trouverGamme("29")?.methode).toBe("sur_devis");
+  });
 });
 
 describe("trouverLigneLxL — case dimension + palier de quantité", () => {

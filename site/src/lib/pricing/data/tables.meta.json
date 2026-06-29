@@ -4,7 +4,7 @@
   "lignes_par_table": {
     "expedition": 100,
     "franco": 1,
-    "gammes": 35,
+    "gammes": 34,
     "iso16890": 17,
     "params": 16,
     "poids": 44,
@@ -15,7 +15,7 @@
     "validite_jours": 1
   },
   "source": "Calculateur_Netair.xlsx",
-  "tables_sha256": "28671328bebfa17137c59b3eb14370f9276a3889f5b80d241d359cbf6527a6cb",
+  "tables_sha256": "3071a53b0f0215a0c8a73200e23493ac8bc69cb6557d476f1ef9e54867aab0e7",
   "version_excel": "v1.0 — 2026-06-25",
   "version_outil": "1.0"
 }

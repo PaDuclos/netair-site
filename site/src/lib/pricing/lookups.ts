@@ -20,11 +20,18 @@ import tablesData from "./data/tables.json";
 /** Prix par classe d'efficacité : nombre si fabriqué, `null` si non assuré pour ce format. */
 export type PrixParClasse = Record<string, number | null>;
 
+/** Les 6 méthodes de calcul du coût (cf. SPEC_B1 §3). */
+export type MethodeCalcul = "A" | "B" | "C" | "D" | "E" | "F";
+/** Méthode d'une gamme : une des 6, ou `sur_devis` (gamme non calculable en boutique). */
+export type MethodeGamme = MethodeCalcul | "sur_devis";
+
 /** Une ligne de la table maîtresse des gammes. */
 export interface GammeRow {
   code: string;
   nom: string;
   famille: string;
+  /** Méthode de calcul (aiguillage), lue dans Infos_Netair par l'export. */
+  methode: MethodeGamme;
   /** Ratio prix tarif (coût → prix catalogue). */
   ratio: number;
   /** Épaisseur par défaut de la gamme (mm). */
