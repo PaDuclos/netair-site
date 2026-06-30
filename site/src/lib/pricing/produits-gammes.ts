@@ -140,7 +140,13 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   },
   "netpak-s-cilia": { code: "7", mode: "calcul" }, // 🟢 cadre+média+pièce, méthode D
   "netcarb-cilia": { code: "8", mode: "calcul" }, // 🟢 méthode D
-  "netpak-s-lumen": { code: "9", mode: "calcul" }, // 🟢 lecture L×l, méthode F
+  // Polydièdre : dimensions en menu déroulant (formats générés depuis la grille), cadre plastique fixe.
+  "netpak-s-lumen": {
+    code: "9",
+    mode: "calcul",
+    cadres: [{ valeur: "pp", libelle: "Plastique" }],
+    variantes: [{ id: "standard", label: "Polydièdre", code: "9", saisie: "formats", labelChamp: "Dimensions (L × H)" }],
+  },
   // 🟠 NETBAG S : DEUX produits distincts en tarif (11 = poches 292 mm, média lourd, M5, ~25-51 € ;
   // 17 = poches 360-600 mm, média léger, sans M5, ~7-11 €), et la fiche annonce G4/M5 non tarifés.
   // Contradiction fiche/tarif → sur devis tant que la R&D n'a pas tranché (CHECKLIST). Pas de prix devine.
@@ -153,6 +159,7 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
     code: "14",
     mode: "calcul",
     classesIncluses: ["H14"],
+    sansCadre: true, // caisson laminaire à cadre aluminium fixe (pas de choix de cadre)
     variantes: [
       { id: "standard", label: "Laminaire", code: "14", saisie: "formats", labelChamp: "Dimensions standard" },
     ],
@@ -161,7 +168,14 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // — Sur devis (gammes « hors calculateur ») —
   netmetal: { code: "29", mode: "devis" },
   "netpak-s-bora": { code: "16", mode: "devis" },
-  "netpak-s-azur": { code: "", mode: "devis" }, // pas de code particulaire dans les tables
+  // AZUR = catégorie 11 de l'Excel (libellé erroné « NETBAG S » dans l'Excel → à corriger, cf. CHECKLIST).
+  // Specs concordantes : profondeur 292, dimensions 287×592 / 490×592 / 592×592, classes M5→F9.
+  "netpak-s-azur": {
+    code: "11",
+    mode: "calcul",
+    cadres: [{ valeur: "pp", libelle: "Plastique" }],
+    variantes: [{ id: "standard", label: "Polydièdre", code: "11", saisie: "formats", labelChamp: "Dimensions (L × H)" }],
+  },
   "netpak-s-duo": { code: "20", mode: "devis" },
   "netcarb-azur": { code: "21", mode: "devis" },
   "netcarb-nival": { code: "23", mode: "devis" }, // 🟠 « NETCARB » générique, à confirmer

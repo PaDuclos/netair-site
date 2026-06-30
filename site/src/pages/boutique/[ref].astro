@@ -31,7 +31,9 @@ const ficheHref = `/fiches-techniques/${encodeURIComponent(`Fiche technique ${d.
 const badges: string[] = d.badges_p1 ?? [];
 const specs: string[][] = d.specs ?? [];
 const points: string[] = d.points_cles ?? [];
-const codeBase = d.nom.replace(/\s+/g, '');
+// Base de la référence : espaces du nom → underscores pour rester lisible
+// (ex. « NETPAK S CILIA » → « NETPAK_S_CILIA », pas « NETPAKSCILIA »).
+const codeBase = d.nom.replace(/\s+/g, '_');
 
 // --- Pont vers le moteur de prix (Bloc B2) ---
 // On relie le produit du site à sa gamme tarifaire. `mode` = "calcul" (prix instantané)
@@ -474,7 +476,6 @@ const variantesConfig =
         $('wrapL') && $('wrapL').classList.toggle('hidden', formats);
         $('wrapH') && $('wrapH').classList.toggle('hidden', formats);
         $('wrapFormat') && $('wrapFormat').classList.toggle('hidden', !formats);
-        $('wrapCadre') && $('wrapCadre').classList.toggle('hidden', formats); // un rouleau/laminaire n'a pas de cadre
         if (formats) {
           if ($('formatLabel') && v.labelChamp) $('formatLabel').textContent = v.labelChamp;
           setFormatOptions(v.formats || []);
