@@ -86,6 +86,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 
   <script>
     import { getCart, setQty, removeItem, cartTotalHT, onCartChange } from '../lib/cart';
+    import { calculerPrix } from '../lib/pricing';
 
     const $ = (id) => document.getElementById(id);
     const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -119,7 +120,18 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       $('total').textContent = eur(cartTotalHT());
 
       list.querySelectorAll('[data-qty]').forEach((inp) =>
-        inp.addEventListener('change', () => setQty(inp.dataset.qty, Math.max(1, +inp.value || 1)))
+        inp.addEventListener('change', () => {
+          const ref = inp.dataset.qty;
+          const qty = Math.max(1, +inp.value || 1);
+          // Re-calcul du prix unitaire selon le palier de quantité (si la config est mémorisée).
+          const it = getCart().find((i) => i.ref === ref);
+          let unit;
+          if (it && it.demande) {
+            const r = calculerPrix({ ...it.demande, quantite: qty });
+            if (r.statut === 'ok' && r.prixUnitaireHT != null) unit = r.prixUnitaireHT;
+          }
+          setQty(ref, qty, unit); // unit indéfini → garde le prix d'ajout (article ancien)
+        })
       );
       list.querySelectorAll('[data-rm]').forEach((b) =>
         b.addEventListener('click', () => removeItem(b.dataset.rm))

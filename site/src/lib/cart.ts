@@ -22,6 +22,18 @@ export interface CartItem {
   unit: number;
   /** Libellé court de la configuration — ex. "Coarse 65 % (G4) · 592×592 · 48 mm · Acier galvanisé". */
   detail: string;
+  /**
+   * Configuration envoyée au moteur (sans la quantité), pour re-calculer le prix
+   * unitaire quand la quantité change au panier (paliers). Optionnel (articles ajoutés
+   * avant cette fonctionnalité : on garde alors le prix d'ajout).
+   */
+  demande?: {
+    codeGamme: string;
+    largeur_mm: number;
+    hauteur_mm: number;
+    profondeur_mm: number;
+    classe: string;
+  };
 }
 
 const CLE = "netair_panier_v1";
@@ -73,13 +85,18 @@ export function removeItem(ref: string): void {
   ecrire(getCart().filter((i) => i.ref !== ref));
 }
 
-/** Fixe la quantité d'une ligne (≥ 1). Une quantité ≤ 0 retire la ligne. */
-export function setQty(ref: string, qty: number): void {
+/**
+ * Fixe la quantité d'une ligne (≥ 1). Une quantité ≤ 0 retire la ligne.
+ * `unit` (optionnel) met à jour le prix unitaire en même temps — utilisé quand le
+ * changement de quantité fait basculer de palier de prix (re-calculé par l'appelant).
+ */
+export function setQty(ref: string, qty: number, unit?: number): void {
   if (qty <= 0) return removeItem(ref);
   const items = getCart();
   const it = items.find((i) => i.ref === ref);
   if (it) {
     it.qty = qty;
+    if (typeof unit === "number") it.unit = unit;
     ecrire(items);
   }
 }

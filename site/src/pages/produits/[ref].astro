@@ -671,7 +671,11 @@ const variantesConfig =
       $('addBtn').addEventListener('click', () => {
         const { c, unit, ok } = refresh();
         if (!ok || unit == null) return;   // pas d'ajout sans prix (sur devis, hors format, classe indispo…)
-        addItem({ ref: refRef(c), produit: nom, qty: c.qty, unit, detail: detailLigne(c) });
+        addItem({
+          ref: refRef(c), produit: nom, qty: c.qty, unit, detail: detailLigne(c),
+          // config complète → re-calcul du prix si la quantité change au panier (paliers)
+          demande: { codeGamme: c.codeUsed, largeur_mm: c.L, hauteur_mm: c.H, profondeur_mm: c.ep ?? 48, classe: c.eff },
+        });
         // renderCart() est rappelé automatiquement via onCartChange.
       });
 
