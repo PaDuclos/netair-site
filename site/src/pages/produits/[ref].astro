@@ -517,10 +517,13 @@ const variantesConfig =
 
       const devis = [];  // demande de devis (sans prix) — local à la page
 
-      // Libellé court d'une config, pour la ligne de panier (efficacité · dimensions · épaisseur · cadre).
+      // Libellé court d'une config, pour la ligne de panier (efficacité · dimensions · cadre).
+      // Dimensions = L×H×épaisseur (ex. "592×592×48 mm"), ou le format pour les produits à formats.
       function detailLigne(c) {
-        const dims = c.formatLabel ? c.formatLabel : (c.L + '×' + c.H);
-        return [c.effLabel, dims, (c.ep ? c.ep + ' mm' : null), c.cadreLabel].filter(Boolean).join(' · ');
+        const dims = c.formatLabel
+          ? c.formatLabel
+          : (c.L + '×' + c.H + (c.ep ? '×' + c.ep : '') + ' mm');
+        return [c.effLabel, dims, c.cadreLabel].filter(Boolean).join(' · ');
       }
 
       function readCfg() {
