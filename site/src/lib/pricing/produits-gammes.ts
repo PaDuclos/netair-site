@@ -80,6 +80,13 @@ export interface GammeProduit {
    * fiche (ex. NETPLY = acier seul, pas de polypropylène).
    */
   cadres?: { valeur: string; libelle: string }[];
+  /**
+   * Dimensions L×H ouvertes par défaut dans le configurateur. Utile pour les produits
+   * dont la grille tarifaire ne couvre pas le 592×592 générique (ex. laminaire = formats
+   * standard) : on ouvre alors sur une dimension réellement tarifée plutôt que sur un
+   * « hors fabrication ». Absent → 592×592.
+   */
+  dimensionDefaut?: { largeur: number; hauteur: number };
 }
 
 /**
@@ -129,7 +136,8 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   "netbag-s": { code: "", mode: "devis" },
   "netcel-v-azur": { code: "13", mode: "calcul" }, // 🟢 méthode F (24 « AZUR » est vide)
   "netcel-v-nival": { code: "15", mode: "calcul" }, // 🟢 méthode F
-  "netpak-v-lam": { code: "14", mode: "calcul" }, // 🟢 méthode F
+  // 🟢 méthode F — laminaire en formats standard (pas de 592×592) → on ouvre sur 610×610 (module courant, tarifé).
+  "netpak-v-lam": { code: "14", mode: "calcul", dimensionDefaut: { largeur: 610, hauteur: 610 } },
 
   // — Sur devis (gammes « hors calculateur ») —
   netmetal: { code: "29", mode: "devis" },

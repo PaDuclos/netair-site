@@ -51,6 +51,8 @@ const REPLI_DEVIS = {
   ],
   epaisseurs: [48, 98] as number[],
 };
+// Dimensions ouvertes par défaut (592×592 sauf produits à formats standard, ex. laminaire 610×610).
+const dimDefaut = gamme?.dimensionDefaut ?? { largeur: 592, hauteur: 592 };
 // Produit sans cadre (média fibreux seul, ex. NETFIBRE) → on masque le choix « Cadre ».
 const sansCadre = gamme?.sansCadre ?? false;
 // Cadres proposés (par défaut : acier + PP). Surchargés par produit (ex. NETPLY = acier seul).
@@ -222,12 +224,12 @@ const variantesConfig =
           )}
           <label id="wrapL" class="block">
             <span class="eyebrow text-[11px] text-muted">Largeur (mm)</span>
-            <input id="inL" type="number" value="592" min="100" max="2000" step="1"
+            <input id="inL" type="number" value={dimDefaut.largeur} min="100" max="2000" step="1"
               class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
           </label>
           <label id="wrapH" class="block">
             <span class="eyebrow text-[11px] text-muted">Hauteur (mm)</span>
-            <input id="inH" type="number" value="592" min="100" max="2000" step="1"
+            <input id="inH" type="number" value={dimDefaut.hauteur} min="100" max="2000" step="1"
               class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
           </label>
           {menus.epaisseurs.length > 0 && (
