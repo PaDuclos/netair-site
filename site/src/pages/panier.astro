@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+---
+
+<BaseLayout title="Panier — Netair" description="Votre panier de filtres Netair.">
+  <!-- Bandeau maquette -->
+  <div class="bg-marine text-blanc">
+    <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
+      Aperçu boutique · panier de démonstration · le <strong>paiement sera activé après immatriculation</strong>
+    </div>
+  </div>
+
+  <section class="mx-auto max-w-[1140px] px-7 pt-10">
+    <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'Panier' }]} />
+  </section>
+
+  <section class="mx-auto max-w-[1140px] px-7 py-6">
+    <h1 class="display text-4xl sm:text-5xl font-normal text-marine">Votre panier</h1>
+
+    <!-- Panier vide -->
+    <div id="vide" class="mt-8 hidden rounded-2xl border border-dashed border-soft bg-mist px-6 py-12 text-center">
+      <p class="text-muted">Votre panier est vide.</p>
+      <a href="/gammes" class="mt-4 inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+        style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+        Découvrir le catalogue →
+      </a>
+    </div>
+
+    <!-- Panier rempli -->
+    <div id="plein" class="mt-8 hidden grid gap-8 lg:grid-cols-[1.5fr_1fr] items-start">
+      <!-- Lignes -->
+      <ul id="lignes" class="divide-y divide-soft rounded-2xl border border-soft bg-white"></ul>
+
+      <!-- Récapitulatif + commande -->
+      <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft lg:sticky lg:top-24">
+        <h2 class="display text-xl font-normal text-marine">Récapitulatif</h2>
+        <div class="mt-5 flex items-center justify-between border-t border-soft pt-4">
+          <span class="text-sm text-muted">Total HT</span>
+          <span class="display text-2xl font-normal text-marine"><span id="total">0</span> €</span>
+        </div>
+        <p class="mt-1 text-right text-xs text-muted">TVA et frais de port calculés à la commande.</p>
+
+        <!-- Étape 1 : bouton commander -->
+        <button id="toForm" type="button"
+          class="mt-5 w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+          style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+          Passer commande →
+        </button>
+
+        <!-- Étape 2 : coordonnées -->
+        <form id="form" class="mt-5 hidden space-y-3">
+          <p class="text-sm font-medium text-marine">Vos coordonnées de livraison</p>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Société</span>
+            <input name="societe" type="text" required class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Nom</span>
+            <input name="nom" type="text" required class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Email</span>
+            <input name="email" type="email" required class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Adresse de livraison</span>
+            <textarea name="adresse" rows="2" required class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise"></textarea>
+          </label>
+          <button type="submit"
+            class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+            style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+            Valider la commande
+          </button>
+          <p class="text-xs text-muted">Maquette : le paiement par carte sera branché après immatriculation.</p>
+        </form>
+
+        <!-- Étape 3 : confirmation -->
+        <div id="done" class="mt-5 hidden rounded-xl border border-turquoise/30 bg-turquoise/5 px-4 py-5 text-sm text-marine">
+          <p class="font-medium">Commande enregistrée ✓</p>
+          <p id="doneMsg" class="mt-1 text-xs text-muted"></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <script>
+    import { getCart, setQty, removeItem, cartTotalHT, onCartChange } from '../lib/cart';
+
+    const $ = (id) => document.getElementById(id);
+    const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    function render() {
+      const items = getCart();
+      const empty = items.length === 0;
+      $('vide').classList.toggle('hidden', !empty);
+      $('plein').classList.toggle('hidden', empty);
+      if (empty) return;
+
+      const list = $('lignes');
+      list.innerHTML = '';
+      items.forEach((it) => {
+        const li = document.createElement('li');
+        li.className = 'flex items-start justify-between gap-4 p-5';
+        li.innerHTML =
+          '<div class="min-w-0">' +
+            '<p class="font-mono text-sm text-marine">' + it.ref + '</p>' +
+            '<p class="mt-0.5 text-xs text-muted">' + (it.detail || '') + '</p>' +
+            '<p class="mt-1 text-xs text-muted">' + eur(it.unit) + ' € HT / u.</p>' +
+          '</div>' +
+          '<div class="flex items-center gap-4 shrink-0">' +
+            '<input type="number" min="1" max="100000" value="' + it.qty + '" data-qty="' + it.ref + '" ' +
+              'class="w-16 rounded-xl border border-soft bg-mist px-2 py-1.5 text-center text-sm text-marine outline-none focus:border-turquoise" />' +
+            '<span class="w-24 text-right text-sm font-medium text-marine">' + eur(it.unit * it.qty) + ' €</span>' +
+            '<button data-rm="' + it.ref + '" class="text-muted hover:text-bleu" aria-label="Retirer">✕</button>' +
+          '</div>';
+        list.appendChild(li);
+      });
+      $('total').textContent = eur(cartTotalHT());
+
+      list.querySelectorAll('[data-qty]').forEach((inp) =>
+        inp.addEventListener('change', () => setQty(inp.dataset.qty, Math.max(1, +inp.value || 1)))
+      );
+      list.querySelectorAll('[data-rm]').forEach((b) =>
+        b.addEventListener('click', () => removeItem(b.dataset.rm))
+      );
+    }
+
+    // Tunnel de commande (maquette)
+    $('toForm').addEventListener('click', () => {
+      $('toForm').classList.add('hidden');
+      $('form').classList.remove('hidden');
+    });
+
+    $('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const societe = new FormData(e.target).get('societe') || '';
+      const items = getCart();
+      const total = items.reduce((s, i) => s + i.unit * i.qty, 0);
+      $('form').classList.add('hidden');
+      $('doneMsg').textContent =
+        'Merci ' + societe + '. Votre commande (' + items.reduce((s, i) => s + i.qty, 0) +
+        ' article(s), ' + eur(total) + ' € HT) a bien été enregistrée. Le paiement sera activé après immatriculation de Netair.';
+      $('done').classList.remove('hidden');
+    });
+
+    render();
+    onCartChange(render);
+  </script>
+</BaseLayout>

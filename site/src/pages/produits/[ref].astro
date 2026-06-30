@@ -346,11 +346,11 @@ const variantesConfig =
               <span class="display text-2xl font-normal text-marine"><span id="grandTotal">0</span> €</span>
             </div>
             <p class="mt-1 text-right text-xs text-muted">TVA et frais de port calculés à l'étape suivante.</p>
-            <button type="button"
-              class="mt-4 w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+            <a href="/panier"
+              class="mt-4 flex w-full items-center justify-center rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
               style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
-              Passer commande <span class="opacity-70">(maquette)</span>
-            </button>
+              Voir le panier &amp; commander →
+            </a>
           </div>
         </aside>
 
@@ -445,6 +445,7 @@ const variantesConfig =
     // Ce <script> est groupé/empaqueté par Astro (pas `is:inline`) afin de pouvoir
     // importer le moteur — qui embarque les tables tarifaires pour un calcul instantané.
     import { calculerPrix } from '../../lib/pricing';
+    import { addItem, getCart, removeItem, onCartChange } from '../../lib/cart';
 
     (function () {
       const root = document.getElementById('boutique');
@@ -514,8 +515,13 @@ const variantesConfig =
         btn.classList.toggle('cursor-not-allowed', !ok);
       }
 
-      const cart = [];   // achat (avec prix)
-      const devis = [];  // demande de devis (sans prix)
+      const devis = [];  // demande de devis (sans prix) — local à la page
+
+      // Libellé court d'une config, pour la ligne de panier (efficacité · dimensions · épaisseur · cadre).
+      function detailLigne(c) {
+        const dims = c.formatLabel ? c.formatLabel : (c.L + '×' + c.H);
+        return [c.effLabel, dims, (c.ep ? c.ep + ' mm' : null), c.cadreLabel].filter(Boolean).join(' · ');
+      }
 
       function readCfg() {
         let L, H, formatLabel = null;
@@ -591,17 +597,18 @@ const variantesConfig =
       }
 
       // ---- Panier d'achat ----
+      // Mini-panier de la page produit : reflète le VRAI panier (partagé entre toutes les pages).
       function renderCart() {
-        const count = cart.reduce((s, i) => s + i.qty, 0);
-        $('cartCount').textContent = count;
-        const empty = cart.length === 0;
+        const items = getCart();
+        $('cartCount').textContent = items.reduce((s, i) => s + i.qty, 0);
+        const empty = items.length === 0;
         $('cartEmpty').classList.toggle('hidden', !empty);
         $('cartList').classList.toggle('hidden', empty);
         $('cartFooter').classList.toggle('hidden', empty);
         const list = $('cartList');
         list.innerHTML = '';
         let grand = 0;
-        cart.forEach((it, idx) => {
+        items.forEach((it) => {
           grand += it.unit * it.qty;
           const li = document.createElement('li');
           li.className = 'flex items-start justify-between gap-3 py-3';
@@ -612,13 +619,13 @@ const variantesConfig =
             '</div>' +
             '<div class="flex items-center gap-3 shrink-0">' +
               '<span class="text-sm font-medium text-marine">' + eur(it.unit * it.qty) + ' €</span>' +
-              '<button data-rm="' + idx + '" class="text-muted hover:text-bleu" aria-label="Retirer">✕</button>' +
+              '<button data-rm="' + it.ref + '" class="text-muted hover:text-bleu" aria-label="Retirer">✕</button>' +
             '</div>';
           list.appendChild(li);
         });
         $('grandTotal').textContent = eur(grand);
         list.querySelectorAll('[data-rm]').forEach((b) =>
-          b.addEventListener('click', () => { cart.splice(+b.dataset.rm, 1); renderCart(); })
+          b.addEventListener('click', () => removeItem(b.dataset.rm))
         );
       }
 
@@ -664,8 +671,8 @@ const variantesConfig =
       $('addBtn').addEventListener('click', () => {
         const { c, unit, ok } = refresh();
         if (!ok || unit == null) return;   // pas d'ajout sans prix (sur devis, hors format, classe indispo…)
-        cart.push({ ref: refRef(c), qty: c.qty, unit });
-        renderCart();
+        addItem({ ref: refRef(c), produit: nom, qty: c.qty, unit, detail: detailLigne(c) });
+        // renderCart() est rappelé automatiquement via onCartChange.
       });
 
       $('addDevisBtn').addEventListener('click', () => {
@@ -712,6 +719,7 @@ const variantesConfig =
       // (qui prépare la saisie + les menus puis recalcule) ; sinon simple premier calcul.
       if (activeVar) applyVariante(activeVar); else refresh();
       renderCart();
+      onCartChange(renderCart); // le mini-panier suit le vrai panier (ajouts/retraits d'où qu'ils viennent)
       renderDevis();
     })();
   </script>
