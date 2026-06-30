@@ -8,7 +8,7 @@ import {
   type Produit,
 } from '../../lib/familles';
 import { gammeDuProduit } from '../../lib/pricing/produits-gammes';
-import { optionsDuCode } from '../../lib/pricing/options';
+import { optionsDuCode, formatsDuCode } from '../../lib/pricing/options';
 
 export async function getStaticPaths() {
   const produits = await getProduits();
@@ -61,28 +61,33 @@ const CADRES_DEFAUT = [
   { valeur: 'pp', libelle: 'Polypropylène' },
 ];
 const cadres = gamme?.cadres ?? CADRES_DEFAUT;
-// Classes retirées de l'offre pour ce produit (tarif douteux non corrigé à la source — cf. CHECKLIST).
+// Filtrage des efficacités proposées : liste blanche (`classesIncluses`, ex. laminaire = H14)
+// puis liste noire (`classesExclues`, ex. NETFIBRE G3 douteux). Sinon, toutes les tarifées.
+const classesIncluses = gamme?.classesIncluses ?? null;
 const classesExclues = gamme?.classesExclues ?? [];
-const sansExclues = (classes: { valeur: string; libelle: string }[]) =>
-  classes.filter((c) => !classesExclues.includes(c.valeur));
+const filtreClasses = (classes: { valeur: string; libelle: string }[]) =>
+  classes
+    .filter((c) => !classesIncluses || classesIncluses.includes(c.valeur))
+    .filter((c) => !classesExclues.includes(c.valeur));
 
 const optsReelles = modeProduit === 'calcul' && codeGamme ? optionsDuCode(codeGamme) : null;
 const menusBruts = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPLI_DEVIS;
-const menus = { ...menusBruts, classes: sansExclues(menusBruts.classes) };
+const menus = { ...menusBruts, classes: filtreClasses(menusBruts.classes) };
 
-// Conditionnements multiples (ex. NETFIBRE panneau/rouleau). Pour chaque variante on
-// calcule ici (côté serveur) les efficacités tarifées, transmises au script via un
-// attribut de données. La variante par défaut alimente les menus rendus ci-dessous.
+// Conditionnements multiples (ex. NETFIBRE panneau/rouleau) ou produit à formats
+// (ex. laminaire). Pour chaque variante on calcule ici (côté serveur) les efficacités
+// tarifées et, en mode "formats" sans liste explicite, les dimensions standard depuis
+// la grille. Transmis au script via un attribut de données.
 const variantesConfig =
   modeProduit === 'calcul' && gamme?.variantes
-    ? gamme.variantes.map((v) => ({
-        id: v.id,
-        label: v.label,
-        code: v.code,
-        saisie: v.saisie,
-        formats: v.formats ?? null,
-        classes: sansExclues(optionsDuCode(v.code).classes),
-      }))
+    ? gamme.variantes.map((v) => {
+        const classes = filtreClasses(optionsDuCode(v.code).classes);
+        const formats =
+          v.saisie === 'formats'
+            ? v.formats ?? formatsDuCode(v.code, classes[0]?.valeur)
+            : null;
+        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, labelChamp: v.labelChamp ?? 'Dimensions' };
+      })
     : null;
 ---
 
@@ -204,7 +209,7 @@ const variantesConfig =
       <!-- Configurateur -->
       <div class="rounded-2xl border border-soft bg-white p-4 shadow-soft">
         <div class="grid gap-x-5 gap-y-2.5 sm:grid-cols-2">
-          {variantesConfig && (
+          {variantesConfig && variantesConfig.length > 1 && (
             <label class="block sm:col-span-2">
               <span class="eyebrow text-[11px] text-muted">Conditionnement</span>
               <select id="inCond"
@@ -217,7 +222,7 @@ const variantesConfig =
           )}
           {variantesConfig && (
             <label id="wrapFormat" class="block sm:col-span-2 hidden">
-              <span class="eyebrow text-[11px] text-muted">Format de rouleau</span>
+              <span id="formatLabel" class="eyebrow text-[11px] text-muted">Dimensions</span>
               <select id="inFormat"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise"></select>
             </label>
@@ -450,8 +455,11 @@ const variantesConfig =
         $('wrapL') && $('wrapL').classList.toggle('hidden', formats);
         $('wrapH') && $('wrapH').classList.toggle('hidden', formats);
         $('wrapFormat') && $('wrapFormat').classList.toggle('hidden', !formats);
-        $('wrapCadre') && $('wrapCadre').classList.toggle('hidden', formats); // un rouleau n'a pas de cadre
-        if (formats) setFormatOptions(v.formats || []);
+        $('wrapCadre') && $('wrapCadre').classList.toggle('hidden', formats); // un rouleau/laminaire n'a pas de cadre
+        if (formats) {
+          if ($('formatLabel') && v.labelChamp) $('formatLabel').textContent = v.labelChamp;
+          setFormatOptions(v.formats || []);
+        }
         setEffOptions(v.classes || []);
         refresh();
       }
@@ -513,7 +521,7 @@ const variantesConfig =
       }
 
       function refRef(c) {
-        if (c.formatLabel) return `${code}-${c.eff}-rouleau-${c.formatLabel.replace(/\s+/g, '')}`;
+        if (c.formatLabel) return `${code}-${c.eff}-${c.formatLabel.replace(/\s+/g, '')}`;
         const epPart = c.ep != null ? ('x' + c.ep) : '';
         const cadrePart = c.cadre ? ('-' + c.cadre) : '';
         return `${code}-${c.eff}-${c.L}x${c.H}${epPart}${cadrePart}`;

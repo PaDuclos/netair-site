@@ -31,6 +31,37 @@ export interface OptionsProduit {
   epaisseurs: number[];
 }
 
+/** Une dimension standard d'un produit à formats (ex. laminaire). */
+export interface FormatDimension {
+  /** Libellé affiché — ex. "610 × 610 mm". */
+  label: string;
+  /** Petit côté (mm), passé au moteur. */
+  largeur: number;
+  /** Grand côté (mm), passé au moteur. */
+  hauteur: number;
+}
+
+/**
+ * Dimensions standard tarifées d'un code (depuis la grille L×l), pour les produits
+ * vendus en formats fixes (ex. laminaire). Si `classeRequise` est fournie, ne garde
+ * que les dimensions où cette classe a un prix. Triées par taille croissante.
+ */
+export function formatsDuCode(code: string, classeRequise?: string): FormatDimension[] {
+  const vues = new Set<string>();
+  const out: FormatDimension[] = [];
+  for (const r of tables.prix_l_et_l) {
+    if (r.code !== code) continue;
+    if (classeRequise && r.prix[classeRequise] == null) continue;
+    const largeur = r.pd_min;
+    const hauteur = r.gd_min;
+    const cle = `${largeur}x${hauteur}`;
+    if (vues.has(cle)) continue;
+    vues.add(cle);
+    out.push({ label: `${largeur} × ${hauteur} mm`, largeur, hauteur });
+  }
+  return out.sort((a, b) => a.largeur - b.largeur || a.hauteur - b.hauteur);
+}
+
 /**
  * Ordre d'affichage des classes (du moins au plus filtrant). Sert uniquement au tri ;
  * les classes inconnues de cette liste sont placées à la fin, dans l'ordre alphabétique.

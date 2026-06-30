@@ -46,8 +46,13 @@ export interface VarianteProduit {
   code: string;
   /** Mode de saisie : dimensions libres (mm) ou choix d'un format fixe. */
   saisie: "dimensions" | "formats";
-  /** Formats proposés quand `saisie === "formats"`. */
+  /**
+   * Formats proposés quand `saisie === "formats"`. Si absent, ils sont générés
+   * automatiquement depuis la grille tarifaire du code (dimensions standard).
+   */
   formats?: FormatRouleau[];
+  /** Libellé du menu de formats (défaut « Dimensions »). Ex. « Format de rouleau ». */
+  labelChamp?: string;
 }
 
 /** Lien d'un produit du site vers sa gamme tarifaire. */
@@ -80,6 +85,11 @@ export interface GammeProduit {
    * fiche (ex. NETPLY = acier seul, pas de polypropylène).
    */
   cadres?: { valeur: string; libelle: string }[];
+  /**
+   * Liste blanche d'efficacités : si présente, SEULES ces classes sont proposées
+   * (ex. laminaire verrouillé sur H14). Appliquée avant `classesExclues`.
+   */
+  classesIncluses?: string[];
   /**
    * Dimensions L×H ouvertes par défaut dans le configurateur. Utile pour les produits
    * dont la grille tarifaire ne couvre pas le 592×592 générique (ex. laminaire = formats
@@ -117,6 +127,7 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
         label: "Rouleau entier",
         code: "5",
         saisie: "formats",
+        labelChamp: "Format de rouleau",
         formats: [
           { label: "1 m × 10 m", largeur: 1, hauteur: 10 },
           { label: "1 m × 20 m", largeur: 1, hauteur: 20 },
@@ -136,8 +147,16 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   "netbag-s": { code: "", mode: "devis" },
   "netcel-v-azur": { code: "13", mode: "calcul" }, // 🟢 méthode F (24 « AZUR » est vide)
   "netcel-v-nival": { code: "15", mode: "calcul" }, // 🟢 méthode F
-  // 🟢 méthode F — laminaire en formats standard (pas de 592×592) → on ouvre sur 610×610 (module courant, tarifé).
-  "netpak-v-lam": { code: "14", mode: "calcul", dimensionDefaut: { largeur: 610, hauteur: 610 } },
+  // 🟢 méthode F — laminaire : pas de sur-mesure, dimensions en menu déroulant (formats
+  // standard générés depuis la grille) et efficacité verrouillée sur H14.
+  "netpak-v-lam": {
+    code: "14",
+    mode: "calcul",
+    classesIncluses: ["H14"],
+    variantes: [
+      { id: "standard", label: "Laminaire", code: "14", saisie: "formats", labelChamp: "Dimensions standard" },
+    ],
+  },
 
   // — Sur devis (gammes « hors calculateur ») —
   netmetal: { code: "29", mode: "devis" },
