@@ -43,17 +43,10 @@ const gamme = gammeDuProduit(produit.id);
 const modeProduit: 'calcul' | 'devis' = gamme?.mode ?? 'devis';
 const codeGamme = gamme?.code ?? '';
 
-// Menus adaptés : pour un produit calculable, on ne propose QUE les efficacités et
-// épaisseurs réellement tarifées (lues dans les tables). Pour un produit sur devis,
-// on garde un repli générique (la classe sert alors juste à préciser la demande, sans prix).
-const REPLI_DEVIS = {
-  classes: [
-    { valeur: 'G4', libelle: 'Coarse 65 % (G4)' },
-    { valeur: 'M5', libelle: 'ePM10 50 % (M5)' },
-    { valeur: 'F7', libelle: 'ePM1 55 % (F7)' },
-  ],
-  epaisseurs: [48, 98] as number[],
-};
+// Menus du configurateur : TOUJOURS lus dans le calculateur (concordance, décision PA :
+// « le configurateur ne référence que le calculateur »). On ne propose QUE les efficacités
+// et épaisseurs réellement présentes dans les tables — jamais de valeurs génériques. Un
+// produit sur devis n'affiche un champ que si le calculateur a l'info (sinon rien).
 // Dimensions ouvertes par défaut (592×592 sauf produits à formats standard, ex. laminaire 610×610).
 const dimDefaut = gamme?.dimensionDefaut ?? { largeur: 592, hauteur: 592 };
 // Produit sans cadre (média fibreux seul, ex. NETFIBRE) → on masque le choix « Cadre ».
@@ -73,12 +66,15 @@ const filtreClasses = (classes: { valeur: string; libelle: string }[]) =>
     .filter((c) => !classesIncluses || classesIncluses.includes(c.valeur))
     .filter((c) => !classesExclues.includes(c.valeur));
 
-const optsReelles = modeProduit === 'calcul' && codeGamme ? optionsDuCode(codeGamme) : null;
-const menusBruts = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPLI_DEVIS;
-const menus = { ...menusBruts, classes: filtreClasses(menusBruts.classes) };
-// Épaisseurs à afficher : tarif pour les calculables ; `epaisseursDevis` pour les produits
-// sur devis qui en déclarent une (ex. BORA 100 mm) afin de la capturer dans la demande.
-const epaisseursAffichees = modeProduit === 'calcul' ? menus.epaisseurs : (gamme?.epaisseursDevis ?? []);
+// Options lues dans le calculateur, pour les produits calculables ET sur devis.
+const optsReelles = codeGamme ? optionsDuCode(codeGamme) : null;
+const menus = {
+  classes: filtreClasses(optsReelles?.classes ?? []),
+  epaisseurs: optsReelles?.epaisseurs ?? [],
+};
+// Épaisseurs : celles du calculateur ; à défaut, stopgap `epaisseursDevis` (ex. BORA 100 mm,
+// en attendant que l'épaisseur soit ajoutée au calculateur — cf. CHECKLIST).
+const epaisseursAffichees = menus.epaisseurs.length > 0 ? menus.epaisseurs : (gamme?.epaisseursDevis ?? []);
 
 // Efficacité pré-sélectionnée : la « par défaut » de la gamme (colonne Excel `eff_defaut`)
 // si elle est proposée, sinon la première du menu — plutôt que toujours la classe la plus basse.
@@ -268,9 +264,9 @@ const variantesConfig =
           {modeProduit === 'calcul' && menus.epaisseurs.length === 1 && (
             <input id="inEp" type="hidden" value={menus.epaisseurs[0]} />
           )}
-          {/* Produits sur devis : pas d'efficacité/cadre génériques (trompeurs) ; seul
-              l'essentiel (dimensions, quantité, et épaisseur ci-dessus si déclarée) est capturé. */}
-          {modeProduit === 'calcul' && (
+          {/* Efficacité — affichée dès que le calculateur a des classes pour ce produit
+              (calculable OU sur devis). Pas de classe dans le calculateur → pas de champ. */}
+          {menus.classes.length > 0 && (
             <label class="block">
               <span class="eyebrow text-[11px] text-muted">Efficacité</span>
               <select id="inEff"

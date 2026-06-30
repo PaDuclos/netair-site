@@ -10,6 +10,7 @@
 
 ---
 
+> **DÉCISION PA (30/06) — Source unique = le calculateur.** Le configurateur ne référence QUE le calculateur Excel (prix, classes, épaisseurs, dimensions, et à terme le cadre). Plus de valeurs génériques ni de specs tirées des fiches. Champs **découplés du mode** (calcul/devis) : un champ s'affiche dès que le calculateur a l'info, produits sur devis inclus → ils se rempliront quand PA les saisira dans l'Excel. **Cadre** : décision = colonne « cadre(s) » dans l'Excel (code séparé seulement si le cadre change le prix, ex. inox). Liste « à intégrer au calculateur » dans `CHECKLIST.md`. Rustines temporaires (G3, V LAM, BORA 100) flaggées, à retirer au fil du retravail Excel.
 > **B6 (30/06) — BORA** : reste **sur devis** (pas de vente en ligne, déc. PA), mais sa demande de devis **capture l'épaisseur** (100 mm) — champ épaisseur réactivé pour les produits sur devis qui en déclarent une (`epaisseursDevis`), visible + dans la référence + la ligne de devis. Les autres produits sur devis restent épurés.
 > **B6 démarré (30/06)** : page produit **unifiée** sous `/produits/[ref]` (la page avec configurateur remplace l'ancienne vitrine ; `/boutique` supprimé). Navigation catalogue → produit branchée sur la bonne page. Reste B6 : polir le catalogue (`/gammes`, pages famille), entrée boutique depuis l'accueil.
 

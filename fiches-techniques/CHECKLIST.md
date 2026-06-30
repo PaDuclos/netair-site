@@ -37,6 +37,25 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 
 ---
 
+## 🔧 À INTÉGRER DANS LE CALCULATEUR (retravail Excel — déc. PA 30/06)
+
+> **Principe figé : le configurateur du site ne référence QUE le calculateur.** Tout ce que le
+> configurateur doit afficher (épaisseur, efficacité, dimensions, cadre) doit vivre dans l'Excel ;
+> le site le lit après ré-export. Une seule source, mises à jour faciles, pas de divergence fiche↔site.
+> Tant qu'une info manque dans l'Excel, le site a une **rustine temporaire** (flaggée) ou n'affiche rien.
+
+À ajouter / corriger dans `Calculateur_Netair.xlsx` puis ré-exporter :
+- [ ] **Renommer** la catégorie **11** « NETBAG S » → **AZUR** (mal étiquetée).
+- [ ] **NETBAG S** : retrouver/figer son vrai code (≈ 17 ?) ; tant que non tranché → reste sur devis.
+- [ ] **NETPAK S LUMEN** : ajouter la 3ᵉ dimension **490×592** (n'a que 287×592 / 592×592).
+- [ ] **NETFIBRE** : corriger le **G3 panneau** (0,015 €/dm² erroné) → rustine `classesExclues:["G3"]` à retirer ensuite.
+- [ ] **NETPAK V LAM** : ne garder que **H14** au tarif si c'est la seule classe vendue (sinon retirer la rustine `classesIncluses`).
+- [ ] **Produits sur devis** (NETMETAL, DUO, NETCARB AZUR/NIVAL/BAG, BORA) : les **saisir dans le calculateur** avec leurs **épaisseurs/classes/dimensions** (marqués sur devis, sans prix) → le configurateur affichera alors ces champs tout seuls.
+- [ ] **NETPAK S BORA** : épaisseur **100 mm** (actuellement rustine `epaisseursDevis:[100]` côté site → à porter dans l'Excel).
+- [ ] **CADRE** : décision PA = **colonne « cadre(s) »** par produit (options séparées par `|`) ; **code séparé** uniquement quand le cadre change le prix (ex. inox 304 > galva). Le configurateur lira la colonne.
+
+---
+
 ## Transverse (toute la gamme)
 
 - [ ] **Photos produit Netair** : toutes les fiches créées utilisent une **photo Titanair détourée
