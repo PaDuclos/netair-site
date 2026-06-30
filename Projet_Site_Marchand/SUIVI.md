@@ -10,6 +10,7 @@
 
 ---
 
+> **B6 (30/06) — BORA** : reste **sur devis** (pas de vente en ligne, déc. PA), mais sa demande de devis **capture l'épaisseur** (100 mm) — champ épaisseur réactivé pour les produits sur devis qui en déclarent une (`epaisseursDevis`), visible + dans la référence + la ligne de devis. Les autres produits sur devis restent épurés.
 > **B6 démarré (30/06)** : page produit **unifiée** sous `/produits/[ref]` (la page avec configurateur remplace l'ancienne vitrine ; `/boutique` supprimé). Navigation catalogue → produit branchée sur la bonne page. Reste B6 : polir le catalogue (`/gammes`, pages famille), entrée boutique depuis l'accueil.
 
 ## Avancement par bloc

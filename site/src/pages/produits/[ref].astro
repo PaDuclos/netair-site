@@ -76,6 +76,9 @@ const filtreClasses = (classes: { valeur: string; libelle: string }[]) =>
 const optsReelles = modeProduit === 'calcul' && codeGamme ? optionsDuCode(codeGamme) : null;
 const menusBruts = optsReelles && optsReelles.classes.length > 0 ? optsReelles : REPLI_DEVIS;
 const menus = { ...menusBruts, classes: filtreClasses(menusBruts.classes) };
+// Épaisseurs à afficher : tarif pour les calculables ; `epaisseursDevis` pour les produits
+// sur devis qui en déclarent une (ex. BORA 100 mm) afin de la capturer dans la demande.
+const epaisseursAffichees = modeProduit === 'calcul' ? menus.epaisseurs : (gamme?.epaisseursDevis ?? []);
 
 // Efficacité pré-sélectionnée : la « par défaut » de la gamme (colonne Excel `eff_defaut`)
 // si elle est proposée, sinon la première du menu — plutôt que toujours la classe la plus basse.
@@ -248,23 +251,25 @@ const variantesConfig =
             <input id="inH" type="number" value={dimDefaut.hauteur} min="100" max="2000" step="1"
               class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
           </label>
-          {/* Produits sur devis : pas de prix → on n'affiche pas efficacité/épaisseur/cadre
-              (valeurs génériques trompeuses) ; la demande de devis capture dimensions + quantité. */}
-          {modeProduit === 'calcul' && menus.epaisseurs.length > 1 && (
+          {/* Épaisseur — affichée si plusieurs choix, OU pour un produit sur devis qui en
+              déclare une (ex. BORA 100 mm, à capturer dans la demande de devis). */}
+          {(epaisseursAffichees.length > 1 || (modeProduit === 'devis' && epaisseursAffichees.length === 1)) && (
             <label class="block">
               <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
               <select id="inEp"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
-                {menus.epaisseurs.map((ep, i) => (
+                {epaisseursAffichees.map((ep, i) => (
                   <option value={ep} selected={i === 0}>{ep} mm</option>
                 ))}
               </select>
             </label>
           )}
-          {/* Épaisseur unique : pas de menu (un seul choix), mais on transmet la valeur au moteur. */}
+          {/* Calculable à épaisseur unique : pas de menu, mais on transmet la valeur au moteur. */}
           {modeProduit === 'calcul' && menus.epaisseurs.length === 1 && (
             <input id="inEp" type="hidden" value={menus.epaisseurs[0]} />
           )}
+          {/* Produits sur devis : pas d'efficacité/cadre génériques (trompeurs) ; seul
+              l'essentiel (dimensions, quantité, et épaisseur ci-dessus si déclarée) est capturé. */}
           {modeProduit === 'calcul' && (
             <label class="block">
               <span class="eyebrow text-[11px] text-muted">Efficacité</span>
@@ -637,7 +642,7 @@ const variantesConfig =
           li.innerHTML =
             '<div class="min-w-0">' +
               '<p class="font-mono text-xs text-marine">' + it.ref + '</p>' +
-              '<p class="text-xs text-muted">' + [it.qty + ' u.', it.effLabel, it.cadreLabel, 'prix sur devis'].filter(Boolean).join(' · ') + '</p>' +
+              '<p class="text-xs text-muted">' + [it.qty + ' u.', (it.ep ? 'ép. ' + it.ep + ' mm' : null), it.effLabel, it.cadreLabel, 'prix sur devis'].filter(Boolean).join(' · ') + '</p>' +
             '</div>' +
             '<button data-rmd="' + idx + '" class="shrink-0 text-muted hover:text-turquoise" aria-label="Retirer">✕</button>';
           list.appendChild(li);

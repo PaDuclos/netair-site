@@ -91,6 +91,11 @@ export interface GammeProduit {
    */
   classesIncluses?: string[];
   /**
+   * Épaisseurs à proposer pour un produit EN « sur devis » (qui n'a pas de tarif d'où
+   * les déduire). Permet de capturer l'épaisseur dans la demande de devis (ex. BORA = 100 mm).
+   */
+  epaisseursDevis?: number[];
+  /**
    * Dimensions L×H ouvertes par défaut dans le configurateur. Utile pour les produits
    * dont la grille tarifaire ne couvre pas le 592×592 générique (ex. laminaire = formats
    * standard) : on ouvre alors sur une dimension réellement tarifée plutôt que sur un
@@ -167,7 +172,7 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
 
   // — Sur devis (gammes « hors calculateur ») —
   netmetal: { code: "29", mode: "devis" },
-  "netpak-s-bora": { code: "16", mode: "devis" },
+  "netpak-s-bora": { code: "16", mode: "devis", epaisseursDevis: [100] }, // panneau à brides, ép. 100 mm (à capturer dans la demande de devis)
   // AZUR = catégorie 11 de l'Excel (libellé erroné « NETBAG S » dans l'Excel → à corriger, cf. CHECKLIST).
   // Specs concordantes : profondeur 292, dimensions 287×592 / 490×592 / 592×592, classes M5→F9.
   "netpak-s-azur": {
