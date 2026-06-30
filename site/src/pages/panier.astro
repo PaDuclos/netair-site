@@ -30,7 +30,12 @@ import Breadcrumb from '../components/Breadcrumb.astro';
     <!-- Panier rempli -->
     <div id="plein" class="mt-8 hidden grid gap-8 lg:grid-cols-[1.5fr_1fr] items-start">
       <!-- Lignes -->
-      <ul id="lignes" class="divide-y divide-soft rounded-2xl border border-soft bg-white"></ul>
+      <div>
+        <ul id="lignes" class="divide-y divide-soft rounded-2xl border border-soft bg-white"></ul>
+        <a href="/gammes" class="mt-4 inline-flex items-center gap-1.5 text-sm font-normal text-muted transition-colors hover:text-bleu">
+          ← Continuer mes achats
+        </a>
+      </div>
 
       <!-- Récapitulatif + commande -->
       <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft lg:sticky lg:top-24">
