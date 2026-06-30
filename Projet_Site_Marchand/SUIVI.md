@@ -10,6 +10,8 @@
 
 ---
 
+> **B6 démarré (30/06)** : page produit **unifiée** sous `/produits/[ref]` (la page avec configurateur remplace l'ancienne vitrine ; `/boutique` supprimé). Navigation catalogue → produit branchée sur la bonne page. Reste B6 : polir le catalogue (`/gammes`, pages famille), entrée boutique depuis l'accueil.
+
 ## Avancement par bloc
 
 | Bloc | Description | Statut | Bloqué par |
