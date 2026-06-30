@@ -79,7 +79,7 @@ const ISO = tables.iso16890;
  * Quand l'ISO est identique à la classe (E10, H13, U15…), on n'affiche que la classe.
  * Normalise la casse et les espaces de l'Excel : "COARSE 65%" → "Coarse 65 %".
  */
-function libelleClasse(classe: string): string {
+export function libelleClasse(classe: string): string {
   const brut = ISO[classe];
   if (!brut || brut === classe) return classe;
   const propre = brut

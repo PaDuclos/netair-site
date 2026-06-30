@@ -52,7 +52,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 - [ ] **NETPAK V LAM** : ne garder que **H14** au tarif si c'est la seule classe vendue (sinon retirer la rustine `classesIncluses`).
 - [ ] **Produits sur devis** (NETMETAL, DUO, NETCARB AZUR/NIVAL/BAG, BORA) : les **saisir dans le calculateur** avec leurs **épaisseurs/classes/dimensions** (marqués sur devis, sans prix) → le configurateur affichera alors ces champs tout seuls.
 - [ ] **NETPAK S BORA** : épaisseur **100 mm** (actuellement rustine `epaisseursDevis:[100]` côté site → à porter dans l'Excel).
-- [ ] **CADRE** : décision PA = **colonne « cadre(s) »** par produit (options séparées par `|`) ; **code séparé** uniquement quand le cadre change le prix (ex. inox 304 > galva). Le configurateur lira la colonne.
+- [ ] **CADRE = info TARIFAIRE** (déc. PA : **le cadre change le prix**). Donc chaque variante de cadre = un **code (ligne tarif) séparé** dans le calculateur, avec son prix. Le configurateur proposera alors les cadres et **basculera le code/prix** selon le cadre choisi (≠ aujourd'hui où le cadre est neutre côté prix → à brancher quand l'Excel le structure).
 
 ---
 

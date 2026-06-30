@@ -8,7 +8,7 @@ import {
   type Produit,
 } from '../../lib/familles';
 import { gammeDuProduit } from '../../lib/pricing/produits-gammes';
-import { optionsDuCode, formatsDuCode } from '../../lib/pricing/options';
+import { optionsDuCode, formatsDuCode, libelleClasse } from '../../lib/pricing/options';
 import { trouverGamme } from '../../lib/pricing/lookups';
 
 export async function getStaticPaths() {
@@ -68,8 +68,12 @@ const filtreClasses = (classes: { valeur: string; libelle: string }[]) =>
 
 // Options lues dans le calculateur, pour les produits calculables ET sur devis.
 const optsReelles = codeGamme ? optionsDuCode(codeGamme) : null;
+const classesCalc = filtreClasses(optsReelles?.classes ?? []);
+// Stopgap : efficacités d'un produit sur devis non encore saisi au calculateur (ex. BORA G4→F9),
+// pour que le client précise son besoin de filtration. À retirer quand l'Excel les couvre.
+const classesStopgap = (gamme?.efficacitesDevis ?? []).map((v) => ({ valeur: v, libelle: libelleClasse(v) }));
 const menus = {
-  classes: filtreClasses(optsReelles?.classes ?? []),
+  classes: classesCalc.length > 0 ? classesCalc : classesStopgap,
   epaisseurs: optsReelles?.epaisseurs ?? [],
 };
 // Épaisseurs : celles du calculateur ; à défaut, stopgap `epaisseursDevis` (ex. BORA 100 mm,
