@@ -27,7 +27,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK S LUMEN | 🟡 | Variantes fournisseurs 2024-25 (MFILTER/FILTECH) · surface média n.c. · photo (Titanair visible) |
 | NETPAK S BORA | 🟡 | GREENTEX ePM1 50% retenu (variante HPE 55% non tracée) · courbe lue sur image · surface n.c. · photo |
 | NETPAK S DUO | 🟡 | ✅ créée (F7 GREENTEX + CA, ep48) · capacité charbon (grammage) à préciser R&D · A4 p2 OK · photo |
-| NETPAK V LAM | 🟡 | ✅ créée (HEPA H14, flux laminaire, A4 OK) · capacité/colmatage à confirmer · photo HEPA |
+| NETCEL V LAM | 🟡 | ✅ créée (HEPA H14, flux laminaire, A4 OK) · capacité/colmatage à confirmer · photo HEPA |
 | NETCEL V NIVAL | 🟡 | E10 & H14 sans courbe (H14 = copie H13) · 610×610 sur moteur 592 · photo |
 | NETCEL V AZUR | 🟡 | H13 extrapolé >2400 m³/h · curseur débit init 3400 (calc OK 2400) · photo = idem NETPAK AZUR · nom à valider |
 | NETCARB CILIA | 🟡 | ✅ créée (charbon actif, ISO 10121, 2 épaisseurs) · classe LD/MD/HD à déterminer par essai · capacité/durée de vie gaz R&D · photo (grains) |
@@ -45,11 +45,12 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 > Tant qu'une info manque dans l'Excel, le site a une **rustine temporaire** (flaggée) ou n'affiche rien.
 
 À ajouter / corriger dans `Calculateur_Netair.xlsx` puis ré-exporter :
+- [ ] **RENOMMAGE PRODUIT (01/07) : NETPAK V LAM → NETCEL V LAM** (code 14, famille HEPA). Fait partout côté site/fiche/docs/code ; **reste à changer le nom de gamme dans les 4 classeurs Excel** (`Calculateur_Netair.xlsx` + `.xltm`, `Gamme_References_Netair.xlsx`, `Bibliotheque_Fiches_Techniques_Netair.xlsx`, `DONNEES_PDC_Netair.xlsx`) via Rechercher-Remplacer « NETPAK V LAM » → « NETCEL V LAM », **puis ré-exporter** `tables.json` (le code 14 ne change pas). FDS à renommer aussi (`FDS_NETPAK_V_LAM` → `FDS_NETCEL_V_LAM`).
 - [ ] **Renommer** la catégorie **11** « NETBAG S » → **AZUR** (mal étiquetée).
 - [ ] **NETBAG S** : retrouver/figer son vrai code (≈ 17 ?) ; tant que non tranché → reste sur devis.
 - [ ] **NETPAK S LUMEN** : ajouter la 3ᵉ dimension **490×592** (n'a que 287×592 / 592×592).
 - [ ] **NETFIBRE** : corriger le **G3 panneau** (0,015 €/dm² erroné) → rustine `classesExclues:["G3"]` à retirer ensuite.
-- [ ] **NETPAK V LAM** : ne garder que **H14** au tarif si c'est la seule classe vendue (sinon retirer la rustine `classesIncluses`).
+- [ ] **NETCEL V LAM** : ne garder que **H14** au tarif si c'est la seule classe vendue (sinon retirer la rustine `classesIncluses`).
 - [ ] **Produits sur devis** (NETMETAL, DUO, NETCARB AZUR/NIVAL/BAG, BORA) : les **saisir dans le calculateur** avec leurs **épaisseurs/classes/dimensions** (marqués sur devis, sans prix) → le configurateur affichera alors ces champs tout seuls.
 - [ ] **NETPAK S BORA** : épaisseur **100 mm** (actuellement rustine `epaisseursDevis:[100]` côté site → à porter dans l'Excel).
 - [ ] **EXPÉDITION — sémantique des codes (doc PA 01/07, à garder en tête)** : l'onglet expédition contient des **départements** (01→95, Corse 2A/2B, tous tarifés) **et** des **modes d'expédition** qui ne sont PAS des départements : `00` = mise à disposition (retrait sur place), `C20`/`C30`/`C40` = Colissimo à 20/30/40 € (choix humain selon **taille/poids estimés** du/des filtre(s)). **Livraison limitée à la France métropolitaine + Corse** (pas de DROM/outre-mer). Côté site : le menu du panier ne propose **que les 96 départements métropole+Corse** (les modes d'expédition et l'outre-mer en sont exclus).

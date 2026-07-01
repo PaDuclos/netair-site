@@ -119,7 +119,7 @@ Elles doivent être **affinées** quand le tarif Netair définitif est figé (ba
 |---|---|
 | Prix unitaire HT préfiltre / plan (NETPLY, NETPLAN, NETFIL, NETFIBRE) | ~3 € – 60 € |
 | Prix unitaire HT poches / compacts (NETBAG, NETPAK, NETCARB) | ~10 € – 150 € |
-| Prix unitaire HT HEPA / T.H.E. (NETCEL, NETPAK V LAM) | ~40 € – 400 € |
+| Prix unitaire HT HEPA / T.H.E. (NETCEL, NETCEL V LAM) | ~40 € – 400 € |
 | Baisse de prix entre 1ᵉʳ et dernier palier de quantité | ~10 % – 30 % |
 | Frais de port (selon département) | 0 € (00 / franco) – ~80 € |
 | Seuil de franco de port | **750 € HT** (fixe) |
