@@ -8,6 +8,12 @@
       "port": 4321
     },
     {
+      "name": "netair-astro-4322",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview", "--prefix", "site", "--", "--host", "--port", "4322"],
+      "port": 4322
+    },
+    {
       "name": "fiches-statique",
       "runtimeExecutable": "node",
       "runtimeArgs": ["fiches-techniques/.preview-server.mjs"],

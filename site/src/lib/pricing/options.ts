@@ -57,7 +57,10 @@ export function formatsDuCode(code: string, classeRequise?: string): FormatDimen
     const cle = `${largeur}x${hauteur}`;
     if (vues.has(cle)) continue;
     vues.add(cle);
-    out.push({ label: `${largeur} × ${hauteur} mm`, largeur, hauteur });
+    // La profondeur (ep) figée figure dans le libellé quand elle existe (ex. polydièdres 292 mm
+    // → "592 × 592 × 292 mm" ; laminaire 69 mm). Pour les gammes sans ep, "L × H mm".
+    const profondeur = typeof r.ep === "number" ? ` × ${r.ep}` : "";
+    out.push({ label: `${largeur} × ${hauteur}${profondeur} mm`, largeur, hauteur });
   }
   return out.sort((a, b) => a.largeur - b.largeur || a.hauteur - b.hauteur);
 }

@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+---
+
+<BaseLayout title="Espace client — Netair" description="Espace client Netair — connexion, suivi de commandes et conditions personnalisées (bientôt disponible).">
+  <section class="mx-auto max-w-[1140px] px-7 pt-10">
+    <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'Espace client' }]} />
+  </section>
+
+  <section class="mx-auto max-w-[720px] px-7 py-10 text-center">
+    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-mist text-marine">
+      <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+
+    <h1 class="display mt-6 text-4xl sm:text-5xl font-normal text-marine">Espace client</h1>
+    <p class="mt-3 text-lg text-muted">Bientôt disponible.</p>
+
+    <p class="mx-auto mt-6 max-w-lg text-marine">
+      Votre espace client Netair arrive prochainement. Vous pourrez y retrouver :
+    </p>
+    <ul class="mx-auto mt-5 grid max-w-md gap-3 text-left">
+      <li class="flex items-start gap-2.5 text-sm text-marine">
+        <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-turquoise"></span>
+        Votre connexion et vos informations de société
+      </li>
+      <li class="flex items-start gap-2.5 text-sm text-marine">
+        <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-turquoise"></span>
+        L'historique et le suivi de vos commandes
+      </li>
+      <li class="flex items-start gap-2.5 text-sm text-marine">
+        <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-turquoise"></span>
+        Le réassort en un clic de vos filtres habituels
+      </li>
+      <li class="flex items-start gap-2.5 text-sm text-marine">
+        <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-turquoise"></span>
+        Vos conditions négociées (comptes validés)
+      </li>
+    </ul>
+
+    <p class="mt-8 text-sm text-muted">
+      En attendant, vous pouvez déjà configurer et commander vos filtres, ou constituer une demande de devis.
+    </p>
+    <div class="mt-5 flex flex-wrap justify-center gap-3">
+      <a href="/gammes" class="inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+        style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+        Voir le catalogue →
+      </a>
+      <a href="/contact" class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-2.5 text-sm font-normal text-marine transition-colors hover:border-turquoise">
+        Nous contacter
+      </a>
+    </div>
+  </section>
+</BaseLayout>

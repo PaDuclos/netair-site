@@ -346,11 +346,11 @@ const variantesConfig =
               <span class="display text-2xl font-normal text-marine"><span id="grandTotal">0</span> €</span>
             </div>
             <p class="mt-1 text-right text-xs text-muted">TVA et frais de port calculés à l'étape suivante.</p>
-            <button type="button"
-              class="mt-4 w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+            <a href="/panier"
+              class="mt-4 flex w-full items-center justify-center rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
               style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
-              Passer commande <span class="opacity-70">(maquette)</span>
-            </button>
+              Voir le panier &amp; commander →
+            </a>
           </div>
         </aside>
 
@@ -367,56 +367,12 @@ const variantesConfig =
           </div>
           <ul id="devisList" class="mt-5 hidden divide-y divide-soft"></ul>
 
-          <!-- Étape 1 : récapitulatif + bouton vers le formulaire -->
+          <!-- Vers la page de demande de devis (les coordonnées et l'envoi y sont saisis) -->
           <div id="devisStep1" class="mt-5 hidden">
-            <button id="toFormBtn" type="button"
-              class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+            <a href="/devis" class="flex w-full items-center justify-center rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
               style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
-              Demander le devis →
-            </button>
-          </div>
-
-          <!-- Étape 2 : coordonnées -->
-          <form id="devisForm" class="mt-5 hidden space-y-3">
-            <p class="text-sm font-medium text-marine">Vos coordonnées</p>
-            <label class="block">
-              <span class="eyebrow text-[11px] text-muted">Société</span>
-              <input name="societe" type="text" required
-                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
-            </label>
-            <label class="block">
-              <span class="eyebrow text-[11px] text-muted">Nom</span>
-              <input name="nom" type="text" required
-                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
-            </label>
-            <label class="block">
-              <span class="eyebrow text-[11px] text-muted">Email</span>
-              <input name="email" type="email" required
-                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
-            </label>
-            <label class="block">
-              <span class="eyebrow text-[11px] text-muted">Téléphone</span>
-              <input name="tel" type="tel"
-                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
-            </label>
-            <label class="block">
-              <span class="eyebrow text-[11px] text-muted">Message (optionnel)</span>
-              <textarea name="message" rows="2"
-                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise"></textarea>
-            </label>
-            <button type="submit"
-              class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
-              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
-              Envoyer ma demande de devis
-            </button>
-            <p class="text-xs text-muted">Maquette : l'envoi réel (email / DEVIS AUTO) sera branché ensuite.</p>
-          </form>
-
-          <!-- Étape 3 : confirmation -->
-          <div id="devisDone" class="mt-5 hidden rounded-xl border border-turquoise/30 bg-turquoise/5 px-4 py-5 text-sm text-marine">
-            <p class="font-medium">Demande enregistrée ✓</p>
-            <p id="devisDoneMsg" class="mt-1 text-xs text-muted"></p>
-            <div id="devisDoneRecap" class="mt-3 space-y-1 text-xs"></div>
+              Voir ma demande de devis →
+            </a>
           </div>
         </aside>
       </div>
@@ -445,6 +401,8 @@ const variantesConfig =
     // Ce <script> est groupé/empaqueté par Astro (pas `is:inline`) afin de pouvoir
     // importer le moteur — qui embarque les tables tarifaires pour un calcul instantané.
     import { calculerPrix } from '../../lib/pricing';
+    import { addItem, getCart, removeItem, onCartChange } from '../../lib/cart';
+    import { addDevisItem, getDevis, removeDevisItem, onDevisChange } from '../../lib/devis';
 
     (function () {
       const root = document.getElementById('boutique');
@@ -514,8 +472,14 @@ const variantesConfig =
         btn.classList.toggle('cursor-not-allowed', !ok);
       }
 
-      const cart = [];   // achat (avec prix)
-      const devis = [];  // demande de devis (sans prix)
+      // Libellé court d'une config, pour la ligne de panier (efficacité · dimensions · cadre).
+      // Dimensions = L×H×épaisseur (ex. "592×592×48 mm"), ou le format pour les produits à formats.
+      function detailLigne(c) {
+        const dims = c.formatLabel
+          ? c.formatLabel
+          : (c.L + '×' + c.H + (c.ep ? '×' + c.ep : '') + ' mm');
+        return [c.effLabel, dims, c.cadreLabel].filter(Boolean).join(' · ');
+      }
 
       function readCfg() {
         let L, H, formatLabel = null;
@@ -591,17 +555,18 @@ const variantesConfig =
       }
 
       // ---- Panier d'achat ----
+      // Mini-panier de la page produit : reflète le VRAI panier (partagé entre toutes les pages).
       function renderCart() {
-        const count = cart.reduce((s, i) => s + i.qty, 0);
-        $('cartCount').textContent = count;
-        const empty = cart.length === 0;
+        const items = getCart();
+        $('cartCount').textContent = items.reduce((s, i) => s + i.qty, 0);
+        const empty = items.length === 0;
         $('cartEmpty').classList.toggle('hidden', !empty);
         $('cartList').classList.toggle('hidden', empty);
         $('cartFooter').classList.toggle('hidden', empty);
         const list = $('cartList');
         list.innerHTML = '';
         let grand = 0;
-        cart.forEach((it, idx) => {
+        items.forEach((it) => {
           grand += it.unit * it.qty;
           const li = document.createElement('li');
           li.className = 'flex items-start justify-between gap-3 py-3';
@@ -612,43 +577,39 @@ const variantesConfig =
             '</div>' +
             '<div class="flex items-center gap-3 shrink-0">' +
               '<span class="text-sm font-medium text-marine">' + eur(it.unit * it.qty) + ' €</span>' +
-              '<button data-rm="' + idx + '" class="text-muted hover:text-bleu" aria-label="Retirer">✕</button>' +
+              '<button data-rm="' + it.ref + '" class="text-muted hover:text-bleu" aria-label="Retirer">✕</button>' +
             '</div>';
           list.appendChild(li);
         });
         $('grandTotal').textContent = eur(grand);
         list.querySelectorAll('[data-rm]').forEach((b) =>
-          b.addEventListener('click', () => { cart.splice(+b.dataset.rm, 1); renderCart(); })
+          b.addEventListener('click', () => removeItem(b.dataset.rm))
         );
       }
 
-      // ---- Demande de devis (liste multi-produits, sans prix) ----
+      // ---- Demande de devis (persistante, partagée entre toutes les pages, sans prix) ----
       function renderDevis() {
-        const count = devis.reduce((s, i) => s + i.qty, 0);
-        $('devisCount').textContent = count;
-        const empty = devis.length === 0;
+        const items = getDevis();
+        $('devisCount').textContent = items.reduce((s, i) => s + i.qty, 0);
+        const empty = items.length === 0;
         $('devisEmpty').classList.toggle('hidden', !empty);
         $('devisList').classList.toggle('hidden', empty);
         $('devisStep1').classList.toggle('hidden', empty);
-        if (empty) {
-          $('devisForm').classList.add('hidden');
-          $('devisDone').classList.add('hidden');
-        }
         const list = $('devisList');
         list.innerHTML = '';
-        devis.forEach((it, idx) => {
+        items.forEach((it) => {
           const li = document.createElement('li');
           li.className = 'flex items-start justify-between gap-3 py-3';
           li.innerHTML =
             '<div class="min-w-0">' +
               '<p class="font-mono text-xs text-marine">' + it.ref + '</p>' +
-              '<p class="text-xs text-muted">' + [it.qty + ' u.', (it.ep ? 'ép. ' + it.ep + ' mm' : null), it.effLabel, it.cadreLabel, 'prix sur devis'].filter(Boolean).join(' · ') + '</p>' +
+              '<p class="text-xs text-muted">' + [it.qty + ' u.', it.detail, 'prix sur devis'].filter(Boolean).join(' · ') + '</p>' +
             '</div>' +
-            '<button data-rmd="' + idx + '" class="shrink-0 text-muted hover:text-turquoise" aria-label="Retirer">✕</button>';
+            '<button data-rmd="' + it.ref + '" class="shrink-0 text-muted hover:text-turquoise" aria-label="Retirer">✕</button>';
           list.appendChild(li);
         });
         list.querySelectorAll('[data-rmd]').forEach((b) =>
-          b.addEventListener('click', () => { devis.splice(+b.dataset.rmd, 1); renderDevis(); })
+          b.addEventListener('click', () => removeDevisItem(b.dataset.rmd))
         );
       }
 
@@ -664,55 +625,27 @@ const variantesConfig =
       $('addBtn').addEventListener('click', () => {
         const { c, unit, ok } = refresh();
         if (!ok || unit == null) return;   // pas d'ajout sans prix (sur devis, hors format, classe indispo…)
-        cart.push({ ref: refRef(c), qty: c.qty, unit });
-        renderCart();
+        addItem({
+          ref: refRef(c), produit: nom, qty: c.qty, unit, detail: detailLigne(c),
+          // config complète → re-calcul du prix si la quantité change au panier (paliers)
+          demande: { codeGamme: c.codeUsed, largeur_mm: c.L, hauteur_mm: c.H, profondeur_mm: c.ep ?? 48, classe: c.eff },
+        });
+        // renderCart() est rappelé automatiquement via onCartChange.
       });
 
       $('addDevisBtn').addEventListener('click', () => {
         const { c } = refresh();
-        devis.push({
-          ref: refRef(c), produit: nom, L: c.L, H: c.H, ep: c.ep,
-          eff: c.eff, effLabel: c.effLabel, cadreLabel: c.cadreLabel, qty: c.qty,
-        });
-        // Si on revenait du formulaire/confirmation, on repart à l'étape liste.
-        $('devisForm').classList.add('hidden');
-        $('devisDone').classList.add('hidden');
-        $('devisStep1').classList.remove('hidden');
-        renderDevis();
-      });
-
-      // Étape liste → formulaire
-      $('toFormBtn').addEventListener('click', () => {
-        $('devisStep1').classList.add('hidden');
-        $('devisForm').classList.remove('hidden');
-      });
-
-      // Envoi (maquette) → confirmation
-      $('devisForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const data = new FormData(e.target);
-        const societe = data.get('societe') || '';
-        const lignes = devis.length;
-        const total = devis.reduce((s, i) => s + i.qty, 0);
-        $('devisForm').classList.add('hidden');
-        $('devisDoneMsg').textContent =
-          `Merci ${societe}. Votre demande (${lignes} filtre${lignes > 1 ? 's' : ''}, ${total} unité${total > 1 ? 's' : ''}) a bien été prise en compte. Netair revient vers vous avec un devis chiffré.`;
-        const recap = $('devisDoneRecap');
-        recap.innerHTML = devis.map((it) =>
-          '<p class="font-mono text-marine">' + it.ref + ' — ' + it.qty + ' u.</p>'
-        ).join('');
-        devis.length = 0;
-        renderDevis();
-        // renderDevis() réaffiche le bloc « vide » : on le masque tant que la confirmation est à l'écran.
-        $('devisEmpty').classList.add('hidden');
-        $('devisDone').classList.remove('hidden');
+        addDevisItem({ ref: refRef(c), produit: nom, qty: c.qty, detail: detailLigne(c) });
+        // renderDevis() est rappelé automatiquement via onDevisChange (envoi = page /devis).
       });
 
       // Démarrage : si le produit a des conditionnements, on applique celui par défaut
       // (qui prépare la saisie + les menus puis recalcule) ; sinon simple premier calcul.
       if (activeVar) applyVariante(activeVar); else refresh();
       renderCart();
+      onCartChange(renderCart); // le mini-panier suit le vrai panier (ajouts/retraits d'où qu'ils viennent)
       renderDevis();
+      onDevisChange(renderDevis); // la mini-liste de devis suit la demande persistante
     })();
   </script>
 </BaseLayout>

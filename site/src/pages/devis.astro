@@ -1,0 +1,138 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+---
+
+<BaseLayout title="Ma demande de devis — Netair" description="Votre demande de devis de filtres Netair.">
+  <!-- Bandeau maquette -->
+  <div class="bg-marine text-blanc">
+    <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
+      Aperçu boutique · demande de devis de démonstration · <strong>l'envoi réel sera branché ensuite</strong>
+    </div>
+  </div>
+
+  <section class="mx-auto max-w-[1140px] px-7 pt-10">
+    <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'Demande de devis' }]} />
+  </section>
+
+  <section class="mx-auto max-w-[1140px] px-7 py-6">
+    <h1 class="display text-4xl sm:text-5xl font-normal text-marine">Ma demande de devis</h1>
+    <p class="mt-2 max-w-2xl text-muted">Ajoutez plusieurs filtres, indiquez vos coordonnées, et Netair revient vers vous avec un <strong>devis chiffré</strong>. Idéal pour les gros volumes, appels d'offres ou produits sur mesure.</p>
+
+    <!-- Vide -->
+    <div id="vide" class="mt-8 hidden rounded-2xl border border-dashed border-soft bg-mist px-6 py-12 text-center">
+      <p class="text-muted">Votre demande de devis est vide.</p>
+      <a href="/gammes" class="mt-4 inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+        style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+        Découvrir le catalogue →
+      </a>
+    </div>
+
+    <!-- Rempli -->
+    <div id="plein" class="mt-8 hidden grid gap-8 lg:grid-cols-[1.5fr_1fr] items-start">
+      <div>
+        <ul id="lignes" class="divide-y divide-soft rounded-2xl border border-soft bg-white"></ul>
+        <a href="/gammes" class="mt-4 inline-flex items-center gap-1.5 text-sm font-normal text-muted transition-colors hover:text-turquoise">
+          ← Continuer mes achats
+        </a>
+      </div>
+
+      <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft lg:sticky lg:top-24">
+        <h2 class="display text-xl font-normal text-marine">Vos coordonnées</h2>
+        <form id="form" class="mt-5 space-y-3">
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Société</span>
+            <input name="societe" type="text" required class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Nom</span>
+            <input name="nom" type="text" required class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Email</span>
+            <input name="email" type="email" required class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Téléphone</span>
+            <input name="tel" type="tel" class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Message (optionnel)</span>
+            <textarea name="message" rows="2" class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise"></textarea>
+          </label>
+          <button type="submit"
+            class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+            style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+            Envoyer ma demande de devis
+          </button>
+          <p class="text-xs text-muted">Maquette : l'envoi réel (email / DEVIS AUTO) sera branché ensuite.</p>
+        </form>
+      </aside>
+    </div>
+
+    <!-- Confirmation -->
+    <div id="done" class="mt-8 hidden rounded-2xl border border-turquoise/30 bg-turquoise/5 px-6 py-8 text-marine">
+      <p class="display text-2xl font-normal">Demande enregistrée ✓</p>
+      <p id="doneMsg" class="mt-2 text-sm text-muted"></p>
+      <a href="/gammes" class="mt-5 inline-flex items-center gap-2 text-sm font-normal text-turquoise hover:text-bleu">← Retour au catalogue</a>
+    </div>
+  </section>
+
+  <script>
+    import { getDevis, setDevisQty, removeDevisItem, onDevisChange, clearDevis } from '../lib/devis';
+
+    const $ = (id) => document.getElementById(id);
+
+    function render() {
+      const items = getDevis();
+      const empty = items.length === 0;
+      // Ne pas ré-afficher la liste tant que la confirmation est à l'écran.
+      if (!$('done').classList.contains('hidden')) return;
+      $('vide').classList.toggle('hidden', !empty);
+      $('plein').classList.toggle('hidden', empty);
+      if (empty) return;
+
+      const list = $('lignes');
+      list.innerHTML = '';
+      items.forEach((it) => {
+        const li = document.createElement('li');
+        li.className = 'flex items-start justify-between gap-4 p-5';
+        li.innerHTML =
+          '<div class="min-w-0">' +
+            '<p class="font-mono text-sm text-marine">' + it.ref + '</p>' +
+            '<p class="mt-0.5 text-xs text-muted">' + (it.detail || '') + ' · prix sur devis</p>' +
+          '</div>' +
+          '<div class="flex items-center gap-4 shrink-0">' +
+            '<input type="number" min="1" max="100000" value="' + it.qty + '" data-qty="' + it.ref + '" ' +
+              'class="w-16 rounded-xl border border-soft bg-mist px-2 py-1.5 text-center text-sm text-marine outline-none focus:border-turquoise" />' +
+            '<button data-rm="' + it.ref + '" class="text-muted hover:text-turquoise" aria-label="Retirer">✕</button>' +
+          '</div>';
+        list.appendChild(li);
+      });
+      list.querySelectorAll('[data-qty]').forEach((inp) =>
+        inp.addEventListener('change', () => setDevisQty(inp.dataset.qty, Math.max(1, +inp.value || 1)))
+      );
+      list.querySelectorAll('[data-rm]').forEach((b) =>
+        b.addEventListener('click', () => removeDevisItem(b.dataset.rm))
+      );
+    }
+
+    $('form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const societe = new FormData(e.target).get('societe') || '';
+      const items = getDevis();
+      const lignes = items.length;
+      const total = items.reduce((s, i) => s + i.qty, 0);
+      clearDevis();
+      $('plein').classList.add('hidden');
+      $('vide').classList.add('hidden');
+      $('doneMsg').textContent =
+        'Merci ' + societe + '. Votre demande (' + lignes + ' filtre' + (lignes > 1 ? 's' : '') + ', ' +
+        total + ' unité' + (total > 1 ? 's' : '') + ') a bien été prise en compte. Netair revient vers vous avec un devis chiffré.';
+      $('done').classList.remove('hidden');
+    });
+
+    render();
+    onDevisChange(render);
+  </script>
+</BaseLayout>
