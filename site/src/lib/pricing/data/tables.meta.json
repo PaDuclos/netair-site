@@ -1,6 +1,6 @@
 {
-  "excel_sha256": "acc52b3795e41d2005169fa59d1d1287392c13cc25bbef1fa8e38a6855f46a4f",
-  "exporte_le": "2026-06-29",
+  "excel_sha256": "8b9343bed631788dc530ed930afdae2dee2cd78635143f1a9891ec2aa16b183a",
+  "exporte_le": "2026-07-01",
   "lignes_par_table": {
     "expedition": 100,
     "franco": 1,
@@ -15,7 +15,7 @@
     "validite_jours": 1
   },
   "source": "Calculateur_Netair.xlsx",
-  "tables_sha256": "3071a53b0f0215a0c8a73200e23493ac8bc69cb6557d476f1ef9e54867aab0e7",
+  "tables_sha256": "9600d6f27cb8e448b32462537e8853eb1307500479b944cb272e80527a821e61",
   "version_excel": "v1.0 — 2026-06-25",
   "version_outil": "1.0"
 }
