@@ -213,7 +213,17 @@ Chaque bloc fera l'objet de sa **propre spécification détaillée** au moment d
   3. **Métas soignées** par page (titre + description uniques) — en partie faites, à compléter.
   4. **Performance** : l'accueil charge encore **Tailwind par CDN** (avertissement en prod) → le **compiler** comme les autres pages (vitesse = critère Google).
   5. **`robots.txt`** + vérifier le `sitemap.xml` (déjà généré) + **Open Graph** (déjà en place) → soigner l'aperçu au partage.
-- **Dépendance** : contenu FR (B6). **Constructible tout de suite** (aucun blocage légal/technique) — fort ROI SEO avant même l'immatriculation.
+- **Deux « notes sur 100 » à ne pas confondre (clarification PA 01/07)** :
+  1. **Note technique du site** (score **Lighthouse / PageSpeed** de Google : vitesse, accessibilité, bonnes pratiques, SEO). **Dans nos mains** → viser **~90-100** via les fondations SEO ci-dessus (compiler Tailwind, images, balises, données structurées). **Mesurable et actionnable maintenant.**
+  2. **Autorité du domaine** (« Domain Authority » Moz / « Domain Rating » Ahrefs, 0→100) : **réputation** du domaine sur le web, **estimée par des tiers** (pas une note officielle Google). Un **site neuf part de ~0** et **monte avec le temps** ; se construit surtout par les **backlinks** (liens entrants de sites sérieux). **Ne pas viser 100 tout de suite** — viser une **progression régulière**.
+- **Stratégie de notoriété / backlinks (autorité du domaine) — décision PA 01/07 :**
+  - **Contenu** : le blog **Actualités** (ci-dessus) = 1er aimant à liens.
+  - **LinkedIn** : présence pro régulière (cf. BLOC5 LinkedIn) qui pointe vers le site.
+  - **Annuaires professionnels** du génie climatique / CVC / filtration (inscription du site).
+  - **Presse spécialisée** (CVC, industrie, salons) : communiqués → liens.
+  - **Partenaires / fournisseurs** (Deltrian, Mfilters…) : échanges de liens si pertinent.
+  - **Google Business Profile** (fiche établissement) — **après immatriculation** (SEO local + notoriété).
+- **Dépendance** : contenu FR (B6). Fondations techniques **constructibles tout de suite** ; l'autorité se construit **dans la durée** (marketing/comms). **Fort ROI SEO avant même l'immatriculation.**
 
 ---
 
