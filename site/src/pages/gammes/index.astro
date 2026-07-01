@@ -40,13 +40,19 @@ const familles = FAMILLES.map((f, i) => ({ ...f, count: counts[i] }));
             )}
           </div>
           <div class="flex flex-1 flex-col p-6">
-            <div class="flex items-start justify-between">
-              <span class="inline-block rounded-lg bg-bleu/10 px-2.5 py-1 text-xs text-bleu leading-tight">
-                {f.tag}
-                {f.tagEn && <><br /><span class="text-bleu/70">{f.tagEn}</span></>}
-              </span>
-              {f.count > 0 && (
-                <span class="text-xs text-muted">{f.count} {f.count > 1 ? 'références' : 'référence'}</span>
+            {f.count > 0 && (
+              <div class="mb-2 text-right text-xs text-muted">{f.count} {f.count > 1 ? 'références' : 'référence'}</div>
+            )}
+            <div class="flex flex-wrap gap-2">
+              <div class="rounded-lg bg-bleu/10 px-2.5 py-1 leading-tight">
+                {f.norme && <div class="text-[10px] font-medium uppercase tracking-wide text-bleu/60">{f.norme}</div>}
+                <div class="text-xs text-bleu">{f.tag}</div>
+              </div>
+              {f.tagEn && (
+                <div class="rounded-lg border border-soft bg-white px-2.5 py-1 leading-tight">
+                  <div class="text-[10px] font-medium uppercase tracking-wide text-muted">EN 779</div>
+                  <div class="text-xs text-muted">{f.tagEn}</div>
+                </div>
               )}
             </div>
             <h2 class="display mt-4 text-xl font-normal text-marine">{f.titre}</h2>
