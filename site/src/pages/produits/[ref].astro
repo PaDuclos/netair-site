@@ -114,7 +114,7 @@ const variantesConfig =
   <!-- Bandeau maquette -->
   <div class="bg-marine text-blanc">
     <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
-      Aperçu boutique · prix catalogue HT réels mais <strong>indicatifs et non contractuels</strong> (avant mise en ligne)
+      Aperçu du site · prix catalogue HT réels mais <strong>indicatifs et non contractuels</strong> (avant mise en ligne)
     </div>
   </div>
 
@@ -162,14 +162,14 @@ const variantesConfig =
 
       <div class="mt-8 flex flex-wrap gap-3">
         <a
-          href="#boutique"
+          href="#configurateur"
           class="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
           style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
         >
           Configurer & commander →
         </a>
         <a
-          href="#boutique"
+          href="#configurateur"
           class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-5 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise"
         >
           Demander un devis
@@ -215,7 +215,7 @@ const variantesConfig =
   )}
 
   <!-- Configurateur + Panier + Demande de devis -->
-  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="boutique" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined}>
+  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined}>
     <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
     <p class="mt-1 text-sm text-muted">Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.</p>
 
@@ -391,7 +391,7 @@ const variantesConfig =
         Pour les gros volumes, appels d'offres ou conditions négociées, constituez votre demande de devis ci-dessus.
       </p>
       <a
-        href="#boutique"
+        href="#configurateur"
         class="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
         style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
       >
@@ -409,7 +409,7 @@ const variantesConfig =
     import { addDevisItem, getDevis, removeDevisItem, onDevisChange } from '../../lib/devis';
 
     (function () {
-      const root = document.getElementById('boutique');
+      const root = document.getElementById('configurateur');
       if (!root) return;
       const nom = root.dataset.nom || 'Filtre';
       const code = root.dataset.code || 'NET';
