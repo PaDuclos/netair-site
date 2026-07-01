@@ -5,7 +5,7 @@
 
 **État global (30/06/2026) : 🟢 B1 (moteur) + B2 (configurateur) TERMINÉS · B3 (panier maquette) & B6 (page unifiée) bien avancés.**
 Le configurateur affiche les **vrais prix catalogue** sur tous les produits calculables (au centime = Excel), la page produit est **unifiée** sous `/produits/[ref]` (descriptif + specs + fiche + configurateur + prix), et le **panier maquette** est complet (persistant, page `/panier`, re-calcul des paliers, « continuer mes achats », tunnel de commande). Principe verrouillé : **le configurateur ne référence QUE le calculateur** (source unique).
-- **Branches / PR (01/07)** : **PR #5 (B2+B6), #6 (B3) ET #7 (renommage NETCEL V LAM + plan B7 + en-tête consolidé + minimum sur page produit + libellés) FUSIONNÉES dans `main`**. Tout le travail est sur `main` ; branches de fonctionnalités **supprimées** (toutes fusionnées). Prochaine feature → nouvelle branche depuis `main`.
+- **Branches / PR (01/07)** : **PR #5 (B2+B6), #6 (B3), #7 (renommage NETCEL V LAM + plan B7 + en-tête consolidé + minimum + libellés) ET #8 (régénération auto des fiches — synchro page↔fiche) FUSIONNÉES dans `main`**. Tout le travail est sur `main` ; branches de fonctionnalités **supprimées** (toutes fusionnées). Prochaine feature → nouvelle branche depuis `main`.
 - **Bloqués par l'immatriculation** : paiement réel Stripe (B3), comptes (B4). **Par INCWO** : synchro (B5).
 - **En attente du retravail Excel par Pierre-Alain** (feuille de route dans `fiches-techniques/CHECKLIST.md` § « À intégrer dans le calculateur ») : specs des produits sur devis, colonne/code cadre, corrections (G3, code 11 = AZUR…). Le site suivra automatiquement après ré-export.
 
