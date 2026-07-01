@@ -71,9 +71,12 @@ import { DEPARTEMENTS } from '../lib/departements';
         <p id="franco" class="mt-2 text-right text-xs text-muted"></p>
         <p class="mt-1 text-right text-xs text-muted">TVA calculée à la commande.</p>
 
+        <!-- Minimum de facturation : message affiché quand le sous-total produits est sous le plancher -->
+        <p id="minMsg" class="mt-4 hidden rounded-xl border border-soft bg-mist px-4 py-2.5 text-xs text-marine"></p>
+
         <!-- Étape 1 : bouton commander -->
         <button id="toForm" type="button"
-          class="mt-5 w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+          class="mt-5 w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] disabled:cursor-not-allowed disabled:opacity-50"
           style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
           Passer commande →
         </button>
@@ -122,6 +125,11 @@ import { DEPARTEMENTS } from '../lib/departements';
     const $ = (id) => document.getElementById(id);
     const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+    // Minimum de facturation (€ HT, produits hors port) : sous ce plancher, la commande
+    // est bloquée. ⚠️ RUSTINE : valeur en dur en attendant qu'elle vive dans les paramètres
+    // de l'Excel (comme le franco 750 €) → à lire dans tables.json après ré-export.
+    const MIN_COMMANDE_HT = 80;
+
     /**
      * Un SEUL frais de port pour tout le panier : calculé sur le total produits + le
      * département (franco global à 750 €). Port inconnu (dépt absent/non tarifé) → non
@@ -159,6 +167,27 @@ import { DEPARTEMENTS } from '../lib/departements';
       } else {
         fr.textContent = '';
       }
+      appliquerMinimum();
+    }
+
+    // Bloque la commande sous le minimum de facturation (produits HT hors port).
+    function appliquerMinimum() {
+      const bloque = cartTotalHT() < MIN_COMMANDE_HT;
+      $('toForm').disabled = bloque;
+      const msg = $('minMsg');
+      if (bloque) {
+        const manque = MIN_COMMANDE_HT - cartTotalHT();
+        msg.textContent = 'Montant minimum de commande : ' + eur(MIN_COMMANDE_HT) + ' € HT (il manque ' + eur(manque) + ' €).';
+        msg.classList.remove('hidden');
+        // Si le tunnel était ouvert et qu'on repasse sous le minimum, on le referme.
+        if (!$('form').classList.contains('hidden')) {
+          $('form').classList.add('hidden');
+          $('toForm').classList.remove('hidden');
+        }
+      } else {
+        msg.classList.add('hidden');
+      }
+      return bloque;
     }
 
     function render() {
@@ -237,6 +266,7 @@ import { DEPARTEMENTS } from '../lib/departements';
 
     $('form').addEventListener('submit', (e) => {
       e.preventDefault();
+      if (appliquerMinimum()) return; // garde : jamais de commande sous le minimum, même si le formulaire est ré-affiché
       const societe = new FormData(e.target).get('societe') || '';
       const nb = getCart().reduce((s, i) => s + i.qty, 0);
       const t = computeTotals();
