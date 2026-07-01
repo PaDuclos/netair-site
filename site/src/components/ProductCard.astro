@@ -1,6 +1,6 @@
 ---
 import type { Produit } from '../lib/familles';
-import { classesProduit } from '../lib/familles';
+import { classesProduit, familleBySlug, SLUG_FAMILLE } from '../lib/familles';
 
 interface Props {
   produit: Produit;
@@ -8,6 +8,8 @@ interface Props {
 const { produit } = Astro.props;
 const { nom, soustitre, photo } = produit.data;
 const { iso, en } = classesProduit(produit);
+// Nom de la norme primaire (ISO 16890, EN 1822…), repris de la famille du produit.
+const norme = familleBySlug(SLUG_FAMILLE[produit.id]?.[0] ?? '')?.norme;
 // Photo détourée (PNG transparent) générée dans /produits/detour/.
 const img = photo ? `/produits/detour/${photo.replace(/\.jpg$/i, '.png')}` : null;
 ---
@@ -30,10 +32,18 @@ const img = photo ? `/produits/detour/${photo.replace(/\.jpg$/i, '.png')}` : nul
   )}
   <div class="flex flex-1 flex-col p-5">
     {iso && (
-      <span class="mb-3 inline-block w-fit rounded-lg bg-bleu/8 px-2.5 py-1 text-xs text-bleu leading-tight">
-        {iso}
-        {en && <><br /><span class="text-bleu/70">{en}</span></>}
-      </span>
+      <div class="mb-3 flex flex-wrap gap-2">
+        <div class="rounded-lg bg-bleu/8 px-2.5 py-1 leading-tight">
+          {norme && <div class="text-[10px] font-medium uppercase tracking-wide text-bleu/60">{norme}</div>}
+          <div class="text-xs text-bleu">{iso}</div>
+        </div>
+        {en && (
+          <div class="rounded-lg border border-soft bg-white px-2.5 py-1 leading-tight">
+            <div class="text-[10px] font-medium uppercase tracking-wide text-muted">EN 779</div>
+            <div class="text-xs text-muted">{en}</div>
+          </div>
+        )}
+      </div>
     )}
     <h3 class="display text-lg font-normal text-marine">{nom}</h3>
     {soustitre && <p class="mt-1 text-sm text-muted">{soustitre}</p>}

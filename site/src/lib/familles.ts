@@ -10,9 +10,12 @@ export type Produit = CollectionEntry<'produits'>;
 export interface Famille {
   slug: string;
   titre: string;
-  /** Badge — 1re ligne : classe ISO 16890 (norme primaire). */
+  /** Badge — encadré primaire : classe de la norme primaire (valeur, ex. « Coarse → ePM10 »). */
   tag: string;
-  /** Badge — 2e ligne : classe EN 779 (ancienne norme), si applicable. */
+  /** Nom de la norme primaire pour l'étiquette de l'encadré (ex. « ISO 16890 », « EN 1822 »).
+   *  Absent = tag descriptif (« Gaz · odeurs ») → encadré sans étiquette de norme. */
+  norme?: string;
+  /** Badge — 2e encadré : classe EN 779 (ancienne norme), si applicable. */
   tagEn?: string;
   desc: string;
   /** Photo détourée (PNG transparent) représentative de la famille. */
@@ -23,7 +26,8 @@ export const FAMILLES: Famille[] = [
   {
     slug: 'prefiltres',
     titre: 'Préfiltres',
-    tag: 'Coarse → ePM10',
+    tag: 'Coarse 65%',
+    norme: 'ISO 16890',
     tagEn: 'G3 → M5',
     photo: '/produits/detour/netply-v6-photo.png',
     desc: "Première barrière contre les grosses poussières, en protection des étages fins. Filtres plissés et plans, cellules métalliques, médias synthétiques en panneau ou en rouleau.",
@@ -32,6 +36,7 @@ export const FAMILLES: Famille[] = [
     slug: 'compacts-miniplis',
     titre: 'Filtres miniplis',
     tag: 'ePM10 50% → ePM1 80%',
+    norme: 'ISO 16890',
     tagEn: 'M5 → F9',
     photo: '/produits/detour/netpak-s-cilia-photo.png',
     desc: "Filtration fine à très fine sous faible encombrement : média finement plissé en cadre rigide, grande surface filtrante pour une longue durée de service.",
@@ -39,7 +44,8 @@ export const FAMILLES: Famille[] = [
   {
     slug: 'poches-souples-rigides',
     titre: 'Filtres à poches souples et rigides',
-    tag: 'ePM10 → ePM1',
+    tag: 'Coarse 65% → ePM1 80%',
+    norme: 'ISO 16890',
     tagEn: 'G4 → F9',
     photo: '/produits/detour/netbag-s-photo.png',
     desc: "Grande surface filtrante développée sur plusieurs poches — souples ou rigides (polydièdres) — pour une longue durée de service à perte de charge maîtrisée.",
@@ -48,6 +54,7 @@ export const FAMILLES: Famille[] = [
     slug: 'hepa',
     titre: 'Filtres absolus (HEPA / T.H.E)',
     tag: 'E10 → H14',
+    norme: 'EN 1822',
     photo: '/produits/detour/netcel-v-nival-photo.png',
     desc: "Filtration absolue pour les environnements maîtrisés : salles propres, santé, process sensibles. Gamme NETCEL et caisson laminaire.",
   },
