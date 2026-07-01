@@ -138,7 +138,11 @@ const accroches: Record<string, string> = {
           <a href="#process" class="link-underline text-sm font-normal text-secondary hover:text-primary">Notre approche</a>
         </nav>
 
-        <div class="flex items-center gap-4 sm:gap-5">
+        <div class="flex items-center gap-2 sm:gap-5">
+          <button id="menu-toggle" type="button" class="inline-flex items-center rounded-xl p-2 text-secondary transition-colors hover:text-primary md:hidden" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-menu">
+            <svg id="menu-open-icon" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            <svg id="menu-close-icon" class="hidden h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
           <a href="/devis" class="hidden items-center gap-1.5 text-sm font-normal text-secondary transition-colors hover:text-primary sm:inline-flex">
             Demander un devis
             <span id="devis-badge" class="hidden min-w-[18px] rounded-full bg-mist px-1 text-center text-[11px] font-medium leading-[18px] text-marine">0</span>
@@ -152,6 +156,18 @@ const accroches: Record<string, string> = {
             <span id="cart-badge" class="hidden rounded-full bg-white/25 px-1.5 text-[11px] font-medium leading-[18px]">0</span>
           </a>
         </div>
+      </div>
+
+      <!-- Panneau du menu mobile (masqué par défaut, ouvert par le hamburger) -->
+      <div id="mobile-menu" class="hidden md:hidden">
+        <nav class="mt-2 flex flex-col rounded-2xl glass px-3 py-3 shadow-soft" aria-label="Menu mobile">
+          <a href="/gammes" class="rounded-lg px-3 py-2.5 text-sm font-normal text-secondary transition-colors hover:bg-mist hover:text-primary">Catalogue</a>
+          <a href="#solutions" class="rounded-lg px-3 py-2.5 text-sm font-normal text-secondary transition-colors hover:bg-mist hover:text-primary">Solutions</a>
+          <a href="#performance" class="rounded-lg px-3 py-2.5 text-sm font-normal text-secondary transition-colors hover:bg-mist hover:text-primary">Performance</a>
+          <a href="#secteurs" class="rounded-lg px-3 py-2.5 text-sm font-normal text-secondary transition-colors hover:bg-mist hover:text-primary">Secteurs</a>
+          <a href="#process" class="rounded-lg px-3 py-2.5 text-sm font-normal text-secondary transition-colors hover:bg-mist hover:text-primary">Notre approche</a>
+          <a href="/devis" class="mt-1 rounded-lg border-t border-soft px-3 pb-2.5 pt-3 text-sm font-normal text-secondary transition-colors hover:bg-mist hover:text-primary">Demander un devis</a>
+        </nav>
       </div>
     </div>
   </header>
@@ -526,6 +542,26 @@ const accroches: Record<string, string> = {
 
     const yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Menu mobile (hamburger) : ouverture/fermeture + bascule de l'icône.
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const openIcon = document.getElementById('menu-open-icon');
+    const closeIcon = document.getElementById('menu-close-icon');
+    if (menuToggle && mobileMenu) {
+      const setOpen = (open) => {
+        mobileMenu.classList.toggle('hidden', !open);
+        if (openIcon) openIcon.classList.toggle('hidden', open);
+        if (closeIcon) closeIcon.classList.toggle('hidden', !open);
+        menuToggle.setAttribute('aria-expanded', String(open));
+      };
+      menuToggle.addEventListener('click', () => setOpen(mobileMenu.classList.contains('hidden')));
+      mobileMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+      document.addEventListener('click', (e) => {
+        if (!mobileMenu.classList.contains('hidden') && !mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) setOpen(false);
+      });
+    }
 
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
