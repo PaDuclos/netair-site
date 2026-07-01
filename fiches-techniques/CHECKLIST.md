@@ -64,6 +64,13 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 
 - [ ] **Photos produit Netair** : toutes les fiches créées utilisent une **photo Titanair détourée
       en placeholder** → remplacer par des photos réelles du produit Netair.
+- [ ] **RÉGÉNÉRATION AUTO DES FICHES (01/07) — décision déploiement à trancher.** Les fiches se
+      régénèrent automatiquement au build/dev (`prebuild`/`predev` → `regen-fiches.sh` → `generer_tous.py`)
+      tant que **python3** est présent. Les fiches HTML de `site/public/fiches-techniques/` sont
+      **committées** (fallback si python absent). ⚠️ Au moment du **déploiement** (hébergeur), trancher :
+      soit **committer les fiches régénérées avec chaque édition de JSON** (workflow), soit garantir
+      **python3 au build de déploiement** (et éventuellement gitignore les fiches = artefacts). Sans objet
+      tant que le site n'est pas hébergé.
 - [x] **Page 2 A4 — mono-classe : RÉGLÉ** via option `compact_p2` (marges p2 + graphe 84 %).
       NETPLAN, NETMETAL, NETFIL, NETFIBRE → page 2 = 1123 px (≤ A4). Identité NETPLY OK.
 - [ ] **🟠 Fiches multi-courbes : page 2 déborde l'A4** — **NETPLY** (1344 px), **NETPAK S AZUR** (1375),
