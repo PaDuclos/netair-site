@@ -31,6 +31,8 @@ Le configurateur affiche les **vrais prix catalogue** sur tous les produits calc
 | **B5 — Synchro INCWO** | Commande → INCWO | ⏳ À venir | INCWO souscrit |
 | **B6 — Catalogue & design** | Navigation + intégration charte | 🔄 **Bien avancé** : page produit **unifiée** sous `/produits` (fin du doublon vitrine/boutique), navigation catalogue → produit branchée, catalogue `/gammes` + pages famille propres. **Entrée boutique depuis l'accueil FAITE** (01/07 : bouton principal du hero « Configurer et acheter en ligne » → `/gammes`). Reste : photo détourée « Charbons actifs » (asset à fournir), nettoyage du mot « boutique ». Dans **PR #5**. | — |
 
+| **B7 — Site multilingue** | EN / ES / IT / DE (i18n + SEO) | ⏳ **Planifié (01/07)** — ajouté au plan (cahier §7 + note B7). Astro gère l'i18n nativement ; traduction **IA puis relue** (priorité vocabulaire technique/normatif) ; `hreflang`/SEO par langue ; sélecteur de langue. **Après la mise en ligne FR** (architecture posable tôt). Prix en € HT inchangés ; CGV/mentions à décliner par langue. | Contenu FR stabilisé (B6) + mise en ligne FR |
+
 Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 
 ---
@@ -124,6 +126,7 @@ Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 
 | Date | Événement |
 |---|---|
+| 01/07/2026 | **Ajout au plan : Bloc B7 — Site multilingue (EN/ES/IT/DE)** (déc. PA). Objectif export ; Astro i18n natif ; **traduction IA puis relue** (priorité vocabulaire technique/normatif) ; `hreflang`/SEO par langue ; sélecteur de langue. **Priorité : après mise en ligne FR** (architecture posable tôt). Écrit dans `CAHIER_DES_CHARGES.md` §7 + note B7 et table des blocs. |
 | 01/07/2026 | **RENOMMAGE PRODUIT : NETPAK V LAM → NETCEL V LAM** (déc. PA — cohérent : filtre HEPA H14 → famille NETCEL). Code prix **14 inchangé**. Fait : site (`familles.ts`, `produits-gammes.ts`, slug + URL `/produits/netcel-v-lam`), **fiche technique** (JSON renommé `netcel-v-lam.json` + régénérée + copiée au site), **photos** renommées (`netcel-v-lam-photo`), docs de pilotage (CLAUDE.md, PLAN.md, SUIVI, CHECKLIST, README, RESULTATS_ETIQUETTE), code `cost_calculator_netair.py`, skill `netair-pricing-validator`. Titanair (« TITAPAK V LAM ») **préservé**. Build OK (page produit = « NETCEL V LAM », plus de route netpak-v-lam). **Reste (action PA)** : renommer le nom de gamme dans les 4 classeurs Excel (Ctrl+H) → ré-export `tables.json` ; renommer + rééditer le **FDS** (fichier ouvert à fermer). Branche `feature/rename-netcel-v-lam`. DEVIS AUTO laissé intact (historique Titanair). |
 | 27/06/2026 | Brainstorm initial + rédaction du cahier des charges v0.1 + ce suivi |
 | 28/06/2026 | Politique de prix affinée (2 canaux) · un seul site · ordre maquette→moteur · **maquette fiche produit créée** (branche `feature/boutique-maquette`) |

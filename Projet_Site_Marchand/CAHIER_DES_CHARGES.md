@@ -188,9 +188,19 @@ ne dépend pas de DEVIS AUTO ; voir la mise au point §4 brique 1).
 | **B4 — Comptes & remise famille** | Auth (nouveaux clients) + remise simple par famille (INCWO) | B2, INCWO | 🔴 immatriculation |
 | **B5 — Synchro INCWO** | Commande → devis/commande INCWO | B3, INCWO | 🟠 INCWO souscrit |
 | **B6 — Catalogue & design** | Navigation, intégration design, raccord fiches | B2 | ❌ non |
+| **B7 — Site multilingue (EN/ES/IT/DE)** | Internationalisation (i18n Astro : `/en/`, `/es/`, `/it/`, `/de/`) + traduction du contenu + `hreflang`/SEO par langue + sélecteur de langue | B6 (contenu FR stabilisé) | ❌ non |
 
-**Ordre conseillé** : B1 → B2/B6 (constructibles maintenant) → puis B3/B4/B5 (après immatriculation + INCWO).
+**Ordre conseillé** : B1 → B2/B6 (constructibles maintenant) → puis B3/B4/B5 (après immatriculation + INCWO) → **B7 après la mise en ligne FR** (l'architecture i18n peut toutefois être posée tôt, à faible coût).
 Chaque bloc fera l'objet de sa **propre spécification détaillée** au moment de l'attaquer.
+
+### Note B7 — Site multilingue (ajouté 01/07/2026, décision PA)
+- **Objectif** : ouvrir le site à l'**export** (Royaume-Uni, Espagne, Italie, Allemagne) — vraie visibilité Google par pays.
+- **Langues** : **anglais, espagnol, italien, allemand** (le **français** reste la langue de référence).
+- **Technique** : Astro gère nativement le multilingue (routes par langue, pas de refonte) — pas de blocage.
+- **Traduction (décision PA)** : **IA d'abord** (rapide, sans coût) **puis relecture** des pages clés — priorité au **vocabulaire technique et normatif** (filtres, EN ISO 16890 / EN 779 / EN 1822, classes) — **avant mise en ligne** de chaque langue.
+- **SEO** : balises `hreflang` + URL par langue → chaque langue indexée séparément (levier commercial export).
+- **Points à prévoir** : sélecteur de langue dans l'en-tête ; **prix/devis** restent en euros HT (même moteur) ; **CGV / mentions légales** à décliner par langue si vente à l'étranger (→ juridique) ; contenu des **fiches techniques** (générées) à internationaliser aussi.
+- **Priorité (décision PA)** : **après la mise en ligne FR** ; poser l'architecture i18n tôt pour éviter une reprise coûteuse.
 
 ---
 
