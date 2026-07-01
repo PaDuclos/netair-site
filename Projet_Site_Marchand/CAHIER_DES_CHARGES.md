@@ -189,8 +189,9 @@ ne dépend pas de DEVIS AUTO ; voir la mise au point §4 brique 1).
 | **B5 — Synchro INCWO** | Commande → devis/commande INCWO | B3, INCWO | 🟠 INCWO souscrit |
 | **B6 — Catalogue & design** | Navigation, intégration design, raccord fiches | B2 | ❌ non |
 | **B7 — Site multilingue (EN/ES/IT/DE)** | Internationalisation (i18n Astro : `/en/`, `/es/`, `/it/`, `/de/`) + traduction du contenu + `hreflang`/SEO par langue + sélecteur de langue | B6 (contenu FR stabilisé) | ❌ non |
+| **B8 — Contenu éditorial & SEO** | Page **« Entreprise / À propos »** dans le menu + section **« Actualités / News »** (blog) + fondations **SEO** (données structurées schema.org, FAQ, méta par page) | B6 | ❌ non |
 
-**Ordre conseillé** : B1 → B2/B6 (constructibles maintenant) → puis B3/B4/B5 (après immatriculation + INCWO) → **B7 après la mise en ligne FR** (l'architecture i18n peut toutefois être posée tôt, à faible coût).
+**Ordre conseillé** : B1 → B2/B6 (constructibles maintenant) → **B8 (constructible maintenant, fort levier SEO)** → puis B3/B4/B5 (après immatriculation + INCWO) → **B7 après la mise en ligne FR** (l'architecture i18n peut toutefois être posée tôt, à faible coût).
 Chaque bloc fera l'objet de sa **propre spécification détaillée** au moment de l'attaquer.
 
 ### Note B7 — Site multilingue (ajouté 01/07/2026, décision PA)
@@ -201,6 +202,18 @@ Chaque bloc fera l'objet de sa **propre spécification détaillée** au moment d
 - **SEO** : balises `hreflang` + URL par langue → chaque langue indexée séparément (levier commercial export).
 - **Points à prévoir** : sélecteur de langue dans l'en-tête ; **prix/devis** restent en euros HT (même moteur) ; **CGV / mentions légales** à décliner par langue si vente à l'étranger (→ juridique) ; contenu des **fiches techniques** (générées) à internationaliser aussi.
 - **Priorité (décision PA)** : **après la mise en ligne FR** ; poser l'architecture i18n tôt pour éviter une reprise coûteuse.
+
+### Note B8 — Contenu éditorial & SEO (ajouté 01/07/2026, idée PA)
+> **SEO = référencement** : être bien placé dans Google. Google favorise les sites qui **inspirent confiance** et **publient régulièrement**.
+- **Page « Entreprise / À propos »** dans le **menu principal** (aujourd'hui `/a-propos` existe mais n'est **pas dans le menu**) : rassure les acheteurs B2B (« à qui j'achète ? ») et renforce le SEO (signaux de confiance, requêtes de marque). → l'ajouter au menu + enrichir la page (histoire, savoir-faire, valeurs, équipe, engagements).
+- **Section « Actualités / News »** (un mini-blog) : **le plus fort levier SEO constructible maintenant**. Publier régulièrement (nouveaux produits, certifications, salons, cas clients, conseils techniques) = **contenu frais** + **plus de pages indexées** + **mots-clés longue traîne** → Google remonte le site. Alimente aussi **LinkedIn**. Prévoir : liste d'articles + page article, catégories/tags, date, image, méta.
+- **Fondations SEO à ne pas oublier** (recommandations Claude) :
+  1. **Données structurées** (schema.org JSON-LD : `Organization`, `Product`, `BreadcrumbList`) → **résultats enrichis** dans Google (prix, fil d'Ariane, étoiles). Fort impact, invisible pour le visiteur.
+  2. **Page FAQ** (avec balisage `FAQPage`) → capte les questions tapées dans Google + réduit le support.
+  3. **Métas soignées** par page (titre + description uniques) — en partie faites, à compléter.
+  4. **Performance** : l'accueil charge encore **Tailwind par CDN** (avertissement en prod) → le **compiler** comme les autres pages (vitesse = critère Google).
+  5. **`robots.txt`** + vérifier le `sitemap.xml` (déjà généré) + **Open Graph** (déjà en place) → soigner l'aperçu au partage.
+- **Dépendance** : contenu FR (B6). **Constructible tout de suite** (aucun blocage légal/technique) — fort ROI SEO avant même l'immatriculation.
 
 ---
 
