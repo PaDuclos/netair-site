@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import { DEPARTEMENTS } from '../lib/departements';
 ---
 
 <BaseLayout title="Panier — Netair" description="Votre panier de filtres Netair.">
@@ -44,9 +45,13 @@ import Breadcrumb from '../components/Breadcrumb.astro';
         <!-- Département de livraison → estime le port immédiatement -->
         <label class="mt-5 block">
           <span class="eyebrow text-[11px] text-muted">Département de livraison</span>
-          <input id="dept" type="text" maxlength="3" placeholder="ex. 35" autocomplete="off"
-            class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+          <select id="dept"
+            class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise">
+            <option value="">— Choisir un département —</option>
+            {DEPARTEMENTS.map((d) => <option value={d.code}>{d.code} — {d.nom}</option>)}
+          </select>
         </label>
+        <p class="mt-1.5 text-[11px] text-muted">Livraison en France métropolitaine et Corse.</p>
 
         <!-- Détail du total -->
         <div class="mt-5 space-y-2 border-t border-soft pt-4">
@@ -206,8 +211,16 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       );
     }
 
+    // Purge d'une valeur mémorisée absente du menu (ancien champ libre, DROM retiré) →
+    // évite un menu vide affiché avec un port incohérent.
+    (() => {
+      const sel = $('dept');
+      const memo = getDeliveryDept();
+      if (memo && !Array.from(sel.options).some((o) => o.value === memo)) setDeliveryDept('');
+    })();
+
     // Département : mémorise et recalcule le port en direct (sans reconstruire les lignes).
-    $('dept').addEventListener('input', () => {
+    $('dept').addEventListener('change', () => {
       setDeliveryDept($('dept').value.trim());
       renderTotals();
     });
