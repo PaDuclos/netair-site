@@ -10,6 +10,7 @@ import {
 import { gammeDuProduit } from '../../lib/pricing/produits-gammes';
 import { optionsDuCode, formatsDuCode, libelleClasse } from '../../lib/pricing/options';
 import { trouverGamme } from '../../lib/pricing/lookups';
+import { MIN_COMMANDE_HT } from '../../lib/boutique';
 
 export async function getStaticPaths() {
   const produits = await getProduits();
@@ -310,6 +311,9 @@ const variantesConfig =
               <span class="eyebrow text-[11px] text-muted">Prix unitaire HT</span>
               <div class="display text-3xl font-normal text-marine"><span id="pUnit">—</span> €</div>
               <p class="mt-1 text-xs text-muted">Total (<span id="pQty">6</span> u.) : <span id="pTotal" class="font-medium text-marine">—</span> € HT</p>
+              {modeProduit === 'calcul' && (
+                <p class="mt-1 text-xs text-muted">Commande minimum : <span class="font-medium text-marine">{MIN_COMMANDE_HT} € HT</span></p>
+              )}
             </div>
           </div>
           <div class="mt-4 flex flex-col gap-3 border-t border-soft pt-4 sm:flex-row">
