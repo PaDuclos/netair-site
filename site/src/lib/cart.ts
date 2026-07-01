@@ -37,6 +37,7 @@ export interface CartItem {
 }
 
 const CLE = "netair_panier_v1";
+const CLE_DEPT = "netair_livraison_dept_v1";
 const EVENEMENT = "netair-panier-change";
 
 /** Lecture défensive du panier depuis le stockage (jamais d'exception en cas de données corrompues). */
@@ -114,6 +115,26 @@ export function cartCount(): number {
 /** Total HT du panier (somme prix unitaire × quantité). */
 export function cartTotalHT(): number {
   return getCart().reduce((s, i) => s + i.unit * i.qty, 0);
+}
+
+/**
+ * Département de livraison mémorisé (pour le calcul du port au panier). Persisté à part
+ * du panier : c'est une préférence de livraison, pas un article. On n'émet PAS
+ * l'événement panier ici (le port se recalcule localement dans la page /panier).
+ */
+export function getDeliveryDept(): string {
+  if (typeof localStorage === "undefined") return "";
+  try {
+    return localStorage.getItem(CLE_DEPT) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+/** Mémorise le département de livraison (chaîne libre, ex. « 35 », « 2A », « 971 »). */
+export function setDeliveryDept(departement: string): void {
+  if (typeof localStorage === "undefined") return;
+  localStorage.setItem(CLE_DEPT, departement);
 }
 
 /**

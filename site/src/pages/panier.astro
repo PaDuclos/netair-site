@@ -40,11 +40,31 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       <!-- Récapitulatif + commande -->
       <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft lg:sticky lg:top-24">
         <h2 class="display text-xl font-normal text-marine">Récapitulatif</h2>
-        <div class="mt-5 flex items-center justify-between border-t border-soft pt-4">
-          <span class="text-sm text-muted">Total HT</span>
+
+        <!-- Département de livraison → estime le port immédiatement -->
+        <label class="mt-5 block">
+          <span class="eyebrow text-[11px] text-muted">Département de livraison</span>
+          <input id="dept" type="text" maxlength="3" placeholder="ex. 35" autocomplete="off"
+            class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+        </label>
+
+        <!-- Détail du total -->
+        <div class="mt-5 space-y-2 border-t border-soft pt-4">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-muted">Sous-total produits HT</span>
+            <span class="text-sm text-marine"><span id="sousTotal">0</span> €</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-muted">Frais de port HT</span>
+            <span id="port" class="text-sm text-marine">à préciser</span>
+          </div>
+        </div>
+        <div class="mt-3 flex items-center justify-between border-t border-soft pt-3">
+          <span class="text-sm font-medium text-marine">Total HT</span>
           <span class="display text-2xl font-normal text-marine"><span id="total">0</span> €</span>
         </div>
-        <p class="mt-1 text-right text-xs text-muted">TVA et frais de port calculés à la commande.</p>
+        <p id="franco" class="mt-2 text-right text-xs text-muted"></p>
+        <p class="mt-1 text-right text-xs text-muted">TVA calculée à la commande.</p>
 
         <!-- Étape 1 : bouton commander -->
         <button id="toForm" type="button"
@@ -90,11 +110,51 @@ import Breadcrumb from '../components/Breadcrumb.astro';
   </section>
 
   <script>
-    import { getCart, setQty, removeItem, cartTotalHT, onCartChange } from '../lib/cart';
+    import { getCart, setQty, removeItem, cartTotalHT, onCartChange, getDeliveryDept, setDeliveryDept } from '../lib/cart';
     import { calculerPrix } from '../lib/pricing';
+    import { calculerPort, seuilFranco } from '../lib/pricing/shipping';
 
     const $ = (id) => document.getElementById(id);
     const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    /**
+     * Un SEUL frais de port pour tout le panier : calculé sur le total produits + le
+     * département (franco global à 750 €). Port inconnu (dépt absent/non tarifé) → non
+     * ajouté au total, mais la commande reste possible (port réglé au devis).
+     */
+    function computeTotals() {
+      const subtotal = cartTotalHT();
+      const dept = getDeliveryDept().trim();
+      let portHT = null, franco = false, surDevis = false;
+      let portLabel = 'à préciser';
+      if (dept) {
+        const r = calculerPort(dept, subtotal);
+        if (r.portSurDevis) { surDevis = true; portLabel = 'sur devis'; }
+        else if (r.francoApplique) { portHT = 0; franco = true; portLabel = 'offert'; }
+        else if (r.fraisPortHT != null) { portHT = r.fraisPortHT; portLabel = eur(portHT) + ' €'; }
+        else { surDevis = true; portLabel = 'sur devis'; } // filet : port manquant → jamais de NaN
+      }
+      const total = subtotal + (portHT || 0);
+      return { subtotal, dept, portHT, portLabel, franco, surDevis, total };
+    }
+
+    function renderTotals() {
+      const t = computeTotals();
+      $('sousTotal').textContent = eur(t.subtotal);
+      $('port').textContent = t.portLabel;
+      $('total').textContent = eur(t.total);
+      const fr = $('franco');
+      if (t.franco) {
+        fr.textContent = '✓ Port offert (commande ≥ ' + eur(seuilFranco(t.dept)) + ' € HT).';
+        fr.className = 'mt-2 text-right text-xs text-turquoise';
+      } else if (t.dept && !t.surDevis) {
+        const reste = seuilFranco(t.dept) - t.subtotal;
+        fr.textContent = reste > 0 ? 'Plus que ' + eur(reste) + ' € HT pour le port offert (dès ' + eur(seuilFranco(t.dept)) + ' €).' : '';
+        fr.className = 'mt-2 text-right text-xs text-muted';
+      } else {
+        fr.textContent = '';
+      }
+    }
 
     function render() {
       const items = getCart();
@@ -102,6 +162,9 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       $('vide').classList.toggle('hidden', !empty);
       $('plein').classList.toggle('hidden', empty);
       if (empty) return;
+
+      // Département mémorisé (sans écraser la saisie en cours ni bouger le curseur).
+      if (document.activeElement !== $('dept')) $('dept').value = getDeliveryDept();
 
       const list = $('lignes');
       list.innerHTML = '';
@@ -122,7 +185,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
           '</div>';
         list.appendChild(li);
       });
-      $('total').textContent = eur(cartTotalHT());
+      renderTotals();
 
       list.querySelectorAll('[data-qty]').forEach((inp) =>
         inp.addEventListener('change', () => {
@@ -143,21 +206,35 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       );
     }
 
+    // Département : mémorise et recalcule le port en direct (sans reconstruire les lignes).
+    $('dept').addEventListener('input', () => {
+      setDeliveryDept($('dept').value.trim());
+      renderTotals();
+    });
+
     // Tunnel de commande (maquette)
     $('toForm').addEventListener('click', () => {
       $('toForm').classList.add('hidden');
       $('form').classList.remove('hidden');
+      // Pré-remplir l'adresse avec le département déjà saisi (si l'adresse est vide).
+      const dep = getDeliveryDept().trim();
+      const adr = $('form').querySelector('[name="adresse"]');
+      if (dep && adr && !adr.value.trim()) adr.value = 'Département ' + dep + ' — ';
     });
 
     $('form').addEventListener('submit', (e) => {
       e.preventDefault();
       const societe = new FormData(e.target).get('societe') || '';
-      const items = getCart();
-      const total = items.reduce((s, i) => s + i.unit * i.qty, 0);
+      const nb = getCart().reduce((s, i) => s + i.qty, 0);
+      const t = computeTotals();
+      const portTxt = t.surDevis ? 'port sur devis'
+        : t.franco ? 'port offert'
+        : t.portHT != null ? 'port ' + eur(t.portHT) + ' € HT'
+        : 'port à préciser';
       $('form').classList.add('hidden');
       $('doneMsg').textContent =
-        'Merci ' + societe + '. Votre commande (' + items.reduce((s, i) => s + i.qty, 0) +
-        ' article(s), ' + eur(total) + ' € HT) a bien été enregistrée. Le paiement sera activé après immatriculation de Netair.';
+        'Merci ' + societe + '. Votre commande (' + nb + ' article(s), ' + eur(t.total) +
+        ' € HT, ' + portTxt + ') a bien été enregistrée. Le paiement sera activé après immatriculation de Netair.';
       $('done').classList.remove('hidden');
     });
 
