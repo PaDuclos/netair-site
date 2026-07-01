@@ -3,10 +3,14 @@
 > Tableau de bord vivant du projet. Mis à jour à chaque avancée.
 > Cahier des charges : [`CAHIER_DES_CHARGES.md`](CAHIER_DES_CHARGES.md)
 
-**État global : 🟢 Bloc B1 (moteur de prix) TERMINÉ & VALIDE** — moteur complet (T1→T9 + hors-format), **conforme à l'Excel au centime sur 1245 vecteurs dorés**, 63 tests verts, relu par les 3 skills (reviewer ✅ + validator CONFORME + qa **VALIDE**, sans réserve bloquante). B1 fusionné dans `main` (PR #4) ; le **hors-format** (commit en attente d'accord PA) est validé sur prix Excel réels. Restes non bloquants : borne dimension MAX par famille (§10.2). Prochain : commit hors-format, puis **B2** (brancher le prix dans le configurateur).
+**État global (30/06/2026) : 🟢 B1 (moteur) + B2 (configurateur) TERMINÉS · B3 (panier maquette) & B6 (page unifiée) bien avancés.**
+Le configurateur affiche les **vrais prix catalogue** sur tous les produits calculables (au centime = Excel), la page produit est **unifiée** sous `/produits/[ref]` (descriptif + specs + fiche + configurateur + prix), et le **panier maquette** est complet (persistant, page `/panier`, re-calcul des paliers, « continuer mes achats », tunnel de commande). Principe verrouillé : **le configurateur ne référence QUE le calculateur** (source unique).
+- **Branches / PR** : B2+B6 = branche `feature/b2-configurateur-prix` → **PR #5**. B3 (panier) = branche `feature/b3-panier` (basée sur la précédente).
+- **Bloqués par l'immatriculation** : paiement réel Stripe (B3), comptes (B4). **Par INCWO** : synchro (B5).
+- **En attente du retravail Excel par Pierre-Alain** (feuille de route dans `fiches-techniques/CHECKLIST.md` § « À intégrer dans le calculateur ») : specs des produits sur devis, colonne/code cadre, corrections (G3, code 11 = AZUR…). Le site suivra automatiquement après ré-export.
 
 > **Reprise rapide (nouvelle session)** : lire ce fichier + [`CAHIER_DES_CHARGES.md`](CAHIER_DES_CHARGES.md).
-> Maquette = `site/src/pages/boutique/[ref].astro` sur la branche `feature/boutique-maquette` ; à voir sur `http://localhost:4321/boutique/netply` (prix **fictifs**). Prochaine action ci-dessous.
+> Page produit + configurateur = `site/src/pages/produits/[ref].astro` ; panier = `site/src/pages/panier.astro` + `site/src/lib/cart.ts`. À voir sur `http://localhost:4321/produits/netply` et `/panier` (prix **réels**, paiement en maquette).
 
 ---
 
@@ -19,11 +23,11 @@
 | Bloc | Description | Statut | Bloqué par |
 |---|---|---|---|
 | **B1 — Moteur de prix** | Réplique des tables Excel + tests | ✅ **TERMINÉ** (T1→T9, T6 abandonné) : moteur complet, **conforme Excel au centime sur 1221 vecteurs**, **62 tests**, relu reviewer + validator + qa. Réserve : hors-format > 50 dm² (attente prix Excel PA). Reste : commit + PR vers main. | — |
-| **B2 — Configurateur & pages produits** | Saisie dimensions → prix instantané | 🔄 **NETPLY branché sur le VRAI moteur** (`calculerPrix`) : prix réel, menus adaptés (classes/épaisseurs tarifées), statuts gérés (ok/sur_devis/…), build prod OK. Reviewer ✅ + validator CONFORME (réserves non bloquantes). Reste : déployer aux autres produits + bornes maxi dim. | — |
+| **B2 — Configurateur & pages produits** | Saisie dimensions → prix instantané | ✅ **TERMINÉ** : tous les produits calculables branchés sur le vrai moteur (prix au centime), menus adaptés, produits à formats (NETFIBRE panneau/rouleau, laminaire, polydièdres AZUR/LUMEN avec profondeur), produits sur devis gérés. Concordance configurateur ⟵ calculateur. Dans **PR #5**. | — |
 | **B3 — Panier & paiement** | Panier + Stripe (invité) | 🔄 **Panier maquette FAIT** : panier persistant (localStorage, suit toutes les pages), icône+compteur dans l'en-tête, page `/panier` (quantités, retrait, total), **re-calcul du prix selon le palier quand la quantité change au panier** (le panier mémorise la config et ré-interroge le moteur), tunnel de commande (récap→coordonnées→confirmation). **Paiement réel (Stripe) en attente d'immatriculation.** | Immatriculation (pour le paiement) |
 | **B4 — Comptes & remises** | Auth + % client depuis INCWO | ⏳ À venir | Immatriculation, INCWO |
 | **B5 — Synchro INCWO** | Commande → INCWO | ⏳ À venir | INCWO souscrit |
-| **B6 — Catalogue & design** | Navigation + intégration charte | ⏳ À venir | B2, fiches finalisées |
+| **B6 — Catalogue & design** | Navigation + intégration charte | 🔄 **Bien avancé** : page produit **unifiée** sous `/produits` (fin du doublon vitrine/boutique), navigation catalogue → produit branchée, catalogue `/gammes` + pages famille propres. Reste : entrée boutique depuis l'accueil, photo détourée « Charbons actifs » (asset à fournir), nettoyage du mot « boutique ». Dans **PR #5**. | — |
 
 Légende : ⏳ à faire · 🔄 en cours · ✅ terminé · ⛔ bloqué
 
