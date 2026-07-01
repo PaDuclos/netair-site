@@ -85,7 +85,7 @@ export const SLUG_FAMILLE: Record<string, string[]> = {
   'netbag-s': ['poches-souples-rigides'],
   'netcel-v-azur': ['hepa'],
   'netcel-v-nival': ['hepa'],
-  'netpak-v-lam': ['hepa'],
+  'netcel-v-lam': ['hepa'],
   'netcarb-cilia': ['charbon-actif'],
   'netcarb-azur': ['charbon-actif'],
   'netcarb-nival': ['charbon-actif'],

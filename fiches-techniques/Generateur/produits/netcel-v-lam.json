@@ -1,8 +1,8 @@
 {
-  "_commentaire": "NETPAK V LAM — filtre HEPA à FLUX LAMINAIRE H14 (équiv. Titanair TITAPAK V LAM). Nom validé PA (22/06/2026, pas de nom signature — volontaire). PARADIGME HEPA (EN 1822, pas ePM/Coarse) → 1re fiche du moteur en mode HEPA : aref=610² (dimensions effectives 610×610×68, pas 592), basse vitesse laminaire (Vmax 0,5 m/s, nominal 0,45 m/s ≈ 600 m³/h), règle ΔP finale = 2 × ΔP initiale (dp_final_mode x2, EN 1822) au lieu de +100 ePM. Source = TITAPAK V LAM H14 2022 (cache Excel) : courbe ΔP en débit 120→600 m³/h → ΔP 12·38·65·95·125 Pa ; en vraie vitesse (aire 610²=0,3721 m²) v=0,09→0,45 m/s. Polynôme ajusté 97,91·v²+263,287·v−12,4 (R²=0,9999), ΔP nom ≈125 Pa @600 m³/h. Specs fiche 2022 : classe EN 1822 H14, média FIBRE DE VERRE, cadre ALUMINIUM, séparateur hot melt, surface média 5,83 m², T° continue 80°C (acc.85/1h), feu M1, ΔP finale absolue (colmatage) 400 Pa. PHOTO = placeholder (à remplacer par visuel HEPA Netair).",
+  "_commentaire": "NETCEL V LAM — filtre HEPA à FLUX LAMINAIRE H14 (équiv. Titanair TITAPAK V LAM). Nom validé PA (22/06/2026, pas de nom signature — volontaire). PARADIGME HEPA (EN 1822, pas ePM/Coarse) → 1re fiche du moteur en mode HEPA : aref=610² (dimensions effectives 610×610×68, pas 592), basse vitesse laminaire (Vmax 0,5 m/s, nominal 0,45 m/s ≈ 600 m³/h), règle ΔP finale = 2 × ΔP initiale (dp_final_mode x2, EN 1822) au lieu de +100 ePM. Source = TITAPAK V LAM H14 2022 (cache Excel) : courbe ΔP en débit 120→600 m³/h → ΔP 12·38·65·95·125 Pa ; en vraie vitesse (aire 610²=0,3721 m²) v=0,09→0,45 m/s. Polynôme ajusté 97,91·v²+263,287·v−12,4 (R²=0,9999), ΔP nom ≈125 Pa @600 m³/h. Specs fiche 2022 : classe EN 1822 H14, média FIBRE DE VERRE, cadre ALUMINIUM, séparateur hot melt, surface média 5,83 m², T° continue 80°C (acc.85/1h), feu M1, ΔP finale absolue (colmatage) 400 Pa. PHOTO = placeholder (à remplacer par visuel HEPA Netair).",
 
-  "slug": "netpak-v-lam",
-  "nom": "NETPAK V LAM",
+  "slug": "netcel-v-lam",
+  "nom": "NETCEL V LAM",
   "soustitre": "Filtre HEPA à flux laminaire — H14 (EN 1822)",
   "mono_classe": true,
   "surface_facteur": 15.67,
@@ -17,12 +17,12 @@
   "dp_final_mode": "x2",
   "compact_p2": true,
 
-  "fiche": { "num": "FT-NETPAK-V-LAM-001", "version": "v1.0", "date": "22/06/2026" },
+  "fiche": { "num": "FT-NETCEL-V-LAM-001", "version": "v1.0", "date": "22/06/2026" },
 
-  "photo": "netpak-v-lam-photo.jpg",
-  "photo_alt": "Filtre HEPA à flux laminaire NETPAK V LAM H14",
+  "photo": "netcel-v-lam-photo.jpg",
+  "photo_alt": "Filtre HEPA à flux laminaire NETCEL V LAM H14",
 
-  "description": "Le NETPAK V LAM est un filtre HEPA terminal à flux laminaire de classe H14 (EN 1822), destiné aux applications exigeant un air ultra-pur : salles propres, blocs opératoires, plafonds soufflants, industries pharmaceutique et agroalimentaire. Son média en microfibres de verre, plissé serré entre séparateurs et cerclé d'un cadre aluminium, retient plus de 99,995 % des particules les plus pénétrantes (MPPS). Conçu pour fonctionner à faible vitesse frontale (flux laminaire), il garantit une diffusion homogène et une perte de charge maîtrisée. Dimensions effectives 610 × 610 × 68 mm.",
+  "description": "Le NETCEL V LAM est un filtre HEPA terminal à flux laminaire de classe H14 (EN 1822), destiné aux applications exigeant un air ultra-pur : salles propres, blocs opératoires, plafonds soufflants, industries pharmaceutique et agroalimentaire. Son média en microfibres de verre, plissé serré entre séparateurs et cerclé d'un cadre aluminium, retient plus de 99,995 % des particules les plus pénétrantes (MPPS). Conçu pour fonctionner à faible vitesse frontale (flux laminaire), il garantit une diffusion homogène et une perte de charge maîtrisée. Dimensions effectives 610 × 610 × 68 mm.",
 
   "points_cles": [
     "HEPA H14 — ≥ 99,995 % MPPS",

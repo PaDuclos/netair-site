@@ -167,7 +167,7 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   "netcel-v-nival": { code: "15", mode: "calcul" }, // 🟢 méthode F
   // 🟢 méthode F — laminaire : pas de sur-mesure, dimensions en menu déroulant (formats
   // standard générés depuis la grille) et efficacité verrouillée sur H14.
-  "netpak-v-lam": {
+  "netcel-v-lam": {
     code: "14",
     mode: "calcul",
     classesIncluses: ["H14"],

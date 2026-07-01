@@ -30,7 +30,7 @@ Filtres conformes double classification **EN779** et **EN16890 (ISO)** :
 | Préfiltres & filtres plans | NETMETAL, NETFIL, NETFIBRE, NETPLY, NETPLAN |
 | Filtres à poches souples | NETBAG S |
 | Filtres compacts / poches rigides | NETPAK S (BORA, CILIA, AZUR, LUMEN, DUO) |
-| Filtres HEPA / T.H.E | NETCEL V (AZUR, NIVAL), NETPAK V LAM |
+| Filtres HEPA / T.H.E | NETCEL V (AZUR, NIVAL), NETCEL V LAM |
 | Filtres à charbon actif | NETCARB (CILIA, AZUR, NIVAL, BAG) |
 
 ## Contact

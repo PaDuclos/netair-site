@@ -81,7 +81,7 @@ Eurovent 4/21 ne classe **que** les filtres fins (ePM1/ePM2,5/ePM10) → badge �
 | Catégorie | Filtres |
 |---|---|
 | Préfiltres Coarse | NETMETAL · NETFIL · NETFIBRE · NETPLAN · (NETPLY version G4) |
-| HEPA / T.H.E (MPPS) | NETCEL V AZUR · NETCEL V NIVAL · NETPAK V LAM |
+| HEPA / T.H.E (MPPS) | NETCEL V AZUR · NETCEL V NIVAL · NETCEL V LAM |
 | Charbon actif pur (ISO 10121) | NETCARB CILIA · NETCARB AZUR · NETCARB NIVAL |
 
 ---

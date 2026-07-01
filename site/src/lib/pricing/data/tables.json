@@ -417,7 +417,7 @@
       "famille": "3. Filtres HEPA / T.H.E.",
       "frais_livraison": 0.1,
       "methode": "F",
-      "nom": "NETPAK V LAM",
+      "nom": "NETCEL V LAM",
       "ratio": 2.857142857142857,
       "remises": [
         0.085,
@@ -933,7 +933,7 @@
     {
       "code": "14",
       "ep": null,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "index": 19,
       "poids": 10.48,
       "unite": "kg/m²"
@@ -8628,7 +8628,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 305,
       "gd_min": 305,
       "index": 258,
@@ -8657,7 +8657,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 305,
       "gd_min": 305,
       "index": 259,
@@ -8686,7 +8686,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 305,
       "gd_min": 305,
       "index": 260,
@@ -8715,7 +8715,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 305,
       "gd_min": 305,
       "index": 261,
@@ -8744,7 +8744,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 457,
       "gd_min": 457,
       "index": 262,
@@ -8773,7 +8773,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 457,
       "gd_min": 457,
       "index": 263,
@@ -8802,7 +8802,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 457,
       "gd_min": 457,
       "index": 264,
@@ -8831,7 +8831,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 457,
       "gd_min": 457,
       "index": 265,
@@ -8860,7 +8860,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 508,
       "gd_min": 508,
       "index": 266,
@@ -8889,7 +8889,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 508,
       "gd_min": 508,
       "index": 267,
@@ -8918,7 +8918,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 508,
       "gd_min": 508,
       "index": 268,
@@ -8947,7 +8947,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 508,
       "gd_min": 508,
       "index": 269,
@@ -8976,7 +8976,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 262,
@@ -9005,7 +9005,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 263,
@@ -9034,7 +9034,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 264,
@@ -9063,7 +9063,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 265,
@@ -9092,7 +9092,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 762,
       "gd_min": 762,
       "index": 266,
@@ -9121,7 +9121,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 762,
       "gd_min": 762,
       "index": 267,
@@ -9150,7 +9150,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 762,
       "gd_min": 762,
       "index": 268,
@@ -9179,7 +9179,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 762,
       "gd_min": 762,
       "index": 269,
@@ -9208,7 +9208,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 915,
       "gd_min": 915,
       "index": 270,
@@ -9237,7 +9237,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 915,
       "gd_min": 915,
       "index": 271,
@@ -9266,7 +9266,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 915,
       "gd_min": 915,
       "index": 272,
@@ -9295,7 +9295,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 915,
       "gd_min": 915,
       "index": 273,
@@ -9324,7 +9324,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 266,
@@ -9353,7 +9353,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 267,
@@ -9382,7 +9382,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 268,
@@ -9411,7 +9411,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 269,
@@ -9440,7 +9440,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 457,
       "gd_min": 457,
       "index": 266,
@@ -9469,7 +9469,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 457,
       "gd_min": 457,
       "index": 267,
@@ -9498,7 +9498,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 457,
       "gd_min": 457,
       "index": 268,
@@ -9527,7 +9527,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 457,
       "gd_min": 457,
       "index": 269,
@@ -9556,7 +9556,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 270,
@@ -9585,7 +9585,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 271,
@@ -9614,7 +9614,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 272,
@@ -9643,7 +9643,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 273,
@@ -9672,7 +9672,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 508,
       "gd_min": 508,
       "index": 274,
@@ -9701,7 +9701,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 508,
       "gd_min": 508,
       "index": 275,
@@ -9730,7 +9730,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 508,
       "gd_min": 508,
       "index": 276,
@@ -9759,7 +9759,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 508,
       "gd_min": 508,
       "index": 277,
@@ -9788,7 +9788,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 278,
@@ -9817,7 +9817,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 279,
@@ -9846,7 +9846,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 280,
@@ -9875,7 +9875,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 281,
@@ -9904,7 +9904,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 560,
       "gd_min": 560,
       "index": 282,
@@ -9933,7 +9933,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 560,
       "gd_min": 560,
       "index": 283,
@@ -9962,7 +9962,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 560,
       "gd_min": 560,
       "index": 284,
@@ -9991,7 +9991,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 560,
       "gd_min": 560,
       "index": 285,
@@ -10020,7 +10020,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 274,
@@ -10049,7 +10049,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 275,
@@ -10078,7 +10078,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 276,
@@ -10107,7 +10107,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 610,
       "gd_min": 610,
       "index": 277,
@@ -10136,7 +10136,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 762,
       "gd_min": 762,
       "index": 278,
@@ -10165,7 +10165,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 762,
       "gd_min": 762,
       "index": 279,
@@ -10194,7 +10194,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 762,
       "gd_min": 762,
       "index": 280,
@@ -10223,7 +10223,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 762,
       "gd_min": 762,
       "index": 281,
@@ -10252,7 +10252,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 915,
       "gd_min": 915,
       "index": 282,
@@ -10281,7 +10281,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 915,
       "gd_min": 915,
       "index": 283,
@@ -10310,7 +10310,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 915,
       "gd_min": 915,
       "index": 284,
@@ -10339,7 +10339,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 915,
       "gd_min": 915,
       "index": 285,
@@ -10368,7 +10368,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 286,
@@ -10397,7 +10397,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 287,
@@ -10426,7 +10426,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 288,
@@ -10455,7 +10455,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 289,
@@ -10484,7 +10484,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 290,
@@ -10513,7 +10513,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 291,
@@ -10542,7 +10542,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 292,
@@ -10571,7 +10571,7 @@
     {
       "code": "14",
       "ep": 69,
-      "gamme": "NETPAK V LAM",
+      "gamme": "NETCEL V LAM",
       "gd_max": 1220,
       "gd_min": 1220,
       "index": 293,

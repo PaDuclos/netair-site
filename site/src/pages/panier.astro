@@ -8,7 +8,7 @@ import { DEPARTEMENTS } from '../lib/departements';
   <!-- Bandeau maquette -->
   <div class="bg-marine text-blanc">
     <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
-      Aperçu boutique · panier de démonstration · le <strong>paiement sera activé après immatriculation</strong>
+      Aperçu du site · panier de démonstration · le <strong>paiement sera activé après immatriculation</strong>
     </div>
   </div>
 
@@ -121,14 +121,10 @@ import { DEPARTEMENTS } from '../lib/departements';
     import { getCart, setQty, removeItem, cartTotalHT, onCartChange, getDeliveryDept, setDeliveryDept } from '../lib/cart';
     import { calculerPrix } from '../lib/pricing';
     import { calculerPort, seuilFranco } from '../lib/pricing/shipping';
+    import { MIN_COMMANDE_HT } from '../lib/boutique';
 
     const $ = (id) => document.getElementById(id);
     const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-    // Minimum de facturation (€ HT, produits hors port) : sous ce plancher, la commande
-    // est bloquée. ⚠️ RUSTINE : valeur en dur en attendant qu'elle vive dans les paramètres
-    // de l'Excel (comme le franco 750 €) → à lire dans tables.json après ré-export.
-    const MIN_COMMANDE_HT = 80;
 
     /**
      * Un SEUL frais de port pour tout le panier : calculé sur le total produits + le

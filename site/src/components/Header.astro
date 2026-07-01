@@ -1,7 +1,10 @@
 ---
-// En-tête commun — IDENTIQUE à celui de la page d'accueil (index.astro).
-// Les liens d'ancre pointent vers la page d'accueil (/#...) pour fonctionner
-// depuis n'importe quelle page intérieure.
+// En-tête commun à TOUTES les pages (accueil incluse — voir index.astro).
+// Les liens d'ancre pointent vers l'accueil (/#...) pour fonctionner depuis n'importe
+// quelle page ; sur l'accueil, /#solutions défile aussi (même URL, simple ancre).
+// `spacer` : cale de 88px sous l'en-tête fixe (vraie par défaut). L'accueil passe
+// `spacer={false}` car son hero gère déjà l'espace en haut.
+const { spacer = true } = Astro.props;
 ---
 
 <header id="nav" class="fixed inset-x-0 top-0 z-40 transition-all duration-300">
@@ -56,8 +59,8 @@
     </div>
   </div>
 </header>
-<!-- Cale pour compenser l'en-tête fixe -->
-<div class="h-[88px]" aria-hidden="true"></div>
+<!-- Cale pour compenser l'en-tête fixe (sauf accueil, dont le hero gère l'espace) -->
+{spacer && <div class="h-[88px]" aria-hidden="true"></div>}
 
 <script>
   import { cartCount, onCartChange } from '../lib/cart';
