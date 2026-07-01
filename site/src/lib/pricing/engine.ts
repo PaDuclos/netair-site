@@ -14,8 +14,9 @@
  *  - Prix unitaire = arrondi2(PRU × ratio × revalorisation). Revalorisation absente
  *    aujourd'hui (param non présent) → facteur 1.
  *  - Méthode A (renfort) : non encore 100 % pilotée par les données — voir configRenfortA.
- *  - Hors-format (Prix_Surface_HF) : NON appliqué (absent de la référence validée) → à
- *    confirmer par les vecteurs dorés (T8).
+ *  - Hors-format (Prix_Surface_HF) : APPLIQUÉ — base = Prix_Surface(50) + Prix_Surface_HF ×
+ *    (⌈surface⌉ − 50). Règle lue dans la formule Excel, validée sur prix réels
+ *    (NETPLY 900×600 = 37,67 € ; 1000×600 = 46,03 €).
  */
 
 import type {
@@ -31,6 +32,7 @@ import {
   trouverGamme,
   trouverLigneLxL,
   trouverLigneSurface,
+  trouverLigneSurfaceHF,
   trouverLignePiece,
   prixPourClasse,
   libellePalier,
@@ -150,43 +152,68 @@ function methodeA(demande: DemandePrix, gamme: GammeRow): ResultatCalcul {
     surcout = getParam(`Surcoût TITAPLY épaisseur ${P}mm :`) ?? 0;
   }
 
-  // Prix de base : L×l, sinon repli sur la grille surface (prix par pièce, PAS × surface).
+  // Prix de base, dans l'ordre : (1) case L×l directe ; (2) repli tranche de surface ≤ 50 dm²
+  // (prix par pièce, PAS × surface) ; (3) hors-format > 50 dm² (surface plafonnée à 50 + supplément HF).
   let base: number | undefined;
-  let source: SourceTable | undefined;
   let palier: string | undefined;
+  let sources: SourceTable[] = [];
+  let baseLabel = "prix de base";
 
+  // 1) Case L×l directe.
   const rLL = trouverLigneLxL(gamme.code, P, L, H, q);
   if (rLL) {
     const p = prixUtilisable(rLL.prix, classe);
     if (p != null) {
       base = p;
-      source = { table: "prix_l_et_l", index: rLL.index };
+      sources = [{ table: "prix_l_et_l", index: rLL.index }];
       palier = libellePalier(rLL);
+      baseLabel = "prix de base (L×l)";
     }
   }
+  // 2) Repli par tranche de surface (dimension hors grille L×l, surface ≤ 50 dm²).
   if (base === undefined) {
     const rS = trouverLigneSurface(gamme.code, P, surface, q);
     if (rS) {
       const p = prixUtilisable(rS.prix, classe);
       if (p != null) {
         base = p;
-        source = { table: "prix_surface", index: rS.index };
+        sources = [{ table: "prix_surface", index: rS.index }];
         palier = libellePalier(rS);
+        baseLabel = "prix de base (surface)";
       }
     }
   }
-  if (base === undefined || source === undefined || palier === undefined) {
-    const rAny = rLL ?? trouverLigneSurface(gamme.code, P, surface, q);
+  // 3) Hors-format (> 50 dm²) : prix surface plafonné à 50 + supplément HF au dm² au-delà de 50.
+  //    base = Prix_Surface(50) + Prix_Surface_HF × (⌈surface⌉ − 50)  — cf. formule Excel « Devis interne ».
+  if (base === undefined && surface > 50) {
+    const rS50 = trouverLigneSurface(gamme.code, P, 50, q);
+    const rHF = trouverLigneSurfaceHF(gamme.code, P, q);
+    if (rS50 && rHF) {
+      const p50 = prixUtilisable(rS50.prix, classe);
+      const pHF = prixUtilisable(rHF.prix, classe);
+      if (p50 != null && pHF != null) {
+        base = p50 + pHF * (Math.ceil(surface) - 50);
+        sources = [
+          { table: "prix_surface", index: rS50.index },
+          { table: "prix_surface_hf", index: rHF.index },
+        ];
+        palier = libellePalier(rHF);
+        baseLabel = "prix de base (hors-format > 50 dm²)";
+      }
+    }
+  }
+  if (base === undefined || palier === undefined) {
+    const rAny =
+      rLL ??
+      trouverLigneSurface(gamme.code, P, surface, q) ??
+      (surface > 50 ? trouverLigneSurface(gamme.code, P, 50, q) : undefined);
     return rAny ? classeIndisponible(classe) : horsFabrication;
   }
 
   const composants: ComposantCout[] = [];
   if (renfort > 0) composants.push({ libelle: renfortLabel, montant: renfort });
   if (surcout > 0) composants.push({ libelle: `surcoût épaisseur ${P} mm`, montant: surcout });
-  composants.push({
-    libelle: source.table === "prix_l_et_l" ? "prix de base (L×l)" : "prix de base (surface)",
-    montant: base,
-  });
+  composants.push({ libelle: baseLabel, montant: base });
 
   return {
     ok: true,
@@ -194,7 +221,7 @@ function methodeA(demande: DemandePrix, gamme: GammeRow): ResultatCalcul {
     composants,
     coutAssemblage: renfort + surcout + base,
     surface_dm2: surface,
-    sources: [source],
+    sources,
     palier,
   };
 }

@@ -111,8 +111,10 @@ describe("Statuts (règle d'or : jamais de prix inventé)", () => {
     expect(r.prixUnitaireHT).toBeUndefined();
   });
 
-  it("hors_fabrication — dimensions hors de toute case", () => {
-    const r = calculerPrixHT(demande({ largeur_mm: 5000, hauteur_mm: 5000 }));
+  it("hors_fabrication — dimensions hors grille (méthode L×l directe, NETBAG)", () => {
+    // Méthode A (NETPLY) prix tout via surface/hors-format → on teste une gamme F (NETBAG)
+    // dont la lecture est L×l directe : hors grille = pas de prix.
+    const r = calculerPrixHT(demande({ codeGamme: "11", largeur_mm: 5000, hauteur_mm: 5000 }));
     expect(r.statut).toBe("hors_fabrication");
   });
 

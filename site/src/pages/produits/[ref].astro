@@ -7,6 +7,9 @@ import {
   SLUG_FAMILLE,
   type Produit,
 } from '../../lib/familles';
+import { gammeDuProduit } from '../../lib/pricing/produits-gammes';
+import { optionsDuCode, formatsDuCode, libelleClasse } from '../../lib/pricing/options';
+import { trouverGamme } from '../../lib/pricing/lookups';
 
 export async function getStaticPaths() {
   const produits = await getProduits();
@@ -28,6 +31,78 @@ const ficheHref = `/fiches-techniques/${encodeURIComponent(`Fiche technique ${d.
 const badges: string[] = d.badges_p1 ?? [];
 const specs: string[][] = d.specs ?? [];
 const points: string[] = d.points_cles ?? [];
+// Base de la référence : espaces du nom → underscores pour rester lisible
+// (ex. « NETPAK S CILIA » → « NETPAK_S_CILIA », pas « NETPAKSCILIA »).
+const codeBase = d.nom.replace(/\s+/g, '_');
+
+// --- Pont vers le moteur de prix (Bloc B2) ---
+// On relie le produit du site à sa gamme tarifaire. `mode` = "calcul" (prix instantané)
+// ou "devis" (gamme hors calculateur → demande de devis seule). Produit non répertorié
+// → on reste prudent : pas de prix public.
+const gamme = gammeDuProduit(produit.id);
+const modeProduit: 'calcul' | 'devis' = gamme?.mode ?? 'devis';
+const codeGamme = gamme?.code ?? '';
+
+// Menus du configurateur : TOUJOURS lus dans le calculateur (concordance, décision PA :
+// « le configurateur ne référence que le calculateur »). On ne propose QUE les efficacités
+// et épaisseurs réellement présentes dans les tables — jamais de valeurs génériques. Un
+// produit sur devis n'affiche un champ que si le calculateur a l'info (sinon rien).
+// Dimensions ouvertes par défaut (592×592 sauf produits à formats standard, ex. laminaire 610×610).
+const dimDefaut = gamme?.dimensionDefaut ?? { largeur: 592, hauteur: 592 };
+// Produit sans cadre (média fibreux seul, ex. NETFIBRE) → on masque le choix « Cadre ».
+const sansCadre = gamme?.sansCadre ?? false;
+// Cadres proposés (par défaut : acier + PP). Surchargés par produit (ex. NETPLY = acier seul).
+const CADRES_DEFAUT = [
+  { valeur: 'galva', libelle: 'Acier galvanisé' },
+  { valeur: 'pp', libelle: 'Polypropylène' },
+];
+const cadres = gamme?.cadres ?? CADRES_DEFAUT;
+// Filtrage des efficacités proposées : liste blanche (`classesIncluses`, ex. laminaire = H14)
+// puis liste noire (`classesExclues`, ex. NETFIBRE G3 douteux). Sinon, toutes les tarifées.
+const classesIncluses = gamme?.classesIncluses ?? null;
+const classesExclues = gamme?.classesExclues ?? [];
+const filtreClasses = (classes: { valeur: string; libelle: string }[]) =>
+  classes
+    .filter((c) => !classesIncluses || classesIncluses.includes(c.valeur))
+    .filter((c) => !classesExclues.includes(c.valeur));
+
+// Options lues dans le calculateur, pour les produits calculables ET sur devis.
+const optsReelles = codeGamme ? optionsDuCode(codeGamme) : null;
+const classesCalc = filtreClasses(optsReelles?.classes ?? []);
+// Stopgap : efficacités d'un produit sur devis non encore saisi au calculateur (ex. BORA G4→F9),
+// pour que le client précise son besoin de filtration. À retirer quand l'Excel les couvre.
+const classesStopgap = (gamme?.efficacitesDevis ?? []).map((v) => ({ valeur: v, libelle: libelleClasse(v) }));
+const menus = {
+  classes: classesCalc.length > 0 ? classesCalc : classesStopgap,
+  epaisseurs: optsReelles?.epaisseurs ?? [],
+};
+// Épaisseurs : celles du calculateur ; à défaut, stopgap `epaisseursDevis` (ex. BORA 100 mm,
+// en attendant que l'épaisseur soit ajoutée au calculateur — cf. CHECKLIST).
+const epaisseursAffichees = menus.epaisseurs.length > 0 ? menus.epaisseurs : (gamme?.epaisseursDevis ?? []);
+
+// Efficacité pré-sélectionnée : la « par défaut » de la gamme (colonne Excel `eff_defaut`)
+// si elle est proposée, sinon la première du menu — plutôt que toujours la classe la plus basse.
+const choisirEff = (classes: { valeur: string }[], code: string) => {
+  const def = code ? trouverGamme(code)?.eff_defaut ?? '' : '';
+  return classes.some((c) => c.valeur === def) ? def : classes[0]?.valeur ?? '';
+};
+const effSelection = choisirEff(menus.classes, codeGamme);
+
+// Conditionnements multiples (ex. NETFIBRE panneau/rouleau) ou produit à formats
+// (ex. laminaire). Pour chaque variante on calcule ici (côté serveur) les efficacités
+// tarifées et, en mode "formats" sans liste explicite, les dimensions standard depuis
+// la grille. Transmis au script via un attribut de données.
+const variantesConfig =
+  modeProduit === 'calcul' && gamme?.variantes
+    ? gamme.variantes.map((v) => {
+        const classes = filtreClasses(optionsDuCode(v.code).classes);
+        const formats =
+          v.saisie === 'formats'
+            ? v.formats ?? formatsDuCode(v.code, classes[0]?.valeur)
+            : null;
+        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
+      })
+    : null;
 ---
 
 <BaseLayout
@@ -35,6 +110,13 @@ const points: string[] = d.points_cles ?? [];
   description={(d.description ?? `${d.nom}, filtre pour centrale de traitement d'air.`).slice(0, 300)}
   ogImage={img ?? '/brand/logo.png'}
 >
+  <!-- Bandeau maquette -->
+  <div class="bg-marine text-blanc">
+    <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
+      Aperçu boutique · prix catalogue HT réels mais <strong>indicatifs et non contractuels</strong> (avant mise en ligne)
+    </div>
+  </div>
+
   <section class="mx-auto max-w-[1140px] px-7 pt-10">
     <Breadcrumb
       items={[
@@ -79,11 +161,17 @@ const points: string[] = d.points_cles ?? [];
 
       <div class="mt-8 flex flex-wrap gap-3">
         <a
-          href="/contact"
+          href="#boutique"
           class="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
           style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
         >
-          Demander un devis →
+          Configurer & commander →
+        </a>
+        <a
+          href="#boutique"
+          class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-5 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise"
+        >
+          Demander un devis
         </a>
         <a
           href={ficheHref}
@@ -97,7 +185,7 @@ const points: string[] = d.points_cles ?? [];
 
   <!-- Description -->
   {d.description && (
-    <section class="mx-auto max-w-[1140px] px-7 py-6">
+    <section class="mx-auto max-w-[1140px] px-7 py-4">
       <h2 class="eyebrow text-xs text-turquoise">Description</h2>
       <p class="mt-3 max-w-3xl text-lg leading-relaxed text-marine">{d.description}</p>
     </section>
@@ -105,15 +193,15 @@ const points: string[] = d.points_cles ?? [];
 
   <!-- Caractéristiques -->
   {specs.length > 0 && (
-    <section class="mx-auto max-w-[1140px] px-7 py-6">
+    <section class="mx-auto max-w-[1140px] px-7 py-4">
       <h2 class="display text-2xl font-normal text-marine">Caractéristiques</h2>
       <div class="mt-5 overflow-hidden rounded-2xl border border-soft">
         <table class="w-full text-sm">
           <tbody>
             {specs.map((row, i) => (
               <tr class={i % 2 ? 'bg-mist' : 'bg-blanc'}>
-                <th scope="row" class="w-1/3 px-5 py-3 text-left font-normal text-muted align-top">{row[0]}</th>
-                <td class="px-5 py-3 text-marine">{row[1]}</td>
+                <th scope="row" class="w-1/3 px-5 py-2.5 text-left font-normal text-muted align-top">{row[0]}</th>
+                <td class="px-5 py-2.5 text-marine">{row[1]}</td>
               </tr>
             ))}
           </tbody>
@@ -125,27 +213,506 @@ const points: string[] = d.points_cles ?? [];
     </section>
   )}
 
-  <!-- Emplacement réservé : futur calculateur / vue 3D -->
-  <section class="mx-auto max-w-[1140px] px-7 py-6">
-    <div class="rounded-2xl border border-dashed border-soft bg-mist/60 p-6 text-center text-sm text-muted">
-      Calculateur énergétique et vue 3D : à intégrer ici (étapes suivantes).
+  <!-- Configurateur + Panier + Demande de devis -->
+  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="boutique" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined}>
+    <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
+    <p class="mt-1 text-sm text-muted">Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.</p>
+
+    <div class="mt-4 grid gap-7 lg:grid-cols-[1.3fr_1fr]">
+
+      <!-- Configurateur -->
+      <div class="rounded-2xl border border-soft bg-white p-4 shadow-soft">
+        <div class="grid gap-x-5 gap-y-2.5 sm:grid-cols-2">
+          {variantesConfig && variantesConfig.length > 1 && (
+            <label class="block sm:col-span-2">
+              <span class="eyebrow text-[11px] text-muted">Conditionnement</span>
+              <select id="inCond"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
+                {variantesConfig.map((v, i) => (
+                  <option value={v.id} selected={i === 0}>{v.label}</option>
+                ))}
+              </select>
+            </label>
+          )}
+          {variantesConfig && (
+            <label id="wrapFormat" class="block sm:col-span-2 hidden">
+              <span id="formatLabel" class="eyebrow text-[11px] text-muted">Dimensions</span>
+              <select id="inFormat"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise"></select>
+            </label>
+          )}
+          <label id="wrapL" class="block">
+            <span class="eyebrow text-[11px] text-muted">Largeur (mm)</span>
+            <input id="inL" type="number" value={dimDefaut.largeur} min="100" max="2000" step="1"
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
+          </label>
+          <label id="wrapH" class="block">
+            <span class="eyebrow text-[11px] text-muted">Hauteur (mm)</span>
+            <input id="inH" type="number" value={dimDefaut.hauteur} min="100" max="2000" step="1"
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
+          </label>
+          {/* Épaisseur — affichée si plusieurs choix, OU pour un produit sur devis qui en
+              déclare une (ex. BORA 100 mm, à capturer dans la demande de devis). */}
+          {(epaisseursAffichees.length > 1 || (modeProduit === 'devis' && epaisseursAffichees.length === 1)) && (
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
+              <select id="inEp"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
+                {epaisseursAffichees.map((ep, i) => (
+                  <option value={ep} selected={i === 0}>{ep} mm</option>
+                ))}
+              </select>
+            </label>
+          )}
+          {/* Calculable à épaisseur unique : pas de menu, mais on transmet la valeur au moteur. */}
+          {modeProduit === 'calcul' && menus.epaisseurs.length === 1 && (
+            <input id="inEp" type="hidden" value={menus.epaisseurs[0]} />
+          )}
+          {/* Efficacité — affichée dès que le calculateur a des classes pour ce produit
+              (calculable OU sur devis). Pas de classe dans le calculateur → pas de champ. */}
+          {menus.classes.length > 0 && (
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Efficacité</span>
+              <select id="inEff"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
+                {menus.classes.map((c) => (
+                  <option value={c.valeur} selected={c.valeur === effSelection}>{c.libelle}</option>
+                ))}
+              </select>
+            </label>
+          )}
+          {modeProduit === 'calcul' && !sansCadre && (
+            <label id="wrapCadre" class="block">
+              <span class="eyebrow text-[11px] text-muted">Cadre</span>
+              <select id="inCadre"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
+                {cadres.map((c, i) => (
+                  <option value={c.valeur} selected={i === 0}>{c.libelle}</option>
+                ))}
+              </select>
+            </label>
+          )}
+          <label class="block">
+            <span class="eyebrow text-[11px] text-muted">Quantité</span>
+            <input id="inQ" type="number" value="6" min="1" max="100000" step="1"
+              class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise" />
+          </label>
+          <div class="block">
+            <span class="eyebrow text-[11px] text-muted">Référence générée</span>
+            <div id="genRef" class="mt-1.5 w-full rounded-xl border border-dashed border-soft bg-mist px-4 py-2 font-mono text-sm text-marine"></div>
+          </div>
+        </div>
+
+        <!-- Prix + actions -->
+        <div class="mt-4 rounded-2xl bg-mist px-5 py-4">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <span class="eyebrow text-[11px] text-muted">Prix unitaire HT</span>
+              <div class="display text-3xl font-normal text-marine"><span id="pUnit">—</span> €</div>
+              <p class="mt-1 text-xs text-muted">Total (<span id="pQty">6</span> u.) : <span id="pTotal" class="font-medium text-marine">—</span> € HT</p>
+            </div>
+          </div>
+          <div class="mt-4 flex flex-col gap-3 border-t border-soft pt-4 sm:flex-row">
+            <button id="addBtn" type="button"
+              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+              Ajouter au panier
+            </button>
+            <button id="addDevisBtn" type="button"
+              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-2.5 text-sm font-normal text-marine transition-colors hover:border-turquoise">
+              Ajouter à ma demande de devis
+            </button>
+          </div>
+        </div>
+        <p id="priceMsg" class="mt-3 text-xs text-muted"></p>
+      </div>
+
+      <!-- Panneau latéral : panier d'achat + demande de devis -->
+      <div class="flex flex-col gap-6 lg:sticky lg:top-24 self-start">
+
+        <!-- Panier d'achat -->
+        <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
+          <div class="flex items-center justify-between">
+            <h3 class="display text-xl font-normal text-marine">Panier d'achat</h3>
+            <span id="cartCount" class="rounded-full bg-bleu/10 px-2.5 py-0.5 text-xs font-medium text-bleu">0</span>
+          </div>
+          <div id="cartEmpty" class="mt-6 rounded-xl border border-dashed border-soft bg-mist px-4 py-6 text-center text-sm text-muted">
+            Panier vide.<br />Configurez un filtre puis « Ajouter au panier ».
+          </div>
+          <ul id="cartList" class="mt-5 hidden divide-y divide-soft"></ul>
+          <div id="cartFooter" class="mt-5 hidden">
+            <div class="flex items-center justify-between border-t border-soft pt-4">
+              <span class="text-sm text-muted">Total HT</span>
+              <span class="display text-2xl font-normal text-marine"><span id="grandTotal">0</span> €</span>
+            </div>
+            <p class="mt-1 text-right text-xs text-muted">TVA et frais de port calculés à l'étape suivante.</p>
+            <button type="button"
+              class="mt-4 w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+              Passer commande <span class="opacity-70">(maquette)</span>
+            </button>
+          </div>
+        </aside>
+
+        <!-- Demande de devis (liste multi-produits) -->
+        <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
+          <div class="flex items-center justify-between">
+            <h3 class="display text-xl font-normal text-marine">Ma demande de devis</h3>
+            <span id="devisCount" class="rounded-full bg-turquoise/10 px-2.5 py-0.5 text-xs font-medium text-turquoise">0</span>
+          </div>
+          <p class="mt-1 text-xs text-muted">Plusieurs filtres possibles · prix étudié sur devis.</p>
+
+          <div id="devisEmpty" class="mt-5 rounded-xl border border-dashed border-soft bg-mist px-4 py-6 text-center text-sm text-muted">
+            Aucun filtre dans la demande.<br />Configurez un filtre puis « Ajouter à ma demande de devis ».
+          </div>
+          <ul id="devisList" class="mt-5 hidden divide-y divide-soft"></ul>
+
+          <!-- Étape 1 : récapitulatif + bouton vers le formulaire -->
+          <div id="devisStep1" class="mt-5 hidden">
+            <button id="toFormBtn" type="button"
+              class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+              Demander le devis →
+            </button>
+          </div>
+
+          <!-- Étape 2 : coordonnées -->
+          <form id="devisForm" class="mt-5 hidden space-y-3">
+            <p class="text-sm font-medium text-marine">Vos coordonnées</p>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Société</span>
+              <input name="societe" type="text" required
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+            </label>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Nom</span>
+              <input name="nom" type="text" required
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+            </label>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Email</span>
+              <input name="email" type="email" required
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+            </label>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Téléphone</span>
+              <input name="tel" type="tel"
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
+            </label>
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">Message (optionnel)</span>
+              <textarea name="message" rows="2"
+                class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise"></textarea>
+            </label>
+            <button type="submit"
+              class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+              Envoyer ma demande de devis
+            </button>
+            <p class="text-xs text-muted">Maquette : l'envoi réel (email / DEVIS AUTO) sera branché ensuite.</p>
+          </form>
+
+          <!-- Étape 3 : confirmation -->
+          <div id="devisDone" class="mt-5 hidden rounded-xl border border-turquoise/30 bg-turquoise/5 px-4 py-5 text-sm text-marine">
+            <p class="font-medium">Demande enregistrée ✓</p>
+            <p id="devisDoneMsg" class="mt-1 text-xs text-muted"></p>
+            <div id="devisDoneRecap" class="mt-3 space-y-1 text-xs"></div>
+          </div>
+        </aside>
+      </div>
     </div>
   </section>
 
   <!-- Appel final -->
   <section class="mx-auto max-w-[1140px] px-7 py-8">
     <div class="rounded-3xl border border-soft bg-mist px-8 py-12 text-center">
-      <h2 class="display text-2xl font-normal text-marine">Besoin de {d.nom} pour votre installation ?</h2>
+      <h2 class="display text-2xl font-normal text-marine">Un projet plus large autour de {d.nom} ?</h2>
       <p class="mx-auto mt-2 max-w-xl text-muted">
-        Indiquez vos dimensions, le débit et la classe visée ; nous revenons avec une proposition adaptée.
+        Pour les gros volumes, appels d'offres ou conditions négociées, constituez votre demande de devis ci-dessus.
       </p>
       <a
-        href="/contact"
-        class="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+        href="#boutique"
+        class="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
         style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
       >
-        Demander un devis →
+        Configurer ma demande de devis →
       </a>
     </div>
   </section>
+
+  <script>
+    // Bloc B2 : le configurateur appelle le VRAI moteur de prix (calculerPrix).
+    // Ce <script> est groupé/empaqueté par Astro (pas `is:inline`) afin de pouvoir
+    // importer le moteur — qui embarque les tables tarifaires pour un calcul instantané.
+    import { calculerPrix } from '../../lib/pricing';
+
+    (function () {
+      const root = document.getElementById('boutique');
+      if (!root) return;
+      const nom = root.dataset.nom || 'Filtre';
+      const code = root.dataset.code || 'NET';
+      const codeGamme = root.dataset.codegamme || '';
+      const mode = root.dataset.mode || 'devis';   // "calcul" = prix instantané · "devis" = sur devis
+      const $ = (id) => document.getElementById(id);
+      const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      // --- Conditionnements multiples (ex. NETFIBRE : panneau / rouleau) ---
+      let variantes = null;
+      try { variantes = root.dataset.variantes ? JSON.parse(root.dataset.variantes) : null; } catch (e) { variantes = null; }
+      let activeVar = variantes && variantes.length ? variantes[0] : null;
+
+      function setEffOptions(classes, selected) {
+        const el = $('inEff');
+        if (!el) return;
+        el.innerHTML = (classes || []).map((c) =>
+          '<option value="' + c.valeur + '"' + (c.valeur === selected ? ' selected' : '') + '>' + c.libelle + '</option>'
+        ).join('');
+      }
+      function setFormatOptions(formats) {
+        $('inFormat').innerHTML = (formats || []).map((f, i) =>
+          '<option value="' + i + '"' + (i === 0 ? ' selected' : '') + '>' + f.label + '</option>'
+        ).join('');
+      }
+      // Bascule un conditionnement : montre/masque dimensions ↔ format, recharge les
+      // efficacités tarifées de la variante, puis recalcule le prix.
+      function applyVariante(v) {
+        activeVar = v;
+        const formats = v.saisie === 'formats';
+        $('wrapL') && $('wrapL').classList.toggle('hidden', formats);
+        $('wrapH') && $('wrapH').classList.toggle('hidden', formats);
+        $('wrapFormat') && $('wrapFormat').classList.toggle('hidden', !formats);
+        if (formats) {
+          if ($('formatLabel') && v.labelChamp) $('formatLabel').textContent = v.labelChamp;
+          setFormatOptions(v.formats || []);
+        }
+        setEffOptions(v.classes || [], v.effSelection);
+        refresh();
+      }
+
+      // Message lisible pour un statut non vendable renvoyé par le moteur.
+      function messageStatut(r) {
+        if (r.message) return r.message;
+        switch (r.statut) {
+          case 'sur_devis': return 'Produit proposé sur devis — ajoutez-le à votre demande.';
+          case 'classe_indisponible': return "Cette efficacité n'est pas disponible dans ce format.";
+          case 'hors_fabrication': return 'Dimensions hors des limites de fabrication.';
+          case 'quantite_insuffisante': return r.quantiteMini ? ('Quantité minimale : ' + r.quantiteMini + '.') : 'Quantité insuffisante.';
+          case 'gamme_inconnue': return 'Produit non disponible à la commande en ligne.';
+          default: return '';
+        }
+      }
+
+      // Affiche (ou efface) le prix et pilote l'état du bouton « Ajouter au panier ».
+      function afficherPrix(unit, total, msg) {
+        const ok = unit != null;
+        $('pUnit').textContent = ok ? eur(unit) : '—';
+        $('pTotal').textContent = ok ? eur(total) : '—';
+        $('priceMsg').textContent = msg || '';
+        const btn = $('addBtn');
+        btn.disabled = !ok;
+        btn.classList.toggle('opacity-40', !ok);
+        btn.classList.toggle('cursor-not-allowed', !ok);
+      }
+
+      const cart = [];   // achat (avec prix)
+      const devis = [];  // demande de devis (sans prix)
+
+      function readCfg() {
+        let L, H, formatLabel = null;
+        if (activeVar && activeVar.saisie === 'formats') {
+          // Rouleau : les dimensions viennent du format choisi (pas d'une saisie en mm).
+          const f = (activeVar.formats || [])[+(($('inFormat') || {}).value) || 0];
+          L = f ? f.largeur : 0;
+          H = f ? f.hauteur : 0;
+          formatLabel = f ? f.label : '';
+        } else {
+          L = Math.max(100, +$('inL').value || 0);
+          H = Math.max(100, +$('inH').value || 0);
+        }
+        // Le menu Épaisseur peut être absent (gammes sans choix d'épaisseur, ex. NETFIL) → ep = null.
+        const epEl = $('inEp');
+        const ep = epEl ? (+epEl.value || null) : null;
+        // Le menu Efficacité peut être absent (produits sur devis : pas de prix).
+        const effEl = $('inEff');
+        const eff = effEl ? effEl.value : '';
+        const effOpt = effEl ? effEl.selectedOptions[0] : null;
+        const effLabel = effOpt ? effOpt.text : '';
+        // Le champ Cadre peut être absent (produits sans cadre, ex. NETFIBRE).
+        const cadreEl = $('inCadre');
+        const cadreVal = cadreEl ? cadreEl.value : null;
+        const cadre = cadreVal === 'pp' ? 'P' : cadreVal === 'galva' ? 'A' : null;
+        const cadreLabel = cadreVal === 'pp' ? 'Polypropylène' : cadreVal === 'galva' ? 'Acier galvanisé' : null;
+        const qty = Math.max(1, +$('inQ').value || 1);
+        const codeUsed = activeVar ? activeVar.code : codeGamme;
+        return { L, H, ep, eff, effLabel, cadre, cadreLabel, qty, codeUsed, formatLabel };
+      }
+
+      function refRef(c) {
+        const effPart = c.eff ? ('-' + c.eff) : '';
+        if (c.formatLabel) return `${code}${effPart}-${c.formatLabel.replace(/\s+/g, '')}`;
+        const epPart = c.ep != null ? ('x' + c.ep) : '';
+        const cadrePart = c.cadre ? ('-' + c.cadre) : '';
+        return `${code}${effPart}-${c.L}x${c.H}${epPart}${cadrePart}`;
+      }
+
+      // Calcule et affiche le prix réel via le moteur. Renvoie { c, unit, ok }.
+      function refresh() {
+        const c = readCfg();
+        $('pQty').textContent = c.qty;
+        $('genRef').textContent = refRef(c);
+
+        // Produit « sur devis » : aucun prix public, on oriente vers la demande de devis.
+        if (mode !== 'calcul') {
+          afficherPrix(null, null, 'Ce produit est proposé sur devis. Ajoutez-le à votre demande de devis.');
+          return { c, unit: null, ok: false };
+        }
+
+        const r = calculerPrix({
+          codeGamme: c.codeUsed, // code de la variante active (ex. NETFIBRE panneau=4 / rouleau=5)
+          largeur_mm: c.L,
+          hauteur_mm: c.H,
+          profondeur_mm: c.ep ?? 48, // valeur positive neutre pour les gammes sans épaisseur (le moteur exige > 0 mais l'ignore ensuite via epCompatible)
+          classe: c.eff,
+          quantite: c.qty,
+        });
+
+        if (r.statut === 'ok') {
+          const total = r.prixUnitaireHT * c.qty;
+          afficherPrix(
+            r.prixUnitaireHT, total,
+            'Prix unitaire HT valable ' + r.dureeValiditeJours + " jours · TVA et frais de port à l'étape suivante.",
+          );
+          return { c, unit: r.prixUnitaireHT, ok: true };
+        }
+
+        // Statut non vendable (sur devis, hors format, classe indisponible…) : pas de prix inventé.
+        afficherPrix(null, null, messageStatut(r));
+        return { c, unit: null, ok: false };
+      }
+
+      // ---- Panier d'achat ----
+      function renderCart() {
+        const count = cart.reduce((s, i) => s + i.qty, 0);
+        $('cartCount').textContent = count;
+        const empty = cart.length === 0;
+        $('cartEmpty').classList.toggle('hidden', !empty);
+        $('cartList').classList.toggle('hidden', empty);
+        $('cartFooter').classList.toggle('hidden', empty);
+        const list = $('cartList');
+        list.innerHTML = '';
+        let grand = 0;
+        cart.forEach((it, idx) => {
+          grand += it.unit * it.qty;
+          const li = document.createElement('li');
+          li.className = 'flex items-start justify-between gap-3 py-3';
+          li.innerHTML =
+            '<div class="min-w-0">' +
+              '<p class="font-mono text-xs text-marine">' + it.ref + '</p>' +
+              '<p class="text-xs text-muted">' + it.qty + ' u. × ' + eur(it.unit) + ' €</p>' +
+            '</div>' +
+            '<div class="flex items-center gap-3 shrink-0">' +
+              '<span class="text-sm font-medium text-marine">' + eur(it.unit * it.qty) + ' €</span>' +
+              '<button data-rm="' + idx + '" class="text-muted hover:text-bleu" aria-label="Retirer">✕</button>' +
+            '</div>';
+          list.appendChild(li);
+        });
+        $('grandTotal').textContent = eur(grand);
+        list.querySelectorAll('[data-rm]').forEach((b) =>
+          b.addEventListener('click', () => { cart.splice(+b.dataset.rm, 1); renderCart(); })
+        );
+      }
+
+      // ---- Demande de devis (liste multi-produits, sans prix) ----
+      function renderDevis() {
+        const count = devis.reduce((s, i) => s + i.qty, 0);
+        $('devisCount').textContent = count;
+        const empty = devis.length === 0;
+        $('devisEmpty').classList.toggle('hidden', !empty);
+        $('devisList').classList.toggle('hidden', empty);
+        $('devisStep1').classList.toggle('hidden', empty);
+        if (empty) {
+          $('devisForm').classList.add('hidden');
+          $('devisDone').classList.add('hidden');
+        }
+        const list = $('devisList');
+        list.innerHTML = '';
+        devis.forEach((it, idx) => {
+          const li = document.createElement('li');
+          li.className = 'flex items-start justify-between gap-3 py-3';
+          li.innerHTML =
+            '<div class="min-w-0">' +
+              '<p class="font-mono text-xs text-marine">' + it.ref + '</p>' +
+              '<p class="text-xs text-muted">' + [it.qty + ' u.', (it.ep ? 'ép. ' + it.ep + ' mm' : null), it.effLabel, it.cadreLabel, 'prix sur devis'].filter(Boolean).join(' · ') + '</p>' +
+            '</div>' +
+            '<button data-rmd="' + idx + '" class="shrink-0 text-muted hover:text-turquoise" aria-label="Retirer">✕</button>';
+          list.appendChild(li);
+        });
+        list.querySelectorAll('[data-rmd]').forEach((b) =>
+          b.addEventListener('click', () => { devis.splice(+b.dataset.rmd, 1); renderDevis(); })
+        );
+      }
+
+      ['inL', 'inH', 'inEp', 'inEff', 'inCadre', 'inQ', 'inFormat'].forEach((id) =>
+        $(id)?.addEventListener('input', refresh)
+      );
+      // Changer de conditionnement (panneau ↔ rouleau) bascule la saisie + les menus.
+      $('inCond')?.addEventListener('input', () => {
+        const v = (variantes || []).find((x) => x.id === $('inCond').value);
+        if (v) applyVariante(v);
+      });
+
+      $('addBtn').addEventListener('click', () => {
+        const { c, unit, ok } = refresh();
+        if (!ok || unit == null) return;   // pas d'ajout sans prix (sur devis, hors format, classe indispo…)
+        cart.push({ ref: refRef(c), qty: c.qty, unit });
+        renderCart();
+      });
+
+      $('addDevisBtn').addEventListener('click', () => {
+        const { c } = refresh();
+        devis.push({
+          ref: refRef(c), produit: nom, L: c.L, H: c.H, ep: c.ep,
+          eff: c.eff, effLabel: c.effLabel, cadreLabel: c.cadreLabel, qty: c.qty,
+        });
+        // Si on revenait du formulaire/confirmation, on repart à l'étape liste.
+        $('devisForm').classList.add('hidden');
+        $('devisDone').classList.add('hidden');
+        $('devisStep1').classList.remove('hidden');
+        renderDevis();
+      });
+
+      // Étape liste → formulaire
+      $('toFormBtn').addEventListener('click', () => {
+        $('devisStep1').classList.add('hidden');
+        $('devisForm').classList.remove('hidden');
+      });
+
+      // Envoi (maquette) → confirmation
+      $('devisForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        const societe = data.get('societe') || '';
+        const lignes = devis.length;
+        const total = devis.reduce((s, i) => s + i.qty, 0);
+        $('devisForm').classList.add('hidden');
+        $('devisDoneMsg').textContent =
+          `Merci ${societe}. Votre demande (${lignes} filtre${lignes > 1 ? 's' : ''}, ${total} unité${total > 1 ? 's' : ''}) a bien été prise en compte. Netair revient vers vous avec un devis chiffré.`;
+        const recap = $('devisDoneRecap');
+        recap.innerHTML = devis.map((it) =>
+          '<p class="font-mono text-marine">' + it.ref + ' — ' + it.qty + ' u.</p>'
+        ).join('');
+        devis.length = 0;
+        renderDevis();
+        // renderDevis() réaffiche le bloc « vide » : on le masque tant que la confirmation est à l'écran.
+        $('devisEmpty').classList.add('hidden');
+        $('devisDone').classList.remove('hidden');
+      });
+
+      // Démarrage : si le produit a des conditionnements, on applique celui par défaut
+      // (qui prépare la saisie + les menus puis recalcule) ; sinon simple premier calcul.
+      if (activeVar) applyVariante(activeVar); else refresh();
+      renderCart();
+      renderDevis();
+    })();
+  </script>
 </BaseLayout>

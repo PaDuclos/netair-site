@@ -1,7 +1,7 @@
 {
   "tables_sha256": "3071a53b0f0215a0c8a73200e23493ac8bc69cb6557d476f1ef9e54867aab0e7",
   "version_excel": "v1.0 — 2026-06-25",
-  "nb": 1221,
+  "nb": 1245,
   "vecteurs": [
     {
       "codeGamme": "1",
@@ -2722,6 +2722,126 @@
       "quantite": 501,
       "coutAttendu": 12.8,
       "prixAttendu": 42.67
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 900,
+      "hauteur_mm": 600,
+      "profondeur_mm": 48,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 11.3,
+      "prixAttendu": 37.67
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 900,
+      "hauteur_mm": 600,
+      "profondeur_mm": 98,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 14.99,
+      "prixAttendu": 49.97
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 900,
+      "hauteur_mm": 600,
+      "profondeur_mm": 48,
+      "classe": "M5",
+      "quantite": 10,
+      "coutAttendu": 12.75,
+      "prixAttendu": 42.5
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 900,
+      "hauteur_mm": 600,
+      "profondeur_mm": 98,
+      "classe": "M5",
+      "quantite": 10,
+      "coutAttendu": 17.0,
+      "prixAttendu": 56.67
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 900,
+      "hauteur_mm": 700,
+      "profondeur_mm": 48,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 15.06,
+      "prixAttendu": 50.2
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 900,
+      "hauteur_mm": 700,
+      "profondeur_mm": 98,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 19.94,
+      "prixAttendu": 66.47
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 900,
+      "hauteur_mm": 700,
+      "profondeur_mm": 48,
+      "classe": "M5",
+      "quantite": 10,
+      "coutAttendu": 17.07,
+      "prixAttendu": 56.9
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 900,
+      "hauteur_mm": 700,
+      "profondeur_mm": 98,
+      "classe": "M5",
+      "quantite": 10,
+      "coutAttendu": 22.69,
+      "prixAttendu": 75.63
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 1000,
+      "hauteur_mm": 600,
+      "profondeur_mm": 48,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 13.81,
+      "prixAttendu": 46.03
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 1000,
+      "hauteur_mm": 600,
+      "profondeur_mm": 98,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 18.29,
+      "prixAttendu": 60.97
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 1000,
+      "hauteur_mm": 600,
+      "profondeur_mm": 48,
+      "classe": "M5",
+      "quantite": 10,
+      "coutAttendu": 15.63,
+      "prixAttendu": 52.1
+    },
+    {
+      "codeGamme": "1",
+      "largeur_mm": 1000,
+      "hauteur_mm": 600,
+      "profondeur_mm": 98,
+      "classe": "M5",
+      "quantite": 10,
+      "coutAttendu": 20.79,
+      "prixAttendu": 69.3
     },
     {
       "codeGamme": "2",
@@ -6562,6 +6682,126 @@
       "quantite": 501,
       "coutAttendu": 7.65,
       "prixAttendu": 21.86
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 900,
+      "hauteur_mm": 600,
+      "profondeur_mm": 10,
+      "classe": "G2",
+      "quantite": 10,
+      "coutAttendu": 11.66,
+      "prixAttendu": 33.31
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 900,
+      "hauteur_mm": 600,
+      "profondeur_mm": 15,
+      "classe": "G3",
+      "quantite": 10,
+      "coutAttendu": 11.97,
+      "prixAttendu": 34.2
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 900,
+      "hauteur_mm": 600,
+      "profondeur_mm": 20,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 12.13,
+      "prixAttendu": 34.66
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 900,
+      "hauteur_mm": 600,
+      "profondeur_mm": 25,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 12.13,
+      "prixAttendu": 34.66
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 900,
+      "hauteur_mm": 700,
+      "profondeur_mm": 10,
+      "classe": "G2",
+      "quantite": 10,
+      "coutAttendu": 15.92,
+      "prixAttendu": 45.49
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 900,
+      "hauteur_mm": 700,
+      "profondeur_mm": 15,
+      "classe": "G3",
+      "quantite": 10,
+      "coutAttendu": 16.32,
+      "prixAttendu": 46.63
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 900,
+      "hauteur_mm": 700,
+      "profondeur_mm": 20,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 16.49,
+      "prixAttendu": 47.11
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 900,
+      "hauteur_mm": 700,
+      "profondeur_mm": 25,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 16.49,
+      "prixAttendu": 47.11
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 1000,
+      "hauteur_mm": 600,
+      "profondeur_mm": 10,
+      "classe": "G2",
+      "quantite": 10,
+      "coutAttendu": 14.5,
+      "prixAttendu": 41.43
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 1000,
+      "hauteur_mm": 600,
+      "profondeur_mm": 15,
+      "classe": "G3",
+      "quantite": 10,
+      "coutAttendu": 14.87,
+      "prixAttendu": 42.49
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 1000,
+      "hauteur_mm": 600,
+      "profondeur_mm": 20,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 15.04,
+      "prixAttendu": 42.97
+    },
+    {
+      "codeGamme": "3",
+      "largeur_mm": 1000,
+      "hauteur_mm": 600,
+      "profondeur_mm": 25,
+      "classe": "G4",
+      "quantite": 10,
+      "coutAttendu": 15.04,
+      "prixAttendu": 42.97
     },
     {
       "codeGamme": "4",

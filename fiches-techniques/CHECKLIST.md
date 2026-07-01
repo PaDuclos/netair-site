@@ -17,8 +17,10 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPLAN | 🟡 | Photo · ΔP extrapolée > 2 m/s à confirmer |
 | NETMETAL | 🟡 | ΔP > 2,38 m/s non mesurée · ~~classe~~ ✅ G2/G3 (déc. PA) |
 | NETFIL | 🟡 | épaisseur/profondeur · ~~G3/G4~~ ✅ G3 confirmé (PA) |
-| NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) |
-| NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo |
+| NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) · **⚠️ TARIF (site B2) : G3 panneau = 0,015 €/dm² dans l'Excel = 5,7× moins cher que G4 (0,0856) → 1,51 € vs 8,57 € pour un 592×592. Jugé erroné (déc. PA 30/06) → G3 retiré de l'offre boutique (`classesExclues`). À corriger/supprimer à la SOURCE (Excel) après vérif R&D, puis ré-exporter.** |
+| NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo · **⚠️ TARIF (site B2, MAJ 30/06) : le code Excel « 11 » étiqueté « NETBAG S » est EN FAIT AZUR (déc. PA : profondeur 292, dim 287/490/592×592, M5→F9). Reste le code 17 (poches 360-600 mm, F7/F8/F9/M6, ~7-11 €) = candidat NETBAG réel, à confirmer au retravail de l'Excel. Tant que non tranché → NETBAG S reste « sur devis ».** |
+| NETPAK S AZUR | 🟡 | **⚠️ TARIF (site B2, 30/06) : = catégorie Excel 11 (mal étiquetée « NETBAG S » dans l'Excel → À RENOMMER en AZUR). Branché à l'achat (3 dim 287/490/592×592×292, M5→F9, prix). Fiche : parois « Polystyrène » → « Plastique » (déc. PA). Vérifier que M5/M6 sont bien standard pour AZUR (fiche disait « F7/F8/F9, M6 sur demande »).** |
+| NETPAK S LUMEN | 🟡 | **⚠️ TARIF (site B2, 30/06) : l'Excel n'a que 2 dimensions (287×592, 592×592) — il MANQUE le 490×592 (3ᵉ format standard, déc. PA) → à AJOUTER dans l'Excel puis ré-exporter (apparaîtra tout seul). Fiche MAJ : efficacités M5→F9 ajoutées, cadre « plastique ». Classes M5→F9 gardées (déc. PA).** |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
 | NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé) · M6 non mesurée · surface média n.c. · photo |
@@ -32,6 +34,25 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETCARB AZUR | 🟡 | ✅ créée (charbon dièdre, mono-classe 292) · courbe 2020 QL-CARB (piège 2023 F7=F8 écarté) · classe LD/MD/HD & capacité R&D · photo blend placeholder |
 | NETCARB NIVAL | 🟡 | ✅ créée (polydièdre, mono 292) · ⚠ courbe ΔP partagée AZUR (V-CARB sans courbe propre → R&D) · parois polyester à confirmer · photo Q-carb (code visible→remplacer) |
 | NETCARB BAG | 🟡 | ✅ créée (poches souples F9 + charbon imprégné, COMBINÉ colmatant) · HR n.c. · capacité/classe 10121 R&D · photo forme NETBAG (média à reshooter) |
+
+---
+
+## 🔧 À INTÉGRER DANS LE CALCULATEUR (retravail Excel — déc. PA 30/06)
+
+> **Principe figé : le configurateur du site ne référence QUE le calculateur.** Tout ce que le
+> configurateur doit afficher (épaisseur, efficacité, dimensions, cadre) doit vivre dans l'Excel ;
+> le site le lit après ré-export. Une seule source, mises à jour faciles, pas de divergence fiche↔site.
+> Tant qu'une info manque dans l'Excel, le site a une **rustine temporaire** (flaggée) ou n'affiche rien.
+
+À ajouter / corriger dans `Calculateur_Netair.xlsx` puis ré-exporter :
+- [ ] **Renommer** la catégorie **11** « NETBAG S » → **AZUR** (mal étiquetée).
+- [ ] **NETBAG S** : retrouver/figer son vrai code (≈ 17 ?) ; tant que non tranché → reste sur devis.
+- [ ] **NETPAK S LUMEN** : ajouter la 3ᵉ dimension **490×592** (n'a que 287×592 / 592×592).
+- [ ] **NETFIBRE** : corriger le **G3 panneau** (0,015 €/dm² erroné) → rustine `classesExclues:["G3"]` à retirer ensuite.
+- [ ] **NETPAK V LAM** : ne garder que **H14** au tarif si c'est la seule classe vendue (sinon retirer la rustine `classesIncluses`).
+- [ ] **Produits sur devis** (NETMETAL, DUO, NETCARB AZUR/NIVAL/BAG, BORA) : les **saisir dans le calculateur** avec leurs **épaisseurs/classes/dimensions** (marqués sur devis, sans prix) → le configurateur affichera alors ces champs tout seuls.
+- [ ] **NETPAK S BORA** : épaisseur **100 mm** (actuellement rustine `epaisseursDevis:[100]` côté site → à porter dans l'Excel).
+- [ ] **CADRE = info TARIFAIRE** (déc. PA : **le cadre change le prix**). Donc chaque variante de cadre = un **code (ligne tarif) séparé** dans le calculateur, avec son prix. Le configurateur proposera alors les cadres et **basculera le code/prix** selon le cadre choisi (≠ aujourd'hui où le cadre est neutre côté prix → à brancher quand l'Excel le structure).
 
 ---
 
