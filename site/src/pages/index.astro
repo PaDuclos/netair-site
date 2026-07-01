@@ -143,16 +143,13 @@ const accroches: Record<string, string> = {
             Demander un devis
             <span id="devis-badge" class="hidden min-w-[18px] rounded-full bg-mist px-1 text-center text-[11px] font-medium leading-[18px] text-marine">0</span>
           </a>
-          <a href="/compte" class="inline-flex items-center gap-1.5 text-sm font-normal text-secondary transition-colors hover:text-primary cursor-pointer" aria-label="Se connecter">
-            <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span class="hidden sm:inline">Se connecter</span>
+          <a href="/compte" class="inline-flex items-center rounded-xl p-2 text-secondary transition-colors hover:text-primary cursor-pointer" aria-label="Se connecter">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </a>
-          <a href="/panier" id="cart-link" class="inline-flex items-center gap-1.5 text-marine transition-transform duration-200 hover:-translate-y-0.5 cursor-pointer" aria-label="Voir le panier">
-            <span class="relative inline-flex h-6 w-7 items-center">
-              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              <span id="cart-badge" class="absolute left-[9px] -top-0.5 hidden text-[13px] font-medium leading-none text-marine">0</span>
-            </span>
-            <span class="text-[15px] font-medium">Panier</span>
+          <a href="/panier" id="cart-link" class="inline-flex items-center gap-2 rounded-xl brand-gradient px-4 py-2.5 text-sm font-normal text-white shadow-soft transition-all duration-200 hover:shadow-lift cursor-pointer" aria-label="Voir le panier">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Panier
+            <span id="cart-badge" class="hidden rounded-full bg-white/25 px-1.5 text-[11px] font-medium leading-[18px]">0</span>
           </a>
         </div>
       </div>
