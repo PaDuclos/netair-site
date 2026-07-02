@@ -152,8 +152,9 @@ const accroches: Record<string, string> = {
             Configurer et acheter en ligne
             <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
-          <a href="#solutions" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border-soft bg-white/70 px-6 py-3.5 text-sm font-normal text-primary shadow-soft transition-all duration-200 hover:bg-white sm:w-auto cursor-pointer">
-            Découvrir nos solutions
+          <a href="/rendez-vous" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border-soft bg-white/70 px-6 py-3.5 text-sm font-normal text-primary shadow-soft transition-all duration-200 hover:bg-white sm:w-auto cursor-pointer">
+            <svg class="h-4 w-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Prendre rendez-vous
           </a>
         </div>
       </div>
@@ -405,39 +406,52 @@ const accroches: Record<string, string> = {
         <div class="relative grid items-center gap-12 lg:grid-cols-2">
           <div>
             <h2 class="font-display text-3xl font-normal tracking-tight text-white sm:text-4xl">Parlons de votre installation</h2>
-            <p class="mt-4 max-w-md text-lg text-white/70">Décrivez votre besoin : nous revenons avec une recommandation chiffrée, adaptée à vos références.</p>
+            <p class="mt-4 max-w-md text-lg text-white/70">Échangez 15 minutes avec un expert filtration Netair, par téléphone ou en visio. On vous aide à choisir le bon filtre pour votre installation.</p>
             <ul class="mt-8 space-y-3 text-sm text-white/80">
               <li class="flex items-center gap-3"><svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Étude et dimensionnement</li>
               <li class="flex items-center gap-3"><svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Standard ou sur-mesure</li>
               <li class="flex items-center gap-3"><svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Sans engagement</li>
             </ul>
+            <a href="/contact" class="mt-8 inline-flex items-center gap-2 rounded-xl border border-white/35 px-5 py-3 text-sm font-normal text-white transition-colors duration-200 hover:border-white/70 hover:bg-white/5">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+              Nous contacter
+            </a>
           </div>
 
-          <form class="rounded-2xl glass-dark p-6 sm:p-8" onsubmit="event.preventDefault(); this.querySelector('[data-ok]').classList.remove('hidden'); this.querySelector('button[type=submit]').disabled=true;">
-            <div class="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label for="nom" class="block text-xs font-normal uppercase tracking-wider text-white/60">Nom</label>
-                <input id="nom" name="nom" type="text" required class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-accent-bright focus:ring-2 focus:ring-accent-bright/40" placeholder="Votre nom" />
+          <div class="grid gap-4">
+            <a href="/rendez-vous" class="group rounded-2xl border border-white/15 bg-white/5 p-6 transition-colors duration-200 hover:border-white/35 hover:bg-white/[0.08]">
+              <div class="flex items-start gap-4">
+                <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-accent-bright">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </span>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-normal text-white">Par téléphone</span>
+                    <span class="rounded-full bg-accent-bright/20 px-2 py-0.5 text-[11px] font-normal text-accent-bright">le plus demandé</span>
+                  </div>
+                  <p class="mt-1 text-sm text-white/60">On vous rappelle au créneau qui vous arrange.</p>
+                  <span class="mt-3 inline-flex items-center gap-1.5 text-sm font-normal text-accent-bright">Choisir un créneau
+                    <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </span>
+                </div>
               </div>
-              <div>
-                <label for="societe" class="block text-xs font-normal uppercase tracking-wider text-white/60">Société</label>
-                <input id="societe" name="societe" type="text" class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-accent-bright focus:ring-2 focus:ring-accent-bright/40" placeholder="Votre entreprise" />
+            </a>
+            <a href="/rendez-vous" class="group rounded-2xl border border-white/15 bg-white/5 p-6 transition-colors duration-200 hover:border-white/35 hover:bg-white/[0.08]">
+              <div class="flex items-start gap-4">
+                <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-accent-bright">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                </span>
+                <div>
+                  <span class="font-normal text-white">En visio</span>
+                  <p class="mt-1 text-sm text-white/60">Partagez plans et schémas à l'écran pour un conseil précis.</p>
+                  <span class="mt-3 inline-flex items-center gap-1.5 text-sm font-normal text-accent-bright">Choisir un créneau
+                    <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </span>
+                </div>
               </div>
-            </div>
-            <div class="mt-4">
-              <label for="email" class="block text-xs font-normal uppercase tracking-wider text-white/60">Email professionnel</label>
-              <input id="email" name="email" type="email" required class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-accent-bright focus:ring-2 focus:ring-accent-bright/40" placeholder="vous@entreprise.fr" />
-            </div>
-            <div class="mt-4">
-              <label for="besoin" class="block text-xs font-normal uppercase tracking-wider text-white/60">Votre besoin</label>
-              <textarea id="besoin" name="besoin" rows="3" class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-accent-bright focus:ring-2 focus:ring-accent-bright/40" placeholder="Type d'installation, débit, classe recherchée…"></textarea>
-            </div>
-            <button type="submit" class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl brand-gradient px-6 py-3.5 text-sm font-normal text-white transition-all duration-200 hover:brightness-110 cursor-pointer disabled:opacity-50">
-              Envoyer ma demande
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
-            </button>
-            <p data-ok class="mt-4 hidden rounded-lg bg-accent-bright/15 px-4 py-3 text-center text-sm font-normal text-accent-bright">Merci ! Pour finaliser, écrivez-nous à contact@netair.fr — ou utilisez la page Contact.</p>
-          </form>
+            </a>
+            <p class="text-center text-sm text-white/50">Gratuit et sans engagement · 15 minutes</p>
+          </div>
         </div>
       </div>
     </div>
