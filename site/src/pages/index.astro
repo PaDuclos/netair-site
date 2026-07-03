@@ -28,6 +28,24 @@ const accroches: Record<string, string> = {
   'charbon-actif': 'Gaz & odeurs',
   combines: 'Particules + gaz',
 };
+
+// Données structurées (schema.org) : carte d'identité de l'entreprise pour les
+// moteurs de recherche. Description = objet social (fourni par Pierre-Alain).
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Netair',
+  url: 'https://netair.fr',
+  logo: 'https://netair.fr/brand/logo.png',
+  description:
+    "Conception, fabrication, assemblage et commercialisation de filtres et accessoires pour systèmes de ventilation et de traitement d'air, ainsi que toutes prestations de services liées à cette activité et toutes opérations se rattachant directement ou indirectement à cet objet.",
+};
+
+// Adresse officielle de la page (canonique) + description partagée méta/Open Graph.
+// Formulation neutre : pas de mention d'origine « française » (encadrée — à cadrer juridiquement).
+const siteUrl = 'https://netair.fr/';
+const metaDescription =
+  "Netair, fabricant de filtres pour la ventilation générale (CTA) : préfiltres, miniplis, poches souples et rigides, filtres absolus HEPA, charbons actifs. Double classification EN ISO 16890 et EN 779. Devis sur mesure.";
 ---
 
 <!doctype html>
@@ -36,9 +54,21 @@ const accroches: Record<string, string> = {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Netair — Filtres pour centrales de traitement d'air (CTA)</title>
-  <meta name="description" content="Netair, fabricant français de filtres pour la ventilation générale (CTA) : préfiltres, miniplis, poches souples et rigides, filtres absolus HEPA, charbons actifs. Double classification EN ISO 16890 et EN 779. Devis sur mesure." />
+  <meta name="description" content={metaDescription} />
+  <link rel="canonical" href={siteUrl} />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Netair" />
+  <meta property="og:title" content="Netair — Filtres pour centrales de traitement d'air (CTA)" />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:url" content={siteUrl} />
+  <meta property="og:image" content="https://netair.fr/brand/logo.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} is:inline></script>
 
   <script src="https://cdn.tailwindcss.com" is:inline></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -186,7 +216,7 @@ const accroches: Record<string, string> = {
     <div class="mx-auto max-w-7xl px-5 py-10 sm:px-8">
       <p class="text-center text-xs font-normal uppercase tracking-[0.2em] text-secondary/70">Conformité &amp; références normatives</p>
       <div class="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-80">
-        {['EN ISO 16890','EN 779','EN 1822','Classement au feu M1','Fabrication française'].map((n) => (
+        {['EN ISO 16890','EN 779','EN 1822','Classement au feu M1'].map((n) => (
           <span class="inline-flex items-center gap-2 font-display text-base font-normal text-primary/70">
             <svg class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
             {n}

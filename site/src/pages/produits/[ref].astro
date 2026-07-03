@@ -36,6 +36,38 @@ const points: string[] = d.points_cles ?? [];
 // (ex. « NETPAK S CILIA » → « NETPAK_S_CILIA », pas « NETPAKSCILIA »).
 const codeBase = d.nom.replace(/\s+/g, '_');
 
+// Fil d'Ariane (source unique : sert à l'affichage ET aux données structurées SEO).
+const filAriane = [
+  { href: '/', label: 'Accueil' },
+  { href: '/gammes', label: 'Gammes' },
+  ...(famille ? [{ href: `/gammes/${famille.slug}`, label: famille.titre }] : []),
+  { label: d.nom },
+];
+
+// Données structurées (schema.org) pour les moteurs de recherche : fiche produit
+// (SANS prix — tarifs dynamiques / sur-mesure, on n'affiche pas de prix figé) + fil d'Ariane.
+const siteBase = Astro.site ?? new URL('https://netair.fr');
+const absUrl = (path: string) => new URL(path, siteBase).href;
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: d.nom,
+  ...(d.description ? { description: d.description.slice(0, 300) } : {}),
+  ...(img ? { image: absUrl(img) } : {}),
+  ...(famille ? { category: famille.titre } : {}),
+  brand: { '@type': 'Brand', name: 'Netair' },
+};
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: filAriane.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.label,
+    ...(c.href ? { item: absUrl(c.href) } : {}),
+  })),
+};
+
 // --- Pont vers le moteur de prix (Bloc B2) ---
 // On relie le produit du site à sa gamme tarifaire. `mode` = "calcul" (prix instantané)
 // ou "devis" (gamme hors calculateur → demande de devis seule). Produit non répertorié
@@ -111,6 +143,9 @@ const variantesConfig =
   description={(d.description ?? `${d.nom}, filtre pour centrale de traitement d'air.`).slice(0, 300)}
   ogImage={img ?? '/brand/logo.png'}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} is:inline></script>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline></script>
+
   <!-- Bandeau maquette -->
   <div class="bg-marine text-blanc">
     <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
@@ -119,14 +154,7 @@ const variantesConfig =
   </div>
 
   <section class="mx-auto max-w-[1140px] px-7 pt-10">
-    <Breadcrumb
-      items={[
-        { href: '/', label: 'Accueil' },
-        { href: '/gammes', label: 'Gammes' },
-        ...(famille ? [{ href: `/gammes/${famille.slug}`, label: famille.titre }] : []),
-        { label: d.nom },
-      ]}
-    />
+    <Breadcrumb items={filAriane} />
   </section>
 
   <!-- En-tête produit -->
