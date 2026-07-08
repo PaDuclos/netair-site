@@ -18,6 +18,9 @@ export interface Famille {
   /** Badge — 2e encadré : classe EN 779 (ancienne norme), si applicable. */
   tagEn?: string;
   desc: string;
+  /** Texte détaillé (2-3 phrases) affiché sur la page famille /gammes/<slug>.
+   *  Absent = on retombe sur `desc` (phrase courte de la bulle). */
+  descLong?: string;
   /** Photo détourée (PNG transparent) représentative de la famille. */
   photo?: string;
 }
@@ -31,6 +34,7 @@ export const FAMILLES: Famille[] = [
     tagEn: 'G3 → M5',
     photo: '/produits/detour/netply-v6-photo.png',
     desc: "Premier niveau de filtration, les préfiltres captent les particules grossières pour protéger les installations et prolonger la durée de vie des étages suivants.",
+    descLong: "Les préfiltres assurent le premier niveau de filtration en captant les particules grossières. Disponibles dans différentes technologies et classes d'efficacité, ils répondent aux besoins de chaque installation, en préfiltration ou en filtration principale.",
   },
   {
     slug: 'compacts-miniplis',
@@ -40,6 +44,7 @@ export const FAMILLES: Famille[] = [
     tagEn: 'M5 → F9',
     photo: '/produits/detour/netpak-s-cilia-photo.png',
     desc: "Conçus pour offrir une faible perte de charge, les filtres miniplis associent haute efficacité et performance énergétique.",
+    descLong: "Grâce à leur faible perte de charge, les filtres miniplis associent haute efficacité et économies d'énergie. Selon les applications, leur conception permet de s'affranchir d'un étage de préfiltration et de réduire le coût global d'exploitation.",
   },
   {
     slug: 'poches-souples-rigides',
@@ -49,6 +54,7 @@ export const FAMILLES: Famille[] = [
     tagEn: 'G4 → F9',
     photo: '/produits/detour/netbag-s-photo.png',
     desc: "Grâce à leur grande capacité de rétention des poussières, les filtres à poches offrent une longue durée de vie et des performances constantes.",
+    descLong: "Déclinés en versions souples et rigides, les filtres à poches équipent les installations de ventilation et de traitement d'air. Netair propose un large choix de technologies et de classes d'efficacité pour chaque application.",
   },
   {
     slug: 'hepa',

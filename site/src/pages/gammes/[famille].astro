@@ -34,7 +34,7 @@ const { famille, produits } = Astro.props;
     />
     <span class="eyebrow mt-5 inline-block text-xs text-turquoise">{famille.tag}</span>
     <h1 class="display mt-2 text-4xl sm:text-5xl font-normal text-marine">{famille.titre}</h1>
-    <p class="mt-4 max-w-2xl text-lg text-muted">{famille.desc}</p>
+    <p class="mt-4 max-w-[47rem] text-lg text-muted">{famille.descLong ?? famille.desc}</p>
   </section>
 
   <section class="mx-auto max-w-[1140px] px-7 py-8">
