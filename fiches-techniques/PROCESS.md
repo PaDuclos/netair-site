@@ -208,7 +208,7 @@ du débit et contredisent le calculateur.
   → ADD +100 Pa. Vmax 3,17 · nominal 3400 m³/h · axe Y 240 Pa. Descriptif reformulé du `livret_2023` p.9.
   **Anomalie** M5 550 mm (ΔP < 650 mm, incohérent) → marquée « à valider » (courbe pointillée). G4 annoncé
   (gamme) mais non mesuré. Manques suivis dans **`CHECKLIST.md`** (tracker global, section NETBAG S). Photo Titabag détourée = placeholder.
-- **NETPAK S CILIA** — filtre **compact à mini-plis** (équiv. TITAPAK S PRISME A), **MULTI-CLASSES** (moteur `multi_classe`) ✅
+- **NETPAK S CILIA** — filtre **compact à miniplis** (équiv. TITAPAK S PRISME A), **MULTI-CLASSES** (moteur `multi_classe`) ✅
   Fiche **3 pages** : P1 desc/specs · P2 dimensions + **tableau ΔP complet** + courbe · P3 calculateur. **Sélecteur 5 classes**
   M5·M6·F7·F8·F9 ; classe choisie tracée en **48 mm (navy) + 98 mm (teal pointillé)** ; calculateur piloté par la classe + toggle
   épaisseur. Source = **PRISME A HPE 2018** (M5/M6/F8/F9) + **GR PRISME A GREENTEX** pour le **F7 (ePM1 50%, média basse résistance)** — fiches 2018, ep48+ep98, caches Excel.

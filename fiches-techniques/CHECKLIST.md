@@ -158,7 +158,7 @@ Surface média (cadre 592×592) : 380 → 3,46 m² · 500 = 550 → 5,11 m² · 
 - [ ] **Photo** : `TITABAG/Titabag.jpg` détourée = placeholder → photo produit Netair.
 
 ### NETPAK S CILIA 🟡
-Compact mini-plis (équiv. TITAPAK S PRISME A). Multi-classes **M5→F9 × ép. 48/98**, fiche **3 pages** (moteur `multi_classe`).
+Compact miniplis (équiv. TITAPAK S PRISME A). Multi-classes **M5→F9 × ép. 48/98**, fiche **3 pages** (moteur `multi_classe`).
 Données ΔP **réelles** : M5/M6/F8/F9 = **TITAPAK S HPE PRISME A 2018** ; **F7 = TITAPAK S GR PRISME A** (GREENTEX, ePM1 50%).
 Polynômes : `DONNEES_PDC` l.38-47.
 
@@ -226,7 +226,7 @@ Moteur : nouveaux drapeaux `deux_epaisseurs` (1 famille × 2 épaisseurs) + `dp_
 - [ ] **🟠 Classe ISO 10121-3 (LD/MD/HD + %)** : non fournie par Titanair (fiche < 2022) → marquée « à déterminer par essai ». **À mesurer / faire certifier** (essai GPACD ISO 10121-2) avant toute revendication de classe.
 - [ ] **Capacité d'adsorption / durée de vie** : 15 % en masse (charge max., donnée Titanair) ; durée de vie réelle = fonction de la charge polluante → **à préciser R&D** (grammage/type de charbon).
 - [ ] **T° 40 °C / HR 50 %** : limites propres au charbon (≠ média synthétique 60 °C) — confirmer sur média Netair.
-- [ ] **Surface média** : tableau = surface **frontale** (le mini-plis charbon développe davantage ; surface développée non communiquée par le fournisseur).
+- [ ] **Surface média** : tableau = surface **frontale** (le miniplis charbon développe davantage ; surface développée non communiquée par le fournisseur).
 - [ ] **Page 2** : 1167 px (≈ +44 px / A4) — léger débord, **bien inférieur** aux fiches multi-courbes déjà tolérées (NETPLY 1344, AZUR 1375). Laissé tel quel (cohérent décision PA 22/06).
 - [ ] **Photo** : `CARB.png` (grains de charbon) aplatie sur blanc = placeholder → visuel produit Netair (cellule PRISME CARB).
 
