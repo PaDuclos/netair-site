@@ -63,12 +63,14 @@ export const FAMILLES: Famille[] = [
     norme: 'EN 1822',
     photo: '/produits/detour/netcel-v-nival-photo.png',
     desc: "Les filtres absolus HEPA assurent une très haute efficacité de filtration pour répondre aux exigences des salles propres, hôpitaux et industries sensibles.",
+    descLong: "Les filtres absolus sont conçus pour les applications exigeant une très haute qualité d'air. Ils répondent aux besoins des environnements les plus sensibles, où la maîtrise de la qualité de l'air est essentielle.",
   },
   {
     slug: 'charbon-actif',
     titre: 'Charbons actifs',
     tag: 'Gaz · odeurs',
     desc: "Les filtres à charbon actif sont spécialement conçus pour capter les odeurs, les gaz et les composés organiques volatils (COV).",
+    descLong: "Les filtres à charbon actif sont conçus pour le traitement des odeurs et de certains composés gazeux. Leur diversité de conception répond aux besoins de chaque application.",
   },
   {
     slug: 'combines',
@@ -76,6 +78,7 @@ export const FAMILLES: Famille[] = [
     tag: 'Particules + gaz',
     photo: '/produits/detour/netpak-s-duo-photo.png',
     desc: "Les filtres combinés associent deux efficacités de filtration dans un seul filtre.",
+    descLong: "Les filtres combinés associent plusieurs niveaux ou technologies de filtration au sein d'un même filtre. Ils répondent aux exigences de chaque application.",
   },
 ];
 
