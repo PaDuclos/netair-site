@@ -57,7 +57,7 @@ l'octet près (test d'identité — à relancer après toute modif du moteur ou 
 **Workflow R&D :** quand une mesure de perte de charge évolue, on **ne touche qu'à l'Excel** :
 1. Ouvrir `DONNEES_PDC_Netair.xlsx`, trouver la ligne du produit (n° fiche / classe / longueur),
    mettre à jour les **ΔP mesurées** dans les cases par débit (1000→4000). Enregistrer.
-2. **Double-cliquer `Mettre à jour les fiches.command`** (ou `cd Generateur && python3 maj_fiches.py`
+2. **Double-cliquer `Mettre à jour Pa courbe et calculateur fiches.command`** (ou `cd Generateur && python3 maj_fiches.py`
    pour l'aperçu, puis `--apply`).
 3. Tout se met à jour en cascade, automatiquement :
    coefficients du polynôme (recalculés par le script, **indépendamment du recalcul Excel**) →
