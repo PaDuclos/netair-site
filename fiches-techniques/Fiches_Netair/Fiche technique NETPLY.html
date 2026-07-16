@@ -17,7 +17,6 @@
   /* Emplacement photo produit — remplacer le contenu / l'image par la photo réelle */
   .photo-slot { width: 100%; height: 60mm; display: flex; align-items: center; justify-content: center; border-radius: 6px; overflow: hidden; }
   .photo-slot img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; }
-  .photo-slot .photo-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; color: #9DB8D6; font-size: 12px; border: 1.5px dashed #C9D7E8; border-radius: 6px; }
   @media print {
     .cmp-wrap { padding: 0; background: #fff; display: block; }
     .cmp-col { display: block; gap: 0; }
@@ -74,11 +73,9 @@
 
         <!-- Photo + description -->
         <div style="display:grid; grid-template-columns:52mm 1fr; gap:8mm; align-items:center;">
-          <div class="photo-slot" id="netply-photo" title="Cliquer pour importer une photo" style="cursor:pointer;">
-            <!-- Cliquer sur la zone pour importer une photo (enregistrée localement) ; ou remplacer par : <img src="photo-produit.jpg" alt="Filtre NETPLY"> -->
+          <div class="photo-slot" id="netply-photo">
+            <!-- Photo : clé "photo" du JSON produit → fichier dans assets/. Pas d'import depuis la fiche. -->
             <img id="netply-img" src="assets/netply-v6-photo.jpg" alt="Filtre plissé NETPLY (épaisseurs 48 et 98 mm)" style="display:block;">
-            <div class="photo-ph" id="netply-ph" style="display:none;">Photo produit<br><span style="font-size:10px; color:#b6c4d6;">cliquer pour importer</span></div>
-            <input type="file" id="netply-file" accept="image/*" style="display:none;">
           </div>
           <div>
             <div style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase;">Description</div>
@@ -155,7 +152,7 @@
       <div style="margin:0; background:#0F3261; color:#cdd9e8; height:10mm; display:flex; align-items:center; justify-content:space-between; padding:0 12mm; font-size:11px;">
         <span style="font-weight:600; color:#fff;">Netair SAS</span>
         <span style="font-family:'IBM Plex Mono',monospace; color:#9DB8D6; letter-spacing:.3px;">Fiche n° FT-NETPLY-001</span>
-        <span>v1.0 — 22/06/2026 — Page 1/2</span>
+        <span>v2.0 — 16/07/2026 — Page 1/2</span>
       </div>
     </div>
 
@@ -404,7 +401,7 @@
       <div style="margin:0; background:#0F3261; color:#cdd9e8; height:10mm; display:flex; align-items:center; justify-content:space-between; padding:0 12mm; font-size:11px;">
         <span style="font-weight:600; color:#fff;">Netair SAS</span>
         <span style="font-family:'IBM Plex Mono',monospace; color:#9DB8D6; letter-spacing:.3px;">Fiche n° FT-NETPLY-001</span>
-        <span>v1.0 — 22/06/2026 — Page 2/2</span>
+        <span>v2.0 — 16/07/2026 — Page 2/2</span>
       </div>
     </div>
 
@@ -616,27 +613,6 @@
   hit.addEventListener('mouseleave', function () { hoverG.style.display = 'none'; fixedMarks.style.display = ''; });
 
   render();
-})();
-</script>
-<script>
-(function () {
-  var slot = document.getElementById('netply-photo');
-  if (!slot) return;
-  var img = document.getElementById('netply-img');
-  var ph = document.getElementById('netply-ph');
-  var file = document.getElementById('netply-file');
-  function show(src) { img.src = src; img.style.display = 'block'; ph.style.display = 'none'; }
-  // Default = bundled original photo (assets/netply-photo.jpg, set in markup).
-  // Only an explicit user re-import overrides it.
-  slot.addEventListener('click', function () { file.click(); });
-  file.addEventListener('change', function (e) {
-    var f = e.target.files[0]; if (!f) return;
-    var r = new FileReader();
-    r.onload = function () {
-      show(r.result);
-    };
-    r.readAsDataURL(f);
-  });
 })();
 </script>
 </body>

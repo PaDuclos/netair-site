@@ -777,7 +777,7 @@ def generer_series(d, html):
     # #4 photo + slug
     html = html.replace('src="assets/netply-photo.jpg" alt="Filtre NETPLY"',
                         f'src="assets/{d["photo"]}" alt="{d["photo_alt"]}"')
-    for tok in ("netply-photo", "netply-img", "netply-ph", "netply-file"):
+    for tok in ("netply-photo", "netply-img"):
         html = re.sub(r"\b" + tok + r"\b", f"{slug}-" + tok.split("-", 1)[1], html)
 
     # #5 description
@@ -1430,7 +1430,7 @@ def generer_multi(d, html):
     # #4 photo + slug
     html = html.replace('src="assets/netply-photo.jpg" alt="Filtre NETPLY"',
                         f'src="assets/{d["photo"]}" alt="{d["photo_alt"]}"')
-    for tok in ("netply-photo", "netply-img", "netply-ph", "netply-file"):
+    for tok in ("netply-photo", "netply-img"):
         html = re.sub(r"\b" + tok + r"\b", f"{slug}-" + tok.split("-", 1)[1], html)
 
     # #5 description
@@ -1515,7 +1515,7 @@ def generer(d, html):
     # --- #4 photo (src + alt) puis identifiants d'éléments (slug)
     html = html.replace('src="assets/netply-photo.jpg" alt="Filtre NETPLY"',
                         f'src="assets/{d["photo"]}" alt="{d["photo_alt"]}"')
-    for tok in ("netply-photo", "netply-img", "netply-ph", "netply-file"):
+    for tok in ("netply-photo", "netply-img"):
         html = re.sub(r"\b" + tok + r"\b", f"{slug}-" + tok.split("-", 1)[1], html)
 
     # --- #5 description
