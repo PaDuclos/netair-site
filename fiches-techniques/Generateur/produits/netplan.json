@@ -4,7 +4,6 @@
   "slug": "netplan",
   "nom": "NETPLAN",
   "soustitre": "Filtre plan — Préfiltre synthétique",
-  "no_dimensions": true,
   "mono_classe": true,
   "surface_facteur": 1,
   "vmax": 2,
@@ -12,8 +11,8 @@
   "debit_nom": 1900,
   "fiche": {
     "num": "FT-NETPLAN-001",
-    "version": "v1.0",
-    "date": "21/06/2026"
+    "version": "v1.1",
+    "date": "16/07/2026"
   },
   "photo": "netplan-photo.jpg",
   "photo_alt": "Filtre plan NETPLAN",
@@ -130,5 +129,21 @@
       "epaisseur": 25
     }
   },
-  "compact_p2": true
+  "compact_p2": true,
+  "_note_dp": "note_dimensions ne doit contenir AUCUN chiffre. La ΔP affichée par le tableau est recalculée par generer.py depuis le polynôme (smooth_curves_origin) : le « dp » du JSON n'est qu'un cache. Une valeur figée dans la note divergerait en silence — c'est ce qui s'est produit avant le 16/07 : la colonne affichait 43 Pa et la note « ≈ 42 Pa ». Ne pas non plus laisser note_dimensions absente : le gabarit retomberait sur sa note par défaut, écrite pour NETPLY (« 2 × la surface frontale », « 3400 m³/h ») donc fausse ici.",
+  "note_dimensions": "Surface filtrante = surface frontale (L × H). Le débit indiqué est le débit nominal ; la ΔP initiale est donnée à ce débit, média propre.",
+  "dimensions": [
+    {
+      "L": 592,
+      "H": 592,
+      "P": 25,
+      "debit": 1900
+    },
+    {
+      "L": 287,
+      "H": 592,
+      "P": 25,
+      "debit": 920
+    }
+  ]
 }
