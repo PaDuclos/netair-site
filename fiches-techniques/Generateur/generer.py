@@ -81,16 +81,14 @@ def build_specs(specs):
     return "\n".join("              " + r for r in rows)
 
 
-def dp_ligne(cls, dim):
-    """ΔP initiale de la classe au débit nominal de cette section.
+def debit_nominal(d, dim):
+    """Débit qui fait passer l'air à la vitesse nominale de référence dans cette section.
 
-    Invariant : lit le poly de d, donc les coefficients DÉJÀ normalisés par
-    smooth_curves_origin() — le tableau ne peut pas contredire la courbe.
+    À média, épaisseur et vitesse identiques, la ΔP est identique : c'est pourquoi le débit
+    de chaque section doit suivre sa surface frontale. Sert à valider les débits saisis.
     """
-    poly = cls["poly"]
-    co = poly.get(str(dim["P"])) or poly.get("48") or next(iter(poly.values()))
-    v = (dim["debit"] / 3600) / ((dim["L"] / 1000) * (dim["H"] / 1000))
-    return int(round(co["a"] * v * v + co["b"] * v + co["c"]))
+    vnom = (d.get("debit_nom", 3400) / 3600) / d.get("aref", AREF)
+    return vnom * ((dim["L"] / 1000) * (dim["H"] / 1000)) * 3600
 
 
 def check_dims_fusionnees(d):
@@ -111,10 +109,20 @@ def check_dims_fusionnees(d):
             "dims_fusionnees + series/tailles : ces modes ont leur propre constructeur de "
             "tableau (build_dimensions_series / _multi) qui ne lit pas ce réglage.")
     for cle in ("low", "high"):
-        if not isinstance(d["classes"][cle].get("poly"), dict):
+        if "dp" not in d["classes"][cle]:
             raise RuntimeError(
-                f"dims_fusionnees : classes.{cle} n'a pas de poly — la colonne ΔP du tableau "
-                "est calculée depuis le polynôme.")
+                f"dims_fusionnees : classes.{cle} n'a pas de dp — c'est la ΔP affichée par le tableau.")
+    # Le tableau affiche une ΔP unique par classe (celle du débit nominal). Ce n'est vrai que
+    # si chaque section est bien à la vitesse nominale : on refuse tout débit qui s'en écarte,
+    # sinon la ligne serait invérifiable (ex. 287×592 à 1700 m³/h → 67 Pa, pas 63).
+    for dim in d["dimensions"]:
+        attendu = debit_nominal(d, dim)
+        ecart = abs(dim["debit"] - attendu) / attendu
+        if ecart > 0.01:
+            raise RuntimeError(
+                f'dims_fusionnees : section {dim["L"]}x{dim["H"]} — débit {dim["debit"]} m³/h, '
+                f'soit {ecart:.1%} d\'écart avec le débit nominal ({attendu:.0f} m³/h). '
+                "La ΔP affichée serait fausse pour cette ligne. Corriger le débit.")
 
 
 def build_dimensions_fusion(d):
@@ -133,8 +141,8 @@ def build_dimensions_fusion(d):
             f'<td style="{c}">{P}</td>'
             f'<td style="{c}">{fr_surface(L, H, facteur)}</td>'
             f'<td style="{c}">{fr_debit(dim["debit"])}</td>'
-            f'<td style="{c}">{dp_ligne(low, dim)}</td>'
-            f'<td style="{c}">{dp_ligne(high, dim)}</td>'
+            f'<td style="{c}">{low["dp"]}</td>'
+            f'<td style="{c}">{high["dp"]}</td>'
             f'</tr>'
         )
     rows.append(

@@ -61,11 +61,12 @@
   "_note_dp": "note_dimensions ne doit contenir AUCUN chiffre : les ΔP sont des colonnes du tableau, calculées par dp_ligne() depuis le polynôme normalisé (mêmes coefficients que la courbe). Un chiffre figé ici divergerait en silence. Ne pas y remettre non plus les épaisseurs ni la surface filtrante (déjà dans les caractéristiques), ni « tenues en stock » (non vérifié — décision PA 16/07). Références retirées du tableau : décision PA 16/07, le client commande au nom du filtre, les codes servent à Incwo.",
   "note_dimensions": "Le débit indiqué est le débit nominal de chaque section ; la ΔP initiale est donnée à ce débit, média propre.",
 
+  "_note_debits": "Débits = débit nominal de chaque section, soit la vitesse de référence (2,69 m/s = 3400 m³/h sur 592×592) appliquée à sa surface frontale. C'est ce qui rend la ΔP identique sur toutes les lignes d'une même classe. Ne pas les arrondir à la louche : 287×592 n'est PAS la moitié de 592×592 (287 vs 296), donc 3400/2 = 1700 est faux (→ 67 Pa au lieu de 63). check_dims_fusionnees() refuse tout écart > 1 %.",
   "dimensions": [
     { "L": 592, "H": 592, "P": 48, "debit": 3400 },
-    { "L": 287, "H": 592, "P": 48, "debit": 1700 },
-    { "L": 490, "H": 592, "P": 48, "debit": 2800 },
-    { "L": 625, "H": 500, "P": 48, "debit": 3050 },
-    { "L": 500, "H": 500, "P": 48, "debit": 2450 }
+    { "L": 287, "H": 592, "P": 48, "debit": 1650 },
+    { "L": 490, "H": 592, "P": 48, "debit": 2810 },
+    { "L": 625, "H": 500, "P": 48, "debit": 3030 },
+    { "L": 500, "H": 500, "P": 48, "debit": 2430 }
   ]
 }
