@@ -118,9 +118,17 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
       (1129/—). Pour les 5 sans `compact_p2`, commencer par l'ajouter (≈ −33 mm) avant tout autre levier.
       ⚠️ `compact_fort` suppose 2 classes distinctes et le gabarit standard : ne pas l'appliquer en
       aveugle (il lève une erreur s'il manque compact_p1/compact_p2, mais ne vérifie pas le reste).
-- [ ] **🔴 Références du tableau « Dimensions » non conformes à `CODIFICATION_PRODUITS.md`** (constaté sur
-      NETPLY le 16/07/2026, **à vérifier sur les 17 autres**). La fiche génère
-      `NETPLY-Coarse 65%-G4-592x592x48` alors que la règle impose `NETPLY-G4-592x592x48` :
+- [ ] **🔴 Références du tableau « Dimensions » : à RETIRER, pas à corriger.** **Décision PA (16/07/2026) :
+      « le client ne copiera pas ce qu'il voit dans le tableau mais le nom du filtre, soit NETPLY »** —
+      les codes article servent à **Incwo**, pas au client (cohérent avec `CODIFICATION_PRODUITS.md` :
+      ligne libre en devis aux 2 premières commandes, fiche catalogue à la 3ᵉ). NETPLY n'affiche plus de
+      référence ; **3 fiches en affichent encore** : `netplan`, `netcel-v-lam`, `netpak-s-duo` → les
+      retirer à leur passage.
+      ⚠️ **Asymétrie à trancher** : le configurateur du site AFFICHE une référence au client
+      (`NETPLY-G4-592x592x48-A`). Si le code n'a pas à être vu du client, pourquoi le site le montre-t-il ?
+      À arbitrer avec Cowork.
+      Pour mémoire, le défaut de format initial (toujours présent sur les 3 fiches ci-dessus) :
+      elles génèrent `NETPLAN-Coarse 65%-G4-592x592x25` alors que la règle impose `NETPLAN-G4-592x592x25` :
       *« on utilise la classe EN 779 dans le code. La classe EN 16890 (ePM1 65%…) figure dans la désignation
       et la fiche technique, **pas dans le code article** »*. La fiche insère en plus un espace et un `%`
       dans un code produit. **Le configurateur du site, lui, respecte la règle** (`NETPLY-G4-592x592x48-A`)

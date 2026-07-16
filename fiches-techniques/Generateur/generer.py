@@ -81,16 +81,22 @@ def build_specs(specs):
     return "\n".join("              " + r for r in rows)
 
 
-def ref_article(nom, cls, L, H, P):
-    """Code article : [FAMILLE]-[CLASSE EN 779]-[L]x[H]x[P] (CODIFICATION_PRODUITS.md).
-    La classe ISO 16890 n'entre jamais dans le code. Même format que le configurateur du site."""
-    return f'{nom.replace(" ", "-")}-{cls["label"].replace(" ", "")}-{L}x{H}x{P}'
+def dp_ligne(cls, dim):
+    """ΔP initiale de la classe au débit nominal de cette section.
+
+    Invariant : lit le poly de d, donc les coefficients DÉJÀ normalisés par
+    smooth_curves_origin() — le tableau ne peut pas contredire la courbe.
+    """
+    poly = cls["poly"]
+    co = poly.get(str(dim["P"])) or poly.get("48") or next(iter(poly.values()))
+    v = (dim["debit"] / 3600) / ((dim["L"] / 1000) * (dim["H"] / 1000))
+    return int(round(co["a"] * v * v + co["b"] * v + co["c"]))
 
 
 def check_dims_fusionnees(d):
-    """`dims_fusionnees` suppose deux classes distinctes, des références portant la classe,
-    et le tableau du gabarit standard. Toute autre combinaison produirait une sortie fausse
-    en silence (colonnes identiques, réglage jamais lu) : on refuse au lieu de laisser passer."""
+    """`dims_fusionnees` suppose deux classes distinctes, chacune avec un poly, et le tableau
+    du gabarit standard. Toute autre combinaison produirait une sortie fausse en silence
+    (colonnes identiques, réglage jamais lu) : on refuse au lieu de laisser passer."""
     if d.get("mono_classe") or d.get("deux_epaisseurs"):
         raise RuntimeError(
             "dims_fusionnees + mono_classe/deux_epaisseurs : une seule classe réelle, les deux "
@@ -104,32 +110,18 @@ def check_dims_fusionnees(d):
         raise RuntimeError(
             "dims_fusionnees + series/tailles : ces modes ont leur propre constructeur de "
             "tableau (build_dimensions_series / _multi) qui ne lit pas ce réglage.")
-    for dim in d["dimensions"]:
-        if "dp" in dim:
+    for cle in ("low", "high"):
+        if not isinstance(d["classes"][cle].get("poly"), dict):
             raise RuntimeError(
-                f'dims_fusionnees : la section {dim["L"]}x{dim["H"]}x{dim["P"]} porte une ΔP '
-                "propre (dim['dp']) que le tableau fusionné n'affiche pas. Elle serait perdue.")
-
-
-def note_dp_fusion(d):
-    """Phrase ΔP de la note dimensions, GÉNÉRÉE depuis classes.*.dp.
-
-    Invariant : ces valeurs sont réécrites par maj_fiches.py depuis DONNEES_PDC_Netair.xlsx.
-    Les figer à la main dans note_dimensions ferait diverger la note et la courbe en silence.
-    """
-    low, high = d["classes"]["low"], d["classes"]["high"]
-    return (f'Le débit indiqué est le débit nominal ; à ce débit, ΔP initiale = '
-            f'{low["dp"]} Pa en {low["iso"]} ({low["label"]}) et '
-            f'{high["dp"]} Pa en {high["iso"]} ({high["label"]}).')
+                f"dims_fusionnees : classes.{cle} n'a pas de poly — la colonne ΔP du tableau "
+                "est calculée depuis le polynôme.")
 
 
 def build_dimensions_fusion(d):
     check_dims_fusionnees(d)
-    nom = d["nom"]
     low, high = d["classes"]["low"], d["classes"]["high"]
     facteur = d.get("surface_facteur", 2)
     c = "padding:4px 7px;"
-    cref = "padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;"
     rows = []
     for i, dim in enumerate(d["dimensions"], start=1):
         L, H, P = dim["L"], dim["H"], dim["P"]
@@ -141,8 +133,8 @@ def build_dimensions_fusion(d):
             f'<td style="{c}">{P}</td>'
             f'<td style="{c}">{fr_surface(L, H, facteur)}</td>'
             f'<td style="{c}">{fr_debit(dim["debit"])}</td>'
-            f'<td style="{cref}">{ref_article(nom, low, L, H, P)}</td>'
-            f'<td style="{cref}">{ref_article(nom, high, L, H, P)}</td>'
+            f'<td style="{c}">{dp_ligne(low, dim)}</td>'
+            f'<td style="{c}">{dp_ligne(high, dim)}</td>'
             f'</tr>'
         )
     rows.append(
@@ -1655,11 +1647,8 @@ def generer(d, html):
 
     # --- note sous le tableau dimensions (optionnelle ; sans objet si bloc retiré)
     if "note_dimensions" in d and not no_dim:
-        note = d["note_dimensions"]
-        if d.get("dims_fusionnees"):
-            note = (note.rstrip() + " " + note_dp_fusion(d)).strip()
         html = sub1(html, r'(margin-top:6px; line-height:1\.45;">)(.*?)(</div>)',
-                    lambda m: m.group(1) + note + m.group(3),
+                    lambda m: m.group(1) + d["note_dimensions"] + m.group(3),
                     flags=re.DOTALL)
 
     # --- mode mono-classe : 1 seule courbe, sans toggle classe/épaisseur
@@ -1712,8 +1701,8 @@ def generer(d, html):
         ancien = (f'                {th}ΔP (Pa)</th>\n'
                   f'                {th}Efficacité ISO 16890</th>\n'
                   f'                {th}Référence complète</th>\n')
-        nouveau = (f'                {th}Réf. {low["iso"]} ({low["label"]})</th>\n'
-                   f'                {th}Réf. {high["iso"]} ({high["label"]})</th>\n')
+        nouveau = (f'                {th}ΔP {low["iso"]} ({low["label"]})</th>\n'
+                   f'                {th}ΔP {high["iso"]} ({high["label"]})</th>\n')
         if ancien not in html:
             raise RuntimeError(
                 "dims_fusionnees : en-tête du tableau dimensions introuvable. Cause probable : "
