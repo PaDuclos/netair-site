@@ -1657,7 +1657,7 @@ def generer(d, html):
     if "note_dimensions" in d and not no_dim:
         note = d["note_dimensions"]
         if d.get("dims_fusionnees"):
-            note = note.rstrip() + " " + note_dp_fusion(d)
+            note = (note.rstrip() + " " + note_dp_fusion(d)).strip()
         html = sub1(html, r'(margin-top:6px; line-height:1\.45;">)(.*?)(</div>)',
                     lambda m: m.group(1) + note + m.group(3),
                     flags=re.DOTALL)

@@ -57,8 +57,8 @@
   },
 
   "dims_fusionnees": true,
-  "_note_dp": "Ne JAMAIS écrire de ΔP en dur dans note_dimensions : la phrase ΔP est générée par note_dp_fusion() depuis classes.*.dp, que generer.py recalcule à chaque génération depuis le polynôme (et que maj_fiches.py réécrit depuis DONNEES_PDC_Netair.xlsx). Une valeur figée ici divergerait de la courbe en silence.",
-  "note_dimensions": "Sections tenues en stock, en épaisseur 48 mm. L'épaisseur 98 mm est également standard, fabriquée à la demande — comme toute autre section. Surface filtrante = 2 × la surface frontale (48 mm) ou 3 × (98 mm).",
+  "_note_dp": "note_dimensions est volontairement VIDE : la phrase ΔP/débit est générée par note_dp_fusion() depuis classes.*.dp, que generer.py recalcule à chaque génération depuis le polynôme (et que maj_fiches.py réécrit depuis DONNEES_PDC_Netair.xlsx). Ne JAMAIS y figer de ΔP en dur : elle divergerait de la courbe en silence. Ne pas y remettre non plus les épaisseurs ni la surface filtrante (déjà dans les caractéristiques), ni « tenues en stock » (non vérifié — décision PA 16/07).",
+  "note_dimensions": "",
 
   "dimensions": [
     { "L": 592, "H": 592, "P": 48, "debit": 3400 },
