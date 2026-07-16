@@ -16,11 +16,11 @@
   "description": "Le NETPLY est un filtre plissé à média synthétique destiné à la préfiltration des centrales de traitement d'air et des installations de ventilation. Ce média, maintenu entre deux grilles métalliques par un assemblage sans couture ni colle, offre une surface filtrante représentant 2 à 3 fois la surface frontale, tout en conservant l'encombrement d'une cellule standard. En fin de vie, le média peut être séparé du cadre en acier galvanisé afin de faciliter le tri sélectif des composants. Le NETPLY est proposé dans une gamme de dimensions standard et peut également être fabriqué sur mesure, en longueur, largeur et épaisseur.",
 
   "points_cles": [
-    "Grande surface filtrante",
     "Faible perte de charge",
-    "Média sans couture ni colle",
-    "Démontable — tri sélectif",
-    "Sans fibre de verre"
+    "Assemblage sans couture ni colle",
+    "Média synthétique sans fibre de verre",
+    "Tri sélectif en fin de vie",
+    "Dimensions sur mesure"
   ],
 
   "specs": [
