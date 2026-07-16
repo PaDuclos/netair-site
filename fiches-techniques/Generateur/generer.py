@@ -91,14 +91,19 @@ def debit_nominal(d, dim):
     return vnom * ((dim["L"] / 1000) * (dim["H"] / 1000)) * 3600
 
 
+def classes_fusion(d):
+    """Classes à afficher en colonnes ΔP : une seule si la fiche est mono-classe, sinon deux."""
+    low, high = d["classes"]["low"], d["classes"]["high"]
+    return [low] if d.get("mono_classe") else [low, high]
+
+
 def check_dims_fusionnees(d):
-    """`dims_fusionnees` suppose deux classes distinctes, chacune avec un poly, et le tableau
-    du gabarit standard. Toute autre combinaison produirait une sortie fausse en silence
-    (colonnes identiques, réglage jamais lu) : on refuse au lieu de laisser passer."""
-    if d.get("mono_classe") or d.get("deux_epaisseurs"):
+    """`dims_fusionnees` suppose des classes portant chacune un poly et un dp, des références
+    portant la classe, et le tableau du gabarit standard. Toute autre combinaison produirait une
+    sortie fausse en silence (colonnes identiques, réglage jamais lu) : on refuse au lieu de passer."""
+    if d.get("deux_epaisseurs"):
         raise RuntimeError(
-            "dims_fusionnees + mono_classe/deux_epaisseurs : une seule classe réelle, les deux "
-            "colonnes de références seraient identiques. Retirer dims_fusionnees.")
+            "dims_fusionnees + deux_epaisseurs : les deux colonnes ΔP seraient identiques.")
     if d.get("ref_simple"):
         raise RuntimeError(
             "dims_fusionnees + ref_simple : ref_simple produit un code sans classe, donc deux "
@@ -108,10 +113,11 @@ def check_dims_fusionnees(d):
         raise RuntimeError(
             "dims_fusionnees + series/tailles : ces modes ont leur propre constructeur de "
             "tableau (build_dimensions_series / _multi) qui ne lit pas ce réglage.")
-    for cle in ("low", "high"):
-        if "dp" not in d["classes"][cle]:
+    for cls in classes_fusion(d):
+        if "dp" not in cls:
             raise RuntimeError(
-                f"dims_fusionnees : classes.{cle} n'a pas de dp — c'est la ΔP affichée par le tableau.")
+                f'dims_fusionnees : la classe {cls.get("label")} n\'a pas de dp — c\'est la ΔP '
+                "affichée par le tableau.")
     # Le tableau affiche une ΔP unique par classe (celle du débit nominal). Ce n'est vrai que
     # si chaque section est bien à la vitesse nominale : on refuse tout débit qui s'en écarte,
     # sinon la ligne serait invérifiable (ex. 287×592 à 1700 m³/h → 67 Pa, pas 63).
@@ -127,13 +133,14 @@ def check_dims_fusionnees(d):
 
 def build_dimensions_fusion(d):
     check_dims_fusionnees(d)
-    low, high = d["classes"]["low"], d["classes"]["high"]
+    classes = classes_fusion(d)
     facteur = d.get("surface_facteur", 2)
     c = "padding:4px 7px;"
     rows = []
     for i, dim in enumerate(d["dimensions"], start=1):
         L, H, P = dim["L"], dim["H"], dim["P"]
         tr = ' style="background:#F2F6FB;"' if i % 2 == 0 else ""
+        dp = "".join(f'<td style="{c}">{cls["dp"]}</td>' for cls in classes)
         rows.append(
             f'<tr{tr}>'
             f'<td style="{c}">{L}</td>'
@@ -141,14 +148,12 @@ def build_dimensions_fusion(d):
             f'<td style="{c}">{P}</td>'
             f'<td style="{c}">{fr_surface(L, H, facteur)}</td>'
             f'<td style="{c}">{fr_debit(dim["debit"])}</td>'
-            f'<td style="{c}">{low["dp"]}</td>'
-            f'<td style="{c}">{high["dp"]}</td>'
-            f'</tr>'
+            f'{dp}</tr>'
         )
     rows.append(
         '<tr style="background:#E6F5F7;">'
         '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="5">Sur mesure</td>'
-        '<td style="padding:4px 7px; color:#5A6573; font-style:italic;" colspan="2">'
+        f'<td style="padding:4px 7px; color:#5A6573; font-style:italic;" colspan="{len(classes)}">'
         'sur demande — délai à confirmer</td></tr>'
     )
     return "\n".join("              " + r for r in rows)
@@ -1705,12 +1710,11 @@ def generer(d, html):
     # test d'identité (_gabarit_ref.json) inchangée.
     if d.get("dims_fusionnees"):
         th = '<th style="padding:6px 7px; text-align:left; font-weight:600;">'
-        low, high = d["classes"]["low"], d["classes"]["high"]
         ancien = (f'                {th}ΔP (Pa)</th>\n'
                   f'                {th}Efficacité ISO 16890</th>\n'
                   f'                {th}Référence complète</th>\n')
-        nouveau = (f'                {th}ΔP {low["iso"]} ({low["label"]})</th>\n'
-                   f'                {th}ΔP {high["iso"]} ({high["label"]})</th>\n')
+        nouveau = "".join(f'                {th}ΔP {cls["iso"]} ({cls["label"]})</th>\n'
+                          for cls in classes_fusion(d))
         if ancien not in html:
             raise RuntimeError(
                 "dims_fusionnees : en-tête du tableau dimensions introuvable. Cause probable : "
