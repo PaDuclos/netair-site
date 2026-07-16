@@ -133,8 +133,14 @@ Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 
 C'est **exactement** la logique du calculateur énergétique (constante `ADD = { Coarse: 50, ePM: 100 }` dans le moteur).
 Le **texte de la ligne specs doit refléter la (les) classe(s) réelle(s) de la fiche** :
 
-- Fiche **mono-Coarse** (NETFIBRE, NETPLAN, NETMETAL, NETFIL) :
+- Fiche **mono-Coarse** (NETFIBRE, NETPLAN, NETFIL) :
   `"min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"`
+- ⚠️ **EXCEPTION NETMETAL (décision PA du 17/07/2026)** : la ligne specs « ΔP finale recommandée » a été
+  **retirée volontairement** de la fiche, après signalement explicite du caractère « impératif » de cette règle.
+  NETMETAL est la **seule des 18 fiches** à y déroger. **Ne pas la remettre** en croyant réparer un oubli :
+  lire `_arbitrages_pad` de `produits/netmetal.json` (point 12) avant toute retouche. La règle reste
+  impérative **pour les 17 autres**. À noter : le calculateur de la page 2 applique **toujours** `+50 Pa`
+  (il lit `classes.*.add`, pas la ligne specs) — seul l'affichage de la page 1 change, aucun calcul n'est modifié.
 - Fiche **multi-classes Coarse + ePM** (NETPLY v6 : G4 Coarse + M5 ePM10) :
   `"min(ΔP initiale + 50 Pa [Coarse] / + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"`
 - Fiche **ePM seule** (à venir : NETBAG S, NETPAK…) : `+ 100 Pa`.
