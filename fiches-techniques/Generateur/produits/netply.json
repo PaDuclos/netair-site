@@ -56,6 +56,10 @@
     "high": { "label": "M5", "iso": "ePM10 50%", "poly": { "48": { "a": 6.14, "b": 9.28, "c": -0.07 }, "98": { "a": 6.14, "b": 7.66, "c": -2.86 } }, "add": 100, "rule": "classe ePM10", "dp": 70 }
   },
 
+  "dims_fusionnees": true,
+  "_note_dp": "Ne JAMAIS écrire de ΔP en dur dans note_dimensions : la phrase ΔP est générée par note_dp_fusion() depuis classes.*.dp, que generer.py recalcule à chaque génération depuis le polynôme (et que maj_fiches.py réécrit depuis DONNEES_PDC_Netair.xlsx). Une valeur figée ici divergerait de la courbe en silence.",
+  "note_dimensions": "Sections tenues en stock, en épaisseur 48 mm. L'épaisseur 98 mm est également standard, fabriquée à la demande — comme toute autre section. Surface filtrante = 2 × la surface frontale (48 mm) ou 3 × (98 mm).",
+
   "dimensions": [
     { "L": 592, "H": 592, "P": 48, "debit": 3400 },
     { "L": 287, "H": 592, "P": 48, "debit": 1700 },

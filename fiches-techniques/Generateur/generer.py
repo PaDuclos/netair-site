@@ -81,7 +81,82 @@ def build_specs(specs):
     return "\n".join("              " + r for r in rows)
 
 
+def ref_article(nom, cls, L, H, P):
+    """Code article : [FAMILLE]-[CLASSE EN 779]-[L]x[H]x[P] (CODIFICATION_PRODUITS.md).
+    La classe ISO 16890 n'entre jamais dans le code. Même format que le configurateur du site."""
+    return f'{nom.replace(" ", "-")}-{cls["label"].replace(" ", "")}-{L}x{H}x{P}'
+
+
+def check_dims_fusionnees(d):
+    """`dims_fusionnees` suppose deux classes distinctes, des références portant la classe,
+    et le tableau du gabarit standard. Toute autre combinaison produirait une sortie fausse
+    en silence (colonnes identiques, réglage jamais lu) : on refuse au lieu de laisser passer."""
+    if d.get("mono_classe") or d.get("deux_epaisseurs"):
+        raise RuntimeError(
+            "dims_fusionnees + mono_classe/deux_epaisseurs : une seule classe réelle, les deux "
+            "colonnes de références seraient identiques. Retirer dims_fusionnees.")
+    if d.get("ref_simple"):
+        raise RuntimeError(
+            "dims_fusionnees + ref_simple : ref_simple produit un code sans classe, donc deux "
+            "colonnes identiques, et renomme l'en-tête que dims_fusionnees doit remplacer. "
+            "Incompatibles — traiter ce produit autrement.")
+    if d.get("series") or d.get("tailles"):
+        raise RuntimeError(
+            "dims_fusionnees + series/tailles : ces modes ont leur propre constructeur de "
+            "tableau (build_dimensions_series / _multi) qui ne lit pas ce réglage.")
+    for dim in d["dimensions"]:
+        if "dp" in dim:
+            raise RuntimeError(
+                f'dims_fusionnees : la section {dim["L"]}x{dim["H"]}x{dim["P"]} porte une ΔP '
+                "propre (dim['dp']) que le tableau fusionné n'affiche pas. Elle serait perdue.")
+
+
+def note_dp_fusion(d):
+    """Phrase ΔP de la note dimensions, GÉNÉRÉE depuis classes.*.dp.
+
+    Invariant : ces valeurs sont réécrites par maj_fiches.py depuis DONNEES_PDC_Netair.xlsx.
+    Les figer à la main dans note_dimensions ferait diverger la note et la courbe en silence.
+    """
+    low, high = d["classes"]["low"], d["classes"]["high"]
+    return (f'Le débit indiqué est le débit nominal ; à ce débit, ΔP initiale = '
+            f'{low["dp"]} Pa en {low["iso"]} ({low["label"]}) et '
+            f'{high["dp"]} Pa en {high["iso"]} ({high["label"]}).')
+
+
+def build_dimensions_fusion(d):
+    check_dims_fusionnees(d)
+    nom = d["nom"]
+    low, high = d["classes"]["low"], d["classes"]["high"]
+    facteur = d.get("surface_facteur", 2)
+    c = "padding:4px 7px;"
+    cref = "padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;"
+    rows = []
+    for i, dim in enumerate(d["dimensions"], start=1):
+        L, H, P = dim["L"], dim["H"], dim["P"]
+        tr = ' style="background:#F2F6FB;"' if i % 2 == 0 else ""
+        rows.append(
+            f'<tr{tr}>'
+            f'<td style="{c}">{L}</td>'
+            f'<td style="{c}">{H}</td>'
+            f'<td style="{c}">{P}</td>'
+            f'<td style="{c}">{fr_surface(L, H, facteur)}</td>'
+            f'<td style="{c}">{fr_debit(dim["debit"])}</td>'
+            f'<td style="{cref}">{ref_article(nom, low, L, H, P)}</td>'
+            f'<td style="{cref}">{ref_article(nom, high, L, H, P)}</td>'
+            f'</tr>'
+        )
+    rows.append(
+        '<tr style="background:#E6F5F7;">'
+        '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="5">Sur mesure</td>'
+        '<td style="padding:4px 7px; color:#5A6573; font-style:italic;" colspan="2">'
+        'sur demande — délai à confirmer</td></tr>'
+    )
+    return "\n".join("              " + r for r in rows)
+
+
 def build_dimensions(d):
+    if d.get("dims_fusionnees"):
+        return build_dimensions_fusion(d)
     nom = d["nom"]
     low, high = d["classes"]["low"], d["classes"]["high"]
     mono = d.get("mono_classe", False) or d.get("deux_epaisseurs", False)
@@ -1580,8 +1655,11 @@ def generer(d, html):
 
     # --- note sous le tableau dimensions (optionnelle ; sans objet si bloc retiré)
     if "note_dimensions" in d and not no_dim:
+        note = d["note_dimensions"]
+        if d.get("dims_fusionnees"):
+            note = note.rstrip() + " " + note_dp_fusion(d)
         html = sub1(html, r'(margin-top:6px; line-height:1\.45;">)(.*?)(</div>)',
-                    lambda m: m.group(1) + d["note_dimensions"] + m.group(3),
+                    lambda m: m.group(1) + note + m.group(3),
                     flags=re.DOTALL)
 
     # --- mode mono-classe : 1 seule courbe, sans toggle classe/épaisseur
@@ -1625,6 +1703,23 @@ def generer(d, html):
     #     pour les produits sans classe particulaire (charbon / moléculaire → ref_simple).
     if d.get("ref_simple"):
         html = html.replace(">Efficacité ISO 16890<", ">Filtration<")
+
+    # Sans le réglage, l'en-tête du gabarit reste intact : c'est ce qui laisse l'ancre du
+    # test d'identité (_gabarit_ref.json) inchangée.
+    if d.get("dims_fusionnees"):
+        th = '<th style="padding:6px 7px; text-align:left; font-weight:600;">'
+        low, high = d["classes"]["low"], d["classes"]["high"]
+        ancien = (f'                {th}ΔP (Pa)</th>\n'
+                  f'                {th}Efficacité ISO 16890</th>\n'
+                  f'                {th}Référence complète</th>\n')
+        nouveau = (f'                {th}Réf. {low["iso"]} ({low["label"]})</th>\n'
+                   f'                {th}Réf. {high["iso"]} ({high["label"]})</th>\n')
+        if ancien not in html:
+            raise RuntimeError(
+                "dims_fusionnees : en-tête du tableau dimensions introuvable. Cause probable : "
+                "un réglage antérieur a déjà réécrit ces <th> (vérifier l'ordre des blocs dans "
+                "generer()), ou le gabarit a changé.")
+        html = html.replace(ancien, nouveau)
 
     # --- page 1 compacte (par produit) : réduit les marges verticales pour
     #     faire tenir un contenu plus dense sur l'A4, sans toucher les autres fiches.
