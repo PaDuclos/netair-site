@@ -95,13 +95,29 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
       pousse la page sans alerte.
 
       **Décision PA (16/07/2026) : viser 2 pages, pas 3** (contrairement à l'orientation du 22/06).
-      Motif : ces fiches doivent finir en PDF + catalogue HTML/PDF. Chantier ouvert sur NETPLY d'abord.
-      Gisements identifiés sur NETPLY page 1 (343,8 mm pour 297) — **du gaspillage, pas du contenu** :
-      - tableau dimensions = **11 lignes** (5 sections × 2 classes + sur-mesure) alors que la géométrie
-        est identique en G4 et M5 (mêmes L/H/P, surface, débit) → dédoublonner ≈ **−33 mm** ;
-      - colonne ΔP = **2 valeurs pour 11 lignes** (63 en G4, 70 en M5, débit calé à vitesse constante) → redondante ;
-      - colonne « Efficacité ISO 16890 » : duplique la classe déjà portée par la référence ;
-      - **33 mm de vide sous la photo** (photo 60 mm dans une colonne de 93 mm).
+      Motif : ces fiches doivent finir en PDF + catalogue HTML/PDF.
+
+      **✅ NETPLY RÉGLÉ le 16/07/2026** — page 1 : 343,8 → **289,4 mm** (marge 7,6) ; page 2 : 355,6 →
+      **290,1 mm** (marge 6,9). Deux leviers, tous deux opt-in par produit, gabarit non modifié :
+      - `dims_fusionnees` : le tableau dimensions listait chaque section **deux fois** (une par classe)
+        alors que la géométrie est identique → 11 lignes → 6, soit **−31 mm**. Vrai doublon supprimé.
+      - `compact_fort` : colonne photo 70 → 52 mm, marges de blocs 6 → 4 mm, interligne du calculateur
+        13 → 5 px, graphe 84 → 68 %, cadre de courbe resserré. Vérifié à l'écran : graphe toujours
+        lisible (le blanc autour de la courbe a payé, pas la courbe).
+
+      **Deux erreurs d'analyse à ne pas refaire** (16/07) :
+      - les « 33 mm de vide sous la photo » **ne sont pas récupérables** : la grille est à 2 colonnes,
+        sa hauteur est imposée par la colonne texte (93 mm) ; la photo (60 mm) est juste centrée dedans.
+        Le seul levier est la **largeur** de la colonne photo, qui fait refluer le texte.
+      - le débordement de la **page 2 n'est pas du gaspillage** : c'est le coût des sélecteurs de classe
+        et d'épaisseur, que les fiches mono-classe n'affichent pas. Mesuré vs NETPLAN : calculateur
+        +17,6 mm, courbe +7,3 mm (légende de 4 courbes), sélecteur « Afficher : » +5,6 mm.
+
+      **Restent 7 fiches à traiter** : NETBAG S (1286/1458), NETPAK S AZUR (1229/1375), NETPAK S LUMEN
+      (1169/1375), NETCEL V AZUR (—/1375), NETCEL V NIVAL (—/1375), NETCARB CILIA (—/1167), NETCARB AZUR
+      (1129/—). Pour les 5 sans `compact_p2`, commencer par l'ajouter (≈ −33 mm) avant tout autre levier.
+      ⚠️ `compact_fort` suppose 2 classes distinctes et le gabarit standard : ne pas l'appliquer en
+      aveugle (il lève une erreur s'il manque compact_p1/compact_p2, mais ne vérifie pas le reste).
 - [ ] **🔴 Références du tableau « Dimensions » non conformes à `CODIFICATION_PRODUITS.md`** (constaté sur
       NETPLY le 16/07/2026, **à vérifier sur les 17 autres**). La fiche génère
       `NETPLY-Coarse 65%-G4-592x592x48` alors que la règle impose `NETPLY-G4-592x592x48` :

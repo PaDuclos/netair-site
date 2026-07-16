@@ -8,6 +8,7 @@
   "soustitre": "Filtre plissé — Préfiltre synthétique",
   "compact_p1": true,
   "compact_p2": true,
+  "compact_fort": true,
 
   "fiche": { "num": "FT-NETPLY-001", "version": "v1.0", "date": "22/06/2026" },
 

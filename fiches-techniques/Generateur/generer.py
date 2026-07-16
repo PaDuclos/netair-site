@@ -1746,6 +1746,30 @@ def generer(d, html):
         html = html.replace('<svg id="curveSvg" viewBox="0 0 600 300" style="width:100%; height:auto; display:block;">',
                             '<svg id="curveSvg" viewBox="0 0 600 300" style="width:84%; height:auto; display:block; margin:0 auto;">')
 
+    # --- compact_fort : tenir une fiche MULTI-CLASSES en 2 pages A4. Ses sélecteurs de classe
+    #     et d'épaisseur, que les fiches mono-classe n'affichent pas, coûtent ~26 mm en page 2.
+    #     Doit passer APRÈS compact_p1/compact_p2 : il resserre les valeurs qu'ils ont posées.
+    if d.get("compact_fort"):
+        if not (d.get("compact_p1") and d.get("compact_p2")):
+            raise RuntimeError(
+                "compact_fort exige compact_p1 ET compact_p2 : il resserre les valeurs qu'ils posent.")
+        remplacements = [
+            ("grid-template-columns:70mm 1fr", "grid-template-columns:52mm 1fr"),
+            ("flex-direction:column; gap:13px", "flex-direction:column; gap:5px"),
+            ('<div style="margin-top:6mm;">', '<div style="margin-top:4mm;">'),
+            ("margin:6mm 0 5mm 0;", "margin:4mm 0 4mm 0;"),
+            ('style="width:84%; height:auto; display:block; margin:0 auto;"',
+             'style="width:68%; height:auto; display:block; margin:0 auto;"'),
+            ("border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCF",
+             "border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCF"),
+        ]
+        for avant, apres in remplacements:
+            if avant not in html:
+                raise RuntimeError(
+                    f"compact_fort : ancre introuvable « {avant[:46]}… ». Le gabarit a changé, "
+                    "ou compact_fort s'exécute avant compact_p1/compact_p2.")
+            html = html.replace(avant, apres)
+
     return html
 
 
