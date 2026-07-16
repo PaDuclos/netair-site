@@ -1,7 +1,7 @@
 {
   "_commentaire": "NETPLY — sources : G4 = TITAPLY EC (FT 2018-020 v3 ep48 / FT 2018-025 v2 ep98) ; M5 = PRISME PLY (FT 2019-032 / FT 2019-033). Surface média 2x (48) / 3x (98) frontale : confirmé sur les 4 fiches. ΔP = polynômes DONNEES_PDC. L'ANCRE du test d'identité du gabarit est produits/_gabarit_ref.json (à ne pas confondre).",
 
-  "_arbitrages_pad": "Descriptif retravaillé et validé par Pierre-Alain le 16/07/2026. Trois arbitrages à NE PAS rouvrir sans le consulter : (1) « sans couture ni colle » est CONFIRMÉ par PA en tant que fabricant, bien que les 4 fiches Titanair 2018 portent « LUT / BOND : OUI » — formulé « par un assemblage sans couture ni colle » car c'est le montage entre grilles qui est concerné, pas le média. (2) « Incinérable : média oui · cadre non » est confirmé par PA, non sourcé dans les fiches 2018. (3) « Démontable / tri sélectif » RETIRÉ : chez Titanair c'est le bouchon de tri BREVETÉ (doc 2013, « exclusivité Groupe Titanair »). Le NETPLY n'est pas démontable ; seule la séparation média / cadre acier est vraie. Ne jamais réintroduire « démontable » ni « éco-conception » (notion encadrée). Sans fibre de verre : sourcé par Gamme_References_Netair.xlsx (média polyester). (4) G3 VOLONTAIREMENT ABSENT de la fiche : décision PA du 16/07/2026, « pas de marché » — bien que Gamme_References_Netair.xlsx annonce encore « G3 / G4 / M5 » (divergence connue, xlsx non corrigé). Ne pas réintroduire le G3 depuis le xlsx sans en reparler à PA.",
+  "_arbitrages_pad": "Descriptif retravaillé et validé par Pierre-Alain le 16/07/2026. Arbitrages à NE PAS rouvrir sans le consulter : (1) « sans couture ni colle » est CONFIRMÉ par PA en tant que fabricant, bien que les 4 fiches Titanair 2018 portent « LUT / BOND : OUI » — formulé « par un assemblage sans couture ni colle » car c'est le montage entre grilles qui est concerné, pas le média. Il figure dans le DESCRIPTIF et les POINTS CLÉS, mais PAS dans les caractéristiques : la ligne « Structure » disait « 2 grilles métalliques (sans couture ni colle) », soit une 3e occurrence sur la même page — retirée le 16/07 sur décision PA. (2) « Incinérable : média oui · cadre non » est confirmé par PA, non sourcé dans les fiches 2018. (3) « Démontable / tri sélectif » RETIRÉ : chez Titanair c'est le bouchon de tri BREVETÉ (doc 2013, « exclusivité Groupe Titanair »). Le NETPLY n'est pas démontable ; seule la séparation média / cadre acier est vraie. Ne jamais réintroduire « démontable » ni « éco-conception » (notion encadrée). Sans fibre de verre : sourcé par Gamme_References_Netair.xlsx (média polyester). (4) G3 VOLONTAIREMENT ABSENT de la fiche : décision PA du 16/07/2026, « pas de marché » — bien que Gamme_References_Netair.xlsx annonce encore « G3 / G4 / M5 » (divergence connue, xlsx non corrigé). Ne pas réintroduire le G3 depuis le xlsx sans en reparler à PA.",
 
   "slug": "netply",
   "nom": "NETPLY",
@@ -27,7 +27,7 @@
 
   "specs": [
     ["Média filtrant", "Fibres synthétiques plissées (polyester)"],
-    ["Structure", "2 grilles métalliques (sans couture ni colle)"],
+    ["Structure", "2 grilles métalliques"],
     ["Cadre", "Acier galvanisé"],
     ["Séparateur", "Sans"],
     ["Efficacités ISO 16890", "Coarse 65% · ePM10 50%"],
