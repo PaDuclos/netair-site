@@ -1482,7 +1482,21 @@ def generer_multi(d, html):
 
 
 # ----------------------------------------------------------------- moteur ----
+def bouton_retour(d, html):
+    """Cible du bouton « Retour au produit » du gabarit (flottant, hors A4, masqué à
+    l'impression par .no-print). Appliqué AVANT le routage vers les 3 moteurs, donc aux
+    18 fiches par le même code : le balisage des fiches est ailleurs dupliqué entre le
+    gabarit et generer.py, et une correction n'avait touché que 17 fiches sur 18.
+    Le gabarit porte le slug de l'ancre (netply) → test d'identité préservé."""
+    avant = 'href="/produits/netply"'
+    if avant not in html:
+        raise RuntimeError(
+            "bouton_retour : ancre 'href=\"/produits/netply\"' introuvable dans le gabarit.")
+    return html.replace(avant, f'href="/produits/{d["slug"]}"')
+
+
 def generer(d, html):
+    html = bouton_retour(d, html)
     if d.get("series"):
         return generer_series(d, html)
     if d.get("multi_classe"):

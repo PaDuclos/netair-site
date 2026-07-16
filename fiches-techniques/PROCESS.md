@@ -169,6 +169,29 @@ du débit et contredisent le calculateur.
 | `series` (+ `courbes`, `classes_def`, `classes_order`, `eff0`, `len0`) | **mode multi-classes opt-in** (N courbes classe × longueur ; calculateur à sélecteur classe × longueur ; cases par classe). Chemin **legacy 2×2 inchangé** sans cette clé → test d'identité NETPLY préservé. Utilisé par NETBAG S. |
 | `multi_classe` (+ `classes_list`, `dimensions_multi`, `velocities`, `eff_default`) | **mode multi-classes « compact » opt-in** → `generer_multi`. **Sélecteur 5 classes**, 2 courbes (classe choisie en 48/98) à la fois, fiche **3 pages** (P1 desc/specs · P2 dimensions + tableau ΔP complet + courbe · P3 calculateur). **Calculateur à sélecteur d'efficacité + épaisseur INDÉPENDANT de la courbe** (`state.calcEff` ≠ `state.eff`) — afficher une classe et calculer l'énergie d'une autre. Surface m²/m², réfs cadre `-A`/`-P`. Chemin 2×2 inchangé. Utilisé par NETPAK S CILIA. ⚠️ proche de `series` — à fusionner un jour. |
 
+## Bouton « Retour au produit » (charte — 17/07/2026)
+
+Les fiches s'ouvrent depuis la page produit **dans le même onglet** (le lien « Fiche technique »
+de `[ref].astro` n'a pas de `target="_blank"`) : sans bouton, le lecteur y est **coincé**, la fiche
+n'ayant aucune navigation. D'où un bouton flottant, présent sur les **18 fiches** :
+
+- **Dans le gabarit**, juste avant `</body>` — donc **hors des blocs `.a4`** : il flotte au-dessus
+  de la page, il n'est pas *dans* la feuille (`position:fixed`, en **bas à gauche**).
+- **Masqué à l'impression et dans le PDF** par `.no-print { display:none !important; }`
+  (règle ajoutée au `@media print` du gabarit). Le papier ne porte jamais de bouton.
+- **Bas à GAUCHE volontairement** : le bouton « Modifier le texte » injecté par `apercu.py`
+  occupe le bas à droite (cf. ci-dessous). Les deux ne se chevauchent pas.
+- **Cible = `/produits/<slug>`**, pas `history.back()` : une fiche ouverte directement (lien
+  partagé, favori) n'a pas de page précédente, et le bouton ne ferait rien.
+- **`bouton_retour()` s'exécute dans `generer()` AVANT le routage** vers `generer_series` /
+  `generer_multi` / le chemin classique → **un seul code pour les 18 fiches**, précisément pour
+  éviter le piège du balisage dupliqué (ci-dessous) qui n'avait touché que 17 fiches sur 18.
+  Le gabarit porte `href="/produits/netply"` (le slug de l'ancre) → **test d'identité préservé**.
+
+> ⚠️ Ne pas confondre avec le bouton **« Modifier le texte »** : celui-là vit dans `apercu.py`
+> (serveur d'aperçu local, port 8765), est **injecté à la volée**, n'est **jamais écrit dans les
+> fichiers** et reste **invisible pour les clients** comme sur le site (port 4321).
+
 ## Pièges identifiés (à surveiller partout)
 
 - **⚠️ La page affiche « 297 mm » même quand elle déborde.** `.a4` a `min-height:297mm` : mesurer sa
