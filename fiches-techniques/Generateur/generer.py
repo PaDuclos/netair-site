@@ -1747,6 +1747,44 @@ def generer(d, html):
         html = html.replace('<svg id="curveSvg" viewBox="0 0 600 300" style="width:100%; height:auto; display:block;">',
                             '<svg id="curveSvg" viewBox="0 0 600 300" style="width:84%; height:auto; display:block; margin:0 auto;">')
 
+    # --- courbe_large : rendre à la courbe ΔP la place que consomme le calculateur.
+    #     Reprend les seuls resserrements de compact_fort qui touchent la PAGE 2, et pousse
+    #     le graphe de 84 % à 100 %. Ne touche NI la page 1, NI la colonne photo, NI les
+    #     légendes multi-classes — d'où un drapeau distinct de compact_fort, qui fait tout ça
+    #     et ne conviendrait pas à une fiche mono-classe dont la page 1 a de la place.
+    #     Mesuré sur NETMETAL (17/07/2026) : courbe 279 → 339 px (+21 %, plus grande que celle
+    #     de NETPLY), page 2 1098 → 1051 px, marge A4 25 → 72 px. Doit passer APRÈS compact_p2 :
+    #     il resserre les valeurs qu'il pose.
+    if d.get("courbe_large"):
+        if not d.get("compact_p2"):
+            raise RuntimeError(
+                "courbe_large exige compact_p2 : il resserre les valeurs qu'il pose "
+                "(dont le graphe à 84 %).")
+        if d.get("compact_fort"):
+            raise RuntimeError(
+                "courbe_large et compact_fort sont incompatibles : compact_fort règle déjà "
+                "le graphe (90 %) et resserre les mêmes ancres.")
+        remplacements = [
+            # Le calculateur : rien ne rétrécit, seul l'espacement se resserre.
+            ("flex-direction:column; gap:13px", "flex-direction:column; gap:5px"),
+            ("align-items:baseline; margin-bottom:5px;", "align-items:baseline; margin-bottom:2px;"),
+            ('style="width:100%; accent-color:#0897A5;"',
+             'style="width:100%; accent-color:#0897A5; display:block; margin:0;"'),
+            ("border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCF",
+             "border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCF"),
+            ("gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px;",
+             "gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px;"),
+            # La place ainsi libérée va à la courbe.
+            ('style="width:84%; height:auto; display:block; margin:0 auto;"',
+             'style="width:100%; height:auto; display:block; margin:0 auto;"'),
+        ]
+        for avant, apres in remplacements:
+            if avant not in html:
+                raise RuntimeError(
+                    f"courbe_large : ancre introuvable « {avant[:46]}… ». Le gabarit a changé, "
+                    "ou courbe_large s'exécute avant compact_p2.")
+            html = html.replace(avant, apres)
+
     # --- compact_fort : tenir une fiche MULTI-CLASSES en 2 pages A4. Ses sélecteurs de classe
     #     et d'épaisseur, que les fiches mono-classe n'affichent pas, coûtent ~26 mm en page 2.
     #     Doit passer APRÈS compact_p1/compact_p2 : il resserre les valeurs qu'ils ont posées.
