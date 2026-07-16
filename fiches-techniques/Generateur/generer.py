@@ -1762,8 +1762,14 @@ def generer(d, html):
             ("gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px;",
              "gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px;"),
             ("Média propre — air à 20 °C", "Média propre · air à 20 °C"),
+            # Les champs du calculateur : l'étiquette laissait 5 mm sous elle, et les curseurs,
+            # en display inline, traînaient l'interligne de leur ligne de texte. Rien ne rétrécit,
+            # seul l'espacement se resserre — la place va au graphe.
+            ("align-items:baseline; margin-bottom:5px;", "align-items:baseline; margin-bottom:2px;"),
+            ('style="width:100%; accent-color:#0897A5;"',
+             'style="width:100%; accent-color:#0897A5; display:block; margin:0;"'),
             ('style="width:84%; height:auto; display:block; margin:0 auto;"',
-             'style="width:80%; height:auto; display:block; margin:0 auto;"'),
+             'style="width:90%; height:auto; display:block; margin:0 auto;"'),
             ("border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCF",
              "border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCF"),
         ]
