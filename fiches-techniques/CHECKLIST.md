@@ -302,7 +302,32 @@ Arbitrages et divergences à analyser — *ne pas les rouvrir sans PA* :
 ### NETPLAN 🟡
 - [ ] **Photo** Netair (placeholder).
 - [ ] **ΔP > 2 m/s** : extrapolée au-delà de la plage mesurée (fiche 2018 ≤ 2 m/s) → à confirmer.
-- [ ] Gamme G2/G3 annoncée (ép. 8–25) : seul G4 (ép. 25) tracé.
+
+**Contenu retravaillé et validé par PA le 16/07/2026** (descriptif · points clés · caractéristiques).
+Arbitrages — *ne pas les rouvrir sans PA* :
+
+- [ ] **🟠 G2/G3 annoncés SANS COURBE — décision PA du 16/07 : on les garde.** La fiche affiche
+      « Coarse 40% · 50% · 65% » et « G2 · G3 · G4 (réf. : G4) », mais **seul le G4 est tracé** : le graphe
+      G3 de la source Titanair était une **copie du G4** (vérifié via le cache Excel), donc écarté.
+      ⚠️ **Décision CONTRAIRE à celle prise sur NETPLY le même jour** (G3 retiré, « pas de marché ») :
+      ici le G2/G3 se vend en filtre plan. Cohérent avec `Gamme_References_Netair.xlsx` (G3/G4).
+      **→ Courbes G2 et G3 à mesurer en R&D.** Tant qu'elles manquent, la fiche annonce trois classes
+      et n'en documente qu'une.
+- [ ] **🔴 « Sans couture ni colle » et « Incinérable » confirmés par PA, non sourcés.** Même situation que
+      NETPLY : les fiches Titanair 2018 portent « LUT / BOND : OUI ». PA a tranché en tant que fabricant
+      le 16/07 — le média n'est ni collé ni cousu, donc il se sépare du cadre acier, donc la ligne
+      « Incinérable » est vraie. **Ne pas les retirer faute de source écrite.** À faire confirmer par le
+      fournisseur si une preuve devient nécessaire.
+- [x] **« Parois cellule : Acier galvanisé » retirée** (16/07) : sourcée par la fiche Titanair 2018, mais
+      redondante avec « Structure : 2 grilles galvanisées » + « Cadre : acier galvanisé ép. 8/10 ».
+      NETPLY n'en a pas.
+- [x] **Descriptif précédent retiré** : il portait « **garantit** une excellente tenue mécanique et une
+      longue durée de service » (« garantit » est un mot banni ; le reste est invérifiable) et
+      « robuste et économique » (jugements sans information).
+- [x] **Sur mesure confirmé par PA** (16/07) — aucune source écrite ne le mentionne.
+- [x] Alignements de gamme appliqués : « Surface média » → « **Surface filtrante** » ; **ISO 16890 avant
+      EN 779** ; « Classement au feu » remonté auprès des efficacités ; média précisé « (polyester) ».
+      Pages : 286,4 et 290,6 mm — les deux tiennent dans l'A4 **sans** `compact_fort` (fiche mono-classe).
 
 ### NETMETAL 🟡
 - [ ] **Photo** Netair (placeholder Titanair).
