@@ -1750,16 +1750,27 @@ def generer(d, html):
         if not (d.get("compact_p1") and d.get("compact_p2")):
             raise RuntimeError(
                 "compact_fort exige compact_p1 ET compact_p2 : il resserre les valeurs qu'ils posent.")
+        low, high = d["classes"]["low"], d["classes"]["high"]
         remplacements = [
             ("grid-template-columns:70mm 1fr", "grid-template-columns:52mm 1fr"),
             ("flex-direction:column; gap:13px", "flex-direction:column; gap:5px"),
             ('<div style="margin-top:6mm;">', '<div style="margin-top:4mm;">'),
             ("margin:6mm 0 5mm 0;", "margin:4mm 0 4mm 0;"),
+            # La légende répétait la classe ISO déjà affichée par le sélecteur « Afficher : »
+            # 5 mm au-dessus : elle débordait sur 2 lignes. Raccourcie, elle tient sur une seule
+            # à police inchangée — ce qui rend au graphe la place qu'elle prenait.
+            ("gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px;",
+             "gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px;"),
+            ("Média propre — air à 20 °C", "Média propre · air à 20 °C"),
             ('style="width:84%; height:auto; display:block; margin:0 auto;"',
-             'style="width:68%; height:auto; display:block; margin:0 auto;"'),
+             'style="width:80%; height:auto; display:block; margin:0 auto;"'),
             ("border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCF",
              "border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCF"),
         ]
+        for cls in (low, high):
+            lab = f'{cls["label"]} · {cls["iso"]}'
+            for ep in ("48", "98"):
+                remplacements.append((f'{lab} — {ep} mm', f'{cls["label"]} · {ep} mm'))
         for avant, apres in remplacements:
             if avant not in html:
                 raise RuntimeError(
