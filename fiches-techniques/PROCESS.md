@@ -156,11 +156,37 @@ du débit et contredisent le calculateur.
 | `classes.*.epaisseur` | épaisseur réelle (légende, libellés) |
 | `note_dimensions` | note sous le tableau dimensions |
 | `compact_p1` | réduit les marges verticales de la page 1 (contenu dense qui doit tenir sur l'A4), par produit |
+| `compact_p2` | page 2 sur un seul A4 : marges + graphe à 84 %. **Gagne ~33 mm à lui seul** — le réflexe n°1 quand une page 2 déborde. Manque encore sur 5 fiches (cf. CHECKLIST) |
+| `compact_fort` | *(16/07/2026)* fiche **multi-classes** tenue en 2 pages A4 : colonne photo 70→52 mm, marges de blocs 6→4 mm, interligne du calculateur 13→5 px, curseurs en `display:block`, légende raccourcie (« G4 · 48 mm » au lieu de « G4 · Coarse 65% — 48 mm »), graphe à 90 %. **Exige `compact_p1` + `compact_p2`** (il resserre leurs valeurs) → lève une erreur sinon. Utilisé par NETPLY |
+| `dims_fusionnees` | *(16/07/2026)* tableau dimensions **une ligne par section** au lieu d'une par section × classe (la géométrie est identique, seule la ΔP change) : 11 → 6 lignes sur NETPLY, **−31 mm**. Colonnes ΔP par classe, **références retirées** (décision PA : le client commande au nom du filtre, les codes servent à Incwo). `check_dims_fusionnees()` **refuse** : `mono_classe`/`deux_epaisseurs` (colonnes identiques), `ref_simple` (code sans classe + conflit d'en-tête), `series`/`tailles` (autre constructeur), classe sans `dp`, et **tout débit s'écartant de plus de 1 % du débit nominal de sa section** |
 | `series` (+ `courbes`, `classes_def`, `classes_order`, `eff0`, `len0`) | **mode multi-classes opt-in** (N courbes classe × longueur ; calculateur à sélecteur classe × longueur ; cases par classe). Chemin **legacy 2×2 inchangé** sans cette clé → test d'identité NETPLY préservé. Utilisé par NETBAG S. |
 | `multi_classe` (+ `classes_list`, `dimensions_multi`, `velocities`, `eff_default`) | **mode multi-classes « compact » opt-in** → `generer_multi`. **Sélecteur 5 classes**, 2 courbes (classe choisie en 48/98) à la fois, fiche **3 pages** (P1 desc/specs · P2 dimensions + tableau ΔP complet + courbe · P3 calculateur). **Calculateur à sélecteur d'efficacité + épaisseur INDÉPENDANT de la courbe** (`state.calcEff` ≠ `state.eff`) — afficher une classe et calculer l'énergie d'une autre. Surface m²/m², réfs cadre `-A`/`-P`. Chemin 2×2 inchangé. Utilisé par NETPAK S CILIA. ⚠️ proche de `series` — à fusionner un jour. |
 
 ## Pièges identifiés (à surveiller partout)
 
+- **⚠️ La page affiche « 297 mm » même quand elle déborde.** `.a4` a `min-height:297mm` : mesurer sa
+  hauteur ne dit PAS si le contenu tient. Neutraliser le plancher pour avoir la vraie hauteur :
+  `p.style.minHeight='0'` avant de mesurer. Sans ça on croit avoir réussi alors qu'on imprime 4 pages.
+- **⚠️ `_gabarit_ref.json` porte le slug `netply`** : le générer **écrase** `Fiche technique NETPLY.html`.
+  Utiliser `--out /tmp/id.html`, ou régénérer NETPLY juste après.
+- **⚠️ Balisage dupliqué entre `gabarit_base.html` et `generer.py`** (cartes ΔP du calculateur, ~l. 1136,
+  chemin multi-classes). Corriger l'un ne corrige pas l'autre : le 16/07, une correction de charte n'avait
+  touché que 17 fiches sur 18. **Toujours contrôler les 18 après une modif du gabarit.**
+- **⚠️ La clé `series` est un BOOLÉEN**, pas une liste. Les classes traçables sont dans `courbes[].cls`.
+  Compter les classes depuis `series` donne un résultat faux (le 16/07 : 2 fiches multi-classes trouvées
+  au lieu de 6).
+- **⚠️ `dp` des classes est un CACHE** : `generer.py` le recalcule depuis le polynôme à chaque génération
+  (`smooth_curves_origin`, ~l. 410). Modifier `dp` dans le JSON n'a **aucun effet** — la source est `poly`.
+- **⚠️ Ne JAMAIS écrire de chiffre à la main dans un texte de fiche** (note, descriptif). `maj_fiches.py`
+  réécrit les données depuis `DONNEES_PDC_Netair.xlsx` mais **jamais la prose** → divergence silencieuse.
+  Tout chiffre affiché doit être généré depuis les données.
+- **⚠️ Débits nominaux arrondis « à la louche »** : à média, épaisseur et vitesse identiques, la ΔP est
+  identique. Une ΔP qui varie d'une ligne à l'autre trahit un débit approximatif, pas une propriété du
+  filtre. Sur NETPLY, `3400/2 = 1700` pour la section 287×592 était faux (287 ≠ 296) → 67 Pa au lieu de 63.
+  Le débit doit suivre la surface frontale : `débit = v_nom × L × H × 3600`.
+- **⚠️ Un serveur d'aperçu qui tourne depuis des jours ment** : il ne surveille pas `Generateur/produits/`
+  (hors du dossier du site). Le 16/07, celui du port 4321 servait des textes figés depuis 15 jours.
+  En cas de doute, **le redémarrer** — recharger la page ne suffit pas.
 - **Graphes Excel copiés-collés** : la courbe G3 de TITAPLAN était une copie du G4
   (vérifié via le cache). Toujours contrôler la cohérence avant d'utiliser.
 - **Sources contradictoires** (plaquette 2013 vs fiche 2018 vs FORMULE_PDC) →
