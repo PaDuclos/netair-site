@@ -60,6 +60,71 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 
 ---
 
+## 🔴 RÉFÉRENCES PRODUIT — À TRANCHER AVANT INCWO (ouvert le 16/07/2026 par PA)
+
+> **PA : « je pense ce sujet très important, il ne faut pas l'oublier. On en reparle avant Incwo. »**
+> **Ne pas paramétrer Incwo ni mettre le site en ligne avant d'avoir tranché.** La référence est la
+> **clé pivot** entre le site, le devis et l'ERP : mal formulée, une fiche se corrige ; mal choisie, une
+> référence se traîne des années sur les devis et les factures.
+
+### Constat — 4 formats divergents pour le même filtre
+
+| Source | Produit |
+|---|---|
+| `CODIFICATION_PRODUITS.md` (la règle) | `NETPLY-G4-592x592x`**`46`** |
+| Configurateur du site | `NETPLY-G4-592x592x`**`48`**`-`**`A`** (suffixe cadre, absent de la règle) |
+| Générateur de fiches (netplan, netcel-v-lam, netpak-s-duo) | `NETPLAN-`**`Coarse 65%`**`-G4-592x592x25` |
+| **Excel `Calculateur_Netair.xlsx`** | **AUCUNE référence composée** |
+
+**Le point le plus lourd : l'Excel n'a pas de référence.** Onglet `Tableau_Gammes` → colonnes séparées
+`Code gamme` (**un chiffre** : 1, 2, 3, 101…), `Nom de la gamme`, `Efficacité`, `Épaisseur`. Il n'y a donc
+rien à « faire correspondre » : la référence **est à construire**, côté prix comme côté Incwo.
+`site/src/lib/pricing/data/tables.json` est généré depuis cet Excel et porte les mêmes clés (`code`, `nom`).
+
+### 🔴 Ambiguïté bloquante — les variantes (CIAT)
+
+```
+Code 1   → NETPLY           methode: A          remises 9,5 % … 13,5 %
+Code 101 → NETPLY (CIAT)    methode: sur_devis  aucune remise
+```
+Idem `NETFIL (CIAT)` (102) et `NETPLAN (CIAT)` (103). **Deux gammes, deux tarifications, le même nom.**
+`NETPLY-G4-592x592x48` ne permet pas de les distinguer — l'une se vend au tarif catalogue, l'autre
+uniquement sur devis. **Risque direct : un prix faux qui part chez un client.** Les fiches ignorent
+totalement ces variantes.
+
+### Préférence exprimée par PA (16/07/2026)
+
+- Référence **longue, classe ISO incluse** : `NETPLAN-Coarse 65%-G4-592x592x25`
+- **Suffixe cadre** `-A` / `-P` quand plusieurs cadres existent
+- Exemple CILIA : `NETPAK S CILIA A ePM1 50% F7 592x592x48`
+  ou `NETPAK-S-CILIA-A-ePM1 50%-F7-592x592x48` → **tirets ou espaces : à trancher**
+
+### Réserves à examiner (Claude, 16/07) — à confronter aux contraintes réelles d'Incwo
+
+1. **Contredit `CODIFICATION_PRODUITS.md`**, qui écrit explicitement : *« on utilise la classe EN 779 dans
+   le code. La classe EN 16890 figure dans la désignation et la fiche technique, **pas dans le code
+   article** »*. C'est une exception assumée à la règle « ISO primaire », justifiée par la compacité.
+   **Si on retient la préférence PA, il faut réécrire la règle** — les deux ne peuvent pas coexister.
+2. **`ePM1 50%` et `F7` sont la même information** (table de correspondance fixe et actée). Les écrire
+   tous les deux = classe en double. `NETPAK-S-CILIA-A-ePM1 50%-F7-592x592x48` = 40 caractères, dont ~8
+   de redondance. → Choisir : ISO seule, EN 779 seule, ou les deux en assumant la longueur.
+3. **Espace et `%` dans un code article** : à valider contre Incwo (longueur max ? caractères admis ?),
+   les imports/exports CSV, et un éventuel usage en code-barres. `%` a une signification particulière
+   dans les URL. Contournable, mais à décider en connaissance de cause.
+4. **Les variantes (CIAT) ne sont pas couvertes** par la proposition → comment les distinguer ?
+5. **Épaisseurs 46/96 (règle) vs 48/98 (fiches et Excel)** → laquelle fait foi ?
+6. **Sur-mesure** : `CODIFICATION_PRODUITS.md` prévoit ligne libre aux 2 premières commandes, fiche
+   catalogue Incwo à la 3ᵉ. La référence sur-mesure suit-elle le même format ?
+
+### Méthode proposée
+
+**Incwo est l'arbitre** : il reçoit la commande du site, sort le devis, facture. La référence doit être
+ce qu'Incwo portera comme code article ; tout le reste s'aligne dessus. Ordre : (1) contraintes Incwo,
+(2) décisions PA, (3) réécriture de `CODIFICATION_PRODUITS.md`, (4) alignement du site, des fiches et de
+l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
+
+---
+
 ## Transverse (toute la gamme)
 
 - [ ] **Photos produit Netair** : toutes les fiches créées utilisent une **photo Titanair détourée
