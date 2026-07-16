@@ -73,10 +73,59 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
       tant que le site n'est pas hébergé.
 - [x] **Page 2 A4 — mono-classe : RÉGLÉ** via option `compact_p2` (marges p2 + graphe 84 %).
       NETPLAN, NETMETAL, NETFIL, NETFIBRE → page 2 = 1123 px (≤ A4). Identité NETPLY OK.
-- [ ] **🟠 Fiches multi-courbes : page 2 déborde l'A4** — **NETPLY** (1344 px), **NETPAK S AZUR** (1375),
-      **NETPAK S LUMEN** (1375 + page 1 1169), **NETPAK S BORA**, **NETBAG S** : plusieurs courbes + cases +
-      sélecteur sur une page → `compact_p2` insuffisant (~67 mm). À passer en **3 pages** (courbe p2 /
-      calculateur p3, comme CILIA). **Décision PA (22/06/2026) : différé, laissé tel quel pour l'instant.**
+- [ ] **🟠 Débordement A4 — état remesuré le 16/07/2026 (8 fiches sur 18).** Mesure faite au navigateur
+      (hauteur réelle des blocs `.a4` ; limite A4 = 1123 px = 297 mm). **La liste du 22/06 était inexacte :**
+      NETPAK S BORA ne déborde pas (1123/1123) ; NETCEL V AZUR, NETCEL V NIVAL, NETCARB CILIA et
+      NETCARB AZUR débordent sans y figurer.
+
+      | Fiche | Page 1 | Page 2 | `compact_p2` |
+      |---|---|---|---|
+      | NETPLY | 1299 (+47 mm) | 1344 → **1223 après ajout de `compact_p2` le 16/07** (+26 mm) | ✅ ajouté 16/07 |
+      | NETBAG S | 1286 | 1458 | ❌ absent |
+      | NETPAK S AZUR | 1229 | 1375 | ❌ absent |
+      | NETPAK S LUMEN | 1169 | 1375 | ❌ absent |
+      | NETCEL V AZUR | 1123 ✅ | 1375 | ❌ absent |
+      | NETCEL V NIVAL | 1123 ✅ | 1375 | ❌ absent |
+      | NETCARB CILIA | 1123 ✅ | 1167 | ✅ présent (insuffisant) |
+      | NETCARB AZUR | 1129 | 1123 ✅ | ✅ présent (limite) |
+
+      **Constat clé : `compact_p2` manque simplement sur 6 fiches** (NETBAG S, NETPAK S AZUR / LUMEN,
+      NETCEL V AZUR / NIVAL — NETPLY corrigé le 16/07). Les 10 fiches conformes tombent *exactement*
+      sur 1123 px : le gabarit est bien réglé, mais **il n'a aucun garde-fou** — un contenu trop long
+      pousse la page sans alerte.
+
+      **Décision PA (16/07/2026) : viser 2 pages, pas 3** (contrairement à l'orientation du 22/06).
+      Motif : ces fiches doivent finir en PDF + catalogue HTML/PDF. Chantier ouvert sur NETPLY d'abord.
+      Gisements identifiés sur NETPLY page 1 (343,8 mm pour 297) — **du gaspillage, pas du contenu** :
+      - tableau dimensions = **11 lignes** (5 sections × 2 classes + sur-mesure) alors que la géométrie
+        est identique en G4 et M5 (mêmes L/H/P, surface, débit) → dédoublonner ≈ **−33 mm** ;
+      - colonne ΔP = **2 valeurs pour 11 lignes** (63 en G4, 70 en M5, débit calé à vitesse constante) → redondante ;
+      - colonne « Efficacité ISO 16890 » : duplique la classe déjà portée par la référence ;
+      - **33 mm de vide sous la photo** (photo 60 mm dans une colonne de 93 mm).
+- [ ] **🔴 Références du tableau « Dimensions » non conformes à `CODIFICATION_PRODUITS.md`** (constaté sur
+      NETPLY le 16/07/2026, **à vérifier sur les 17 autres**). La fiche génère
+      `NETPLY-Coarse 65%-G4-592x592x48` alors que la règle impose `NETPLY-G4-592x592x48` :
+      *« on utilise la classe EN 779 dans le code. La classe EN 16890 (ePM1 65%…) figure dans la désignation
+      et la fiche technique, **pas dans le code article** »*. La fiche insère en plus un espace et un `%`
+      dans un code produit. **Le configurateur du site, lui, respecte la règle** (`NETPLY-G4-592x592x48-A`)
+      → **le client lit deux références différentes pour le même filtre** selon le support. Corriger le
+      générateur, pas les JSON. (Noter aussi : les exemples de `CODIFICATION_PRODUITS.md` utilisent des
+      épaisseurs 46/96 mm là où les fiches utilisent 48/98 — à trancher.)
+- [ ] **Alignements de gamme créés par le retravail de NETPLY (16/07/2026)** — NETPLY est désormais seul
+      conforme, les autres suivront à leur passage :
+      - **« Surface média » → « Surface filtrante »** : 11 fiches encore en « Surface média »
+        (netcel-v-azur, netcel-v-nival, netfibre, netcel-v-lam, netpak-s-azur, netpak-s-bora,
+        netpak-s-cilia, netpak-s-duo, netplan, netpak-s-lumen). Le gabarit écrit déjà
+        « S. filtrante (m²) » et « Surface filtrante = … » sur la même page.
+      - **Ordre des normes** : NETPLAN, NETMETAL, NETFIL, NETFIBRE affichent **EN 779 avant ISO 16890**,
+        contrairement à la règle actée « ISO primaire » (que les badges respectent). PA a confirmé
+        le 16/07 : **ISO d'abord**.
+- [ ] **Tirets cadratins « — » : 76 occurrences dans les 18 JSON** (18 sous-titres, 37 caractéristiques,
+      12 points clés, 9 descriptifs). **PA n'en veut pas** (« ça fait réponse IA », 16/07/2026). Retirés
+      des points clés et du descriptif de NETPLY. Restent les sous-titres (`Filtre plissé — Préfiltre
+      synthétique`, 18/18) et les caractéristiques (ligne ΔP : `… — EN 13053`), où le tiret sépare deux
+      champs plutôt qu'il ne fait du style. Le point médian `·` est déjà le séparateur maison ailleurs.
+      **Chantier de charte à trancher, non ouvert.**
 - [ ] **Humidité relative max.** : harmoniser/confirmer (100 % retenu par défaut sur média synthétique).
 - [ ] **Pieds de page** : numéros de fiche figés OK ; vérifier version/date à chaque révision.
 - [ ] **Classe G4 (Coarse, ADD +50)** sur les familles poches/poches rigides : annoncée commercialement,
@@ -91,6 +140,39 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 
 ### NETPLY ✅
 - [ ] Photo définitive Netair (actuel : TITAPLY EC détouré).
+
+**Contenu retravaillé et validé par PA le 16/07/2026** (descriptif · points clés · caractéristiques).
+Arbitrages et divergences à analyser — *ne pas les rouvrir sans PA* :
+
+- [ ] **🟠 Incohérence gamme — le G3.** `Gamme_References_Netair.xlsx` annonce **G3 / G4 / M5** pour NETPLY ;
+      la fiche ne présente que **G4 et M5**. **Décision PA (16/07/2026) : G3 retiré, « pas de marché »** —
+      alors qu'une heure plus tôt il souhaitait le citer pour ne pas perdre un client vers un confrère.
+      **→ le xlsx est désormais en avance sur la réalité : à trancher avec Cowork** (corriger le xlsx,
+      ou réintroduire le G3). Aucune courbe ΔP mesurée pour le G3 de toute façon.
+- [ ] **🟠 La classe M5 ne vient pas du même produit que le G4.** G4 = **TITAPLY EC** (FT 2018-020 v3 ep48,
+      FT 2018-025 v2 ep98). M5 = **PRISME PLY** (FT 2019-032 ep48, FT 2019-033 ep98) — un *autre* produit
+      Titanair. Les deux fiches concordent sur les specs (60 °C, M1, surface 2×/3×), mais NETPLY agrège
+      bien **deux produits sources**. À confirmer côté fournisseur que la gamme Netair est cohérente.
+- [ ] **🔴 « Sans couture ni colle » contredit les 4 fiches Titanair 2018**, qui portent toutes
+      **« LUT / BOND : OUI »**. La formule vient du doc commercial *Titaply EC 2013*. **PA a tranché
+      le 16/07 en tant que fabricant : c'est exact**, formulé « par un **assemblage** sans couture ni colle »
+      (c'est le montage entre grilles qui est concerné, pas le média). À faire confirmer par le fournisseur
+      si une preuve écrite est un jour nécessaire.
+- [ ] **🔴 « Incinérable : Média : oui · Cadre acier : non » n'est sourcé nulle part** — absent des 4 fiches
+      2018. **Confirmé par PA le 16/07.** Seule fiche des 18 à porter cette ligne, alors que NETPLAN a
+      lui aussi média + cadre acier → à harmoniser.
+- [x] **« Démontable / tri sélectif » RETIRÉ (16/07/2026).** Chez Titanair, la déconstruction repose sur des
+      **bouchons de tri brevetés** (*« EXCLUSIVITÉ Groupe TITANAIR »*, doc 2013). Le NETPLY n'est **pas**
+      démontable ; PA a précisé que seule la **séparation média / cadre acier** est vraie. Ne jamais
+      réintroduire « démontable » ni « éco-conception » (notion juridiquement encadrée).
+- [x] **« Sans fibre de verre » sourcé** : `Gamme_References_Netair.xlsx` → FIBRE = SYNTHÉTIQUE,
+      TYPE FIBRE = **POLYESTER**. Le taux (100 % ?) n'est pas documenté → écrit « (polyester) » sans
+      pourcentage, contrairement à NETFIL qui affiche « 100% polyester » (sourcé, lui).
+- [ ] **Surface filtrante 2× (48 mm) / 3× (98 mm)** : confirmé sur les 4 fiches sources, en G4 comme en M5.
+      Le descriptif annonce « 2 à 3 fois la surface frontale ».
+- [ ] **Tableau dimensions : que du 48 mm** (5 sections). PA (16/07) : *« le standard est ce qui est tenu
+      en stock, le gros du marché est en 48 mm ; le 98 mm est une épaisseur standard mais pas tenu en
+      stock »*. → note à ajouter sous le tableau ; **bloc dimensions pas encore revu avec PA**.
 
 ### NETPLAN 🟡
 - [ ] **Photo** Netair (placeholder).
