@@ -1,5 +1,7 @@
 {
-  "_commentaire": "NETPLY — fiche produit officielle, contenu d'après les vraies sources TITAPLY EC (fiche 2018 FT 2018-020 v3 + descriptif). Specs réelles (acier galvanisé, média synthétique sans couture ni colle). Éco-conception GÉNÉRIQUE (pas de revendication du brevet Titanair). ΔP = polynômes DONNEES_PDC. L'ANCRE du test d'identité du gabarit est produits/_gabarit_ref.json (à ne pas confondre).",
+  "_commentaire": "NETPLY — sources : G4 = TITAPLY EC (FT 2018-020 v3 ep48 / FT 2018-025 v2 ep98) ; M5 = PRISME PLY (FT 2019-032 / FT 2019-033). Surface média 2x (48) / 3x (98) frontale : confirmé sur les 4 fiches. ΔP = polynômes DONNEES_PDC. L'ANCRE du test d'identité du gabarit est produits/_gabarit_ref.json (à ne pas confondre).",
+
+  "_arbitrages_pad": "Descriptif retravaillé et validé par Pierre-Alain le 16/07/2026. Trois arbitrages à NE PAS rouvrir sans le consulter : (1) « sans couture ni colle » est CONFIRMÉ par PA en tant que fabricant, bien que les 4 fiches Titanair 2018 portent « LUT / BOND : OUI » — formulé « par un assemblage sans couture ni colle » car c'est le montage entre grilles qui est concerné, pas le média. (2) « Incinérable : média oui · cadre non » est confirmé par PA, non sourcé dans les fiches 2018. (3) « Démontable / tri sélectif » RETIRÉ : chez Titanair c'est le bouchon de tri BREVETÉ (doc 2013, « exclusivité Groupe Titanair »). Le NETPLY n'est pas démontable ; seule la séparation média / cadre acier est vraie. Ne jamais réintroduire « démontable » ni « éco-conception » (notion encadrée). Sans fibre de verre : sourcé par Gamme_References_Netair.xlsx (média polyester).",
 
   "slug": "netply",
   "nom": "NETPLY",
@@ -11,7 +13,7 @@
   "photo": "netply-v6-photo.jpg",
   "photo_alt": "Filtre plissé NETPLY (épaisseurs 48 et 98 mm)",
 
-  "description": "Filtre plissé à grande surface filtrante, le NETPLY assure une préfiltration efficace et économe des centrales de traitement d'air. Son média synthétique plissé entre deux grilles métalliques, sans couture ni colle, conjugue faible perte de charge et longue durée de vie. Sa conception démontable facilite le tri sélectif des composants en fin de vie, dans une démarche d'éco-conception. Disponible en G4 et M5 (EN 779 / EN ISO 16890), en épaisseurs 48 et 98 mm.",
+  "description": "Le NETPLY est un filtre plissé à média synthétique destiné à la préfiltration des centrales de traitement d'air et des installations de ventilation. Ce média, maintenu entre deux grilles métalliques par un assemblage sans couture ni colle, offre une surface filtrante représentant 2 à 3 fois la surface frontale, tout en conservant l'encombrement d'une cellule standard. En fin de vie, le média peut être séparé du cadre en acier galvanisé afin de faciliter le tri sélectif des composants. Le NETPLY est proposé dans une gamme de dimensions standard et peut également être fabriqué sur mesure, en longueur, largeur et épaisseur.",
 
   "points_cles": [
     "Grande surface filtrante",
