@@ -10,7 +10,7 @@
   "compact_p2": true,
   "compact_fort": true,
 
-  "fiche": { "num": "FT-NETPLY-001", "version": "v2.0", "date": "16/07/2026" },
+  "fiche": { "num": "FT-NETPLY-001", "version": "v1.1", "date": "16/07/2026" },
 
   "photo": "netply-v6-photo.jpg",
   "photo_alt": "Filtre plissé NETPLY (épaisseurs 48 et 98 mm)",

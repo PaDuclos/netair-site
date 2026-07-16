@@ -150,7 +150,43 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
       synthétique`, 18/18) et les caractéristiques (ligne ΔP : `… — EN 13053`), où le tiret sépare deux
       champs plutôt qu'il ne fait du style. Le point médian `·` est déjà le séparateur maison ailleurs.
       **Chantier de charte à trancher, non ouvert.**
+- [ ] **📄 EXPORT PDF — un fichier PAR CLASSE D'EFFICACITÉ (décision PA, 16/07/2026).**
+      **Motif** : sur les fiches multi-classes, les courbes s'affichent via des cases « Afficher : » et le
+      calculateur via des boutons de classe. **Un PDF ne se clique pas** → il fige l'état par défaut.
+      Constaté sur NETPLY : seule la case G4 est cochée au départ, donc le PDF ne montre **que la courbe
+      G4**, alors que les badges annoncent 2 classes et que la légende mentionne « M5 · 48 mm » sans
+      qu'aucune courbe M5 n'apparaisse. Un client recevrait une fiche qui se contredit.
+      **Règle** : une classe = un PDF, avec la case correspondante cochée et les autres décochées.
+
+      **Périmètre réel — 6 fiches sur 18, soit 32 PDF au lieu de 18** (recompté le 16/07 ; attention,
+      la clé `series` est un **booléen**, les classes traçables sont dans `courbes[].cls`) :
+
+      | Fiche | Classes | PDF |
+      |---|---|---|
+      | NETBAG S | M5 · M6 · F7 · F8 · F9 | 5 |
+      | NETPAK S CILIA | M5 · M6 · F7 · F8 · F9 | 5 |
+      | NETPAK S AZUR | F7 · F8 · F9 | 3 |
+      | NETPAK S LUMEN | F7 · F8 · F9 | 3 |
+      | NETCEL V AZUR | E10 · H13 | 2 |
+      | NETPLY | G4 · M5 | 2 |
+      | *les 12 autres (mono-classe)* | — | *1 chacune* |
+
+      **Quand** : à la toute fin, après remplacement des photos Netair (décision PA : les PDF ne se font
+      pas avant). **Ne pas produire de PDF avec les placeholders Titanair.**
+      **Comment** : Chrome headless, testé et validé le 16/07 sur NETPLY —
+      `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu
+      --no-pdf-header-footer --virtual-time-budget=4000 --print-to-pdf="<sortie>.pdf" "file://<fiche>.html"`
+      → 2 pages A4 propres, photo + courbe + calculateur inclus, rien à corriger côté rendu.
+      Reste à écrire : le pilotage de l'état des cases par classe avant impression (piste : un paramètre
+      d'URL ou un réglage d'export lu au chargement), et le nommage des fichiers.
+      **À noter aussi** : le calculateur se fige sur ses valeurs par défaut (139 €, 3400 m³/h, 24 h, 250 j).
+      Acceptable — c'est une illustration —, mais à confirmer avec PA avant la campagne.
 - [ ] **Humidité relative max.** : harmoniser/confirmer (100 % retenu par défaut sur média synthétique).
+- [ ] **Versionnage des fiches — règle PA (16/07/2026) : rester en v1.x tant que le site n'est pas en
+      ligne.** Aucune fiche n'ayant été publiée, il n'existe pas de « v1.0 diffusée » dont on s'écarterait :
+      les refontes d'avant mise en ligne restent des révisions (v1.1, v1.2…). Le passage en v2.0 se
+      justifiera après publication, ou sur un changement de produit. La **date** suit chaque révision.
+      *(NETPLY : v1.0 22/06 → v1.1 16/07. Un v2.0 avait été posé puis corrigé.)*
 - [ ] **Pieds de page** : numéros de fiche figés OK ; vérifier version/date à chaque révision.
 - [ ] **Classe G4 (Coarse, ADD +50)** sur les familles poches/poches rigides : annoncée commercialement,
       rarement mesurée → à mesurer au cas par cas.
