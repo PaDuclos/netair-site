@@ -101,9 +101,13 @@ export interface GammeProduit {
   classesExclues?: string[];
   /**
    * `true` = le configurateur masque le choix « Cadre ». Deux cas :
-   *  - le produit n'a pas de cadre du tout (média fibreux seul, ex. NETFIBRE) ;
+   *  - le produit n'a pas de cadre à offrir (média fibreux seul, ex. NETFIBRE ; ou média cousu
+   *    sur une armature en fil qui fait partie du produit, ex. NETFIL) ;
    *  - le cadre est unique et non choisi par le client (ex. NETCEL V LAM = caisson
    *    aluminium, NETCEL V AZUR = parois polyester) → rien à offrir.
+   *
+   * À décider produit par produit d'après sa fiche : chaque filtre est différent. Un cadre réel
+   * et choisi (ex. NETPAK S CILIA acier OU plastique) reste un `cadres`, pas un `sansCadre`.
    */
   sansCadre?: boolean;
   /**
@@ -157,7 +161,9 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // — Calculables (prix instantané) —
   netply: { code: "1", mode: "calcul", cadres: [{ valeur: "galva", libelle: "Acier galvanisé" }] }, // 🟢 plissé, méthode A · cadre acier seul (cf. fiche)
   netplan: { code: "3", mode: "calcul", cadres: [{ valeur: "galva", libelle: "Acier galvanisé" }] }, // 🟢 plan, méthode A · cadre acier seul (cf. fiche)
-  netfil: { code: "2", mode: "calcul", cadres: [{ valeur: "galva", libelle: "Acier galvanisé" }] }, // 🟢 mètre linéaire, méthode B · cadre fil acier galvanisé seul (cf. fiche)
+  // 🟢 mètre linéaire, méthode B · pas de cadre à choisir : le média est cousu sur une simple
+  // armature en fil d'acier galvanisé Ø 4,5 mm, qui fait partie du produit (décision PA 17/07).
+  netfil: { code: "2", mode: "calcul", sansCadre: true },
   // NETFIBRE se vend en 2 conditionnements (Option B) : panneau découpé sur mesure
   // (code 4, méthode C, prix au dm²) ou rouleau entier (code 5, méthode E, prix par format).
   netfibre: {
