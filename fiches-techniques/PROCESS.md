@@ -23,6 +23,22 @@ l'octet près (test d'identité — à relancer après toute modif du moteur ou 
 5. **Vérifier au navigateur** (preview) chaque fiche : 0 erreur JS, valeurs ΔP/courbe/
    calculateur, photo, tient sur l'A4. Fournir une preuve (capture).
 6. **Commit + push** sur la branche `feature/generateur-fiches` après validation.
+7. 🔴 **NE JAMAIS MODIFIER UNE FICHE VALIDÉE SANS L'ACCORD EXPLICITE DE PA** (règle du 17/07/2026).
+   Une fiche « Validée PA » au registre est un livrable **figé**, même pour un changement trivial,
+   même dans une reprise de gamme légitime. Motif : PA pilote 18 fiches sur plusieurs semaines ;
+   si des fiches figées bougent en arrière-plan, il perd la trace de ce qu'il a validé et quand
+   (« sinon on va se perdre »).
+   - Une **reprise transverse** (unifier un libellé sur toute la gamme) **n'est PAS un détail
+     mécanique** : c'est une modification de livrables figés → faire valider **fiche par fiche**,
+     ou reporter à la passe de contenu de chacune.
+   - Si PA autorise : **bumper la version + la date** et mettre à jour le registre. Sans bump, la
+     fiche affiche un numéro qui **ment** sur son contenu. **Erreur commise le 17/07** : la reprise
+     humidité a modifié NETPLY et NETPLAN (validées v1.1 du 16/07) sans bump → réparé en **v1.2**.
+   - **Ne pas bumper une fiche encore en v1.0** (« créée », passe de contenu non faite) pour une
+     retouche mineure : ça consommerait le numéro de sa vraie passe. Le noter au **registre** à la
+     place — décision PA du 17/07 pour **NETPAK S BORA / CILIA / DUO**, qui affichent « v1.0 — 22/06 »
+     alors que leur ligne humidité date du 17/07 (écart connu et assumé).
+   - **Ambiguïté sur la portée d'une autorisation → demander**, ne pas trancher seul.
 
 ## Étapes pour une nouvelle fiche
 

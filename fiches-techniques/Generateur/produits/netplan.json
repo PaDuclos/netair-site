@@ -11,8 +11,8 @@
   "debit_nom": 1900,
   "fiche": {
     "num": "FT-NETPLAN-001",
-    "version": "v1.1",
-    "date": "16/07/2026"
+    "version": "v1.2",
+    "date": "17/07/2026"
   },
   "photo": "netplan-photo.jpg",
   "photo_alt": "Filtre plan NETPLAN",
