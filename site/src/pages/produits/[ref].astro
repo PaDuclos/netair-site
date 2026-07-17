@@ -142,10 +142,13 @@ const variantesConfig =
   modeProduit === 'calcul' && gamme?.variantes
     ? gamme.variantes.map((v) => {
         const classes = filtreClasses(optionsDuCode(v.code).classes);
-        const formats =
+        const formatsBase =
           v.saisie === 'formats'
             ? v.formats ?? formatsDuCode(v.code, classes[0]?.valeur)
             : null;
+        // formatsGrandDabord : premier = sélection par défaut → plein format en tête.
+        const formats =
+          formatsBase && v.formatsGrandDabord ? [...formatsBase].reverse() : formatsBase;
         return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
       })
     : null;

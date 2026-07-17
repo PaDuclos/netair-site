@@ -95,6 +95,12 @@ export interface VarianteProduit {
    * automatiquement depuis la grille tarifaire du code (dimensions standard).
    */
   formats?: FormatRouleau[];
+  /**
+   * Présente les formats du plus grand au plus petit : le premier de la liste est
+   * la sélection par défaut, et le cadre plein format (ex. 592×592) est le cas
+   * d'usage courant. Les dimensions restent lues dans la grille tarifaire.
+   */
+  formatsGrandDabord?: boolean;
   /** Libellé du menu de formats (défaut « Dimensions »). Ex. « Format de rouleau ». */
   labelChamp?: string;
 }
@@ -302,7 +308,7 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
     code: "11",
     mode: "calcul",
     cadreFixe: { valeur: "pp", libelle: "Plastique" },
-    variantes: [{ id: "standard", label: "Polydièdre", code: "11", saisie: "formats", labelChamp: "Dimensions (L × H)" }],
+    variantes: [{ id: "standard", label: "Polydièdre", code: "11", saisie: "formats", formatsGrandDabord: true, labelChamp: "Dimensions (L × H)" }],
   },
   "netpak-s-duo": { code: "20", mode: "devis" },
   "netcarb-azur": { code: "21", mode: "devis" },
