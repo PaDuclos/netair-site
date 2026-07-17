@@ -27,7 +27,8 @@
     "Sans fibre de verre",
     "Architecture en V (polydièdre)",
     "Faible perte de charge",
-    "Cadre en plastique ABS"
+    "Cadre en plastique ABS",
+    "Utilisable sans préfiltre"
   ],
   "specs": [
     [
@@ -178,6 +179,7 @@
     "(9) COURBE POUSSÉE À 4500 m³/h (déc. PA) — le segment 4000 → 4500 est EXTRAPOLÉ du polynôme : les mesures Titanair s'arrêtent à 4000 m³/h. vmax 3.5667 m/s (= 4500 m³/h sur 592×592).",
     "(10) ΔP NOMINALE F9 ÉPINGLÉE À 95 Pa (dp_fixe, déc. PA) — valeur mesurée (95,43), contre le recalcul du lissage (96) induit par l'extension de plage. Écart courbe/étiquette ≈ 0,6 Pa, invisible. F7 affiché 64 Pa = valeur lissée (mesure 63,4) ; F8 91.",
     "(11) MISE EN PAGE (déc. PA, opt-in AZUR seul) : étiquettes ΔP permanentes au point nominal (mécanisme NETPLY porté au moteur série) ; annotation « 2,7 m/s ≈ 3400 m³/h · 592×592 » ; légende sans « — 292 mm » ; tableau sans référence complète (format à trancher avant Incwo), sans surface (n.c.), sans ligne « Sur mesure » (produit aux 3 cadres standard uniquement), trié par efficacité, colonne EN 779 séparée, 7 colonnes réparties ; calculateur à formats fixes (3 boutons L×H×P, débit nominal du cadre) ; courbe élargie 80 → 85 % ; A4 exact (2 pages à 0 px).",
-    "(12) BOUTON « RETOUR AU PRODUIT » EN HAUT À GAUCHE — décision de CHARTE commune aux 18 fiches (gabarit modifié, 17 fiches régénérées avec pour seul diff cette ligne). Bouton no-print → les PDF des 5 fiches figées sont inchangés, pas de bump de version au registre pour elles."
+    "(12) BOUTON « RETOUR AU PRODUIT » EN HAUT À GAUCHE — décision de CHARTE commune aux 18 fiches (gabarit modifié, 17 fiches régénérées avec pour seul diff cette ligne). Bouton no-print → les PDF des 5 fiches figées sont inchangés, pas de bump de version au registre pour elles.",
+    "(13) POINT CLÉ « UTILISABLE SANS PRÉFILTRE » AJOUTÉ (demande PA, 17/07, fiche + page produit). NON SOURCÉ dans la doc Titanair consultée (les 5 avantages du livret SV-GD ne le mentionnent pas). Déclaration fabricant, cohérente avec la nature du produit (poches rigides en filtration fine). Placé en 6e position : sous « Faible perte de charge » dans la grille à 2 colonnes."
   ]
 }
