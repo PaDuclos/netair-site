@@ -162,12 +162,45 @@ du débit et contredisent le calculateur.
 | `classes.*.epaisseur` | épaisseur réelle (légende, libellés) |
 | `note_dimensions` | note sous le tableau dimensions |
 | `compact_p1` | réduit les marges verticales de la page 1 (contenu dense qui doit tenir sur l'A4), par produit |
-| `compact_p2` | page 2 sur un seul A4 : marges + graphe à 84 %. **Gagne ~33 mm à lui seul** — le réflexe n°1 quand une page 2 déborde. Manque encore sur 5 fiches (cf. CHECKLIST) |
-| `courbe_large` | *(17/07/2026)* **rend à la courbe ΔP la place que consomme le calculateur**, pour les fiches où la courbe est l'information principale. Reprend les seuls resserrements de `compact_fort` qui touchent la **page 2** (interligne du calculateur 13→5 px, curseurs en `display:block`, étiquettes 5→2 px, padding de la note méthode, légende) et pousse le graphe de **84 % à 100 %**. Ne touche NI la page 1, NI la colonne photo, NI les légendes multi-classes — c'est là toute la différence avec `compact_fort`, qui compacterait une page 1 n'ayant aucun besoin de l'être. **Exige `compact_p2`** (il resserre ses valeurs) et **refuse `compact_fort`** (mêmes ancres, graphe déjà réglé à 90 %) → lève une erreur sinon. Mesuré sur NETMETAL : courbe **279 → 339 px (+21 %**, plus grande que celle de NETPLY à 305 px), page 2 1098 → 1051 px, **marge A4 25 → 72 px**. Utilisé par NETMETAL |
+| `compact_p2` | page 2 sur un seul A4 : **marges de la page 2 uniquement** (ne règle plus la courbe : 80 % est le STANDARD du gabarit depuis le 17/07). **Gagne ~33 mm à lui seul** — le réflexe n°1 quand une page 2 déborde. Manque encore sur 5 fiches (cf. CHECKLIST) |
 | `compact_fort` | *(16/07/2026)* fiche **multi-classes** tenue en 2 pages A4 : colonne photo 70→52 mm, marges de blocs 6→4 mm, interligne du calculateur 13→5 px, curseurs en `display:block`, légende raccourcie (« G4 · 48 mm » au lieu de « G4 · Coarse 65% — 48 mm »), graphe à 90 %. **Exige `compact_p1` + `compact_p2`** (il resserre leurs valeurs) → lève une erreur sinon. Utilisé par NETPLY |
 | `dims_fusionnees` | *(16/07/2026)* tableau dimensions **une ligne par section** au lieu d'une par section × classe (la géométrie est identique, seule la ΔP change) : 11 → 6 lignes sur NETPLY, **−31 mm**. **Colonnes ΔP titrées par classe** (une seule si `mono_classe`, deux sinon) ; les colonnes « ΔP », « Efficacité ISO 16890 » et **« Référence complète » disparaissent** — décision PA : le client commande au nom du filtre, les codes servent à Incwo, et l'efficacité est déjà dans les badges. **C'est le format cible de toutes les fiches** (NETPLY, NETPLAN faits). `check_dims_fusionnees()` **refuse** : `deux_epaisseurs` (colonnes ΔP identiques), `ref_simple` (code sans classe + conflit d'en-tête), `series`/`tailles` (autre constructeur), classe sans `dp`, et **tout débit s'écartant de plus de 1 % du débit nominal de sa section** — le garde-fou qui a rattrapé les 1700 m³/h de NETPLY et les 900 de NETPLAN |
 | `series` (+ `courbes`, `classes_def`, `classes_order`, `eff0`, `len0`) | **mode multi-classes opt-in** (N courbes classe × longueur ; calculateur à sélecteur classe × longueur ; cases par classe). Chemin **legacy 2×2 inchangé** sans cette clé → test d'identité NETPLY préservé. Utilisé par NETBAG S. |
 | `multi_classe` (+ `classes_list`, `dimensions_multi`, `velocities`, `eff_default`) | **mode multi-classes « compact » opt-in** → `generer_multi`. **Sélecteur 5 classes**, 2 courbes (classe choisie en 48/98) à la fois, fiche **3 pages** (P1 desc/specs · P2 dimensions + tableau ΔP complet + courbe · P3 calculateur). **Calculateur à sélecteur d'efficacité + épaisseur INDÉPENDANT de la courbe** (`state.calcEff` ≠ `state.eff`) — afficher une classe et calculer l'énergie d'une autre. Surface m²/m², réfs cadre `-A`/`-P`. Chemin 2×2 inchangé. Utilisé par NETPAK S CILIA. ⚠️ proche de `series` — à fusionner un jour. |
+
+## STANDARD de la page 2 — courbe 80 % + calculateur 11 px (charte — 17/07/2026)
+
+> **Décision PA.** Avant cette date, les 18 fiches avaient **cinq** rendus de page 2 différents,
+> apparus au fil des besoins : 84 %/aéré (10 fiches), 100 %/aéré (5), 90 %/serré (NETPLY),
+> 100 %/serré (NETMETAL), + NETPAK S CILIA. **Le standard vit dans `gabarit_base.html`, PAS dans
+> des drapeaux par produit** — c'est la dispersion en drapeaux qui avait produit les 5 rendus.
+
+**Ce que le gabarit impose désormais aux 18 fiches :**
+
+| Élément | Valeur | Pourquoi |
+|---|---|---|
+| Courbe (SVG `#curveSvg`) | **80 %**, centrée (271 px) | limite fixée par **NETPLY**, la fiche la plus contrainte (ses sélecteurs de classe + épaisseur coûtent ~85 px irréductibles) : au-delà de 80 %, elle déborde |
+| Calculateur (colonne des champs) | **`gap:11px`** | compromis validé PA : la valeur d'origine (13 px) ne laissait que 7 px de marge à NETPLY |
+| Curseurs `input[type=range]` | **`display:block; margin:0`** | ⚠️ **LE gain principal**, contre-intuitif : en `inline`, ils traînent l'**interligne fantôme** de leur ligne de texte. Rien ne rétrécit, du vide invisible disparaît. C'est ce qui permet une courbe correcte SANS écraser le calculateur |
+| Étiquettes des champs | `margin-bottom:2px` | idem, espacement seulement |
+| Note de méthode | `padding:2mm 3mm 2mm 3mm` | idem |
+| Légende de la courbe | `gap:6px 14px; margin-top:2mm` | idem |
+
+**Résultat mesuré :** NETPLAN p2 1101 → **1014** px (marge 22 → 109) · NETPLY p2 1095 → **1103**
+(marge 20) · NETMETAL p2 1051 → **1014** (marge 109). **18/18 fiches en 80 % + 11 px.**
+
+⚠️ **Le balisage est TRIPLIQUÉ.** `generer_series` (l. ~842, ancre de légende) et surtout
+`generer_multi` (l. ~1068-1197 : **son propre SVG en viewBox 292, ses propres curseurs et
+étiquettes**) réécrivent leur page 2. Toucher au standard du gabarit **casse `series`**
+(erreur d'ancre, vu le 17/07 : les 5 fiches ont planté) et **fait ignorer le standard par
+`multi_classe` EN SILENCE**. → après toute modif du standard : régénérer les 18 **et**
+vérifier la largeur du SVG dans chacune, pas seulement que la génération passe.
+
+- `courbe_large` : **SUPPRIMÉ** le 17/07 (créé le matin même, rendu inutile par le standard).
+  Un `.json` qui le porte encore fait **échouer** la génération — pas d'oubli silencieux.
+- `compact_p2` : ne règle **plus** la courbe, seulement les marges de la page 2.
+- `compact_fort` : **vidé** de ses réglages de page 2 ; ne garde que la page 1 (colonne photo
+  70→52 mm, marges) et les légendes multi-classes.
 
 ## Bouton « Retour au produit » (charte — 17/07/2026)
 
