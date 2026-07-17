@@ -246,6 +246,20 @@ n'ayant aucune navigation. D'où un bouton flottant, présent sur les **18 fiche
   7,34·v²+2,44·v+5,57 (fit 5 pts 0,79–2,38 m/s), Vmax 2,4 · nominal 1,5 m/s (1900 m³/h) ✅
   — doc 2015 disait G1-G2 → priorité fiche 2018 ; photo placeholder Titanair à remplacer ;
   ΔP au-delà de 2,38 m/s non mesurée.
+  **v1.1 (17/07/2026) — contenu retravaillé et REPOSITIONNÉ, validé PA.** Le produit est présenté
+  comme **pare-gouttelettes** (aval batteries froides) puis **pare-étincelles** (aval batteries
+  électriques), la filtration des particules grossières devenant un usage **second** — ce qui
+  **contredit la doc 2015** (filtration en usage premier) : décision de fabricant, pas une erreur.
+  Sous-titre **« Filtre métallique »** : seule fiche dont le sous-titre n'annonce pas le rôle.
+  Corrigés : ISO avant EN 779 ; **Coarse 40% ajouté** (il manquait en face du G2 annoncé, sourcé
+  KMX/CA + WZA) ; badge ISO aligné sur le tableau ; « Structure : 2 grilles métalliques » comme
+  NETPLY/NETPLAN ; cadre « inox 304 ». **Courbe agrandie de 21 %** (drapeau `courbe_large`,
+  279 → 339 px : la plus grande de la gamme). ⚠️ **2 dérogations à NE PAS « réparer »** : la ligne
+  « ΔP finale recommandée » est **retirée de la p1** (seule des 18 fiches, cf. exception ci-dessus)
+  et la **T° reste à 150 °C** alors que l'inox 304 tient 200 °C (variante sous-vendue volontairement).
+  Épaisseurs 10/15/20 mm et HR 100 % = confirmées PA, **non sourcées**. **Tension ouverte** : le
+  calculateur p2 modélise un colmatage de filtre à particules quand la p1 vend un pare-gouttelettes.
+  → **Lire `_arbitrages_pad` de `produits/netmetal.json` avant toute retouche.**
 - **NETFIL** — mono-classe G3 / Coarse 50% (équiv. TITAFIL, filtre cousu), polynôme
   3,99·v²+7,24·v+0,97 (fit 6 pts 0,16–1,5 m/s, fiche v2_2020), Vmax 1,5 · nominal 1,0 m/s (1260 m³/h) ✅
   — 3 révisions Titanair (G3 2020 / G4 2023) → G3 retenu (cohérent gamme) ; épaisseur 20 mm et
