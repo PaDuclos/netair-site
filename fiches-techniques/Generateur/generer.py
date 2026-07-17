@@ -892,6 +892,15 @@ def generer_series(d, html):
     html = html.replace('letter-spacing:-.6px; text-align:center;">NETPLY</div>',
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
     html = html.replace('letter-spacing:-.3px;">NETPLY</div>', f'letter-spacing:-.3px;">{nom}</div>')
+    # titre_fs (opt-in) : corps du titre P1 réduit pour tenir sur UNE ligne quand les
+    # badges longs (ex. « ePM10 50% → ePM1 80% ») compriment la zone titre (constaté
+    # sur AZUR : 40px passe sur 2 lignes là où BORA, badges courts, tient en 1).
+    if d.get("titre_fs"):
+        html = html.replace(
+            f'font-size:40px; font-weight:700; color:#0F3261; line-height:.98; '
+            f'letter-spacing:-.6px; text-align:center;">{nom}</div>',
+            f'font-size:{d["titre_fs"]}px; font-weight:700; color:#0F3261; line-height:.98; '
+            f'letter-spacing:-.6px; text-align:center;">{nom}</div>', 1)
 
     # #2 sous-titre
     html = html.replace(">Filtre plissé — Préfiltre synthétique</div>", f">{d['soustitre']}</div>")
