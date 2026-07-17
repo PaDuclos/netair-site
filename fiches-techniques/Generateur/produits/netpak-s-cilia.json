@@ -38,7 +38,7 @@
     ["Efficacité EN 779", "M5 · M6 · F7 · F8 · F9"],
     ["Efficacité ISO 16890", "ePM10 50% → ePM1 80%"],
     ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
-    ["Humidité relative max.", "100 %"],
+    ["Humidité relative max.", "100 % (sans condensation)"],
     ["ΔP finale recommandée", "min(ΔP initiale + 100 Pa ; 3 × ΔP initiale) — EN 13053"]
   ],
 

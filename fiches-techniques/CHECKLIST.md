@@ -16,7 +16,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPLY | ✅ | Photo finale Netair (placeholder détouré) |
 | NETPLAN | 🟡 | Photo · ΔP extrapolée > 2 m/s à confirmer |
 | NETMETAL | 🟡 | ΔP > 2,38 m/s non mesurée · ~~classe~~ ✅ G2/G3 (déc. PA) · **contenu retravaillé v1.1 (17/07) — voir `_arbitrages_pad` de netmetal.json AVANT toute retouche** · **feu M0 : sourcé (4 fiches 2018) mais (a) classement français 1983 remplacé par les Euroclasses EN 13501-1 (A1) → basculer un jour, (b) PV d'essai à récupérer/refaire pour Netair si un BE le réclame** · **T° inox 304 sous-vendue : la fiche annonce 150 °C (valeur alu/galva) alors que KMX/CA donne 200 °C continu / 300 °C acc. — décision PA du 17/07 de garder une valeur unique prudente ; à rouvrir si l'inox se vend** · épaisseurs 10/15/20 mm et HR 100 % = confirmées PA en tant que fabricant, non sourcées · **ΔP finale recommandée RETIRÉE de la p1 (déc. PA 17/07) → seule des 18 fiches à déroger à la règle « impérative » du PROCESS ; le calculateur p2 applique pourtant toujours +50 Pa** · photo placeholder Titanair |
-| NETFIL | 🟡 | épaisseur/profondeur · ~~G3/G4~~ ✅ G3 confirmé (PA) |
+| NETFIL | 🟡 | **contenu retravaillé v1.1 (17/07) — voir `_arbitrages_pad` de netfil.json AVANT toute retouche** · ~~G3/G4~~ ✅ G3 confirmé (PA) · ~~ISO Coarse 50% « équivalence indicative »~~ ✅ **SOURCÉ** : 4e révision `TITAFIL.pdf` (non datée, SAS/APE 2825Z) porte « ISO 16890 : COARSE 50% » **en face du G3** ; le `_commentaire` affirmait le contraire → corrigé le 17/07 · ✅ **courbe G3 corroborée** par une 4e source jusqu'ici non exploitée (cache `TITAFIL 2013.xlsx` : 6/12/20/38 Pa à 0,5/1/1,5/2 m/s, vs 6,5/11,5/21 pour la v2_2020 retenue) · **🔴 ÉPAISSEUR 4,5 mm = DÉDUCTION, PAS UNE MESURE** : c'est le Ø du fil du cadre (doc 2015) ; un média cousu **sur** un fil de 4,5 mm fait nécessairement plus. Aucune fiche Titanair ne donne d'épaisseur (« DIMENSIONS EFFECTIVES : A DETERMINER »). Le chiffre est **affiché 3×** (légende de courbe + sélecteurs du calculateur) → **seul chiffre visible de la fiche ne provenant d'aucune mesure. À faire mesurer en R&D.** Maintenu par PA le 17/07 après signalement. ⚠️ `PROCESS.md` disait « 20 mm à valider » : **périmé** depuis le commit `2454fec` (22/06), corrigé le 17/07 · **T° 60 °C / acc. 65 °C = CONTRE les 4 fiches Titanair** (toutes à acc. 80 °C ; doc 2015 : 100 °C) — alignement délibéré sur la règle de gamme CLAUDE.md (même média = même T°) · **HR 100 % (sans condensation) = confirmée PA, NON SOURCÉE** (aucune fiche TITAFIL n'a de ligne humidité ; l'ancien 95 % ne venait d'aucune source non plus) · **VC uniquement, jamais CTA = déc. PA, CONTREDIT la doc 2015** (« comme filtre final » en « ventilo-convecteurs, unité de traitement d'air ») · **🔴 3 des 4 points clés = recopie de la rubrique « AVANTAGES DES FILTRES » de la plaquette Titanair 2015** (Faible encombrement / Construction renforcée / Toutes dimensions), et « Faible encombrement » + « Construction renforcée » sont des **jugements orphelins** depuis la réécriture du descriptif (rien sur la page ne les soutient) — **réserves de Claude exposées 3× et écartées par PA en connaissance de cause le 17/07** (une ligne « Épaisseur : 4,5 mm » a été ajoutée puis retirée à sa demande) · « 100% polyester » sourcé **uniquement par v3_2023**, la révision écartée pour sa classe (G4) · photo placeholder Titanair blanc-sur-blanc à remplacer |
 | NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) · **⚠️ TARIF (site B2) : G3 panneau = 0,015 €/dm² dans l'Excel = 5,7× moins cher que G4 (0,0856) → 1,51 € vs 8,57 € pour un 592×592. Jugé erroné (déc. PA 30/06) → G3 retiré de l'offre boutique (`classesExclues`). À corriger/supprimer à la SOURCE (Excel) après vérif R&D, puis ré-exporter.** |
 | NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo · **⚠️ TARIF (site B2, MAJ 30/06) : le code Excel « 11 » étiqueté « NETBAG S » est EN FAIT AZUR (déc. PA : profondeur 292, dim 287/490/592×592, M5→F9). Reste le code 17 (poches 360-600 mm, F7/F8/F9/M6, ~7-11 €) = candidat NETBAG réel, à confirmer au retravail de l'Excel. Tant que non tranché → NETBAG S reste « sur devis ».** |
 | NETPAK S AZUR | 🟡 | **⚠️ TARIF (site B2, 30/06) : = catégorie Excel 11 (mal étiquetée « NETBAG S » dans l'Excel → À RENOMMER en AZUR). Branché à l'achat (3 dim 287/490/592×592×292, M5→F9, prix). Fiche : parois « Polystyrène » → « Plastique » (déc. PA). Vérifier que M5/M6 sont bien standard pour AZUR (fiche disait « F7/F8/F9, M6 sur demande »).** |
@@ -206,15 +206,33 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
         (netcel-v-azur, netcel-v-nival, netfibre, netcel-v-lam, netpak-s-azur, netpak-s-bora,
         netpak-s-cilia, netpak-s-duo, netplan, netpak-s-lumen). Le gabarit écrit déjà
         « S. filtrante (m²) » et « Surface filtrante = … » sur la même page.
-      - **Ordre des normes** : NETPLAN, NETMETAL, NETFIL, NETFIBRE affichent **EN 779 avant ISO 16890**,
-        contrairement à la règle actée « ISO primaire » (que les badges respectent). PA a confirmé
-        le 16/07 : **ISO d'abord**.
+      - **Ordre des normes** : ~~NETPLAN, NETMETAL, NETFIL~~, **NETFIBRE** affiche encore **EN 779 avant
+        ISO 16890**, contrairement à la règle actée « ISO primaire » (que les badges respectent). PA a
+        confirmé le 16/07 : **ISO d'abord**. NETPLAN et NETMETAL corrigés le 16-17/07, **NETFIL le 17/07**
+        → **il ne reste que NETFIBRE**, à traiter à sa passe de contenu. À noter : NETFIL est mono-classe,
+        son libellé reste donc au **singulier** (« Efficacité ISO 16890 » / « Efficacité EN 779 »), 1 classe
+        ISO face à 1 classe EN 779 — les fiches multi-classes écrivent « Efficacités ». Divergence de
+        libellé volontaire, à rouvrir seulement si on uniformise les 18.
+- [x] **Humidité relative — libellé unifié « 100 % (sans condensation) » (déc. PA, 17/07/2026).** Appliqué
+      le 17/07 aux **7 fiches concernées** : NETFIL (qui passait de 95 %, valeur non sourcée) + NETPLY,
+      NETPLAN, NETMETAL, NETPAK S BORA, NETPAK S CILIA, NETPAK S DUO (qui disaient « 100 % » tout court).
+      **Périmètre volontairement limité après audit des 18** — ne pas l'étendre en croyant finir le travail :
+      les **3 fiches charbon actif** (NETCARB AZUR 70 %, NETCARB NIVAL 70 %, NETCARB CILIA 50 %) **ne
+      changent pas** — le charbon actif est hygroscopique, la valeur basse **est** la contrainte réelle du
+      produit et « sans condensation » n'a pas de sens à 50/70 % ; les **8 fiches sans ligne humidité**
+      (NETBAG S, NETCARB BAG, les 3 NETCEL, NETFIBRE, NETPAK S AZUR, NETPAK S LUMEN) **restent sans ligne**,
+      aucune valeur n'étant sourcée pour elles (PA doit les fournir en tant que fabricant). ⚠️ Le 100 % est
+      **confirmé PA mais NON SOURCÉ** : aucune fiche Titanair de ces produits ne porte de ligne humidité.
 - [ ] **Tirets cadratins « — » : 76 occurrences dans les 18 JSON** (18 sous-titres, 37 caractéristiques,
       12 points clés, 9 descriptifs). **PA n'en veut pas** (« ça fait réponse IA », 16/07/2026). Retirés
       des points clés et du descriptif de NETPLY. Restent les sous-titres (`Filtre plissé — Préfiltre
-      synthétique`, 18/18) et les caractéristiques (ligne ΔP : `… — EN 13053`), où le tiret sépare deux
+      synthétique`, **16/18 au 17/07** : NETMETAL « Filtre métallique » et **NETFIL « Filtre cousu sur fil »**
+      n'en portent plus, mais par effet de bord — leur sous-titre a été raccourci sur décision produit, pas
+      au titre de ce chantier) et les caractéristiques (ligne ΔP : `… — EN 13053`), où le tiret sépare deux
       champs plutôt qu'il ne fait du style. Le point médian `·` est déjà le séparateur maison ailleurs.
-      **Chantier de charte à trancher, non ouvert.**
+      **Chantier de charte à trancher, TOUJOURS NON OUVERT** — ne pas le déclarer lancé au motif que 2 fiches
+      sur 18 n'ont plus de tiret. Corollaire connu : NETPLY et NETPLAN annoncent leur rôle au sous-titre
+      (« Préfiltre synthétique »), NETMETAL et NETFIL non → **deux styles de sous-titre coexistent**, assumé.
 - [ ] **📄 EXPORT PDF — un fichier PAR CLASSE D'EFFICACITÉ (décision PA, 16/07/2026).**
       **Motif** : sur les fiches multi-classes, les courbes s'affichent via des cases « Afficher : » et le
       calculateur via des boutons de classe. **Un PDF ne se clique pas** → il fige l'état par défaut.

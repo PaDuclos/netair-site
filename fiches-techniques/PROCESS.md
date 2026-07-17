@@ -295,8 +295,21 @@ n'ayant aucune navigation. D'où un bouton flottant, présent sur les **18 fiche
   → **Lire `_arbitrages_pad` de `produits/netmetal.json` avant toute retouche.**
 - **NETFIL** — mono-classe G3 / Coarse 50% (équiv. TITAFIL, filtre cousu), polynôme
   3,99·v²+7,24·v+0,97 (fit 6 pts 0,16–1,5 m/s, fiche v2_2020), Vmax 1,5 · nominal 1,0 m/s (1260 m³/h) ✅
-  — 3 révisions Titanair (G3 2020 / G4 2023) → G3 retenu (cohérent gamme) ; épaisseur 20 mm et
-  photo placeholder à valider ; domaine basse vitesse hors grille débits de DONNEES_PDC.
+  — **contenu retravaillé v1.1 (17/07)**. **4 révisions Titanair, pas 3** : la 4e (`TITAFIL.pdf`, non datée,
+  SAS/APE 2825Z) porte « ISO 16890 : COARSE 50% » **en face du G3** → le Coarse 50% est **sourcé**, pas une
+  équivalence déduite. Une **4e courbe** (cache `TITAFIL 2013.xlsx` : 6/12/20/38 Pa à 0,5/1/1,5/2 m/s)
+  **corrobore** la courbe v2_2020 retenue → G3 confirmé, ne repose plus sur une seule fiche.
+  ⚠️ **La consigne « épaisseur 20 mm à valider » qui figurait ici était PÉRIMÉE** : le commit `2454fec`
+  (22/06) l'a corrigée en **4,5 mm** dans le JSON et le registre, PROCESS n'avait jamais suivi. Le 4,5 mm
+  reste une **déduction** (Ø du fil du cadre), non sourcée et probablement sous-évaluée, **affichée 3×**
+  (légende + calculateur) → à mesurer en R&D. Sous-titre « Filtre cousu sur fil » (pas de rôle annoncé,
+  comme NETMETAL) ; **VC uniquement, jamais CTA** (déc. PA, contredit la doc 2015) ; T° alignée sur la gamme
+  (60 °C / acc. 65 °C) **contre** les 4 fiches Titanair (acc. 80 °C). Photo placeholder à remplacer ;
+  domaine basse vitesse hors grille débits de DONNEES_PDC.
+  → **Lire `_arbitrages_pad` de `produits/netfil.json` avant toute retouche** (dont 2 réserves de Claude
+  écartées par PA : 3 des 4 points clés recopient la rubrique « AVANTAGES » de la plaquette Titanair, et
+  « Faible encombrement » / « Construction renforcée » sont des jugements orphelins depuis la réécriture
+  du descriptif).
 - **NETFIBRE** — mono-classe G4 / Coarse 65% (réf. TITAFIBRE, fiche 2018 FT 2018-030, ép. 20 mm), polynôme
   14·v²+1,8·v+8 (fit 4 pts courbe fiche 2018, R²≈0,998), Vmax 2 · nominal 1,5 m/s (1900 m³/h, ΔP≈42 Pa) ✅
   — média synthétique densité croissante vendu en **panneau découpé sur mesure** (média aussi en rouleau 20×2 m) →

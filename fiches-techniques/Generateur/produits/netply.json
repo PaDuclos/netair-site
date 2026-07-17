@@ -36,7 +36,7 @@
     ["Épaisseurs disponibles", "48 · 98 mm (autres épaisseurs sur mesure)"],
     ["Surface filtrante", "2 × surface frontale (48 mm) · 3 × surface frontale (98 mm)"],
     ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
-    ["Humidité relative max.", "100 %"],
+    ["Humidité relative max.", "100 % (sans condensation)"],
     ["ΔP finale recommandée", "min(ΔP initiale + 50 Pa [Coarse] / + 100 Pa [ePM10] ; 3 × ΔP initiale) — EN 13053"],
     ["Incinérable", "Média : oui · Cadre acier : non"]
   ],
