@@ -839,7 +839,7 @@ def generer_series(d, html):
     # --- légende (1 entrée par série)
     html = sub1(
         html,
-        r'(margin-top:3mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">\n)(.*?)'
+        r'(margin-top:2mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">\n)(.*?)'
         r'(\n            <div style="margin-left:auto; font-style:italic;)',
         lambda m: m.group(1) + build_series_legend(d) + m.group(3), flags=re.DOTALL)
 
@@ -1065,7 +1065,7 @@ def build_multi_section(d):
         </div>
 
         <div style="margin-top:3mm; border:1px solid #E1E7EF; border-radius:8px; padding:3mm 6mm 2mm 4mm; background:#FCFDFE;">
-          <svg id="curveSvg" viewBox="0 0 600 292" style="width:100%; height:auto; display:block;">
+          <svg id="curveSvg" viewBox="0 0 600 292" style="width:80%; height:auto; display:block; margin:0 auto;">
             <line x1="52" y1="16" x2="580" y2="16" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="74.5" x2="580" y2="74.5" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="133" x2="580" y2="133" stroke="#EDF1F6" stroke-width="1"></line>
@@ -1162,39 +1162,39 @@ def build_multi_section(d):
               </div>
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Débit d'air</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="debitVal"></span> m³/h</span>
               </div>
-              <input type="range" id="inDebit" min="500" max="6000" step="50" value="{dnom}" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDebit" min="500" max="6000" step="50" value="{dnom}" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Durée de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="dureeVal"></span> h/jour</span>
               </div>
-              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Jours de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="joursVal"></span> j/an · <span id="heuresVal"></span> h/an</span>
               </div>
-              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Rendement moto-ventilateur</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="etaVal"></span> %</span>
               </div>
-              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Prix de l'électricité</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="prixVal"></span> €/kWh</span>
               </div>
-              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
           </div>
 
@@ -1758,50 +1758,21 @@ def generer(d, html):
                             'gap:7mm; margin-top:4mm; align-items:stretch;">')                   # grille calculateur
         html = html.replace('margin-top:7mm; background:#F2F6FB;',
                             'margin-top:4mm; background:#F2F6FB;')                               # note méthode
-        html = html.replace('<svg id="curveSvg" viewBox="0 0 600 300" style="width:100%; height:auto; display:block;">',
-                            '<svg id="curveSvg" viewBox="0 0 600 300" style="width:84%; height:auto; display:block; margin:0 auto;">')
+        # (la taille de la courbe n'est plus réglée ici : 80 % est le STANDARD du gabarit
+        #  depuis le 17/07/2026. compact_p2 ne s'occupe plus que des marges de la page 2.)
 
-    # --- courbe_large : rendre à la courbe ΔP la place que consomme le calculateur.
-    #     Reprend les seuls resserrements de compact_fort qui touchent la PAGE 2, et pousse
-    #     le graphe de 84 % à 100 %. Ne touche NI la page 1, NI la colonne photo, NI les
-    #     légendes multi-classes — d'où un drapeau distinct de compact_fort, qui fait tout ça
-    #     et ne conviendrait pas à une fiche mono-classe dont la page 1 a de la place.
-    #     Mesuré sur NETMETAL (17/07/2026) : courbe 279 → 339 px (+21 %, plus grande que celle
-    #     de NETPLY), page 2 1098 → 1051 px, marge A4 25 → 72 px. Doit passer APRÈS compact_p2 :
-    #     il resserre les valeurs qu'il pose.
-    if d.get("courbe_large"):
-        if not d.get("compact_p2"):
-            raise RuntimeError(
-                "courbe_large exige compact_p2 : il resserre les valeurs qu'il pose "
-                "(dont le graphe à 84 %).")
-        if d.get("compact_fort"):
-            raise RuntimeError(
-                "courbe_large et compact_fort sont incompatibles : compact_fort règle déjà "
-                "le graphe (90 %) et resserre les mêmes ancres.")
-        remplacements = [
-            # Le calculateur : rien ne rétrécit, seul l'espacement se resserre.
-            ("flex-direction:column; gap:13px", "flex-direction:column; gap:5px"),
-            ("align-items:baseline; margin-bottom:5px;", "align-items:baseline; margin-bottom:2px;"),
-            ('style="width:100%; accent-color:#0897A5;"',
-             'style="width:100%; accent-color:#0897A5; display:block; margin:0;"'),
-            ("border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCF",
-             "border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCF"),
-            ("gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px;",
-             "gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px;"),
-            # La place ainsi libérée va à la courbe.
-            ('style="width:84%; height:auto; display:block; margin:0 auto;"',
-             'style="width:100%; height:auto; display:block; margin:0 auto;"'),
-        ]
-        for avant, apres in remplacements:
-            if avant not in html:
-                raise RuntimeError(
-                    f"courbe_large : ancre introuvable « {avant[:46]}… ». Le gabarit a changé, "
-                    "ou courbe_large s'exécute avant compact_p2.")
-            html = html.replace(avant, apres)
+    # (courbe_large a existé le 17/07/2026 pour rendre à la courbe la place du calculateur sur
+    #  NETMETAL. SUPPRIMÉ le jour même : ses réglages sont devenus le STANDARD du gabarit — courbe
+    #  80 % + calculateur 11 px + suppression des interlignes fantômes — donc appliqués aux 18 fiches
+    #  sans drapeau. Si un .json porte encore "courbe_large", generer.py le refuse : cf. main().)
 
     # --- compact_fort : tenir une fiche MULTI-CLASSES en 2 pages A4. Ses sélecteurs de classe
     #     et d'épaisseur, que les fiches mono-classe n'affichent pas, coûtent ~26 mm en page 2.
     #     Doit passer APRÈS compact_p1/compact_p2 : il resserre les valeurs qu'ils ont posées.
+    #     ⚠️ VIDÉ de ses réglages de PAGE 2 le 17/07/2026 : la courbe (80 %), le calculateur (11 px),
+    #     les curseurs en display:block, les étiquettes, la note et la légende sont désormais le
+    #     STANDARD du gabarit, commun aux 18 fiches (décision PA). compact_fort ne garde que ce qui
+    #     lui est PROPRE : la page 1 (colonne photo, marges) et les légendes multi-classes.
     if d.get("compact_fort"):
         if not (d.get("compact_p1") and d.get("compact_p2")):
             raise RuntimeError(
@@ -1809,25 +1780,9 @@ def generer(d, html):
         low, high = d["classes"]["low"], d["classes"]["high"]
         remplacements = [
             ("grid-template-columns:70mm 1fr", "grid-template-columns:52mm 1fr"),
-            ("flex-direction:column; gap:13px", "flex-direction:column; gap:5px"),
             ('<div style="margin-top:6mm;">', '<div style="margin-top:4mm;">'),
             ("margin:6mm 0 5mm 0;", "margin:4mm 0 4mm 0;"),
-            # La légende répétait la classe ISO déjà affichée par le sélecteur « Afficher : »
-            # 5 mm au-dessus : elle débordait sur 2 lignes. Raccourcie, elle tient sur une seule
-            # à police inchangée — ce qui rend au graphe la place qu'elle prenait.
-            ("gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px;",
-             "gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px;"),
             ("Média propre — air à 20 °C", "Média propre · air à 20 °C"),
-            # Les champs du calculateur : l'étiquette laissait 5 mm sous elle, et les curseurs,
-            # en display inline, traînaient l'interligne de leur ligne de texte. Rien ne rétrécit,
-            # seul l'espacement se resserre — la place va au graphe.
-            ("align-items:baseline; margin-bottom:5px;", "align-items:baseline; margin-bottom:2px;"),
-            ('style="width:100%; accent-color:#0897A5;"',
-             'style="width:100%; accent-color:#0897A5; display:block; margin:0;"'),
-            ('style="width:84%; height:auto; display:block; margin:0 auto;"',
-             'style="width:90%; height:auto; display:block; margin:0 auto;"'),
-            ("border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCF",
-             "border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCF"),
         ]
         for cls in (low, high):
             lab = f'{cls["label"]} · {cls["iso"]}'
@@ -1856,6 +1811,13 @@ def main():
 
     with open(json_path, encoding="utf-8") as f:
         d = json.load(f)
+
+    # Clés retirées du moteur : mieux vaut refuser que les ignorer en silence.
+    if d.get("courbe_large"):
+        sys.exit(
+            "❌ « courbe_large » n'existe plus (supprimé le 17/07/2026) : la courbe à 80 % et le "
+            "calculateur à 11 px sont le STANDARD du gabarit, appliqué aux 18 fiches. "
+            f"Retirer cette clé de {json_path}.")
     smooth_curves_origin(d)   # courbes lisses partant de 0 (sauf ancre du test d'identité)
     with open(BASE, encoding="utf-8") as f:
         html = f.read()
