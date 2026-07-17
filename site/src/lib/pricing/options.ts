@@ -136,3 +136,28 @@ export function optionsDuCode(code: string): OptionsProduit {
     epaisseurs: [...epaisseurs].sort((a, b) => a - b),
   };
 }
+
+/**
+ * Efficacité à figer, ou `null` s'il faut garder un vrai menu.
+ *
+ * Règle : pas de choix quand il n'y en a qu'un (décision PA du 17/07/2026, même règle que le
+ * cadre). Un menu à une seule ligne fait croire à une option qui n'existe pas — ex. NETFIL,
+ * qui n'est tarifé qu'en Coarse 50 % (G3).
+ *
+ * On exige que le produit ET chacun de ses conditionnements ne proposent que cette même classe :
+ * deux conditionnements à classe unique mais DIFFÉRENTE (ex. panneau G4 / rouleau F7) restent un
+ * choix, puisque changer de conditionnement changerait la filtration.
+ *
+ * La classe figée reste une entrée du moteur de prix : l'appelant doit continuer à la transmettre.
+ */
+export function efficaciteFigee(
+  classes: OptionClasse[],
+  classesParVariante: OptionClasse[][] = [],
+): OptionClasse | null {
+  if (classes.length !== 1) return null;
+  const distinctes = new Set([
+    ...classes.map((c) => c.valeur),
+    ...classesParVariante.flat().map((c) => c.valeur),
+  ]);
+  return distinctes.size === 1 ? classes[0] : null;
+}

@@ -8,6 +8,8 @@ import {
   produitsSansCadresDeclares,
 } from "../../src/lib/pricing/produits-gammes";
 import type { GammeProduit } from "../../src/lib/pricing/produits-gammes";
+import { efficaciteFigee } from "../../src/lib/pricing/options";
+import { calculerPrix } from "../../src/lib/pricing/index";
 
 /**
  * Garde-fou sur les cadres proposés par le configurateur.
@@ -149,6 +151,50 @@ describe("épaisseurs des produits sur devis", () => {
   });
 });
 
+describe("les produits à efficacité figée gardent un prix", () => {
+  // Figer l'affichage ne doit RIEN changer au prix : la classe reste transmise au moteur.
+  // Ancre chiffrée, indépendante du navigateur — si un jour le champ caché cesse d'envoyer
+  // la classe, le statut passera à `classe_indisponible` et ces tests tomberont.
+  it.each([
+    ["netfil", { codeGamme: "2", largeur_mm: 592, hauteur_mm: 592, profondeur_mm: 48, classe: "G3", quantite: 6 }, 7.89],
+    ["netfibre panneau", { codeGamme: "4", largeur_mm: 592, hauteur_mm: 592, profondeur_mm: 48, classe: "G4", quantite: 6 }, 8.57],
+    ["netcel-v-lam", { codeGamme: "14", largeur_mm: 305, hauteur_mm: 305, profondeur_mm: 69, classe: "H14", quantite: 6 }, 71.37],
+  ])("%s : prix au centime", (_nom, demande, attendu) => {
+    const r = calculerPrix(demande as never);
+    expect(r.statut).toBe("ok");
+    expect(r.statut === "ok" && r.prixUnitaireHT).toBe(attendu);
+  });
+});
+
+describe("efficacité figée quand il n'y a qu'une classe", () => {
+  // Règle PA : pas de choix quand il n'y en a qu'un. La classe restant une entrée du moteur,
+  // elle continue d'être transmise — mais l'affichage ne doit pas simuler un choix inexistant.
+  const G4 = { valeur: "G4", libelle: "Coarse 65 % (G4)" };
+  const F7 = { valeur: "F7", libelle: "ePM1 55 % (F7)" };
+
+  it("fige la classe unique d'un produit sans conditionnement (cas NETFIL)", () => {
+    expect(efficaciteFigee([G4])).toEqual(G4);
+  });
+
+  it("garde le menu dès qu'il y a un vrai choix", () => {
+    expect(efficaciteFigee([G4, F7])).toBeNull();
+  });
+
+  it("fige si tous les conditionnements partagent la même classe unique (cas NETFIBRE)", () => {
+    expect(efficaciteFigee([G4], [[G4], [G4]])).toEqual(G4);
+  });
+
+  it("garde le menu si deux conditionnements ont chacun une classe UNIQUE mais DIFFÉRENTE", () => {
+    // Le piège : chaque conditionnement n'a qu'une classe, mais changer de conditionnement
+    // changerait la filtration → c'est bien un choix, il doit rester ouvert.
+    expect(efficaciteFigee([G4], [[G4], [F7]])).toBeNull();
+  });
+
+  it("ne fige rien quand aucune classe n'est tarifée", () => {
+    expect(efficaciteFigee([])).toBeNull();
+  });
+});
+
 describe("garde-fou anti-retour du défaut", () => {
   // Le bug d'origine est né DANS la page, pas dans les données : un repli
   // `gamme?.cadres ?? CADRES_DEFAUT`. Les tests sur GAMME_PRODUIT ne peuvent pas le voir,
@@ -163,6 +209,14 @@ describe("garde-fou anti-retour du défaut", () => {
     // `?? []` est le repli légitime (aucun cadre) ; `?? [{ … }]` réintroduirait un défaut.
     expect(page).not.toMatch(/cadres\s*\?\?\s*\[\s*\{/);
     expect(page).not.toMatch(/cadreFixe\s*\?\?\s*\{/);
+  });
+
+  it("la page ne propose pas de menu d'efficacité à une seule option", () => {
+    // Règle PA : pas de choix quand il n'y en a qu'un. Une efficacité unique s'affiche figée
+    // (`effFixe`) — mais elle reste une entrée du moteur, d'où le champ caché qui la transmet.
+    expect(page).toMatch(/const effFixe =/);
+    expect(page).toMatch(/!effFixe &&/);
+    expect(page).toMatch(/<input id="inEff" type="hidden"/);
   });
 
   it("la page ne recopie pas le mapping cadre → suffixe", () => {

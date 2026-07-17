@@ -8,7 +8,7 @@ import {
   type Produit,
 } from '../../lib/familles';
 import { gammeDuProduit, produitsSansCadresDeclares } from '../../lib/pricing/produits-gammes';
-import { optionsDuCode, formatsDuCode, libelleClasse } from '../../lib/pricing/options';
+import { optionsDuCode, formatsDuCode, libelleClasse, efficaciteFigee } from '../../lib/pricing/options';
 import { trouverGamme } from '../../lib/pricing/lookups';
 import { MIN_COMMANDE_HT } from '../../lib/boutique';
 
@@ -149,6 +149,10 @@ const variantesConfig =
         return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
       })
     : null;
+
+// Efficacité unique → champ figé (libellé affiché + valeur transmise au moteur), jamais un menu
+// à une seule ligne : ce serait un faux choix. Règle et cas limites dans `efficaciteFigee`.
+const effFixe = efficaciteFigee(menus.classes, variantesConfig?.map((v) => v.classes) ?? []);
 ---
 
 <BaseLayout
@@ -312,7 +316,7 @@ const variantesConfig =
           )}
           {/* Efficacité — affichée dès que le calculateur a des classes pour ce produit
               (calculable OU sur devis). Pas de classe dans le calculateur → pas de champ. */}
-          {menus.classes.length > 0 && (
+          {menus.classes.length > 0 && !effFixe && (
             <label class="block">
               <span class="eyebrow text-[11px] text-muted">Efficacité</span>
               <select id="inEff"
@@ -322,6 +326,14 @@ const variantesConfig =
                 ))}
               </select>
             </label>
+          )}
+          {effFixe && (
+            <div class="block">
+              <span class="eyebrow text-[11px] text-muted">Efficacité</span>
+              <p id="effFixeLabel" class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine">{effFixe.libelle}</p>
+              {/* La classe reste une entrée du moteur de prix : on la transmet, figée. */}
+              <input id="inEff" type="hidden" value={effFixe.valeur} data-libelle={effFixe.libelle} />
+            </div>
           )}
           {cadres.length > 0 && (
             <label id="wrapCadre" class="block">
@@ -474,6 +486,17 @@ const variantesConfig =
       function setEffOptions(classes, selected) {
         const el = $('inEff');
         if (!el) return;
+        // Efficacité figée (champ caché, cf. `effFixe`) : rien à reconstruire, on remet à jour
+        // la valeur et le libellé au cas où le conditionnement changerait la classe.
+        if (el.tagName !== 'SELECT') {
+          const c = (classes || [])[0];
+          if (!c) return;
+          el.value = c.valeur;
+          el.dataset.libelle = c.libelle;
+          const p = $('effFixeLabel');
+          if (p) p.textContent = c.libelle;
+          return;
+        }
         el.innerHTML = (classes || []).map((c) =>
           '<option value="' + c.valeur + '"' + (c.valeur === selected ? ' selected' : '') + '>' + c.libelle + '</option>'
         ).join('');
@@ -551,8 +574,9 @@ const variantesConfig =
         // Le menu Efficacité peut être absent (produits sur devis : pas de prix).
         const effEl = $('inEff');
         const eff = effEl ? effEl.value : '';
-        const effOpt = effEl ? effEl.selectedOptions[0] : null;
-        const effLabel = effOpt ? effOpt.text : '';
+        // Menu → libellé de l'option choisie ; efficacité figée (champ caché) → `data-libelle`.
+        const effOpt = effEl && effEl.selectedOptions ? effEl.selectedOptions[0] : null;
+        const effLabel = effOpt ? effOpt.text : (effEl?.dataset.libelle ?? '');
         // Trois cas : menu (cadre au choix), cadre imposé lu sur le conteneur (affiché en
         // lecture seule, il compte quand même dans la référence), ou rien (ex. NETFIBRE).
         const cadreEl = $('inCadre');
