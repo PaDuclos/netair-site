@@ -120,6 +120,11 @@ const menus = {
 // Épaisseurs : celles du calculateur ; à défaut, stopgap `epaisseursDevis` (ex. BORA 100 mm,
 // en attendant que l'épaisseur soit ajoutée au calculateur — cf. CHECKLIST).
 const epaisseursAffichees = menus.epaisseurs.length > 0 ? menus.epaisseurs : (gamme?.epaisseursDevis ?? []);
+// Épaisseur pré-sélectionnée : celle déclarée si elle est bien proposée, sinon la première
+// du menu. L'ordre étant croissant, s'en remettre au premier reviendrait à pousser la plus fine.
+const epDefaut = epaisseursAffichees.includes(gamme?.epaisseurDefaut as number)
+  ? gamme!.epaisseurDefaut
+  : epaisseursAffichees[0];
 
 // Efficacité pré-sélectionnée : la « par défaut » de la gamme (colonne Excel `eff_defaut`)
 // si elle est proposée, sinon la première du menu — plutôt que toujours la classe la plus basse.
@@ -295,8 +300,8 @@ const variantesConfig =
               <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
               <select id="inEp"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
-                {epaisseursAffichees.map((ep, i) => (
-                  <option value={ep} selected={i === 0}>{ep} mm</option>
+                {epaisseursAffichees.map((ep) => (
+                  <option value={ep} selected={ep === epDefaut}>{ep} mm</option>
                 ))}
               </select>
             </label>

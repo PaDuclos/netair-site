@@ -108,6 +108,47 @@ describe("suffixes de référence", () => {
   });
 });
 
+describe("épaisseurs des produits sur devis", () => {
+  // Ces épaisseurs ne viennent pas du calculateur (produits sur devis) : leur seule source de
+  // vérité est la fiche technique. On la relit ici pour qu'elles ne puissent pas diverger en
+  // silence — c'est exactement le genre d'écart fiche/boutique qui a produit le bug NETFIL.
+  const ficheJson = (slug: string) =>
+    JSON.parse(
+      readFileSync(
+        fileURLToPath(new URL(`../../../fiches-techniques/Generateur/produits/${slug}.json`, import.meta.url)),
+        "utf8",
+      ),
+    );
+
+  /** Épaisseurs annoncées par la ligne « Épaisseurs disponibles » d'une fiche, en mm. */
+  const epaisseursDeLaFiche = (slug: string): number[] => {
+    const lignes: unknown[] = [];
+    const parcourir = (o: unknown) => {
+      if (Array.isArray(o)) {
+        if (o.length === 2 && typeof o[0] === "string" && typeof o[1] === "string") lignes.push(o);
+        else o.forEach(parcourir);
+      } else if (o && typeof o === "object") Object.values(o).forEach(parcourir);
+    };
+    parcourir(ficheJson(slug));
+    const ligne = (lignes as [string, string][]).find(([k]) => /épaisseurs? disponibles?/i.test(k));
+    return ligne ? [...ligne[1].matchAll(/\d+/g)].map((m) => Number(m[0])) : [];
+  };
+
+  it("NETMETAL propose exactement les épaisseurs de sa fiche", () => {
+    const attendues = epaisseursDeLaFiche("netmetal");
+    expect(attendues, "ligne « Épaisseurs disponibles » introuvable dans la fiche").not.toEqual([]);
+    expect([...(GAMME_PRODUIT.netmetal.epaisseursDevis ?? [])].sort((a, b) => a - b)).toEqual(
+      [...attendues].sort((a, b) => a - b),
+    );
+  });
+
+  it.each(tousProduits)("%s : l'épaisseur par défaut est réellement proposée", (_id, gamme) => {
+    // Un défaut absent du menu retomberait silencieusement sur la première valeur.
+    if (gamme.epaisseurDefaut === undefined) return;
+    expect(gamme.epaisseursDevis ?? []).toContain(gamme.epaisseurDefaut);
+  });
+});
+
 describe("garde-fou anti-retour du défaut", () => {
   // Le bug d'origine est né DANS la page, pas dans les données : un repli
   // `gamme?.cadres ?? CADRES_DEFAUT`. Les tests sur GAMME_PRODUIT ne peuvent pas le voir,

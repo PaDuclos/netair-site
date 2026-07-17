@@ -161,6 +161,14 @@ export interface GammeProduit {
    */
   epaisseursDevis?: number[];
   /**
+   * Épaisseur pré-sélectionnée à l'ouverture (défaut : la première du menu).
+   *
+   * L'ordre du menu est croissant, pour la lisibilité — il ne dit donc rien de l'épaisseur
+   * la plus vendue. Sans ce réglage, un client qui ne touche pas au menu demanderait un devis
+   * sur la plus fine par simple inertie. Ex. NETMETAL = 25 mm (décision PA 17/07/2026).
+   */
+  epaisseurDefaut?: number;
+  /**
    * Efficacités (EN 779) à proposer pour un produit EN « sur devis », pour que le client
    * précise son besoin de filtration dans la demande de prix (ex. BORA = G4→F9).
    * Stopgap : à terme elles viennent du calculateur. Cf. CHECKLIST.
@@ -265,6 +273,10 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   netmetal: {
     code: "29",
     mode: "devis",
+    // Épaisseurs de la fiche (« 10 · 15 · 20 · 25 · 30 · 48 mm ») : le code 29 est sur devis,
+    // le calculateur ne les porte pas → stopgap pour que le client précise son besoin.
+    epaisseursDevis: [10, 15, 20, 25, 30, 48],
+    epaisseurDefaut: 25, // décision PA 17/07/2026 (et non 10 mm, la plus fine, par simple inertie du menu)
     labelCadre: "Matière",
     cadres: [
       { valeur: "acier_acier", libelle: "Cadre acier · tricot acier" },
