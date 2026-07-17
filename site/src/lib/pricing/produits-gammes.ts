@@ -59,12 +59,21 @@ export interface CadreOffre {
 
 /** Un format de rouleau fixe (dimensions dans l'unité des tables, ici en mètres). */
 export interface FormatRouleau {
-  /** Libellé affiché — ex. "1 m × 10 m". */
+  /**
+   * Libellé affiché, en LONGUEUR × LARGEUR — ex. "20 m × 2 m" (décision PA 17/07/2026) :
+   * un rouleau se dit par sa longueur déroulée, puis sa laize.
+   *
+   * ⚠️ L'ordre du libellé est INDÉPENDANT de `largeur`/`hauteur` ci-dessous, qui sont les
+   * entrées du moteur : les intervertir changerait le prix. Le libellé alimente aussi le
+   * suffixe de référence (ex. NETFIBRE-G4-20m×2m).
+   */
   label: string;
-  /** Petit côté (passé tel quel au moteur — l'unité est celle de la table). */
+  /** Petit côté / laize (passé tel quel au moteur — l'unité est celle de la table). */
   largeur: number;
-  /** Grand côté (idem). */
+  /** Grand côté / longueur déroulée (idem). */
   hauteur: number;
+  /** Format pré-sélectionné à l'ouverture. À défaut, le premier de la liste. */
+  defaut?: boolean;
 }
 
 /**
@@ -215,13 +224,14 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
         code: "5",
         saisie: "formats",
         labelChamp: "Format de rouleau",
-        formats: [
-          { label: "1 m × 10 m", largeur: 1, hauteur: 10 },
-          { label: "1 m × 20 m", largeur: 1, hauteur: 20 },
-          { label: "2 m × 10 m", largeur: 2, hauteur: 10 },
-          { label: "2 m × 20 m", largeur: 2, hauteur: 20 },
-          { label: "2 m × 30 m", largeur: 2, hauteur: 30 },
-        ],
+        // Un SEUL format pour le moment (déc. PA 17/07) : le 20 m × 2 m, celui qu'annonce la
+        // fiche. Les 4 autres (10×1, 20×1, 10×2, 30×2) sont retirés de la vente le temps de
+        // vérifier leurs tarifs — incohérence au m² relevée le 17/07 (20 m × 1 m à 5,26 €/m²
+        // vs 10 m × 2 m à 8,42 €/m² pour la même surface). Cf. CHECKLIST.
+        // Libellé en longueur × largeur : un rouleau se dit par sa longueur déroulée, puis sa
+        // laize. `defaut` porté par le 20 m × 2 m pour qu'il reste le format d'ouverture le
+        // jour où les autres reviennent (sans lui, le tri imposerait le plus petit).
+        formats: [{ label: "20 m × 2 m", largeur: 2, hauteur: 20, defaut: true }],
       },
     ],
   },

@@ -502,8 +502,12 @@ const effFixe = efficaciteFigee(menus.classes, variantesConfig?.map((v) => v.cla
         ).join('');
       }
       function setFormatOptions(formats) {
-        $('inFormat').innerHTML = (formats || []).map((f, i) =>
-          '<option value="' + i + '"' + (i === 0 ? ' selected' : '') + '>' + f.label + '</option>'
+        const liste = formats || [];
+        // Format pré-sélectionné : celui marqué `defaut` (ex. rouleau 20 m × 2 m), sinon le
+        // premier — l'ordre de la liste sert la lecture, il ne dit pas le format courant.
+        const iDefaut = Math.max(0, liste.findIndex((f) => f.defaut));
+        $('inFormat').innerHTML = liste.map((f, i) =>
+          '<option value="' + i + '"' + (i === iDefaut ? ' selected' : '') + '>' + f.label + '</option>'
         ).join('');
       }
       // Bascule un conditionnement : montre/masque dimensions ↔ format, recharge les
