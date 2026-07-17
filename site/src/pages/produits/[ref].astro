@@ -50,13 +50,15 @@ const codeGamme = gamme?.code ?? '';
 // produit sur devis n'affiche un champ que si le calculateur a l'info (sinon rien).
 // Dimensions ouvertes par défaut (592×592 sauf produits à formats standard, ex. laminaire 610×610).
 const dimDefaut = gamme?.dimensionDefaut ?? { largeur: 592, hauteur: 592 };
-// Produit sans cadre (média fibreux seul, ex. NETFIBRE) → on masque le choix « Cadre ».
-const sansCadre = gamme?.sansCadre ?? false;
 // Cadres proposés : lus dans la fiche du produit, JAMAIS devinés. Pas de repli par défaut —
 // un défaut « acier + polypropylène » proposait en silence des cadres inexistants (cf.
 // `produits-gammes.ts`). Un produit calculable mal déclaré casse le build (tous les fautifs
 // signalés d'un coup) plutôt que d'afficher un cadre faux au client.
 const cadres = gamme?.cadres ?? [];
+// Cadre imposé (ex. NETPLY = acier galvanisé) : affiché en information, jamais en menu.
+const cadreFixe = gamme?.cadreFixe ?? null;
+// « Cadre » par défaut ; NETMETAL vend un couple cadre + tricot → « Matière ».
+const labelCadre = gamme?.labelCadre ?? 'Cadre';
 const fautifs = produitsSansCadresDeclares();
 if (fautifs.length > 0) {
   throw new Error(
@@ -221,7 +223,7 @@ const variantesConfig =
   )}
 
   <!-- Configurateur + Panier + Demande de devis -->
-  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined}>
+  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined} data-cadrefixe={cadreFixe?.valeur} data-cadrefixelabel={cadreFixe?.libelle}>
     <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
     <p class="mt-1 text-sm text-muted">Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.</p>
 
@@ -288,9 +290,9 @@ const variantesConfig =
               </select>
             </label>
           )}
-          {modeProduit === 'calcul' && !sansCadre && (
+          {cadres.length > 0 && (
             <label id="wrapCadre" class="block">
-              <span class="eyebrow text-[11px] text-muted">Cadre</span>
+              <span class="eyebrow text-[11px] text-muted">{labelCadre}</span>
               <select id="inCadre"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
                 {cadres.map((c, i) => (
@@ -298,6 +300,12 @@ const variantesConfig =
                 ))}
               </select>
             </label>
+          )}
+          {cadreFixe && (
+            <div id="wrapCadre" class="block">
+              <span class="eyebrow text-[11px] text-muted">{labelCadre}</span>
+              <p class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine">{cadreFixe.libelle}</p>
+            </div>
           )}
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Quantité</span>
@@ -512,15 +520,16 @@ const variantesConfig =
         const eff = effEl ? effEl.value : '';
         const effOpt = effEl ? effEl.selectedOptions[0] : null;
         const effLabel = effOpt ? effOpt.text : '';
-        // Le champ Cadre peut être absent (produits sans cadre, ex. NETFIBRE).
+        // Trois cas : menu (cadre au choix), cadre imposé lu sur le conteneur (affiché en
+        // lecture seule, il compte quand même dans la référence), ou rien (ex. NETFIBRE).
         const cadreEl = $('inCadre');
-        const cadreVal = cadreEl ? cadreEl.value : null;
-        // Suffixe lu dans la table partagée (jamais recopié ici) : un cadre sans lettre
-        // tranchée est refusé en amont par les tests.
+        const cadreVal = cadreEl ? cadreEl.value : (root.dataset.cadrefixe || null);
+        // Suffixe lu dans la table partagée (jamais recopié ici) : un cadre sans suffixe
+        // tranché est refusé en amont par les tests.
         const cadre = cadreVal ? CADRE_SUFFIXE[cadreVal] ?? null : null;
         // Libellé lu dans le menu (et non déduit de la valeur) : un même cadre `pp` s'affiche
         // « Polypropylène » ou « Plastique » selon la fiche du produit.
-        const cadreLabel = cadreEl?.selectedOptions[0]?.text ?? null;
+        const cadreLabel = cadreEl?.selectedOptions[0]?.text ?? root.dataset.cadrefixelabel ?? null;
         const qty = Math.max(1, +$('inQ').value || 1);
         const codeUsed = activeVar ? activeVar.code : codeGamme;
         return { L, H, ep, eff, effLabel, cadre, cadreLabel, qty, codeUsed, formatLabel };
