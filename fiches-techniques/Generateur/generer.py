@@ -55,6 +55,27 @@ def lit(s):
 
 
 # --------------------------------------------------------- fragments HTML ----
+def apply_compact_p2(d, html):
+    """Page 2 compacte (opt-in par produit) : resserre les marges de la page 2 pour
+    tenir courbe + calculateur sur une seule A4. Réglages de marges uniquement, sans
+    toucher le gabarit ni le test d'identité. Appliqué dans TOUS les chemins (base,
+    series, multi) : la page 2 a le même balisage partout."""
+    if not d.get("compact_p2"):
+        return html
+    html = html.replace("margin:7mm 0 7mm 0;", "margin:4mm 0 4mm 0;")                       # filet en-tête P2
+    html = html.replace('<div style="margin-top:6mm; border:1px solid #E1E7EF;',
+                        '<div style="margin-top:3mm; border:1px solid #E1E7EF;')             # cadre courbe
+    html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
+                        'display:flex; align-items:center; gap:18px; margin-top:4px;">')     # ligne « Afficher : »
+    html = html.replace('gap:10px; margin-top:9mm;">',
+                        'gap:10px; margin-top:5mm;">')                                       # titre Calculateur
+    html = html.replace('gap:7mm; margin-top:6mm; align-items:stretch;">',
+                        'gap:7mm; margin-top:4mm; align-items:stretch;">')                   # grille calculateur
+    html = html.replace('margin-top:7mm; background:#F2F6FB;',
+                        'margin-top:4mm; background:#F2F6FB;')                               # note méthode
+    return html
+
+
 def build_points_cles(points):
     SPAN = ('<span style="width:8px; height:8px; background:#0897A5; '
             'display:inline-block; flex:none;"></span>')
@@ -388,7 +409,9 @@ def smooth_curves_origin(d):
         a, b, _ = force_origin(s["a"], s["b"], s["c"], vmax)
         s["a"], s["b"], s["c"] = round(a, 4), round(b, 4), 0.0
         if "dp" in s:
-            s["dp"] = nom(s)
+            # dp_fixe (opt-in) : épingle la ΔP nominale affichée à la valeur mesurée au
+            # lieu de la recalculer sur la courbe lissée (l'écart refit reste < 1 Pa).
+            s["dp"] = s.get("dp_fixe", nom(s))
 
     # multi-classes (NETPAK CILIA…) : poly par classe × épaisseur. Le tableau ΔP
     # reste basé sur les points mesurés ("points") ; seule la courbe (poly) est lissée.
@@ -477,6 +500,17 @@ def build_series_paths(d):
     for s in series:
         k = _serie_key(s)
         out.append(f'            <circle id="m_{k}" cx="0" cy="0" r="0" fill="{s["color"]}"></circle>')
+    # Étiquettes ΔP au point nominal (opt-in "points_nominaux") — même mécanisme que
+    # NETPLY (legacy) : texte dans fixedMarks, placé et rempli par le script série, donc
+    # dynamique (suit l'affichage des classes) et masqué au survol. Style identique.
+    if d.get("points_nominaux"):
+        for s in series:
+            k = _serie_key(s)
+            out.append(
+                f'            <text id="tlab_{k}" x="0" y="0" text-anchor="start" '
+                f'paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" '
+                f'font-family="\'IBM Plex Mono\',monospace" font-size="10" font-weight="600" '
+                f'fill="{s["color"]}"></text>')
     out.append('            </g>')
     return "\n".join(out)
 
@@ -496,9 +530,13 @@ def build_series_hover():
 def build_series_legend(d):
     cdef = d["classes_def"]
     out = []
+    # legende_sans_longueur (opt-in) : profondeur unique déjà affichée ailleurs → inutile
+    # de la répéter sur chaque entrée de légende.
+    sans_len = d.get("legende_sans_longueur", False)
     for s in d["courbes"]:
         k = _serie_key(s)
-        lab = f'{cdef[s["cls"]]["label"]} · {cdef[s["cls"]]["iso"]} — {s["len"]} mm'
+        lab = f'{cdef[s["cls"]]["label"]} · {cdef[s["cls"]]["iso"]}' + (
+            '' if sans_len else f' — {s["len"]} mm')
         if s.get("avalider"):
             lab += " (à valider)"
         out.append(
@@ -513,6 +551,15 @@ def build_series_selector(d):
     present = [c for c in order if any(s["cls"] == c for s in d["courbes"])]
     btns = "".join(
         f'<button id="be_{c}" style="flex:1; font-size:10px;">{cdef[c]["iso"]} ({cdef[c]["label"]})</button>' for c in present)
+    # calc_formats_fixes (opt-in) : la profondeur est unique → le bloc « Longueur de
+    # poche » n'apporte rien, on le retire pour rendre la place à la courbe.
+    poche = (
+        '              <div>\n'
+        '                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; '
+        'text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Longueur de poche</div>\n'
+        '                <div id="lenBtns" style="display:flex; background:#EEF3F9; '
+        'border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;"></div>\n'
+        '              </div>\n') if not d.get("calc_formats_fixes") else ''
     return (
         '            <div style="display:grid; grid-template-columns:1fr; gap:10px;">\n'
         '              <div>\n'
@@ -521,12 +568,7 @@ def build_series_selector(d):
         '                <div style="display:flex; background:#EEF3F9; border:1px solid #D5E0EF; '
         f'border-radius:9px; padding:3px; gap:3px;">{btns}</div>\n'
         '              </div>\n'
-        '              <div>\n'
-        '                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; '
-        'text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Longueur de poche</div>\n'
-        '                <div id="lenBtns" style="display:flex; background:#EEF3F9; '
-        'border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;"></div>\n'
-        '              </div>\n'
+        + poche +
         '            </div>')
 
 
@@ -535,6 +577,13 @@ def build_dimensions_series(d):
     rows = []
     c = "padding:4px 7px;"
     cref = ("padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;")
+    # Réglages opt-in du tableau (AZUR) : sans la colonne référence (format non tranché,
+    # cf. CHECKLIST « références produit »), sans la surface (non communiquée), lignes
+    # groupées par efficacité plutôt que par taille. Les défauts reproduisent l'existant.
+    sans_ref = d.get("dims_sans_ref", False)
+    sans_surf = d.get("dims_sans_surface", False)
+    tri_classe = d.get("dims_tri_classe", False)
+    en779_col = d.get("dims_en779_col", False)
 
     def emit(i, L, H, s, debit):
         grey = (i % 2 == 0)
@@ -542,31 +591,43 @@ def build_dimensions_series(d):
         cl = cdef[s["cls"]]
         P = s["len"]
         surf = f'{s["surface"]:.2f}'.replace(".", ",") if "surface" in s else "n.c."
-        eff = f'{cl["iso"]} ({cl["label"]})'
+        eff = cl["iso"] if en779_col else f'{cl["iso"]} ({cl["label"]})'
         ref = f'{nom}-{cl["iso"]}-{cl["label"]}-{L}x{H}x{P}'
         dp = f'{s["dp"]}*' if s.get("avalider") else f'{s["dp"]}'
-        rows.append(
-            f'<tr{tr}><td style="{c}">{L}</td><td style="{c}">{H}</td><td style="{c}">{P}</td>'
-            f'<td style="{c}">{surf}</td><td style="{c}">{fr_debit(debit)}</td><td style="{c}">{dp}</td>'
-            f'<td style="{c}">{eff}</td><td style="{cref}">{ref}</td></tr>')
+        cells = [f'<td style="{c}">{L}</td>', f'<td style="{c}">{H}</td>',
+                 f'<td style="{c}">{P}</td>']
+        if not sans_surf:
+            cells.append(f'<td style="{c}">{surf}</td>')
+        cells += [f'<td style="{c}">{fr_debit(debit)}</td>', f'<td style="{c}">{dp}</td>',
+                  f'<td style="{c}">{eff}</td>']
+        if en779_col:
+            cells.append(f'<td style="{c}">{cl["label"]}</td>')
+        if not sans_ref:
+            cells.append(f'<td style="{cref}">{ref}</td>')
+        rows.append(f'<tr{tr}>' + "".join(cells) + '</tr>')
 
     # Mode multi-tailles (opt-in "tailles") : pour chaque cadre standard, les N classes.
     # Le débit nominal est propre à la taille (proportionnel à la section). Sinon : 1 ligne
     # par classe au cadre 592×592 (comportement d'origine, autres fiches série inchangées).
     if d.get("tailles"):
-        i = 0
-        for t in d["tailles"]:
-            for s in d["courbes"]:
-                i += 1
-                emit(i, t["L"], t["H"], s, t.get("debit", dnom))
+        if tri_classe:
+            paires = [(t, s) for s in d["courbes"] for t in d["tailles"]]
+        else:
+            paires = [(t, s) for t in d["tailles"] for s in d["courbes"]]
+        for i, (t, s) in enumerate(paires, start=1):
+            emit(i, t["L"], t["H"], s, t.get("debit", dnom))
     else:
         for i, s in enumerate(d["courbes"], start=1):
             emit(i, 592, 592, s, dnom)
-    rows.append(
-        '<tr style="background:#E6F5F7;">'
-        '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="7">Sur mesure</td>'
-        '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
-        'sur demande — délai à confirmer</td></tr>')
+    # dims_sans_surmesure (opt-in) : pas de ligne « Sur mesure » quand le produit
+    # n'existe qu'en cadres standard.
+    if not d.get("dims_sans_surmesure"):
+        ncols = 8 - (1 if sans_ref else 0) - (1 if sans_surf else 0) + (1 if en779_col else 0)
+        rows.append(
+            '<tr style="background:#E6F5F7;">'
+            f'<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="{ncols - 1}">Sur mesure</td>'
+            '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
+            'sur demande — délai à confirmer</td></tr>')
     return "\n".join("              " + r for r in rows)
 
 
@@ -658,6 +719,7 @@ SERIES_JS = r"""<script>
       mc.setAttribute('cx', mapX(Vnom).toFixed(1)); mc.setAttribute('cy', yy.toFixed(1)); mc.setAttribute('r', show ? 2.6 : 0);
       $('lg_' + s.k).style.opacity = show ? '1' : '0.25';
     }
+__SERIES_NOMLABELS__
     for (i = 0; i < ORDER.length; i++) {
       var cb = $('cb_' + ORDER[i]); if (cb) cb.checked = state.disp[ORDER[i]] !== false;
       var be = $('be_' + ORDER[i]); if (be) be.setAttribute('style', BEB + (state.eff === ORDER[i] ? ON : OFF));
@@ -730,10 +792,38 @@ SERIES_JS = r"""<script>
 </script>"""
 
 
+def _series_nomlabels_js():
+    """Bloc JS (injecté dans render(), opt-in "points_nominaux") qui place les étiquettes
+    ΔP sur chaque point nominal, écarte celles qui se chevauchent, et efface celle d'une
+    classe masquée. Même rendu que les pt() du gabarit NETPLY, généralisé à N courbes."""
+    return (
+        "    (function () {\n"
+        "      var arr = [];\n"
+        "      for (var j = 0; j < SERIES.length; j++) {\n"
+        "        var sj = SERIES[j], tl = $('tlab_' + sj.k);\n"
+        "        if (!tl) continue;\n"
+        "        if (state.disp[sj.cls] === false) { tl.textContent = ''; continue; }\n"
+        "        arr.push({ t: tl, y: mapY(pdc(sj.co, Vnom)), v: (sj.dp != null ? sj.dp : pdc(sj.co, Vnom)) });\n"
+        "      }\n"
+        "      arr.sort(function (a, b) { return a.y - b.y; });\n"
+        "      for (var j = 1; j < arr.length; j++) { if (arr[j].y < arr[j - 1].y + 11) arr[j].y = arr[j - 1].y + 11; }\n"
+        "      var mx = mapX(Vnom);\n"
+        "      for (var j = 0; j < arr.length; j++) {\n"
+        "        arr[j].t.setAttribute('x', (mx + 8).toFixed(1));\n"
+        "        arr[j].t.setAttribute('y', (arr[j].y + 3).toFixed(1));\n"
+        "        arr[j].t.textContent = fr(arr[j].v) + ' Pa';\n"
+        "      }\n"
+        "    })();\n")
+
+
 def build_series_script(d):
     import json as _json
+    # dp embarqué seulement si les étiquettes nominales le consomment (points_nominaux) :
+    # ne pas gonfler le JSON des autres fiches série, qui doivent rester byte-identiques.
+    with_dp = d.get("points_nominaux", False)
     series = [{"k": _serie_key(s), "cls": s["cls"], "len": s["len"],
-               "co": {"a": s["a"], "b": s["b"], "c": s["c"]}, "color": s["color"]}
+               "co": {"a": s["a"], "b": s["b"], "c": s["c"]}, "color": s["color"],
+               **({"dp": s["dp"]} if with_dp and "dp" in s else {})}
               for s in d["courbes"]]
     cls = {k: {"label": v["label"], "iso": v["iso"], "add": v["add"], "rule": v["rule"]}
            for k, v in d["classes_def"].items()}
@@ -750,6 +840,43 @@ def build_series_script(d):
     js = js.replace("__EFF0__", _json.dumps(d.get("eff0", order[0])))
     js = js.replace("__LEN0__", str(d.get("len0", d["courbes"][0]["len"])))
     js = js.replace("__DISP0__", _json.dumps(disp0))
+    js = js.replace("__SERIES_NOMLABELS__\n",
+                    _series_nomlabels_js() if d.get("points_nominaux") else "")
+    if d.get("calc_formats_fixes"):
+        # lenBtns retiré du DOM → le constructeur d'épaisseurs se retire proprement
+        js = js.replace("var cont = $('lenBtns'); cont.innerHTML = '';",
+                        "var cont = $('lenBtns'); if (!cont) return; cont.innerHTML = '';")
+        # champs libres L/H retirés du DOM → leurs écouteurs aussi
+        js = js.replace("  $('inLen').addEventListener('input', "
+                        "function (e) { state.flen = +e.target.value; render(); });\n", "")
+        js = js.replace("  $('inWid').addEventListener('input', "
+                        "function (e) { state.fwid = +e.target.value; render(); });\n", "")
+        # boutons de format : chaque cadre standard règle L, H et son débit nominal
+        fmts = _json.dumps([{"L": t["L"], "H": t["H"],
+                             "d": t.get("debit", d.get("debit_nom", 3400))}
+                            for t in d.get("tailles", [])], ensure_ascii=False)
+        prof = d["courbes"][0]["len"]
+        js = js.replace(
+            "\n  render();\n})();",
+            "\n  var FMTS = " + fmts + ";\n"
+            "  function buildFmtBtns() {\n"
+            "    var c = $('fmtBtns'); if (!c) return; c.innerHTML = '';\n"
+            "    FMTS.forEach(function (f) {\n"
+            "      var b = document.createElement('button');\n"
+            "      b.textContent = f.L + ' \\u00d7 ' + f.H + ' \\u00d7 " + str(prof) + "';\n"
+            "      b.setAttribute('style', BTL + 'flex:1; ' + "
+            "(state.flen === f.L && state.fwid === f.H ? ON : OFF));\n"
+            "      b.addEventListener('click', function () {\n"
+            "        state.flen = f.L; state.fwid = f.H; state.debit = f.d;\n"
+            "        var iD = $('inDebit'); if (iD) iD.value = f.d;\n"
+            "        render();\n"
+            "      });\n"
+            "      c.appendChild(b);\n"
+            "    });\n"
+            "  }\n"
+            "  var _renderBase = render;\n"
+            "  render = function () { _renderBase(); buildFmtBtns(); };\n"
+            "  render();\n})();")
     if d.get("axe_debit"):
         js = apply_axe_debit_js(js, d.get("axe_debit_max", AXE_DEBIT_DMAX))
     return js
@@ -800,6 +927,30 @@ def generer_series(d, html):
     # #8 dimensions (lignes explicites par série)
     html = sub1(html, r"(<!-- Dimensions -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
                 lambda m: m.group(1) + build_dimensions_series(d) + m.group(3), flags=re.DOTALL)
+    # en-têtes retirés/ajoutés en même temps que leurs colonnes (opt-in, cf. build_dimensions_series)
+    if d.get("dims_sans_surface"):
+        html = html.replace('                <th style="padding:6px 7px; text-align:left; '
+                            'font-weight:600;">S. filtrante (m²)</th>\n', '', 1)
+    if d.get("dims_sans_ref"):
+        html = html.replace('                <th style="padding:6px 7px; text-align:left; '
+                            'font-weight:600;">Référence complète</th>\n', '', 1)
+    if d.get("dims_en779_col"):
+        th_iso = ('                <th style="padding:6px 7px; text-align:left; '
+                  'font-weight:600;">Efficacité ISO 16890</th>\n')
+        html = html.replace(
+            th_iso,
+            th_iso + '                <th style="padding:6px 7px; text-align:left; '
+                     'font-weight:600;">EN 779</th>\n', 1)
+    # 7 colonnes au lieu de 9 : sans largeurs imposées elles se tassent à gauche et
+    # laissent un vide à droite. On les répartit sur toute la largeur du tableau.
+    if d.get("dims_sans_ref") and d.get("dims_sans_surface") and d.get("dims_en779_col"):
+        for label, pct in (("L (mm)", 13), ("H (mm)", 13), ("P (mm)", 13),
+                           ("Débit (m³/h)", 15), ("ΔP (Pa)", 13),
+                           ("Efficacité ISO 16890", 19), ("EN 779", 14)):
+            html = html.replace(
+                f'<th style="padding:6px 7px; text-align:left; font-weight:600;">{label}</th>',
+                f'<th style="padding:6px 7px; text-align:left; font-weight:600; '
+                f'width:{pct}%;">{label}</th>', 1)
 
     # #9 pied de page
     html = html.replace("Fiche n° FT-NETPLY-001", f"Fiche n° {d['fiche']['num']}")
@@ -820,6 +971,13 @@ def generer_series(d, html):
     if d.get("axe_debit"):
         html = apply_axe_debit_svg(html, d.get("debit_nom", 3400),
                                    d.get("axe_debit_max", AXE_DEBIT_DMAX))
+        # annot_vitesse (opt-in) : annotation nominale au format NETPLY
+        # « 2,7 m/s ≈ 3400 m³/h · 592×592 » au lieu de « Débit nominal 3400 m³/h ».
+        if d.get("annot_vitesse"):
+            dnom = d.get("debit_nom", 3400)
+            vtxt = _frnum(round((dnom / 3600) / d.get("aref", AREF), 1))
+            html = html.replace(f'>Débit nominal {dnom} m³/h</text>',
+                                f'>{vtxt} m/s ≈ {dnom} m³/h · 592×592</text>')
 
     # --- bloc « Afficher : » (cases par classe)
     html = sub1(
@@ -835,6 +993,36 @@ def generer_series(d, html):
     # --- groupe de survol (lanes créées par le JS)
     html = sub1(html, r'            <!-- survol interactif -->.*?\n(            <rect id="hoverHit")',
                 lambda m: build_series_hover() + "\n" + m.group(1), flags=re.DOTALL)
+
+    # --- calc_formats_fixes (opt-in) : dimensions imposées par les cadres standard.
+    #     Les champs libres L/H deviennent des boutons (1 par cadre) qui règlent aussi le
+    #     débit nominal du cadre ; la place gagnée est rendue à la courbe (width 80→85 %).
+    if d.get("calc_formats_fixes"):
+        html = sub1(
+            html,
+            r'<span style="font-size:12\.5px; font-weight:600; color:#0F3261;">'
+            r'Dimensions du filtre .*?</div>\s*'
+            r'<div style="display:flex; gap:10px; align-items:center;">.*?'
+            r'</div>\s*</div>\s*</div>\n(\s*<div>\s*<div style="display:flex; '
+            r'justify-content:space-between; align-items:baseline; margin-bottom:2px;">)',
+            lambda m: (
+                '<span style="font-size:12.5px; font-weight:600; color:#0F3261;">'
+                'Dimensions du filtre <span style="font-weight:400; color:#8b97a6;">'
+                '(mm)</span></span>\n'
+                '                <span style="font-family:\'IBM Plex Mono\',monospace; '
+                'font-size:11.5px; color:#0897A5;"><span id="area"></span> m² · '
+                '<span id="vel"></span> m/s</span>\n'
+                '              </div>\n'
+                '              <div id="fmtBtns" style="display:flex; background:#EEF3F9; '
+                'border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;"></div>\n'
+                '            </div>\n' + m.group(1)),
+            flags=re.DOTALL)
+        html = html.replace('id="curveSvg" viewBox="0 0 600 300" style="width:80%;',
+                            'id="curveSvg" viewBox="0 0 600 300" style="width:85%;')
+        # dernières marges pour tenir l'A4 malgré la courbe agrandie : ligne « Afficher »
+        # (l'ancre série diffère de celle du gabarit, compact_p2 ne la voit pas)…
+        html = html.replace('gap:14px; margin-top:7px; flex-wrap:wrap;',
+                            'gap:14px; margin-top:4px; flex-wrap:wrap;')
 
     # --- légende (1 entrée par série)
     html = sub1(
@@ -873,6 +1061,16 @@ def generer_series(d, html):
         html = html.replace('<div style="margin-top:9mm;">', '<div style="margin-top:6mm;">')
         html = html.replace('<div style="margin-top:8mm;">', '<div style="margin-top:6mm;">')
 
+    html = apply_compact_p2(d, html)
+    # …et marges du bas de page resserrées d'un mm (après compact_p2, qui pose 5/4mm).
+    # ⚠️ Ne PAS toucher au filet d'en-tête (margin:4mm 0 4mm 0) : à 3mm il remonte dans
+    # le badge EN 13053 (constaté 17/07). Les mm se prennent sous la courbe, pas au-dessus.
+    if d.get("calc_formats_fixes"):
+        html = html.replace("gap:10px; margin-top:5mm;", "gap:10px; margin-top:4mm;")
+        html = html.replace('gap:7mm; margin-top:4mm; align-items:stretch;">',
+                            'gap:7mm; margin-top:3mm; align-items:stretch;">')
+        html = html.replace("margin-top:4mm; background:#F2F6FB;",
+                            "margin-top:3mm; background:#F2F6FB;")
     return html
 
 
@@ -1478,6 +1676,7 @@ def generer_multi(d, html):
         html = html.replace('<div style="margin-top:9mm;">', '<div style="margin-top:6mm;">')
         html = html.replace('<div style="margin-top:8mm;">', '<div style="margin-top:6mm;">')
 
+    html = apply_compact_p2(d, html)
     return html
 
 
@@ -1746,20 +1945,9 @@ def generer(d, html):
     # --- page 2 compacte (par produit) : courbe + calculateur sur une seule page A4.
     #     Réduit les marges de la page 2 et la taille du graphe, sans toucher le gabarit
     #     par défaut (NETPLY) ni le test d'identité.
-    if d.get("compact_p2"):
-        html = html.replace("margin:7mm 0 7mm 0;", "margin:4mm 0 4mm 0;")                       # filet en-tête P2
-        html = html.replace('<div style="margin-top:6mm; border:1px solid #E1E7EF;',
-                            '<div style="margin-top:3mm; border:1px solid #E1E7EF;')             # cadre courbe
-        html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
-                            'display:flex; align-items:center; gap:18px; margin-top:4px;">')     # ligne « Afficher : »
-        html = html.replace('gap:10px; margin-top:9mm;">',
-                            'gap:10px; margin-top:5mm;">')                                       # titre Calculateur
-        html = html.replace('gap:7mm; margin-top:6mm; align-items:stretch;">',
-                            'gap:7mm; margin-top:4mm; align-items:stretch;">')                   # grille calculateur
-        html = html.replace('margin-top:7mm; background:#F2F6FB;',
-                            'margin-top:4mm; background:#F2F6FB;')                               # note méthode
-        # (la taille de la courbe n'est plus réglée ici : 80 % est le STANDARD du gabarit
-        #  depuis le 17/07/2026. compact_p2 ne s'occupe plus que des marges de la page 2.)
+    #     (la taille de la courbe n'est plus réglée ici : 80 % est le STANDARD du gabarit
+    #      depuis le 17/07/2026. compact_p2 ne s'occupe plus que des marges de la page 2.)
+    html = apply_compact_p2(d, html)
 
     # (courbe_large a existé le 17/07/2026 pour rendre à la courbe la place du calculateur sur
     #  NETMETAL. SUPPRIMÉ le jour même : ses réglages sont devenus le STANDARD du gabarit — courbe

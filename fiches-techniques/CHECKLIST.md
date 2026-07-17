@@ -19,11 +19,11 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETFIL | 🟡 | **contenu retravaillé v1.1 (17/07) — voir `_arbitrages_pad` de netfil.json AVANT toute retouche** · ~~G3/G4~~ ✅ G3 confirmé (PA) · ~~ISO Coarse 50% « équivalence indicative »~~ ✅ **SOURCÉ** : 4e révision `TITAFIL.pdf` (non datée, SAS/APE 2825Z) porte « ISO 16890 : COARSE 50% » **en face du G3** ; le `_commentaire` affirmait le contraire → corrigé le 17/07 · ✅ **courbe G3 corroborée** par une 4e source jusqu'ici non exploitée (cache `TITAFIL 2013.xlsx` : 6/12/20/38 Pa à 0,5/1/1,5/2 m/s, vs 6,5/11,5/21 pour la v2_2020 retenue) · **🔴 ÉPAISSEUR 4,5 mm = DÉDUCTION, PAS UNE MESURE** : c'est le Ø du fil du cadre (doc 2015) ; un média cousu **sur** un fil de 4,5 mm fait nécessairement plus. Aucune fiche Titanair ne donne d'épaisseur (« DIMENSIONS EFFECTIVES : A DETERMINER »). Le chiffre est **affiché 3×** (légende de courbe + sélecteurs du calculateur) → **seul chiffre visible de la fiche ne provenant d'aucune mesure. À faire mesurer en R&D.** Maintenu par PA le 17/07 après signalement. ⚠️ `PROCESS.md` disait « 20 mm à valider » : **périmé** depuis le commit `2454fec` (22/06), corrigé le 17/07 · **T° 60 °C / acc. 65 °C = CONTRE les 4 fiches Titanair** (toutes à acc. 80 °C ; doc 2015 : 100 °C) — alignement délibéré sur la règle de gamme CLAUDE.md (même média = même T°) · **HR 100 % (sans condensation) = confirmée PA, NON SOURCÉE** (aucune fiche TITAFIL n'a de ligne humidité ; l'ancien 95 % ne venait d'aucune source non plus) · **VC uniquement, jamais CTA = déc. PA, CONTREDIT la doc 2015** (« comme filtre final » en « ventilo-convecteurs, unité de traitement d'air ») · **🔴 3 des 4 points clés = recopie de la rubrique « AVANTAGES DES FILTRES » de la plaquette Titanair 2015** (Faible encombrement / Construction renforcée / Toutes dimensions), et « Faible encombrement » + « Construction renforcée » sont des **jugements orphelins** depuis la réécriture du descriptif (rien sur la page ne les soutient) — **réserves de Claude exposées 3× et écartées par PA en connaissance de cause le 17/07** (une ligne « Épaisseur : 4,5 mm » a été ajoutée puis retirée à sa demande) · « 100% polyester » sourcé **uniquement par v3_2023**, la révision écartée pour sa classe (G4) · photo placeholder Titanair blanc-sur-blanc à remplacer |
 | NETFIBRE | 🟡 | **contenu retravaillé v1.1 (17/07) — voir `_arbitrages_pad` de netfibre.json AVANT toute retouche** · ~~courbes G2/G3/M5 à mesurer~~ ✅ **SANS OBJET : gamme réduite à G4 SEUL (déc. PA 17/07)** — la seule courbe mesurée est la G4 ; les classes G2/G3/M5 ne sont plus annoncées (sous-titre et specs nettoyés) · ~~T°~~ ✅ 60 °C confirmé (PA) · **⚠️ TARIF ROULEAU (site B2, 17/07) : incohérence /m² relevée au configurateur — `20 m × 1 m` (20 m²) = 105,14 € soit 5,26 €/m², vs `10 m × 2 m` (20 m²) = 168,43 € soit 8,42 €/m² : +60 % pour la MÊME surface de média. Pire, passer de `10 m × 1 m` (103,69 €) à `20 m × 1 m` (105,14 €) ajoute 10 m² pour +1,45 €, et rend le 20×1 moins cher au m² que le 20×2 (5,74 €/m²). Prix issus de l'Excel (code 5, méthode E) → à VÉRIFIER/CORRIGER À LA SOURCE puis ré-exporter. ⚠️ RUSTINE (déc. PA 17/07) : la boutique ne propose plus qu'UN SEUL format, le **20 m × 2 m** (229,71 €, celui qu'annonce la fiche) ; les 4 autres (10×1, 20×1, 10×2, 30×2) sont retirés de la vente le temps de la vérif R&D → aucun prix douteux n'atteint le client, mais 4 formats réels ne sont plus vendables. À rouvrir après correction de l'Excel.** · **⚠️ TARIF G3 panneau (déc. PA 30/06) : 0,015 €/dm² = 5,7× moins cher que G4 (0,0856) → 1,51 € vs 8,57 € pour un 592×592. Jugé erroné → G3 retiré de l'offre (`classesExclues`). ⚠️ MAJ 17/07 : la gamme étant désormais G4 SEUL, le G3 n'a plus à exister dans l'Excel — la rustine devient DÉFINITIVE (ce n'est plus un prix à corriger, c'est une ligne à supprimer).** · photo placeholder Titanair à remplacer |
 | NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo · **⚠️ TARIF (site B2, MAJ 30/06) : le code Excel « 11 » étiqueté « NETBAG S » est EN FAIT AZUR (déc. PA : profondeur 292, dim 287/490/592×592, M5→F9). Reste le code 17 (poches 360-600 mm, F7/F8/F9/M6, ~7-11 €) = candidat NETBAG réel, à confirmer au retravail de l'Excel. Tant que non tranché → NETBAG S reste « sur devis ».** |
-| NETPAK S AZUR | 🟡 | **⚠️ TARIF (site B2, 30/06) : = catégorie Excel 11 (mal étiquetée « NETBAG S » dans l'Excel → À RENOMMER en AZUR). Branché à l'achat (3 dim 287/490/592×592×292, M5→F9, prix). Fiche : parois « Polystyrène » → « Plastique » (déc. PA). Vérifier que M5/M6 sont bien standard pour AZUR (fiche disait « F7/F8/F9, M6 sur demande »).** |
+| NETPAK S AZUR | 🟡 | **⚠️ TARIF (site B2, 30/06) : = catégorie Excel 11 (mal étiquetée « NETBAG S » dans l'Excel → À RENOMMER en AZUR). Branché à l'achat (3 dim 287/490/592×592×292, M5→F9, prix). ~~Vérifier que M5/M6 sont bien standard~~ → TRANCHÉ le 17/07 (déc. PA) : fiche alignée sur **M5 → F9** (M5 sans source ni courbe, cf. § détaillé). Parois : fiche « Plastique ABS » (décl. fabricant), configurateur laissé « Plastique » (déc. PA).** |
 | NETPAK S LUMEN | 🟡 | **⚠️ TARIF (site B2, 30/06) : l'Excel n'a que 2 dimensions (287×592, 592×592) — il MANQUE le 490×592 (3ᵉ format standard, déc. PA) → à AJOUTER dans l'Excel puis ré-exporter (apparaîtra tout seul). Fiche MAJ : efficacités M5→F9 ajoutées, cadre « plastique ». Classes M5→F9 gardées (déc. PA).** |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
 | NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
-| NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé) · M6 non mesurée · surface média n.c. · photo |
+| NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé, réserve ROUVERTE 17/07) · M5 ET M6 sans courbe (M5 sans source) · courbe >4000 extrapolée · surface média n.c. · photo |
 | NETPAK S LUMEN | 🟡 | Variantes fournisseurs 2024-25 (MFILTER/FILTECH) · surface média n.c. · photo (Titanair visible) |
 | NETPAK S BORA | 🟡 | GREENTEX ePM1 50% retenu (variante HPE 55% non tracée) · courbe lue sur image · surface n.c. · photo |
 | NETPAK S DUO | 🟡 | ✅ créée (F7 GREENTEX + CA, ep48) · capacité charbon (grammage) à préciser R&D · A4 p2 OK · photo |
@@ -148,7 +148,7 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
       |---|---|---|---|
       | NETPLY | 1299 (+47 mm) | 1344 → **1223 après ajout de `compact_p2` le 16/07** (+26 mm) | ✅ ajouté 16/07 |
       | NETBAG S | 1286 | 1458 | ❌ absent |
-      | NETPAK S AZUR | 1229 | 1375 | ❌ absent |
+      | NETPAK S AZUR | ~~1229~~ → **1123 ✅** | ~~1375~~ → **1123 ✅** (17/07, `compact_p2` + optimisation calculateur) | ✅ ajouté 17/07 |
       | NETPAK S LUMEN | 1169 | 1375 | ❌ absent |
       | NETCEL V AZUR | 1123 ✅ | 1375 | ❌ absent |
       | NETCEL V NIVAL | 1123 ✅ | 1375 | ❌ absent |
@@ -179,9 +179,11 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
         et d'épaisseur, que les fiches mono-classe n'affichent pas. Mesuré vs NETPLAN : calculateur
         +17,6 mm, courbe +7,3 mm (légende de 4 courbes), sélecteur « Afficher : » +5,6 mm.
 
-      **Restent 7 fiches à traiter** : NETBAG S (1286/1458), NETPAK S AZUR (1229/1375), NETPAK S LUMEN
-      (1169/1375), NETCEL V AZUR (—/1375), NETCEL V NIVAL (—/1375), NETCARB CILIA (—/1167), NETCARB AZUR
-      (1129/—). Pour les 5 sans `compact_p2`, commencer par l'ajouter (≈ −33 mm) avant tout autre levier.
+      **Restent 6 fiches à traiter** (AZUR réglée le 17/07 : 1123/1123 ✅ — `compact_p2` porté au chemin
+      série via `apply_compact_p2()`, commun aux 3 moteurs, + optimisation du calculateur) : NETBAG S
+      (1286/1458), NETPAK S LUMEN (1169/1375), NETCEL V AZUR (—/1375), NETCEL V NIVAL (—/1375),
+      NETCARB CILIA (—/1167), NETCARB AZUR (1129/—). Pour celles sans `compact_p2`, commencer par
+      l'ajouter (≈ −33 mm) avant tout autre levier — il marche désormais sur les fiches série aussi.
       ⚠️ `compact_fort` suppose 2 classes distinctes et le gabarit standard : ne pas l'appliquer en
       aveugle (il lève une erreur s'il manque compact_p1/compact_p2, mais ne vérifie pas le reste).
 - [ ] **🔴 Références du tableau « Dimensions » : à RETIRER, pas à corriger.** **Décision PA (16/07/2026) :
@@ -420,13 +422,25 @@ Polynômes : `DONNEES_PDC` l.38-47.
 - [ ] **Surface média m²/m²** : le tableau dimensions affiche les valeurs HPE (11,68 m² ép. 48 / 23,87 ép. 98 @592×592) comme représentatives ; le F7 GREENTEX diffère (12,55 / 25,65 m²) → préciser si on distingue par classe.
 - [ ] **Photo** : TITAPAK PRISME A HD (© A. Périer) détourée sur blanc = placeholder → photo produit Netair.
 
-### NETPAK S AZUR 🟡
-Compact polydièdre rigide (équiv. TITAPAK SV-GD). Multi-classes **F7/F8/F9** (ePM1, moteur `series`), profondeur 292.
-Données ΔP **réelles** : caches Excel SV-GD 2018 (F7/F9) + FORMULE_PDC. Polynômes : `DONNEES_PDC` l.48-51.
+### NETPAK S AZUR 🟡 — v1.1 « Validée PA » (passe de contenu 17/07/2026, arbitrages dans `_arbitrages_pad` du JSON)
+Filtre à poches rigides polydièdre (équiv. TITAPAK SV-GD). Gamme affichée **M5 → F9** (déc. PA 17/07 —
+aligné boutique/Excel), courbes tracées **F7/F8/F9** (moteur `series`), profondeur 292.
+Données ΔP : caches Excel SV-GD 2018 (F7/F9) + FORMULE_PDC. Polynômes : `DONNEES_PDC` l.48-51.
 
-- [ ] **🟠 F8 (ePM1 70 %) = F9 × 0,95 EXACTEMENT** (18=round(19×0,95), … sur les 7 points) → courbe **dérivée, non mesurée** (même type de piège que CILIA F9=F8+10 et NETBAG M5). Affichée normalement sur **décision dirigeant**, mais **à mesurer en R&D**.
-- [ ] **M6 ePM2,5 50 %** annoncée (livret DEHS) mais **aucune courbe 2018** → mise en specs/badges seulement (« sur demande ») → courbe à mesurer.
-- [ ] **Surface média développée non communiquée** (n.c.) par Titanair → à obtenir/mesurer pour le tableau dimensions.
+- [ ] **🟠 F8 (ePM1 70 %) = arrondi(F9 × 0,95) sur les 7 points** → courbe **dérivée, non mesurée**.
+      ⚠️ Réserve **ROUVERTE le 17/07** : le `_commentaire` affirmait « vraies mesures F8.xlsx » — FAUX
+      (le fichier lit la colonne E d'un classeur partagé dont F9 lit la colonne D). Gardée sur décision
+      PA (plausible), **à mesurer en R&D**.
+- [ ] **M5 (ePM10 50 %)** : au catalogue ET sur la fiche (déc. PA) mais **sans aucune source produit**
+      (absent de la doc SV-GD) ni courbe → à caractériser en R&D (courbe + efficacité).
+- [ ] **M6 ePM2,5 50 %** : sourcée (livret DEHS 60-65 %) mais **aucune courbe 2018** → à mesurer.
+- [ ] **Courbes affichées jusqu'à 4500 m³/h** (déc. PA) : mesures arrêtées à 4000 → **segment 4000-4500
+      extrapolé** du polynôme, à valider en R&D si besoin de certification.
+- [ ] La fiche n'affiche **plus** la note « courbes données pour F7/F8/F9 » (retirée, déc. PA 17/07).
+- [ ] **Parois « Plastique ABS »** : déclaration fabricant **non sourcée** (fiches 2018 : polystyrène) ;
+      le configurateur du site reste sur « Plastique » (écart assumé, déc. PA).
+- [ ] **Surface média développée non communiquée** (n.c.) par Titanair → retirée du tableau ; à
+      obtenir/mesurer si on veut la réafficher.
 - [ ] **Largeurs 490/287** : F9 mesuré en 490 ; F7/F8 en 490/287 non mesurés (extrapolés du 592).
 - [ ] **Photo** : SV-GD réelle (© A. Périer) légèrement nettoyée = placeholder → photo produit Netair.
 
