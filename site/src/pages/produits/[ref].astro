@@ -7,7 +7,7 @@ import {
   SLUG_FAMILLE,
   type Produit,
 } from '../../lib/familles';
-import { gammeDuProduit } from '../../lib/pricing/produits-gammes';
+import { gammeDuProduit, produitsSansCadresDeclares } from '../../lib/pricing/produits-gammes';
 import { optionsDuCode, formatsDuCode, libelleClasse } from '../../lib/pricing/options';
 import { trouverGamme } from '../../lib/pricing/lookups';
 import { MIN_COMMANDE_HT } from '../../lib/boutique';
@@ -52,12 +52,18 @@ const codeGamme = gamme?.code ?? '';
 const dimDefaut = gamme?.dimensionDefaut ?? { largeur: 592, hauteur: 592 };
 // Produit sans cadre (média fibreux seul, ex. NETFIBRE) → on masque le choix « Cadre ».
 const sansCadre = gamme?.sansCadre ?? false;
-// Cadres proposés (par défaut : acier + PP). Surchargés par produit (ex. NETPLY = acier seul).
-const CADRES_DEFAUT = [
-  { valeur: 'galva', libelle: 'Acier galvanisé' },
-  { valeur: 'pp', libelle: 'Polypropylène' },
-];
-const cadres = gamme?.cadres ?? CADRES_DEFAUT;
+// Cadres proposés : lus dans la fiche du produit, JAMAIS devinés. Pas de repli par défaut —
+// un défaut « acier + polypropylène » proposait en silence des cadres inexistants (cf.
+// `produits-gammes.ts`). Un produit calculable mal déclaré casse le build (tous les fautifs
+// signalés d'un coup) plutôt que d'afficher un cadre faux au client.
+const cadres = gamme?.cadres ?? [];
+const fautifs = produitsSansCadresDeclares();
+if (fautifs.length > 0) {
+  throw new Error(
+    `Cadres non déclarés pour : ${fautifs.join(', ')}. Renseigner « cadres » dans produits-gammes.ts ` +
+      `d'après la ligne « Cadre » de la fiche technique, ou « sansCadre: true » si le cadre est unique.`,
+  );
+}
 // Filtrage des efficacités proposées : liste blanche (`classesIncluses`, ex. laminaire = H14)
 // puis liste noire (`classesExclues`, ex. NETFIBRE G3 douteux). Sinon, toutes les tarifées.
 const classesIncluses = gamme?.classesIncluses ?? null;
@@ -405,6 +411,7 @@ const variantesConfig =
     // Ce <script> est groupé/empaqueté par Astro (pas `is:inline`) afin de pouvoir
     // importer le moteur — qui embarque les tables tarifaires pour un calcul instantané.
     import { calculerPrix } from '../../lib/pricing';
+    import { CADRE_SUFFIXE } from '../../lib/pricing/produits-gammes';
     import { addItem, getCart, removeItem, onCartChange } from '../../lib/cart';
     import { addDevisItem, getDevis, removeDevisItem, onDevisChange } from '../../lib/devis';
 
@@ -508,7 +515,9 @@ const variantesConfig =
         // Le champ Cadre peut être absent (produits sans cadre, ex. NETFIBRE).
         const cadreEl = $('inCadre');
         const cadreVal = cadreEl ? cadreEl.value : null;
-        const cadre = cadreVal === 'pp' ? 'P' : cadreVal === 'galva' ? 'A' : null;
+        // Suffixe lu dans la table partagée (jamais recopié ici) : un cadre sans lettre
+        // tranchée est refusé en amont par les tests.
+        const cadre = cadreVal ? CADRE_SUFFIXE[cadreVal] ?? null : null;
         // Libellé lu dans le menu (et non déduit de la valeur) : un même cadre `pp` s'affiche
         // « Polypropylène » ou « Plastique » selon la fiche du produit.
         const cadreLabel = cadreEl?.selectedOptions[0]?.text ?? null;

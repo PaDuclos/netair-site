@@ -22,6 +22,31 @@
 /** Mode de commercialisation d'un produit sur la boutique. */
 export type ModeProduit = "calcul" | "devis";
 
+/**
+ * Cadres offrables → lettre de suffixe dans la référence générée (ex. NETFIL-G3-592x592-A).
+ * SOURCE DE VÉRITÉ UNIQUE : la page produit et les tests lisent cette table, personne ne
+ * recopie la correspondance à la main.
+ *
+ * Ajouter un matériau (cellulose, polyester, inox…) = trancher d'abord sa lettre côté
+ * codification produits, puis l'ajouter ICI. Un cadre absent de cette table est signalé par
+ * `CadreValeur` dans l'éditeur et refusé par `tests/pricing/produits-gammes.test.ts` (le
+ * build ne type-check pas) : il ne peut pas perdre son suffixe en silence.
+ */
+export const CADRE_SUFFIXE = {
+  galva: "A",
+  pp: "P",
+} as const;
+
+/** Valeur de cadre autorisée — dérivée de `CADRE_SUFFIXE`, jamais réécrite à la main. */
+export type CadreValeur = keyof typeof CADRE_SUFFIXE;
+
+/** Un cadre proposé au client dans le configurateur. */
+export interface CadreOffre {
+  valeur: CadreValeur;
+  /** Libellé affiché, repris de la fiche (« Acier galvanisé », « Plastique »…). */
+  libelle: string;
+}
+
 /** Un format de rouleau fixe (dimensions dans l'unité des tables, ici en mètres). */
 export interface FormatRouleau {
   /** Libellé affiché — ex. "1 m × 10 m". */
@@ -75,16 +100,26 @@ export interface GammeProduit {
    */
   classesExclues?: string[];
   /**
-   * `true` si le produit n'a pas de cadre (média fibreux seul, ex. NETFIBRE) : le
-   * configurateur masque alors le choix « Cadre ».
+   * `true` = le configurateur masque le choix « Cadre ». Deux cas :
+   *  - le produit n'a pas de cadre du tout (média fibreux seul, ex. NETFIBRE) ;
+   *  - le cadre est unique et non choisi par le client (ex. NETCEL V LAM = caisson
+   *    aluminium, NETCEL V AZUR = parois polyester) → rien à offrir.
    */
   sansCadre?: boolean;
   /**
-   * Cadres proposés pour ce produit (valeur technique + libellé). Si absent, le
-   * configurateur propose les cadres par défaut. Permet d'aligner le choix sur la
-   * fiche (ex. NETPLY = acier seul, pas de polypropylène).
+   * Cadres proposés, alignés sur la ligne « Cadre » / « Parois cellule » de la fiche
+   * technique (ex. NETPLY = acier seul, pas de polypropylène).
+   *
+   * OBLIGATOIRE pour tout produit `mode: "calcul"` non `sansCadre` : il n'y a
+   * volontairement PAS de cadre par défaut. Un défaut « acier + polypropylène » a
+   * longtemps servi de repli et n'était juste que pour 2 produits sur 18 — il faisait
+   * proposer en silence des cadres inexistants (NETFIL en polypropylène…) et générait
+   * des références fantômes. Invariant vérifié par `tests/pricing/produits-gammes.test.ts`.
+   *
+   * `valeur` est contrainte par `CADRE_SUFFIXE` : un matériau sans lettre de référence
+   * tranchée (cellulose, polyester, inox…) est rejeté par les tests.
    */
-  cadres?: { valeur: string; libelle: string }[];
+  cadres?: CadreOffre[];
   /**
    * Liste blanche d'efficacités : si présente, SEULES ces classes sont proposées
    * (ex. laminaire verrouillé sur H14). Appliquée avant `classesExclues`.
@@ -150,8 +185,19 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
       },
     ],
   },
-  "netpak-s-cilia": { code: "7", mode: "calcul" }, // 🟢 cadre+média+pièce, méthode D
-  "netcarb-cilia": { code: "8", mode: "calcul" }, // 🟢 méthode D
+  // 🟢 cadre+média+pièce, méthode D · seul produit réellement offert en acier OU plastique (cf. fiche)
+  "netpak-s-cilia": {
+    code: "7",
+    mode: "calcul",
+    cadres: [
+      { valeur: "galva", libelle: "Acier galvanisé" },
+      { valeur: "pp", libelle: "Polypropylène" },
+    ],
+  },
+  // 🟢 méthode D · parois cellule acier galvanisé (cf. fiche). L'option « cellulose pelliculée
+  // incinérable » de la fiche n'est pas encore proposée : elle demande une lettre de suffixe de
+  // référence à trancher (codification). Cf. CHECKLIST.
+  "netcarb-cilia": { code: "8", mode: "calcul", cadres: [{ valeur: "galva", libelle: "Acier galvanisé" }] },
   // Polydièdre : dimensions en menu déroulant (formats générés depuis la grille), cadre plastique fixe.
   "netpak-s-lumen": {
     code: "9",
@@ -163,7 +209,9 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // 17 = poches 360-600 mm, média léger, sans M5, ~7-11 €), et la fiche annonce G4/M5 non tarifés.
   // Contradiction fiche/tarif → sur devis tant que la R&D n'a pas tranché (CHECKLIST). Pas de prix devine.
   "netbag-s": { code: "", mode: "devis" },
-  "netcel-v-azur": { code: "13", mode: "calcul" }, // 🟢 méthode F (24 « AZUR » est vide)
+  // 🟢 méthode F (24 « AZUR » est vide) · parois cellule polyester fixe (cf. fiche) : pas de
+  // choix de cadre à offrir — le polyester n'a pas de suffixe de référence (codification).
+  "netcel-v-azur": { code: "13", mode: "calcul", sansCadre: true },
   // 🟢 méthode F · parois cellule « Plastique » (cf. fiche) — pas de variante acier
   "netcel-v-nival": { code: "15", mode: "calcul", cadres: [{ valeur: "pp", libelle: "Plastique" }] },
   // 🟢 méthode F — laminaire : pas de sur-mesure, dimensions en menu déroulant (formats
@@ -202,4 +250,17 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
  */
 export function gammeDuProduit(produitId: string): GammeProduit | undefined {
   return GAMME_PRODUIT[produitId];
+}
+
+/**
+ * Produits calculables qui n'offrent ni cadres déclarés ni `sansCadre`.
+ *
+ * Il n'existe volontairement aucun cadre par défaut : un tel produit n'a donc rien de juste
+ * à afficher. On préfère casser le build (cf. appel dans `[ref].astro`) plutôt que de laisser
+ * un cadre faux atteindre un client. Renvoie TOUS les fautifs, pas seulement le premier.
+ */
+export function produitsSansCadresDeclares(): string[] {
+  return Object.entries(GAMME_PRODUIT)
+    .filter(([, g]) => g.mode === "calcul" && !g.sansCadre && !g.cadres?.length)
+    .map(([id]) => id);
 }
