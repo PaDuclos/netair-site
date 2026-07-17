@@ -285,6 +285,9 @@ const effFixe = efficaciteFigee(menus.classes, variantesConfig?.map((v) => v.cla
               <span id="formatLabel" class="eyebrow text-[11px] text-muted">Dimensions</span>
               <select id="inFormat"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise"></select>
+              {/* Format unique : on affiche le libellé ici et on masque le menu ci-dessus —
+                  qui reste dans la page, car c'est lui qui porte la dimension lue par le moteur. */}
+              <p id="formatFixe" class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine hidden"></p>
             </label>
           )}
           <label id="wrapL" class="block">
@@ -506,9 +509,19 @@ const effFixe = efficaciteFigee(menus.classes, variantesConfig?.map((v) => v.cla
         // Format pré-sélectionné : celui marqué `defaut` (ex. rouleau 20 m × 2 m), sinon le
         // premier — l'ordre de la liste sert la lecture, il ne dit pas le format courant.
         const iDefaut = Math.max(0, liste.findIndex((f) => f.defaut));
-        $('inFormat').innerHTML = liste.map((f, i) =>
+        const sel = $('inFormat');
+        sel.innerHTML = liste.map((f, i) =>
           '<option value="' + i + '"' + (i === iDefaut ? ' selected' : '') + '>' + f.label + '</option>'
         ).join('');
+        // Un seul format = pas un choix : on masque le menu et on affiche le libellé. Le menu
+        // reste rempli et sélectionné — `readCfg` y lit la dimension envoyée au moteur.
+        const unSeul = liste.length === 1;
+        sel.classList.toggle('hidden', unSeul);
+        const fixe = $('formatFixe');
+        if (fixe) {
+          fixe.classList.toggle('hidden', !unSeul);
+          fixe.textContent = unSeul ? liste[0].label : '';
+        }
       }
       // Bascule un conditionnement : montre/masque dimensions ↔ format, recharge les
       // efficacités tarifées de la variante, puis recalcule le prix.
