@@ -121,8 +121,8 @@ export interface GammeProduit {
 export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // — Calculables (prix instantané) —
   netply: { code: "1", mode: "calcul", cadres: [{ valeur: "galva", libelle: "Acier galvanisé" }] }, // 🟢 plissé, méthode A · cadre acier seul (cf. fiche)
-  netplan: { code: "3", mode: "calcul" }, // 🟢 plan, méthode A
-  netfil: { code: "2", mode: "calcul" }, // 🟢 mètre linéaire, méthode B
+  netplan: { code: "3", mode: "calcul", cadres: [{ valeur: "galva", libelle: "Acier galvanisé" }] }, // 🟢 plan, méthode A · cadre acier seul (cf. fiche)
+  netfil: { code: "2", mode: "calcul", cadres: [{ valeur: "galva", libelle: "Acier galvanisé" }] }, // 🟢 mètre linéaire, méthode B · cadre fil acier galvanisé seul (cf. fiche)
   // NETFIBRE se vend en 2 conditionnements (Option B) : panneau découpé sur mesure
   // (code 4, méthode C, prix au dm²) ou rouleau entier (code 5, méthode E, prix par format).
   netfibre: {
@@ -164,7 +164,8 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // Contradiction fiche/tarif → sur devis tant que la R&D n'a pas tranché (CHECKLIST). Pas de prix devine.
   "netbag-s": { code: "", mode: "devis" },
   "netcel-v-azur": { code: "13", mode: "calcul" }, // 🟢 méthode F (24 « AZUR » est vide)
-  "netcel-v-nival": { code: "15", mode: "calcul" }, // 🟢 méthode F
+  // 🟢 méthode F · parois cellule « Plastique » (cf. fiche) — pas de variante acier
+  "netcel-v-nival": { code: "15", mode: "calcul", cadres: [{ valeur: "pp", libelle: "Plastique" }] },
   // 🟢 méthode F — laminaire : pas de sur-mesure, dimensions en menu déroulant (formats
   // standard générés depuis la grille) et efficacité verrouillée sur H14.
   "netcel-v-lam": {

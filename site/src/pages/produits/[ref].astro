@@ -509,7 +509,9 @@ const variantesConfig =
         const cadreEl = $('inCadre');
         const cadreVal = cadreEl ? cadreEl.value : null;
         const cadre = cadreVal === 'pp' ? 'P' : cadreVal === 'galva' ? 'A' : null;
-        const cadreLabel = cadreVal === 'pp' ? 'Polypropylène' : cadreVal === 'galva' ? 'Acier galvanisé' : null;
+        // Libellé lu dans le menu (et non déduit de la valeur) : un même cadre `pp` s'affiche
+        // « Polypropylène » ou « Plastique » selon la fiche du produit.
+        const cadreLabel = cadreEl?.selectedOptions[0]?.text ?? null;
         const qty = Math.max(1, +$('inQ').value || 1);
         const codeUsed = activeVar ? activeVar.code : codeGamme;
         return { L, H, ep, eff, effLabel, cadre, cadreLabel, qty, codeUsed, formatLabel };
