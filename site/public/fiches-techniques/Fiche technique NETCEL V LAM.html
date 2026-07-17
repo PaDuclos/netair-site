@@ -17,8 +17,8 @@
   /* Emplacement photo produit — remplacer le contenu / l'image par la photo réelle */
   .photo-slot { width: 100%; height: 60mm; display: flex; align-items: center; justify-content: center; border-radius: 6px; overflow: hidden; }
   .photo-slot img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; }
-  .photo-slot .photo-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; color: #9DB8D6; font-size: 12px; border: 1.5px dashed #C9D7E8; border-radius: 6px; }
   @media print {
+    .no-print { display: none !important; }
     .cmp-wrap { padding: 0; background: #fff; display: block; }
     .cmp-col { display: block; gap: 0; }
     .a4 { box-shadow: none; margin: 0; page-break-after: always; }
@@ -78,11 +78,9 @@
 
         <!-- Photo + description -->
         <div style="display:grid; grid-template-columns:70mm 1fr; gap:8mm; align-items:center;">
-          <div class="photo-slot" id="netcel-v-lam-photo" title="Cliquer pour importer une photo" style="cursor:pointer;">
-            <!-- Cliquer sur la zone pour importer une photo (enregistrée localement) ; ou remplacer par : <img src="photo-produit.jpg" alt="Filtre NETPLY"> -->
+          <div class="photo-slot" id="netcel-v-lam-photo">
+            <!-- Photo : clé "photo" du JSON produit → fichier dans assets/. Pas d'import depuis la fiche. -->
             <img id="netcel-v-lam-img" src="assets/netcel-v-lam-photo.jpg" alt="Filtre HEPA à flux laminaire NETCEL V LAM H14" style="display:block;">
-            <div class="photo-ph" id="netcel-v-lam-ph" style="display:none;">Photo produit<br><span style="font-size:10px; color:#b6c4d6;">cliquer pour importer</span></div>
-            <input type="file" id="netcel-v-lam-file" accept="image/*" style="display:none;">
           </div>
           <div>
             <div style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase;">Description</div>
@@ -174,7 +172,7 @@
             </div>
           </div>
         </div>
-        <div style="height:2px; background:#0F3261; margin:4mm 0 4mm 0;"></div>
+        <div style="height:2px; background:#0F3261; margin:7mm 0 7mm 0;"></div>
 
         <!-- Section courbe -->
         <div style="display:flex; align-items:center; gap:10px;">
@@ -193,8 +191,8 @@
           </label>
         </div>
 
-        <div style="margin-top:3mm; border:1px solid #E1E7EF; border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCFDFE;">
-          <svg id="curveSvg" viewBox="0 0 600 300" style="width:84%; height:auto; display:block; margin:0 auto;">
+        <div style="margin-top:6mm; border:1px solid #E1E7EF; border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCFDFE;">
+          <svg id="curveSvg" viewBox="0 0 600 300" style="width:80%; height:auto; display:block; margin:0 auto;">
             <!-- horizontal gridlines -->
             <line x1="52" y1="16" x2="580" y2="16" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="74.5" x2="580" y2="74.5" stroke="#EDF1F6" stroke-width="1"></line>
@@ -264,7 +262,7 @@
             </g>
             <rect id="hoverHit" x="52" y="16" width="528" height="234" fill="transparent" style="cursor:crosshair;"></rect>
           </svg>
-          <div style="display:flex; gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
+          <div style="display:flex; gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
             <div id="legG4a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0F3261; display:inline-block; border-radius:2px;"></span>H14 · ≥ 99,995 % MPPS — 68 mm</div>
             <div id="legG4b" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#6B8FC2; display:inline-block; border-radius:2px;"></span>H14 · ≥ 99,995 % MPPS — 98 mm</div>
             <div id="legM5a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0897A5; display:inline-block; border-radius:2px;"></span>H14 · ≥ 99,995 % MPPS — 48 mm</div>
@@ -274,15 +272,15 @@
         </div>
 
         <!-- Section calculateur -->
-        <div style="display:flex; align-items:center; gap:10px; margin-top:5mm;">
+        <div style="display:flex; align-items:center; gap:10px; margin-top:9mm;">
           <span style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase; white-space:nowrap;">Calculateur énergétique</span>
           <span style="flex:1; height:1px; background:#0F3261;"></span>
         </div>
         <div style="font-size:12px; color:#5A6573; margin-top:5px; line-height:1.5;">Estimez la consommation du ventilateur liée à la perte de charge du filtre sur une année de fonctionnement. Ajustez les paramètres ci-dessous.</div>
 
-        <div style="display:grid; grid-template-columns:1fr 80mm; gap:7mm; margin-top:4mm; align-items:stretch;">
+        <div style="display:grid; grid-template-columns:1fr 80mm; gap:7mm; margin-top:6mm; align-items:stretch;">
           <!-- PARAMÈTRES -->
-          <div style="display:flex; flex-direction:column; gap:13px; padding-top:1px;">
+          <div style="display:flex; flex-direction:column; gap:11px; padding-top:1px;">
             <div style="display:grid; grid-template-columns:1.7fr 1fr; gap:12px; display:none;">
               <div>
                 <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d'efficacité</div>
@@ -301,9 +299,9 @@
             </div>
             <div>
               <div style="display:flex; gap:7px;">
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
                 <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP finale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpFinal"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
               </div>
               <div style="font-size:9.5px; color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale = 2 × ΔP initiale<span id="effAdd" style="display:none;"></span> <span style="color:#b9c2cd;">— EN 1822 · <span id="effRule"></span></span></div>
             </div>
@@ -325,39 +323,39 @@
               </div>
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Débit d'air</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="debitVal"></span> m³/h</span>
               </div>
-              <input type="range" id="inDebit" min="120" max="1200" step="20" value="600" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDebit" min="120" max="1200" step="20" value="600" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Durée de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="dureeVal"></span> h/jour</span>
               </div>
-              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Jours de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="joursVal"></span> j/an · <span id="heuresVal"></span> h/an</span>
               </div>
-              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Rendement moto-ventilateur</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="etaVal"></span> %</span>
               </div>
-              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Prix de l'électricité</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="prixVal"></span> €/kWh</span>
               </div>
-              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
           </div>
 
@@ -390,7 +388,7 @@
           </div>
         </div>
 
-        <div style="margin-top:4mm; background:#F2F6FB; border-left:3px solid #0897A5; padding:9px 14px; font-size:10.5px; color:#5A6573; line-height:1.55;">
+        <div style="margin-top:7mm; background:#F2F6FB; border-left:3px solid #0897A5; padding:9px 14px; font-size:10.5px; color:#5A6573; line-height:1.55;">
           <strong style="color:#0F3261;">Méthode :</strong> P = (Q ⁄ 3600) × ΔP ⁄ η &nbsp;·&nbsp; Énergie = P × heures de fonctionnement. Valeurs indicatives à but de comparaison — base CO₂ 0,079 kgCO₂/kWh — 79 g (mix électrique France). η = rendement global du moto-ventilateur.
         </div>
 
@@ -613,26 +611,6 @@
   render();
 })();
 </script>
-<script>
-(function () {
-  var slot = document.getElementById('netcel-v-lam-photo');
-  if (!slot) return;
-  var img = document.getElementById('netcel-v-lam-img');
-  var ph = document.getElementById('netcel-v-lam-ph');
-  var file = document.getElementById('netcel-v-lam-file');
-  function show(src) { img.src = src; img.style.display = 'block'; ph.style.display = 'none'; }
-  // Default = bundled original photo (assets/netcel-v-lam-photo.jpg, set in markup).
-  // Only an explicit user re-import overrides it.
-  slot.addEventListener('click', function () { file.click(); });
-  file.addEventListener('change', function (e) {
-    var f = e.target.files[0]; if (!f) return;
-    var r = new FileReader();
-    r.onload = function () {
-      show(r.result);
-    };
-    r.readAsDataURL(f);
-  });
-})();
-</script>
+<a class="no-print" href="/produits/netcel-v-lam" style="position:fixed; left:18px; bottom:18px; z-index:99999; display:inline-flex; align-items:center; gap:8px; background:#fff; color:#0F3261; border:1px solid #E2E8F0; border-radius:9px; padding:11px 16px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:13.5px; font-weight:600; text-decoration:none; box-shadow:0 3px 10px rgba(15,50,97,.18);"><span style="color:#0897A5; font-size:15px; line-height:1;">&#8592;</span> Retour au produit</a>
 </body>
 </html>

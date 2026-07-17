@@ -17,8 +17,8 @@
   /* Emplacement photo produit — remplacer le contenu / l'image par la photo réelle */
   .photo-slot { width: 100%; height: 60mm; display: flex; align-items: center; justify-content: center; border-radius: 6px; overflow: hidden; }
   .photo-slot img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; }
-  .photo-slot .photo-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; color: #9DB8D6; font-size: 12px; border: 1.5px dashed #C9D7E8; border-radius: 6px; }
   @media print {
+    .no-print { display: none !important; }
     .cmp-wrap { padding: 0; background: #fff; display: block; }
     .cmp-col { display: block; gap: 0; }
     .a4 { box-shadow: none; margin: 0; page-break-after: always; }
@@ -63,13 +63,13 @@
           <div style="width:1px; align-self:stretch; background:#DCE6F2; margin:2px 0;"></div>
           <div style="flex:1; min-width:0;">
             <div style="font-size:40px; font-weight:700; color:#0F3261; line-height:.98; letter-spacing:-.6px; text-align:center;">NETMETAL</div>
-            <div style="font-size:13.5px; color:#5A6573; margin-top:5px; font-weight:500; text-align:center;">Cellule filtrante métallique — Préfiltre régénérable</div>
+            <div style="font-size:13.5px; color:#5A6573; margin-top:5px; font-weight:500; text-align:center;">Filtre métallique</div>
           </div>
           <div style="display:flex; flex-direction:column; align-items:flex-end; gap:7px; flex:none;">
-            <div style="display:inline-block; background:#0F3261; color:#fff; font-size:10px; font-weight:600; padding:5px 11px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">ISO 16890 : Coarse 50%</div>
+            <div style="display:inline-block; background:#0F3261; color:#fff; font-size:10px; font-weight:600; padding:5px 11px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">ISO 16890 : Coarse 40% / 50%</div>
             <div style="display:inline-block; background:#0897A5; color:#fff; font-size:10px; font-weight:600; padding:5px 11px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">EN 779 : G2 / G3</div>
             <div style="display:flex; gap:6px; margin-top:2px;">
-              <div style="display:inline-block; background:#fff; color:#0F3261; font-size:10px; font-weight:600; padding:3px 9px; border-radius:20px; border:1.5px solid #C9D7E8;">Lavable / régénérable</div>
+              <div style="display:inline-block; background:#fff; color:#0F3261; font-size:10px; font-weight:600; padding:3px 9px; border-radius:20px; border:1.5px solid #C9D7E8;">Lavable</div>
             </div>
           </div>
         </div>
@@ -78,22 +78,21 @@
 
         <!-- Photo + description -->
         <div style="display:grid; grid-template-columns:70mm 1fr; gap:8mm; align-items:center;">
-          <div class="photo-slot" id="netmetal-photo" title="Cliquer pour importer une photo" style="cursor:pointer;">
-            <!-- Cliquer sur la zone pour importer une photo (enregistrée localement) ; ou remplacer par : <img src="photo-produit.jpg" alt="Filtre NETPLY"> -->
+          <div class="photo-slot" id="netmetal-photo">
+            <!-- Photo : clé "photo" du JSON produit → fichier dans assets/. Pas d'import depuis la fiche. -->
             <img id="netmetal-img" src="assets/netmetal-photo.jpg" alt="Cellule filtrante métallique NETMETAL" style="display:block;">
-            <div class="photo-ph" id="netmetal-ph" style="display:none;">Photo produit<br><span style="font-size:10px; color:#b6c4d6;">cliquer pour importer</span></div>
-            <input type="file" id="netmetal-file" accept="image/*" style="display:none;">
           </div>
           <div>
             <div style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase;">Description</div>
             <div style="width:34px; height:2px; background:#0897A5; margin:5px 0 8px 0;"></div>
-            <p style="margin:0; font-size:13px; line-height:1.55; color:#3a4654; text-wrap:pretty;">Le NETMETAL est une cellule filtrante métallique régénérable destinée à la préfiltration des poussières grossières en centrale de traitement d'air. Son média en mailles métalliques superposées, agencées en structure labyrinthique — aluminium, acier galvanisé ou inox 304 — est maintenu entre deux grilles en fil zingué et cerclé d'un cadre en acier galvanisé ou inox 304 (ép. 8/10), gage de robustesse. Lavable et réutilisable, il réduit les déchets et le coût d'exploitation. Sa grande résistance mécanique et sa faible section de passage le destinent aussi à la séparation de gouttes et à la filtration anti-graisse, là où il faut conjuguer débit d'air élevé et tenue dans le temps.</p>
+            <p style="margin:0; font-size:13px; line-height:1.55; color:#3a4654; text-wrap:pretty;">Le filtre métallique NETMETAL est utilisé comme pare-gouttelettes en aval des batteries froides des centrales de traitement d'air afin de limiter l'entraînement de gouttelettes d'eau dans le réseau aéraulique. Il peut également être utilisé comme pare-étincelles en aval des batteries électriques ou, selon les applications, pour la filtration des particules grossières.</p>
             <div style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase; margin-top:11px;">Points clés</div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px 14px; margin-top:8px; font-size:12.5px; color:#27313e;">
-              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Lavable et régénérable</div>
-              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Cadre acier galva ou inox 304</div>
-              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Média alu / galva / inox 304</div>
-              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Anti-graisse · séparateur de gouttes</div>
+              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Pare-gouttelettes</div>
+              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Pare-étincelles</div>
+              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Lavable</div>
+              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Dimensions sur mesure</div>
+              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Disponible en aluminium, acier galvanisé ou inox 304</div>
             </div>
           </div>
         </div>
@@ -106,18 +105,17 @@
           </div>
           <table style="width:100%; border-collapse:collapse; font-size:12.5px; margin-top:7px;">
             <tbody>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261; width:40%;">Média filtrant</td><td style="padding:6px 12px; color:#3a4654;">Mailles métalliques superposées (tricot labyrinthique)</td></tr>
-              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Matériau média</td><td style="padding:6px 12px; color:#3a4654;">Aluminium (réf.) · acier galvanisé · inox 304</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Cadre</td><td style="padding:6px 12px; color:#3a4654;">Acier galvanisé ou inox 304 — ép. 8/10</td></tr>
-              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Grilles de maintien</td><td style="padding:6px 12px; color:#3a4654;">Fil zingué (2 faces)</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités EN 779</td><td style="padding:6px 12px; color:#3a4654;">G2 / G3 (Coarse) selon le nombre de couches</td></tr>
-              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités ISO 16890</td><td style="padding:6px 12px; color:#3a4654;">Coarse 50%</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261; width:40%;">Élément filtrant</td><td style="padding:6px 12px; color:#3a4654;">Tricot métallique (aluminium, acier galvanisé ou inox 304)</td></tr>
+              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Structure</td><td style="padding:6px 12px; color:#3a4654;">2 grilles métalliques</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Cadre</td><td style="padding:6px 12px; color:#3a4654;">Acier galvanisé ou inox 304</td></tr>
+              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Séparateur</td><td style="padding:6px 12px; color:#3a4654;">Sans</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités ISO 16890</td><td style="padding:6px 12px; color:#3a4654;">Coarse 40% · Coarse 50%</td></tr>
+              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités EN 779</td><td style="padding:6px 12px; color:#3a4654;">G2 · G3</td></tr>
               <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Épaisseurs disponibles</td><td style="padding:6px 12px; color:#3a4654;">10 · 15 · 20 · 25 · 30 · 48 mm</td></tr>
               <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Classement au feu</td><td style="padding:6px 12px; color:#3a4654;">M0 (incombustible)</td></tr>
               <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Température de service</td><td style="padding:6px 12px; color:#3a4654;">150 °C (accidentelle 200 °C / 1 h)</td></tr>
-              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Humidité relative max.</td><td style="padding:6px 12px; color:#3a4654;">100 %</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Régénérable</td><td style="padding:6px 12px; color:#3a4654;">Oui — lavable, réutilisable</td></tr>
-              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">ΔP finale recommandée</td><td style="padding:6px 12px; color:#3a4654;">min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053</td></tr>
+              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Humidité relative max.</td><td style="padding:6px 12px; color:#3a4654;">100 % (sans condensation)</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Lavable</td><td style="padding:6px 12px; color:#3a4654;">Oui</td></tr>
             </tbody>
           </table>
         </div>
@@ -128,7 +126,7 @@
       <div style="margin:0; background:#0F3261; color:#cdd9e8; height:10mm; display:flex; align-items:center; justify-content:space-between; padding:0 12mm; font-size:11px;">
         <span style="font-weight:600; color:#fff;">Netair SAS</span>
         <span style="font-family:'IBM Plex Mono',monospace; color:#9DB8D6; letter-spacing:.3px;">Fiche n° FT-NETMETAL-001</span>
-        <span>v1.0 — 22/06/2026 — Page 1/2</span>
+        <span>v1.1 — 17/07/2026 — Page 1/2</span>
       </div>
     </div>
 
@@ -143,13 +141,13 @@
           <div style="font-size:12px; color:#5A6573; margin-top:3px; font-weight:500;">Performances aérauliques &amp; énergétique</div>
           <div style="position:absolute; right:0; top:50%; transform:translateY(-50%); text-align:right;">
             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px;">
-              <div style="display:inline-block; background:#0F3261; color:#fff; font-size:9px; font-weight:600; padding:4px 9px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">ISO 16890 : Coarse 50%</div>
+              <div style="display:inline-block; background:#0F3261; color:#fff; font-size:9px; font-weight:600; padding:4px 9px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">ISO 16890 : Coarse 40% / 50%</div>
               <div style="display:inline-block; background:#0897A5; color:#fff; font-size:9px; font-weight:600; padding:4px 9px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">EN 779 : G2 / G3</div>
-              <div style="display:inline-block; background:#fff; color:#0F3261; font-size:9px; font-weight:600; padding:3px 9px; border-radius:20px; border:1.5px solid #C9D7E8; white-space:nowrap;">Lavable / régénérable</div>
+              <div style="display:inline-block; background:#fff; color:#0F3261; font-size:9px; font-weight:600; padding:3px 9px; border-radius:20px; border:1.5px solid #C9D7E8; white-space:nowrap;">Lavable</div>
             </div>
           </div>
         </div>
-        <div style="height:2px; background:#0F3261; margin:4mm 0 4mm 0;"></div>
+        <div style="height:2px; background:#0F3261; margin:7mm 0 7mm 0;"></div>
 
         <!-- Section courbe -->
         <div style="display:flex; align-items:center; gap:10px;">
@@ -168,8 +166,8 @@
           </label>
         </div>
 
-        <div style="margin-top:3mm; border:1px solid #E1E7EF; border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCFDFE;">
-          <svg id="curveSvg" viewBox="0 0 600 300" style="width:84%; height:auto; display:block; margin:0 auto;">
+        <div style="margin-top:6mm; border:1px solid #E1E7EF; border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCFDFE;">
+          <svg id="curveSvg" viewBox="0 0 600 300" style="width:80%; height:auto; display:block; margin:0 auto;">
             <!-- horizontal gridlines -->
             <line x1="52" y1="16" x2="580" y2="16" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="74.5" x2="580" y2="74.5" stroke="#EDF1F6" stroke-width="1"></line>
@@ -239,7 +237,7 @@
             </g>
             <rect id="hoverHit" x="52" y="16" width="528" height="234" fill="transparent" style="cursor:crosshair;"></rect>
           </svg>
-          <div style="display:flex; gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
+          <div style="display:flex; gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
             <div id="legG4a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0F3261; display:inline-block; border-radius:2px;"></span>G2 / G3 · Coarse 50% — 48 mm</div>
             <div id="legG4b" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#6B8FC2; display:inline-block; border-radius:2px;"></span>G2 / G3 · Coarse 50% — 98 mm</div>
             <div id="legM5a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0897A5; display:inline-block; border-radius:2px;"></span>G2 / G3 · Coarse 50% — 48 mm</div>
@@ -249,15 +247,15 @@
         </div>
 
         <!-- Section calculateur -->
-        <div style="display:flex; align-items:center; gap:10px; margin-top:5mm;">
+        <div style="display:flex; align-items:center; gap:10px; margin-top:9mm;">
           <span style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase; white-space:nowrap;">Calculateur énergétique</span>
           <span style="flex:1; height:1px; background:#0F3261;"></span>
         </div>
         <div style="font-size:12px; color:#5A6573; margin-top:5px; line-height:1.5;">Estimez la consommation du ventilateur liée à la perte de charge du filtre sur une année de fonctionnement. Ajustez les paramètres ci-dessous.</div>
 
-        <div style="display:grid; grid-template-columns:1fr 80mm; gap:7mm; margin-top:4mm; align-items:stretch;">
+        <div style="display:grid; grid-template-columns:1fr 80mm; gap:7mm; margin-top:6mm; align-items:stretch;">
           <!-- PARAMÈTRES -->
-          <div style="display:flex; flex-direction:column; gap:13px; padding-top:1px;">
+          <div style="display:flex; flex-direction:column; gap:11px; padding-top:1px;">
             <div style="display:grid; grid-template-columns:1.7fr 1fr; gap:12px; display:none;">
               <div>
                 <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d'efficacité</div>
@@ -276,9 +274,9 @@
             </div>
             <div>
               <div style="display:flex; gap:7px;">
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
                 <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP finale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpFinal"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
               </div>
               <div style="font-size:9.5px; color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span></div>
             </div>
@@ -300,39 +298,39 @@
               </div>
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Débit d'air</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="debitVal"></span> m³/h</span>
               </div>
-              <input type="range" id="inDebit" min="500" max="6000" step="50" value="1900" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDebit" min="500" max="6000" step="50" value="1900" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Durée de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="dureeVal"></span> h/jour</span>
               </div>
-              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Jours de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="joursVal"></span> j/an · <span id="heuresVal"></span> h/an</span>
               </div>
-              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Rendement moto-ventilateur</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="etaVal"></span> %</span>
               </div>
-              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Prix de l'électricité</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="prixVal"></span> €/kWh</span>
               </div>
-              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
           </div>
 
@@ -365,7 +363,7 @@
           </div>
         </div>
 
-        <div style="margin-top:4mm; background:#F2F6FB; border-left:3px solid #0897A5; padding:9px 14px; font-size:10.5px; color:#5A6573; line-height:1.55;">
+        <div style="margin-top:7mm; background:#F2F6FB; border-left:3px solid #0897A5; padding:9px 14px; font-size:10.5px; color:#5A6573; line-height:1.55;">
           <strong style="color:#0F3261;">Méthode :</strong> P = (Q ⁄ 3600) × ΔP ⁄ η &nbsp;·&nbsp; Énergie = P × heures de fonctionnement. Valeurs indicatives à but de comparaison — base CO₂ 0,079 kgCO₂/kWh — 79 g (mix électrique France). η = rendement global du moto-ventilateur.
         </div>
 
@@ -374,7 +372,7 @@
       <div style="margin:0; background:#0F3261; color:#cdd9e8; height:10mm; display:flex; align-items:center; justify-content:space-between; padding:0 12mm; font-size:11px;">
         <span style="font-weight:600; color:#fff;">Netair SAS</span>
         <span style="font-family:'IBM Plex Mono',monospace; color:#9DB8D6; letter-spacing:.3px;">Fiche n° FT-NETMETAL-001</span>
-        <span>v1.0 — 22/06/2026 — Page 2/2</span>
+        <span>v1.1 — 17/07/2026 — Page 2/2</span>
       </div>
     </div>
 
@@ -588,26 +586,6 @@
   render();
 })();
 </script>
-<script>
-(function () {
-  var slot = document.getElementById('netmetal-photo');
-  if (!slot) return;
-  var img = document.getElementById('netmetal-img');
-  var ph = document.getElementById('netmetal-ph');
-  var file = document.getElementById('netmetal-file');
-  function show(src) { img.src = src; img.style.display = 'block'; ph.style.display = 'none'; }
-  // Default = bundled original photo (assets/netmetal-photo.jpg, set in markup).
-  // Only an explicit user re-import overrides it.
-  slot.addEventListener('click', function () { file.click(); });
-  file.addEventListener('change', function (e) {
-    var f = e.target.files[0]; if (!f) return;
-    var r = new FileReader();
-    r.onload = function () {
-      show(r.result);
-    };
-    r.readAsDataURL(f);
-  });
-})();
-</script>
+<a class="no-print" href="/produits/netmetal" style="position:fixed; left:18px; bottom:18px; z-index:99999; display:inline-flex; align-items:center; gap:8px; background:#fff; color:#0F3261; border:1px solid #E2E8F0; border-radius:9px; padding:11px 16px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:13.5px; font-weight:600; text-decoration:none; box-shadow:0 3px 10px rgba(15,50,97,.18);"><span style="color:#0897A5; font-size:15px; line-height:1;">&#8592;</span> Retour au produit</a>
 </body>
 </html>

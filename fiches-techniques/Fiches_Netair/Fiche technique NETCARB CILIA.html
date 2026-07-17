@@ -17,8 +17,8 @@
   /* Emplacement photo produit — remplacer le contenu / l'image par la photo réelle */
   .photo-slot { width: 100%; height: 60mm; display: flex; align-items: center; justify-content: center; border-radius: 6px; overflow: hidden; }
   .photo-slot img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; }
-  .photo-slot .photo-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; color: #9DB8D6; font-size: 12px; border: 1.5px dashed #C9D7E8; border-radius: 6px; }
   @media print {
+    .no-print { display: none !important; }
     .cmp-wrap { padding: 0; background: #fff; display: block; }
     .cmp-col { display: block; gap: 0; }
     .a4 { box-shadow: none; margin: 0; page-break-after: always; }
@@ -78,22 +78,20 @@
 
         <!-- Photo + description -->
         <div style="display:grid; grid-template-columns:70mm 1fr; gap:8mm; align-items:center;">
-          <div class="photo-slot" id="netcarb-cilia-photo" title="Cliquer pour importer une photo" style="cursor:pointer;">
-            <!-- Cliquer sur la zone pour importer une photo (enregistrée localement) ; ou remplacer par : <img src="photo-produit.jpg" alt="Filtre NETPLY"> -->
+          <div class="photo-slot" id="netcarb-cilia-photo">
+            <!-- Photo : clé "photo" du JSON produit → fichier dans assets/. Pas d'import depuis la fiche. -->
             <img id="netcarb-cilia-img" src="assets/netcarb-cilia-photo.jpg" alt="Filtre compact à charbon actif NETCARB CILIA" style="display:block;">
-            <div class="photo-ph" id="netcarb-cilia-ph" style="display:none;">Photo produit<br><span style="font-size:10px; color:#b6c4d6;">cliquer pour importer</span></div>
-            <input type="file" id="netcarb-cilia-file" accept="image/*" style="display:none;">
           </div>
           <div>
             <div style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase;">Description</div>
             <div style="width:34px; height:2px; background:#0897A5; margin:5px 0 8px 0;"></div>
-            <p style="margin:0; font-size:13px; line-height:1.55; color:#3a4654; text-wrap:pretty;">Le NETCARB CILIA est un filtre compact de filtration moléculaire au charbon actif. Il est conçu pour les ambiances chargées en gaz et en odeurs — air urbain pollué par l'ozone, les oxydes de soufre (SOx) et d'azote (NOx), composés organiques volatils (COV). Sur un lit de micro-grains de charbon actif plissé, il adsorbe ces molécules là où un filtre à particules reste sans effet. Sa structure mini-plis développe une large surface de contact, gage d'une faible perte de charge et d'une bonne capacité d'adsorption. Cadre acier galvanisé (ou cellulose pelliculée, incinérable), en épaisseurs 48 et 98 mm. Le NETCARB CILIA traite les gaz : il complète un filtre à particules, dont il ne remplace pas la fonction.</p>
+            <p style="margin:0; font-size:13px; line-height:1.55; color:#3a4654; text-wrap:pretty;">Le NETCARB CILIA est un filtre compact de filtration moléculaire au charbon actif. Il est conçu pour les ambiances chargées en gaz et en odeurs — air urbain pollué par l'ozone, les oxydes de soufre (SOx) et d'azote (NOx), composés organiques volatils (COV). Sur un lit de micro-grains de charbon actif plissé, il adsorbe ces molécules là où un filtre à particules reste sans effet. Sa structure miniplis développe une large surface de contact, gage d'une faible perte de charge et d'une bonne capacité d'adsorption. Cadre acier galvanisé (ou cellulose pelliculée, incinérable), en épaisseurs 48 et 98 mm. Le NETCARB CILIA traite les gaz : il complète un filtre à particules, dont il ne remplace pas la fonction.</p>
             <div style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase; margin-top:11px;">Points clés</div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px 14px; margin-top:8px; font-size:12.5px; color:#27313e;">
               <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Adsorbe gaz, odeurs & COV</div>
               <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Air urbain — ozone, SOx, NOx</div>
               <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Micro-grains de charbon actif</div>
-              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Faible perte de charge (mini-plis)</div>
+              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Faible perte de charge (miniplis)</div>
               <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Média incinérable</div>
             </div>
           </div>
@@ -107,7 +105,7 @@
           </div>
           <table style="width:100%; border-collapse:collapse; font-size:12.5px; margin-top:7px;">
             <tbody>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261; width:40%;">Type</td><td style="padding:6px 12px; color:#3a4654;">Compact à charbon actif (mini-plis)</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261; width:40%;">Type</td><td style="padding:6px 12px; color:#3a4654;">Compact à charbon actif (miniplis)</td></tr>
               <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Média filtrant</td><td style="padding:6px 12px; color:#3a4654;">Micro-grains de charbon actif</td></tr>
               <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Fonction</td><td style="padding:6px 12px; color:#3a4654;">Adsorption moléculaire — COV · ozone · SO₂ · NO₂</td></tr>
               <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Normes</td><td style="padding:6px 12px; color:#3a4654;">ISO 10121-1/-2 (essai) · classe 10121-3 (LD·MD·HD) à déterminer</td></tr>
@@ -147,7 +145,7 @@
               <tr style="background:#E6F5F7;"><td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="7">Sur mesure</td><td style="padding:4px 7px; color:#5A6573; font-style:italic;">sur demande — délai à confirmer</td></tr>
             </tbody>
           </table>
-          <div style="font-size:10px; color:#8b97a6; margin-top:6px; line-height:1.45;">Surface indiquée = surface frontale ; le média mini-plis charbon développe une surface de contact supérieure (surface développée non communiquée par le fournisseur). ΔP de référence donnée pour l'épaisseur 48 mm (≈ 73 Pa à 3 400 m³/h) ; le 98 mm est moins résistant (≈ 67 Pa — voir la courbe). Code article complet selon la codification NETCARB : NETCARB-CILIA-[L]x[H]x[P]. Capacité d'adsorption ≈ 15 % en masse ; la durée de vie réelle dépend de la charge polluante (à préciser R&D).</div>
+          <div style="font-size:10px; color:#8b97a6; margin-top:6px; line-height:1.45;">Surface indiquée = surface frontale ; le média miniplis charbon développe une surface de contact supérieure (surface développée non communiquée par le fournisseur). ΔP de référence donnée pour l'épaisseur 48 mm (≈ 73 Pa à 3 400 m³/h) ; le 98 mm est moins résistant (≈ 67 Pa — voir la courbe). Code article complet selon la codification NETCARB : NETCARB-CILIA-[L]x[H]x[P]. Capacité d'adsorption ≈ 15 % en masse ; la durée de vie réelle dépend de la charge polluante (à préciser R&D).</div>
         </div>
 
       </div>
@@ -195,8 +193,8 @@
           </label>
         </div>
 
-        <div style="margin-top:3mm; border:1px solid #E1E7EF; border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCFDFE;">
-          <svg id="curveSvg" viewBox="0 0 600 300" style="width:84%; height:auto; display:block; margin:0 auto;">
+        <div style="margin-top:3mm; border:1px solid #E1E7EF; border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCFDFE;">
+          <svg id="curveSvg" viewBox="0 0 600 300" style="width:80%; height:auto; display:block; margin:0 auto;">
             <!-- horizontal gridlines -->
             <line x1="52" y1="16" x2="580" y2="16" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="74.5" x2="580" y2="74.5" stroke="#EDF1F6" stroke-width="1"></line>
@@ -269,7 +267,7 @@
             </g>
             <rect id="hoverHit" x="52" y="16" width="528" height="234" fill="transparent" style="cursor:crosshair;"></rect>
           </svg>
-          <div style="display:flex; gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
+          <div style="display:flex; gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
             <div id="legG4a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0F3261; display:inline-block; border-radius:2px;"></span>Charbon actif · ISO 10121 — 48 mm</div>
             <div id="legG4b" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#6B8FC2; display:inline-block; border-radius:2px;"></span>Charbon actif · ISO 10121 — 98 mm</div>
             <div id="legM5a" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0897A5; display:inline-block; border-radius:2px;"></span>Charbon actif · ISO 10121 — 48 mm</div>
@@ -287,7 +285,7 @@
 
         <div style="display:grid; grid-template-columns:1fr 80mm; gap:7mm; margin-top:4mm; align-items:stretch;">
           <!-- PARAMÈTRES -->
-          <div style="display:flex; flex-direction:column; gap:13px; padding-top:1px;">
+          <div style="display:flex; flex-direction:column; gap:11px; padding-top:1px;">
             <div style="display:grid; grid-template-columns:170px; gap:12px;">
               <div style="display:none;">
                 <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d'efficacité</div>
@@ -306,9 +304,9 @@
             </div>
             <div>
               <div style="display:flex; gap:7px;">
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
                 <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP finale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpFinal"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
               </div>
               <div style="font-size:9.5px; color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale ≈ ΔP initiale<span id="effAdd" style="display:none;"></span> <span style="color:#b9c2cd;">— filtre non colmatant · remplacement à saturation<span id="effRule" style="display:none;"></span></span></div>
             </div>
@@ -330,39 +328,39 @@
               </div>
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Débit d'air</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="debitVal"></span> m³/h</span>
               </div>
-              <input type="range" id="inDebit" min="500" max="6000" step="50" value="3400" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDebit" min="500" max="6000" step="50" value="3400" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Durée de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="dureeVal"></span> h/jour</span>
               </div>
-              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Jours de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="joursVal"></span> j/an · <span id="heuresVal"></span> h/an</span>
               </div>
-              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Rendement moto-ventilateur</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="etaVal"></span> %</span>
               </div>
-              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Prix de l'électricité</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="prixVal"></span> €/kWh</span>
               </div>
-              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
           </div>
 
@@ -618,26 +616,6 @@
   render();
 })();
 </script>
-<script>
-(function () {
-  var slot = document.getElementById('netcarb-cilia-photo');
-  if (!slot) return;
-  var img = document.getElementById('netcarb-cilia-img');
-  var ph = document.getElementById('netcarb-cilia-ph');
-  var file = document.getElementById('netcarb-cilia-file');
-  function show(src) { img.src = src; img.style.display = 'block'; ph.style.display = 'none'; }
-  // Default = bundled original photo (assets/netcarb-cilia-photo.jpg, set in markup).
-  // Only an explicit user re-import overrides it.
-  slot.addEventListener('click', function () { file.click(); });
-  file.addEventListener('change', function (e) {
-    var f = e.target.files[0]; if (!f) return;
-    var r = new FileReader();
-    r.onload = function () {
-      show(r.result);
-    };
-    r.readAsDataURL(f);
-  });
-})();
-</script>
+<a class="no-print" href="/produits/netcarb-cilia" style="position:fixed; left:18px; bottom:18px; z-index:99999; display:inline-flex; align-items:center; gap:8px; background:#fff; color:#0F3261; border:1px solid #E2E8F0; border-radius:9px; padding:11px 16px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:13.5px; font-weight:600; text-decoration:none; box-shadow:0 3px 10px rgba(15,50,97,.18);"><span style="color:#0897A5; font-size:15px; line-height:1;">&#8592;</span> Retour au produit</a>
 </body>
 </html>

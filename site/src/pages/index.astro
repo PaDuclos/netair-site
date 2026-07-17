@@ -28,6 +28,24 @@ const accroches: Record<string, string> = {
   'charbon-actif': 'Gaz & odeurs',
   combines: 'Particules + gaz',
 };
+
+// Données structurées (schema.org) : carte d'identité de l'entreprise pour les
+// moteurs de recherche. Description = objet social (fourni par Pierre-Alain).
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Netair',
+  url: 'https://netair.fr',
+  logo: 'https://netair.fr/brand/logo.png',
+  description:
+    "Conception, fabrication, assemblage et commercialisation de filtres et accessoires pour systèmes de ventilation et de traitement d'air, ainsi que toutes prestations de services liées à cette activité et toutes opérations se rattachant directement ou indirectement à cet objet.",
+};
+
+// Adresse officielle de la page (canonique) + description partagée méta/Open Graph.
+// Formulation neutre : pas de mention d'origine « française » (encadrée — à cadrer juridiquement).
+const siteUrl = 'https://netair.fr/';
+const metaDescription =
+  "Netair, fabricant de filtres pour la ventilation générale (CTA) : préfiltres, miniplis, poches souples et rigides, filtres absolus HEPA, charbons actifs. Double classification EN ISO 16890 et EN 779. Devis sur mesure.";
 ---
 
 <!doctype html>
@@ -36,9 +54,21 @@ const accroches: Record<string, string> = {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Netair — Filtres pour centrales de traitement d'air (CTA)</title>
-  <meta name="description" content="Netair, fabricant français de filtres pour la ventilation générale (CTA) : préfiltres, miniplis, poches souples et rigides, filtres absolus HEPA, charbons actifs. Double classification EN ISO 16890 et EN 779. Devis sur mesure." />
+  <meta name="description" content={metaDescription} />
+  <link rel="canonical" href={siteUrl} />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Netair" />
+  <meta property="og:title" content="Netair — Filtres pour centrales de traitement d'air (CTA)" />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:url" content={siteUrl} />
+  <meta property="og:image" content="https://netair.fr/brand/logo.png" />
+  <meta property="og:locale" content="fr_FR" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} is:inline></script>
 
   <script src="https://cdn.tailwindcss.com" is:inline></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -152,29 +182,34 @@ const accroches: Record<string, string> = {
             Configurer et acheter en ligne
             <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
-          <a href="#solutions" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border-soft bg-white/70 px-6 py-3.5 text-sm font-normal text-primary shadow-soft transition-all duration-200 hover:bg-white sm:w-auto cursor-pointer">
-            Découvrir nos solutions
+          <a href="/rendez-vous" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border-soft bg-white/70 px-6 py-3.5 text-sm font-normal text-primary shadow-soft transition-all duration-200 hover:bg-white sm:w-auto cursor-pointer">
+            <svg class="h-4 w-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Prendre rendez-vous
           </a>
         </div>
       </div>
 
-      <!-- KPI strip (chiffres VRAIS) -->
+      <!-- Piliers Netair -->
       <div class="reveal mx-auto mt-16 grid max-w-4xl grid-cols-2 gap-px overflow-hidden rounded-2xl glass shadow-soft sm:grid-cols-4" style="transition-delay:.2s">
         <div class="bg-white/40 px-6 py-7 text-center">
-          <div class="font-display text-3xl font-normal text-primary" data-count="6">0</div>
-          <p class="mt-1 text-xs font-normal uppercase tracking-wider text-secondary">familles de filtres</p>
+          <svg class="mx-auto h-6 w-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg>
+          <div class="font-display mt-3 text-2xl font-normal text-primary">Santé</div>
+          <p class="mt-1 text-xs font-normal uppercase tracking-wider text-secondary">protection des occupants</p>
         </div>
         <div class="bg-white/40 px-6 py-7 text-center">
-          <div class="font-display text-3xl font-normal text-primary" data-count="14">0</div>
-          <p class="mt-1 text-xs font-normal uppercase tracking-wider text-secondary">références au catalogue</p>
+          <svg class="mx-auto h-6 w-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+          <div class="font-display mt-3 text-2xl font-normal text-primary">Sécurité</div>
+          <p class="mt-1 text-xs font-normal uppercase tracking-wider text-secondary">médias classés au feu M1</p>
         </div>
         <div class="bg-white/40 px-6 py-7 text-center">
-          <div class="font-display text-xl font-normal text-primary leading-tight">EN ISO 16890<br />+ EN 779</div>
-          <p class="mt-1 text-xs font-normal uppercase tracking-wider text-secondary">double classification</p>
+          <svg class="mx-auto h-6 w-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+          <div class="font-display mt-3 text-2xl font-normal text-primary">Énergie</div>
+          <p class="mt-1 text-xs font-normal uppercase tracking-wider text-secondary">faible perte de charge</p>
         </div>
         <div class="bg-white/40 px-6 py-7 text-center">
-          <div class="font-display text-2xl font-normal text-primary">Sur mesure</div>
-          <p class="mt-1 text-xs font-normal uppercase tracking-wider text-secondary">devis au cas par cas</p>
+          <svg class="mx-auto h-6 w-6 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg>
+          <div class="font-display mt-3 text-2xl font-normal text-primary">Décarbonation</div>
+          <p class="mt-1 text-xs font-normal uppercase tracking-wider text-secondary">réduction de l'empreinte carbone</p>
         </div>
       </div>
     </div>
@@ -185,7 +220,7 @@ const accroches: Record<string, string> = {
     <div class="mx-auto max-w-7xl px-5 py-10 sm:px-8">
       <p class="text-center text-xs font-normal uppercase tracking-[0.2em] text-secondary/70">Conformité &amp; références normatives</p>
       <div class="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-80">
-        {['EN ISO 16890','EN 779','EN 1822','Classement au feu M1','Fabrication française'].map((n) => (
+        {['EN ISO 16890','EN 779','EN 1822','EN 13053'].map((n) => (
           <span class="inline-flex items-center gap-2 font-display text-base font-normal text-primary/70">
             <svg class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
             {n}
@@ -200,8 +235,8 @@ const accroches: Record<string, string> = {
     <div class="mx-auto max-w-7xl px-5 sm:px-8">
       <div class="max-w-2xl">
         <span class="reveal text-sm font-normal uppercase tracking-wider text-accent">Nos solutions</span>
-        <h2 class="reveal font-display mt-3 text-3xl font-normal tracking-tight text-primary sm:text-4xl">Une gamme complète, du préfiltre au très haute efficacité</h2>
-        <p class="reveal mt-4 text-lg text-secondary">Chaque étage de filtration répond à un besoin précis. Netair dimensionne la solution selon votre débit, votre charge particulaire et vos contraintes énergétiques.</p>
+        <h2 class="reveal font-display mt-3 text-3xl font-normal tracking-tight text-primary sm:text-4xl">Une gamme complète, du préfiltre à la très haute efficacité</h2>
+        <p class="reveal mt-4 text-lg text-secondary">Conçue pour répondre à tous les environnements de traitement de l’air, la gamme Netair associe efficacité de filtration, performance énergétique et durabilité. Nos experts vous accompagnent dans le choix de la solution la plus adaptée à votre installation afin d’optimiser la qualité de l’air, les consommations d’énergie et les coûts d’exploitation.</p>
       </div>
 
       <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -243,7 +278,7 @@ const accroches: Record<string, string> = {
         <div>
           <span class="reveal text-sm font-normal uppercase tracking-wider text-accent-bright">Performance &amp; conformité</span>
           <h2 class="reveal font-display mt-3 text-3xl font-normal tracking-tight sm:text-4xl">La norme EN ISO 16890, appliquée sans compromis</h2>
-          <p class="reveal mt-4 text-lg leading-relaxed text-white/70">Netair classe chaque filtre selon son efficacité réelle sur les particules ePM1, ePM2,5 et ePM10 — celles qui pénètrent le plus profondément dans les voies respiratoires. Pas d'approximation : les valeurs de chaque produit figurent sur sa fiche technique.</p>
+          <p class="reveal mt-4 text-lg leading-relaxed text-white/70">Chaque filtre est classé selon son efficacité mesurée sur les particules ePM1, ePM2,5 et ePM10, conformément à la norme EN ISO 16890. Les performances de chaque référence sont disponibles sur sa fiche technique.</p>
 
           <dl class="reveal mt-10 grid gap-6 sm:grid-cols-2">
             <div class="rounded-2xl glass-dark p-5">
@@ -251,28 +286,28 @@ const accroches: Record<string, string> = {
                 <svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3 8-8"/><path d="M21 12a9 9 0 1 1-6.2-8.6"/></svg>
                 Efficacité énergétique
               </dt>
-              <dd class="mt-2 text-sm text-white/60">Faible perte de charge = moins de consommation ventilateur sur toute la durée de vie.</dd>
+              <dd class="mt-2 text-sm text-white/60">Une faible perte de charge contribue à réduire la consommation du ventilateur sur la durée d'exploitation.</dd>
             </div>
             <div class="rounded-2xl glass-dark p-5">
               <dt class="flex items-center gap-2 text-sm font-normal text-white">
                 <svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>
-                Traçabilité
+                Transparence des performances
               </dt>
-              <dd class="mt-2 text-sm text-white/60">Chaque référence documentée : classes, perte de charge et durée de service sur sa fiche.</dd>
+              <dd class="mt-2 text-sm text-white/60">Classes d'efficacité, perte de charge et principales caractéristiques sont détaillées pour chaque référence.</dd>
             </div>
             <div class="rounded-2xl glass-dark p-5">
               <dt class="flex items-center gap-2 text-sm font-normal text-white">
                 <svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z"/><path d="m8 12 3 3 5-6"/></svg>
-                Conformité EN 1822
+                Fiabilité des données
               </dt>
-              <dd class="mt-2 text-sm text-white/60">Filtres HEPA testés selon EN 1822.</dd>
+              <dd class="mt-2 text-sm text-white/60">Les données annoncées reposent sur des essais réalisés selon les normes applicables.</dd>
             </div>
             <div class="rounded-2xl glass-dark p-5">
               <dt class="flex items-center gap-2 text-sm font-normal text-white">
                 <svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7 9 18l-5-5"/></svg>
                 Double classification
               </dt>
-              <dd class="mt-2 text-sm text-white/60">EN ISO 16890 (primaire) et EN 779, sur chaque référence.</dd>
+              <dd class="mt-2 text-sm text-white/60">Les classifications EN ISO 16890 et EN 779 sont indiquées sur chaque référence concernée.</dd>
             </div>
           </dl>
         </div>
@@ -282,19 +317,23 @@ const accroches: Record<string, string> = {
             <p class="font-display text-sm font-normal uppercase tracking-wider text-accent-bright">Échelle de finesse de filtration</p>
             <div class="mt-5 space-y-3 font-mono text-sm">
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                <span class="text-white/80">ISO Coarse <span class="text-white/40">(G3/G4)</span></span>
+                <span class="text-white/80">ISO Coarse <span class="text-white/40">(G2/G3/G4)</span></span>
                 <div class="flex items-center gap-3"><div class="h-2 w-28 overflow-hidden rounded-full bg-white/10"><div class="h-full w-[28%] rounded-full bg-accent-bright"></div></div></div>
               </div>
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                <span class="text-white/80">ePM10 <span class="text-white/40">(M5/M6)</span></span>
+                <span class="text-white/80">ePM10 <span class="text-white/40">(M5)</span></span>
                 <div class="flex items-center gap-3"><div class="h-2 w-28 overflow-hidden rounded-full bg-white/10"><div class="h-full w-[48%] rounded-full bg-accent-bright"></div></div></div>
               </div>
               <div class="flex items-center justify-between border-b border-white/10 pb-3">
-                <span class="text-white/80">ePM1 <span class="text-white/40">(F7/F9)</span></span>
+                <span class="text-white/80">ePM2,5 <span class="text-white/40">(M6)</span></span>
+                <div class="flex items-center gap-3"><div class="h-2 w-28 overflow-hidden rounded-full bg-white/10"><div class="h-full w-[65%] rounded-full bg-accent-bright"></div></div></div>
+              </div>
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <span class="text-white/80">ePM1 <span class="text-white/40">(F7/F8/F9)</span></span>
                 <div class="flex items-center gap-3"><div class="h-2 w-28 overflow-hidden rounded-full bg-white/10"><div class="h-full w-[82%] rounded-full bg-accent-bright"></div></div></div>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-white/80">HEPA H14 <span class="text-white/40">(EN 1822)</span></span>
+                <span class="text-white/80">EPA et HEPA <span class="text-white/40">(E10 à H14)</span></span>
                 <div class="flex items-center gap-3"><div class="h-2 w-28 overflow-hidden rounded-full bg-white/10"><div class="h-full w-[99%] rounded-full brand-gradient"></div></div></div>
               </div>
             </div>
@@ -318,22 +357,22 @@ const accroches: Record<string, string> = {
         <div class="reveal group rounded-2xl border border-border-soft bg-white p-6 shadow-soft transition-all duration-300 hover:border-accent/40 hover:shadow-lift cursor-default">
           <svg class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V8l6-3v15"/><path d="M10 20V5l8 4v11"/><path d="M14 12h.01M14 16h.01"/></svg>
           <h3 class="font-display mt-4 font-normal text-primary">Industrie &amp; process</h3>
-          <p class="mt-1.5 text-sm text-secondary">Protection des lignes, captation à la source, traitement d'air procédé.</p>
+          <p class="mt-1.5 text-sm text-secondary">Protection des équipements, traitement d'air des procédés et captation à la source.</p>
         </div>
         <div class="reveal group rounded-2xl border border-border-soft bg-white p-6 shadow-soft transition-all duration-300 hover:border-accent/40 hover:shadow-lift cursor-default" style="transition-delay:.05s">
           <svg class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/></svg>
           <h3 class="font-display mt-4 font-normal text-primary">Santé &amp; laboratoires</h3>
-          <p class="mt-1.5 text-sm text-secondary">Salles propres, blocs, hottes — filtration absolue et hygiène contrôlée.</p>
+          <p class="mt-1.5 text-sm text-secondary">Filtration des salles propres, blocs opératoires et environnements maîtrisés.</p>
         </div>
         <div class="reveal group rounded-2xl border border-border-soft bg-white p-6 shadow-soft transition-all duration-300 hover:border-accent/40 hover:shadow-lift cursor-default" style="transition-delay:.1s">
           <svg class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a2 2 0 0 1 2-2h8l6 6v14"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8"/></svg>
           <h3 class="font-display mt-4 font-normal text-primary">Tertiaire &amp; bureaux</h3>
-          <p class="mt-1.5 text-sm text-secondary">Qualité d'air intérieur, confort et économie d'énergie en CTA.</p>
+          <p class="mt-1.5 text-sm text-secondary">Qualité de l'air intérieur, confort des occupants et performance énergétique des installations.</p>
         </div>
         <div class="reveal group rounded-2xl border border-border-soft bg-white p-6 shadow-soft transition-all duration-300 hover:border-accent/40 hover:shadow-lift cursor-default" style="transition-delay:.15s">
           <svg class="h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7v10l10 5 10-5V7z"/><path d="M2 7l10 5 10-5"/><path d="M12 22V12"/></svg>
           <h3 class="font-display mt-4 font-normal text-primary">Agroalimentaire</h3>
-          <p class="mt-1.5 text-sm text-secondary">Maîtrise de la contamination, conformité hygiène et sécurité produit.</p>
+          <p class="mt-1.5 text-sm text-secondary">Protection des procédés de fabrication et maîtrise de la qualité de l'air en zones de production.</p>
         </div>
       </div>
     </div>
@@ -352,7 +391,7 @@ const accroches: Record<string, string> = {
           <span class="font-mono text-sm font-normal text-accent">01</span>
           <div class="mt-3 h-px w-full bg-gradient-to-r from-accent to-transparent"></div>
           <h3 class="font-display mt-4 text-lg font-normal text-primary">Besoin &amp; devis</h3>
-          <p class="mt-2 text-sm text-secondary">Vous nous transmettez vos références ou vos cotes ; nous étudions chaque demande.</p>
+          <p class="mt-2 text-sm text-secondary">Vous nous transmettez vos références ou vos dimensions ; nous étudions chaque demande.</p>
         </li>
         <li class="reveal relative" style="transition-delay:.05s">
           <span class="font-mono text-sm font-normal text-accent">02</span>
@@ -382,7 +421,7 @@ const accroches: Record<string, string> = {
       <figure class="reveal rounded-3xl border border-border-soft bg-white p-10 text-center shadow-soft sm:p-14">
         <svg class="mx-auto h-10 w-10 text-accent/30" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 7C6.5 7 4 9.5 4 12.5V18h6v-6H7.5c0-1.6 1.3-2.5 2.5-2.5V7zm10 0c-3 0-5.5 2.5-5.5 5.5V18h6v-6h-2.5c0-1.6 1.3-2.5 2.5-2.5V7z"/></svg>
         <blockquote class="font-display mt-6 text-xl font-normal leading-relaxed text-primary sm:text-2xl">
-          «&#8239;Air intérieur sain, énergie maîtrisée, empreinte carbone réduite, installations sûres : voilà ce qu'apporte un filtre bien conçu. C'est notre métier, et notre engagement au quotidien.&#8239;»
+          «&#8239;La filtration joue un rôle essentiel dans la performance des installations, la qualité de l'air et la maîtrise des consommations énergétiques. C'est cette conviction qui guide nos choix et notre engagement au quotidien.&#8239;»
         </blockquote>
         <figcaption class="mt-8 flex items-center justify-center gap-4">
           <img src="/img/pierre-alain-duclos.jpg" alt="Pierre-Alain Duclos, fondateur de Netair" width="64" height="64" class="h-16 w-16 rounded-full object-cover" />
@@ -405,39 +444,52 @@ const accroches: Record<string, string> = {
         <div class="relative grid items-center gap-12 lg:grid-cols-2">
           <div>
             <h2 class="font-display text-3xl font-normal tracking-tight text-white sm:text-4xl">Parlons de votre installation</h2>
-            <p class="mt-4 max-w-md text-lg text-white/70">Décrivez votre besoin : nous revenons avec une recommandation chiffrée, adaptée à vos références.</p>
+            <p class="mt-4 max-w-md text-lg text-white/70">Échangez 15 minutes avec un expert filtration Netair, par téléphone ou en visio. On vous aide à choisir le bon filtre pour votre installation.</p>
             <ul class="mt-8 space-y-3 text-sm text-white/80">
               <li class="flex items-center gap-3"><svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Étude et dimensionnement</li>
               <li class="flex items-center gap-3"><svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Standard ou sur-mesure</li>
               <li class="flex items-center gap-3"><svg class="h-5 w-5 text-accent-bright" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Sans engagement</li>
             </ul>
+            <a href="/contact" class="mt-8 inline-flex items-center gap-2 rounded-xl border border-white/35 px-5 py-3 text-sm font-normal text-white transition-colors duration-200 hover:border-white/70 hover:bg-white/5">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+              Nous contacter
+            </a>
           </div>
 
-          <form class="rounded-2xl glass-dark p-6 sm:p-8" onsubmit="event.preventDefault(); this.querySelector('[data-ok]').classList.remove('hidden'); this.querySelector('button[type=submit]').disabled=true;">
-            <div class="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label for="nom" class="block text-xs font-normal uppercase tracking-wider text-white/60">Nom</label>
-                <input id="nom" name="nom" type="text" required class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-accent-bright focus:ring-2 focus:ring-accent-bright/40" placeholder="Votre nom" />
+          <div class="grid gap-4">
+            <a href="/rendez-vous" class="group rounded-2xl border border-white/15 bg-white/5 p-6 transition-colors duration-200 hover:border-white/35 hover:bg-white/[0.08]">
+              <div class="flex items-start gap-4">
+                <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-accent-bright">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </span>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-normal text-white">Par téléphone</span>
+                    <span class="rounded-full bg-accent-bright/20 px-2 py-0.5 text-[11px] font-normal text-accent-bright">le plus demandé</span>
+                  </div>
+                  <p class="mt-1 text-sm text-white/60">On vous rappelle au créneau qui vous arrange.</p>
+                  <span class="mt-3 inline-flex items-center gap-1.5 text-sm font-normal text-accent-bright">Choisir un créneau
+                    <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </span>
+                </div>
               </div>
-              <div>
-                <label for="societe" class="block text-xs font-normal uppercase tracking-wider text-white/60">Société</label>
-                <input id="societe" name="societe" type="text" class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-accent-bright focus:ring-2 focus:ring-accent-bright/40" placeholder="Votre entreprise" />
+            </a>
+            <a href="/rendez-vous" class="group rounded-2xl border border-white/15 bg-white/5 p-6 transition-colors duration-200 hover:border-white/35 hover:bg-white/[0.08]">
+              <div class="flex items-start gap-4">
+                <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-accent-bright">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                </span>
+                <div>
+                  <span class="font-normal text-white">En visio</span>
+                  <p class="mt-1 text-sm text-white/60">Partagez plans et schémas à l'écran pour un conseil précis.</p>
+                  <span class="mt-3 inline-flex items-center gap-1.5 text-sm font-normal text-accent-bright">Choisir un créneau
+                    <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </span>
+                </div>
               </div>
-            </div>
-            <div class="mt-4">
-              <label for="email" class="block text-xs font-normal uppercase tracking-wider text-white/60">Email professionnel</label>
-              <input id="email" name="email" type="email" required class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-accent-bright focus:ring-2 focus:ring-accent-bright/40" placeholder="vous@entreprise.fr" />
-            </div>
-            <div class="mt-4">
-              <label for="besoin" class="block text-xs font-normal uppercase tracking-wider text-white/60">Votre besoin</label>
-              <textarea id="besoin" name="besoin" rows="3" class="mt-1.5 w-full rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-accent-bright focus:ring-2 focus:ring-accent-bright/40" placeholder="Type d'installation, débit, classe recherchée…"></textarea>
-            </div>
-            <button type="submit" class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl brand-gradient px-6 py-3.5 text-sm font-normal text-white transition-all duration-200 hover:brightness-110 cursor-pointer disabled:opacity-50">
-              Envoyer ma demande
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
-            </button>
-            <p data-ok class="mt-4 hidden rounded-lg bg-accent-bright/15 px-4 py-3 text-center text-sm font-normal text-accent-bright">Merci ! Pour finaliser, écrivez-nous à contact@netair.fr — ou utilisez la page Contact.</p>
-          </form>
+            </a>
+            <p class="text-center text-sm text-white/50">Gratuit et sans engagement · 15 minutes</p>
+          </div>
         </div>
       </div>
     </div>

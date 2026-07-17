@@ -15,8 +15,8 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 |---|:--:|---|
 | NETPLY | ✅ | Photo finale Netair (placeholder détouré) |
 | NETPLAN | 🟡 | Photo · ΔP extrapolée > 2 m/s à confirmer |
-| NETMETAL | 🟡 | ΔP > 2,38 m/s non mesurée · ~~classe~~ ✅ G2/G3 (déc. PA) |
-| NETFIL | 🟡 | épaisseur/profondeur · ~~G3/G4~~ ✅ G3 confirmé (PA) |
+| NETMETAL | 🟡 | ΔP > 2,38 m/s non mesurée · ~~classe~~ ✅ G2/G3 (déc. PA) · **contenu retravaillé v1.1 (17/07) — voir `_arbitrages_pad` de netmetal.json AVANT toute retouche** · **feu M0 : sourcé (4 fiches 2018) mais (a) classement français 1983 remplacé par les Euroclasses EN 13501-1 (A1) → basculer un jour, (b) PV d'essai à récupérer/refaire pour Netair si un BE le réclame** · **T° inox 304 sous-vendue : la fiche annonce 150 °C (valeur alu/galva) alors que KMX/CA donne 200 °C continu / 300 °C acc. — décision PA du 17/07 de garder une valeur unique prudente ; à rouvrir si l'inox se vend** · épaisseurs 10/15/20 mm et HR 100 % = confirmées PA en tant que fabricant, non sourcées · **ΔP finale recommandée RETIRÉE de la p1 (déc. PA 17/07) → seule des 18 fiches à déroger à la règle « impérative » du PROCESS ; le calculateur p2 applique pourtant toujours +50 Pa** · photo placeholder Titanair |
+| NETFIL | 🟡 | **contenu retravaillé v1.1 (17/07) — voir `_arbitrages_pad` de netfil.json AVANT toute retouche** · ~~G3/G4~~ ✅ G3 confirmé (PA) · ~~ISO Coarse 50% « équivalence indicative »~~ ✅ **SOURCÉ** : 4e révision `TITAFIL.pdf` (non datée, SAS/APE 2825Z) porte « ISO 16890 : COARSE 50% » **en face du G3** ; le `_commentaire` affirmait le contraire → corrigé le 17/07 · ✅ **courbe G3 corroborée** par une 4e source jusqu'ici non exploitée (cache `TITAFIL 2013.xlsx` : 6/12/20/38 Pa à 0,5/1/1,5/2 m/s, vs 6,5/11,5/21 pour la v2_2020 retenue) · **🔴 ÉPAISSEUR 4,5 mm = DÉDUCTION, PAS UNE MESURE** : c'est le Ø du fil du cadre (doc 2015) ; un média cousu **sur** un fil de 4,5 mm fait nécessairement plus. Aucune fiche Titanair ne donne d'épaisseur (« DIMENSIONS EFFECTIVES : A DETERMINER »). Le chiffre est **affiché 3×** (légende de courbe + sélecteurs du calculateur) → **seul chiffre visible de la fiche ne provenant d'aucune mesure. À faire mesurer en R&D.** Maintenu par PA le 17/07 après signalement. ⚠️ `PROCESS.md` disait « 20 mm à valider » : **périmé** depuis le commit `2454fec` (22/06), corrigé le 17/07 · **T° 60 °C / acc. 65 °C = CONTRE les 4 fiches Titanair** (toutes à acc. 80 °C ; doc 2015 : 100 °C) — alignement délibéré sur la règle de gamme CLAUDE.md (même média = même T°) · **HR 100 % (sans condensation) = confirmée PA, NON SOURCÉE** (aucune fiche TITAFIL n'a de ligne humidité ; l'ancien 95 % ne venait d'aucune source non plus) · **VC uniquement, jamais CTA = déc. PA, CONTREDIT la doc 2015** (« comme filtre final » en « ventilo-convecteurs, unité de traitement d'air ») · **🔴 3 des 4 points clés = recopie de la rubrique « AVANTAGES DES FILTRES » de la plaquette Titanair 2015** (Faible encombrement / Construction renforcée / Toutes dimensions), et « Faible encombrement » + « Construction renforcée » sont des **jugements orphelins** depuis la réécriture du descriptif (rien sur la page ne les soutient) — **réserves de Claude exposées 3× et écartées par PA en connaissance de cause le 17/07** (une ligne « Épaisseur : 4,5 mm » a été ajoutée puis retirée à sa demande) · « 100% polyester » sourcé **uniquement par v3_2023**, la révision écartée pour sa classe (G4) · photo placeholder Titanair blanc-sur-blanc à remplacer |
 | NETFIBRE | 🟡 | courbes G2/G3/M5 à mesurer · ~~T°~~ ✅ 60 °C confirmé (PA) · **⚠️ TARIF (site B2) : G3 panneau = 0,015 €/dm² dans l'Excel = 5,7× moins cher que G4 (0,0856) → 1,51 € vs 8,57 € pour un 592×592. Jugé erroné (déc. PA 30/06) → G3 retiré de l'offre boutique (`classesExclues`). À corriger/supprimer à la SOURCE (Excel) après vérif R&D, puis ré-exporter.** |
 | NETBAG S | 🟡 | Anomalie M5 550/650 · G4 intégré specs (Coarse 65%, courbe à mesurer) · 287×592 & humidité · photo · **⚠️ TARIF (site B2, MAJ 30/06) : le code Excel « 11 » étiqueté « NETBAG S » est EN FAIT AZUR (déc. PA : profondeur 292, dim 287/490/592×592, M5→F9). Reste le code 17 (poches 360-600 mm, F7/F8/F9/M6, ~7-11 €) = candidat NETBAG réel, à confirmer au retravail de l'Excel. Tant que non tranché → NETBAG S reste « sur devis ».** |
 | NETPAK S AZUR | 🟡 | **⚠️ TARIF (site B2, 30/06) : = catégorie Excel 11 (mal étiquetée « NETBAG S » dans l'Excel → À RENOMMER en AZUR). Branché à l'achat (3 dim 287/490/592×592×292, M5→F9, prix). Fiche : parois « Polystyrène » → « Plastique » (déc. PA). Vérifier que M5/M6 sont bien standard pour AZUR (fiche disait « F7/F8/F9, M6 sur demande »).** |
@@ -60,6 +60,71 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 
 ---
 
+## 🔴 RÉFÉRENCES PRODUIT — À TRANCHER AVANT INCWO (ouvert le 16/07/2026 par PA)
+
+> **PA : « je pense ce sujet très important, il ne faut pas l'oublier. On en reparle avant Incwo. »**
+> **Ne pas paramétrer Incwo ni mettre le site en ligne avant d'avoir tranché.** La référence est la
+> **clé pivot** entre le site, le devis et l'ERP : mal formulée, une fiche se corrige ; mal choisie, une
+> référence se traîne des années sur les devis et les factures.
+
+### Constat — 4 formats divergents pour le même filtre
+
+| Source | Produit |
+|---|---|
+| `CODIFICATION_PRODUITS.md` (la règle) | `NETPLY-G4-592x592x`**`46`** |
+| Configurateur du site | `NETPLY-G4-592x592x`**`48`**`-`**`A`** (suffixe cadre, absent de la règle) |
+| Générateur de fiches (netplan, netcel-v-lam, netpak-s-duo) | `NETPLAN-`**`Coarse 65%`**`-G4-592x592x25` |
+| **Excel `Calculateur_Netair.xlsx`** | **AUCUNE référence composée** |
+
+**Le point le plus lourd : l'Excel n'a pas de référence.** Onglet `Tableau_Gammes` → colonnes séparées
+`Code gamme` (**un chiffre** : 1, 2, 3, 101…), `Nom de la gamme`, `Efficacité`, `Épaisseur`. Il n'y a donc
+rien à « faire correspondre » : la référence **est à construire**, côté prix comme côté Incwo.
+`site/src/lib/pricing/data/tables.json` est généré depuis cet Excel et porte les mêmes clés (`code`, `nom`).
+
+### 🔴 Ambiguïté bloquante — les variantes (CIAT)
+
+```
+Code 1   → NETPLY           methode: A          remises 9,5 % … 13,5 %
+Code 101 → NETPLY (CIAT)    methode: sur_devis  aucune remise
+```
+Idem `NETFIL (CIAT)` (102) et `NETPLAN (CIAT)` (103). **Deux gammes, deux tarifications, le même nom.**
+`NETPLY-G4-592x592x48` ne permet pas de les distinguer — l'une se vend au tarif catalogue, l'autre
+uniquement sur devis. **Risque direct : un prix faux qui part chez un client.** Les fiches ignorent
+totalement ces variantes.
+
+### Préférence exprimée par PA (16/07/2026)
+
+- Référence **longue, classe ISO incluse** : `NETPLAN-Coarse 65%-G4-592x592x25`
+- **Suffixe cadre** `-A` / `-P` quand plusieurs cadres existent
+- Exemple CILIA : `NETPAK S CILIA A ePM1 50% F7 592x592x48`
+  ou `NETPAK-S-CILIA-A-ePM1 50%-F7-592x592x48` → **tirets ou espaces : à trancher**
+
+### Réserves à examiner (Claude, 16/07) — à confronter aux contraintes réelles d'Incwo
+
+1. **Contredit `CODIFICATION_PRODUITS.md`**, qui écrit explicitement : *« on utilise la classe EN 779 dans
+   le code. La classe EN 16890 figure dans la désignation et la fiche technique, **pas dans le code
+   article** »*. C'est une exception assumée à la règle « ISO primaire », justifiée par la compacité.
+   **Si on retient la préférence PA, il faut réécrire la règle** — les deux ne peuvent pas coexister.
+2. **`ePM1 50%` et `F7` sont la même information** (table de correspondance fixe et actée). Les écrire
+   tous les deux = classe en double. `NETPAK-S-CILIA-A-ePM1 50%-F7-592x592x48` = 40 caractères, dont ~8
+   de redondance. → Choisir : ISO seule, EN 779 seule, ou les deux en assumant la longueur.
+3. **Espace et `%` dans un code article** : à valider contre Incwo (longueur max ? caractères admis ?),
+   les imports/exports CSV, et un éventuel usage en code-barres. `%` a une signification particulière
+   dans les URL. Contournable, mais à décider en connaissance de cause.
+4. **Les variantes (CIAT) ne sont pas couvertes** par la proposition → comment les distinguer ?
+5. **Épaisseurs 46/96 (règle) vs 48/98 (fiches et Excel)** → laquelle fait foi ?
+6. **Sur-mesure** : `CODIFICATION_PRODUITS.md` prévoit ligne libre aux 2 premières commandes, fiche
+   catalogue Incwo à la 3ᵉ. La référence sur-mesure suit-elle le même format ?
+
+### Méthode proposée
+
+**Incwo est l'arbitre** : il reçoit la commande du site, sort le devis, facture. La référence doit être
+ce qu'Incwo portera comme code article ; tout le reste s'aligne dessus. Ordre : (1) contraintes Incwo,
+(2) décisions PA, (3) réécriture de `CODIFICATION_PRODUITS.md`, (4) alignement du site, des fiches et de
+l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
+
+---
+
 ## Transverse (toute la gamme)
 
 - [ ] **Photos produit Netair** : toutes les fiches créées utilisent une **photo Titanair détourée
@@ -73,11 +138,138 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
       tant que le site n'est pas hébergé.
 - [x] **Page 2 A4 — mono-classe : RÉGLÉ** via option `compact_p2` (marges p2 + graphe 84 %).
       NETPLAN, NETMETAL, NETFIL, NETFIBRE → page 2 = 1123 px (≤ A4). Identité NETPLY OK.
-- [ ] **🟠 Fiches multi-courbes : page 2 déborde l'A4** — **NETPLY** (1344 px), **NETPAK S AZUR** (1375),
-      **NETPAK S LUMEN** (1375 + page 1 1169), **NETPAK S BORA**, **NETBAG S** : plusieurs courbes + cases +
-      sélecteur sur une page → `compact_p2` insuffisant (~67 mm). À passer en **3 pages** (courbe p2 /
-      calculateur p3, comme CILIA). **Décision PA (22/06/2026) : différé, laissé tel quel pour l'instant.**
+- [ ] **🟠 Débordement A4 — état remesuré le 16/07/2026 (8 fiches sur 18).** Mesure faite au navigateur
+      (hauteur réelle des blocs `.a4` ; limite A4 = 1123 px = 297 mm). **La liste du 22/06 était inexacte :**
+      NETPAK S BORA ne déborde pas (1123/1123) ; NETCEL V AZUR, NETCEL V NIVAL, NETCARB CILIA et
+      NETCARB AZUR débordent sans y figurer.
+
+      | Fiche | Page 1 | Page 2 | `compact_p2` |
+      |---|---|---|---|
+      | NETPLY | 1299 (+47 mm) | 1344 → **1223 après ajout de `compact_p2` le 16/07** (+26 mm) | ✅ ajouté 16/07 |
+      | NETBAG S | 1286 | 1458 | ❌ absent |
+      | NETPAK S AZUR | 1229 | 1375 | ❌ absent |
+      | NETPAK S LUMEN | 1169 | 1375 | ❌ absent |
+      | NETCEL V AZUR | 1123 ✅ | 1375 | ❌ absent |
+      | NETCEL V NIVAL | 1123 ✅ | 1375 | ❌ absent |
+      | NETCARB CILIA | 1123 ✅ | 1167 | ✅ présent (insuffisant) |
+      | NETCARB AZUR | 1129 | 1123 ✅ | ✅ présent (limite) |
+
+      **Constat clé : `compact_p2` manque simplement sur 6 fiches** (NETBAG S, NETPAK S AZUR / LUMEN,
+      NETCEL V AZUR / NIVAL — NETPLY corrigé le 16/07). Les 10 fiches conformes tombent *exactement*
+      sur 1123 px : le gabarit est bien réglé, mais **il n'a aucun garde-fou** — un contenu trop long
+      pousse la page sans alerte.
+
+      **Décision PA (16/07/2026) : viser 2 pages, pas 3** (contrairement à l'orientation du 22/06).
+      Motif : ces fiches doivent finir en PDF + catalogue HTML/PDF.
+
+      **✅ NETPLY RÉGLÉ le 16/07/2026** — page 1 : 343,8 → **289,4 mm** (marge 7,6) ; page 2 : 355,6 →
+      **290,1 mm** (marge 6,9). Deux leviers, tous deux opt-in par produit, gabarit non modifié :
+      - `dims_fusionnees` : le tableau dimensions listait chaque section **deux fois** (une par classe)
+        alors que la géométrie est identique → 11 lignes → 6, soit **−31 mm**. Vrai doublon supprimé.
+      - `compact_fort` : colonne photo 70 → 52 mm, marges de blocs 6 → 4 mm, interligne du calculateur
+        13 → 5 px, graphe 84 → 68 %, cadre de courbe resserré. Vérifié à l'écran : graphe toujours
+        lisible (le blanc autour de la courbe a payé, pas la courbe).
+
+      **Deux erreurs d'analyse à ne pas refaire** (16/07) :
+      - les « 33 mm de vide sous la photo » **ne sont pas récupérables** : la grille est à 2 colonnes,
+        sa hauteur est imposée par la colonne texte (93 mm) ; la photo (60 mm) est juste centrée dedans.
+        Le seul levier est la **largeur** de la colonne photo, qui fait refluer le texte.
+      - le débordement de la **page 2 n'est pas du gaspillage** : c'est le coût des sélecteurs de classe
+        et d'épaisseur, que les fiches mono-classe n'affichent pas. Mesuré vs NETPLAN : calculateur
+        +17,6 mm, courbe +7,3 mm (légende de 4 courbes), sélecteur « Afficher : » +5,6 mm.
+
+      **Restent 7 fiches à traiter** : NETBAG S (1286/1458), NETPAK S AZUR (1229/1375), NETPAK S LUMEN
+      (1169/1375), NETCEL V AZUR (—/1375), NETCEL V NIVAL (—/1375), NETCARB CILIA (—/1167), NETCARB AZUR
+      (1129/—). Pour les 5 sans `compact_p2`, commencer par l'ajouter (≈ −33 mm) avant tout autre levier.
+      ⚠️ `compact_fort` suppose 2 classes distinctes et le gabarit standard : ne pas l'appliquer en
+      aveugle (il lève une erreur s'il manque compact_p1/compact_p2, mais ne vérifie pas le reste).
+- [ ] **🔴 Références du tableau « Dimensions » : à RETIRER, pas à corriger.** **Décision PA (16/07/2026) :
+      « le client ne copiera pas ce qu'il voit dans le tableau mais le nom du filtre, soit NETPLY »** —
+      les codes article servent à **Incwo**, pas au client (cohérent avec `CODIFICATION_PRODUITS.md` :
+      ligne libre en devis aux 2 premières commandes, fiche catalogue à la 3ᵉ). NETPLY n'affiche plus de
+      référence ; **3 fiches en affichent encore** : `netplan`, `netcel-v-lam`, `netpak-s-duo` → les
+      retirer à leur passage.
+      ⚠️ **Asymétrie à trancher** : le configurateur du site AFFICHE une référence au client
+      (`NETPLY-G4-592x592x48-A`). Si le code n'a pas à être vu du client, pourquoi le site le montre-t-il ?
+      À arbitrer avec Cowork.
+      Pour mémoire, le défaut de format initial (toujours présent sur les 3 fiches ci-dessus) :
+      elles génèrent `NETPLAN-Coarse 65%-G4-592x592x25` alors que la règle impose `NETPLAN-G4-592x592x25` :
+      *« on utilise la classe EN 779 dans le code. La classe EN 16890 (ePM1 65%…) figure dans la désignation
+      et la fiche technique, **pas dans le code article** »*. La fiche insère en plus un espace et un `%`
+      dans un code produit. **Le configurateur du site, lui, respecte la règle** (`NETPLY-G4-592x592x48-A`)
+      → **le client lit deux références différentes pour le même filtre** selon le support. Corriger le
+      générateur, pas les JSON. (Noter aussi : les exemples de `CODIFICATION_PRODUITS.md` utilisent des
+      épaisseurs 46/96 mm là où les fiches utilisent 48/98 — à trancher.)
+- [ ] **Alignements de gamme créés par le retravail de NETPLY (16/07/2026)** — NETPLY est désormais seul
+      conforme, les autres suivront à leur passage :
+      - **« Surface média » → « Surface filtrante »** : 11 fiches encore en « Surface média »
+        (netcel-v-azur, netcel-v-nival, netfibre, netcel-v-lam, netpak-s-azur, netpak-s-bora,
+        netpak-s-cilia, netpak-s-duo, netplan, netpak-s-lumen). Le gabarit écrit déjà
+        « S. filtrante (m²) » et « Surface filtrante = … » sur la même page.
+      - **Ordre des normes** : ~~NETPLAN, NETMETAL, NETFIL~~, **NETFIBRE** affiche encore **EN 779 avant
+        ISO 16890**, contrairement à la règle actée « ISO primaire » (que les badges respectent). PA a
+        confirmé le 16/07 : **ISO d'abord**. NETPLAN et NETMETAL corrigés le 16-17/07, **NETFIL le 17/07**
+        → **il ne reste que NETFIBRE**, à traiter à sa passe de contenu. À noter : NETFIL est mono-classe,
+        son libellé reste donc au **singulier** (« Efficacité ISO 16890 » / « Efficacité EN 779 »), 1 classe
+        ISO face à 1 classe EN 779 — les fiches multi-classes écrivent « Efficacités ». Divergence de
+        libellé volontaire, à rouvrir seulement si on uniformise les 18.
+- [x] **Humidité relative — libellé unifié « 100 % (sans condensation) » (déc. PA, 17/07/2026).** Appliqué
+      le 17/07 aux **7 fiches concernées** : NETFIL (qui passait de 95 %, valeur non sourcée) + NETPLY,
+      NETPLAN, NETMETAL, NETPAK S BORA, NETPAK S CILIA, NETPAK S DUO (qui disaient « 100 % » tout court).
+      **Périmètre volontairement limité après audit des 18** — ne pas l'étendre en croyant finir le travail :
+      les **3 fiches charbon actif** (NETCARB AZUR 70 %, NETCARB NIVAL 70 %, NETCARB CILIA 50 %) **ne
+      changent pas** — le charbon actif est hygroscopique, la valeur basse **est** la contrainte réelle du
+      produit et « sans condensation » n'a pas de sens à 50/70 % ; les **8 fiches sans ligne humidité**
+      (NETBAG S, NETCARB BAG, les 3 NETCEL, NETFIBRE, NETPAK S AZUR, NETPAK S LUMEN) **restent sans ligne**,
+      aucune valeur n'étant sourcée pour elles (PA doit les fournir en tant que fabricant). ⚠️ Le 100 % est
+      **confirmé PA mais NON SOURCÉ** : aucune fiche Titanair de ces produits ne porte de ligne humidité.
+- [ ] **Tirets cadratins « — » : 76 occurrences dans les 18 JSON** (18 sous-titres, 37 caractéristiques,
+      12 points clés, 9 descriptifs). **PA n'en veut pas** (« ça fait réponse IA », 16/07/2026). Retirés
+      des points clés et du descriptif de NETPLY. Restent les sous-titres (`Filtre plissé — Préfiltre
+      synthétique`, **16/18 au 17/07** : NETMETAL « Filtre métallique » et **NETFIL « Filtre cousu sur fil »**
+      n'en portent plus, mais par effet de bord — leur sous-titre a été raccourci sur décision produit, pas
+      au titre de ce chantier) et les caractéristiques (ligne ΔP : `… — EN 13053`), où le tiret sépare deux
+      champs plutôt qu'il ne fait du style. Le point médian `·` est déjà le séparateur maison ailleurs.
+      **Chantier de charte à trancher, TOUJOURS NON OUVERT** — ne pas le déclarer lancé au motif que 2 fiches
+      sur 18 n'ont plus de tiret. Corollaire connu : NETPLY et NETPLAN annoncent leur rôle au sous-titre
+      (« Préfiltre synthétique »), NETMETAL et NETFIL non → **deux styles de sous-titre coexistent**, assumé.
+- [ ] **📄 EXPORT PDF — un fichier PAR CLASSE D'EFFICACITÉ (décision PA, 16/07/2026).**
+      **Motif** : sur les fiches multi-classes, les courbes s'affichent via des cases « Afficher : » et le
+      calculateur via des boutons de classe. **Un PDF ne se clique pas** → il fige l'état par défaut.
+      Constaté sur NETPLY : seule la case G4 est cochée au départ, donc le PDF ne montre **que la courbe
+      G4**, alors que les badges annoncent 2 classes et que la légende mentionne « M5 · 48 mm » sans
+      qu'aucune courbe M5 n'apparaisse. Un client recevrait une fiche qui se contredit.
+      **Règle** : une classe = un PDF, avec la case correspondante cochée et les autres décochées.
+
+      **Périmètre réel — 6 fiches sur 18, soit 32 PDF au lieu de 18** (recompté le 16/07 ; attention,
+      la clé `series` est un **booléen**, les classes traçables sont dans `courbes[].cls`) :
+
+      | Fiche | Classes | PDF |
+      |---|---|---|
+      | NETBAG S | M5 · M6 · F7 · F8 · F9 | 5 |
+      | NETPAK S CILIA | M5 · M6 · F7 · F8 · F9 | 5 |
+      | NETPAK S AZUR | F7 · F8 · F9 | 3 |
+      | NETPAK S LUMEN | F7 · F8 · F9 | 3 |
+      | NETCEL V AZUR | E10 · H13 | 2 |
+      | NETPLY | G4 · M5 | 2 |
+      | *les 12 autres (mono-classe)* | — | *1 chacune* |
+
+      **Quand** : à la toute fin, après remplacement des photos Netair (décision PA : les PDF ne se font
+      pas avant). **Ne pas produire de PDF avec les placeholders Titanair.**
+      **Comment** : Chrome headless, testé et validé le 16/07 sur NETPLY —
+      `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu
+      --no-pdf-header-footer --virtual-time-budget=4000 --print-to-pdf="<sortie>.pdf" "file://<fiche>.html"`
+      → 2 pages A4 propres, photo + courbe + calculateur inclus, rien à corriger côté rendu.
+      Reste à écrire : le pilotage de l'état des cases par classe avant impression (piste : un paramètre
+      d'URL ou un réglage d'export lu au chargement), et le nommage des fichiers.
+      **À noter aussi** : le calculateur se fige sur ses valeurs par défaut (139 €, 3400 m³/h, 24 h, 250 j).
+      Acceptable — c'est une illustration —, mais à confirmer avec PA avant la campagne.
 - [ ] **Humidité relative max.** : harmoniser/confirmer (100 % retenu par défaut sur média synthétique).
+- [ ] **Versionnage des fiches — règle PA (16/07/2026) : rester en v1.x tant que le site n'est pas en
+      ligne.** Aucune fiche n'ayant été publiée, il n'existe pas de « v1.0 diffusée » dont on s'écarterait :
+      les refontes d'avant mise en ligne restent des révisions (v1.1, v1.2…). Le passage en v2.0 se
+      justifiera après publication, ou sur un changement de produit. La **date** suit chaque révision.
+      *(NETPLY : v1.0 22/06 → v1.1 16/07. Un v2.0 avait été posé puis corrigé.)*
 - [ ] **Pieds de page** : numéros de fiche figés OK ; vérifier version/date à chaque révision.
 - [ ] **Classe G4 (Coarse, ADD +50)** sur les familles poches/poches rigides : annoncée commercialement,
       rarement mesurée → à mesurer au cas par cas.
@@ -92,10 +284,68 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 ### NETPLY ✅
 - [ ] Photo définitive Netair (actuel : TITAPLY EC détouré).
 
+**Contenu retravaillé et validé par PA le 16/07/2026** (descriptif · points clés · caractéristiques).
+Arbitrages et divergences à analyser — *ne pas les rouvrir sans PA* :
+
+- [ ] **🟠 Incohérence gamme — le G3.** `Gamme_References_Netair.xlsx` annonce **G3 / G4 / M5** pour NETPLY ;
+      la fiche ne présente que **G4 et M5**. **Décision PA (16/07/2026) : G3 retiré, « pas de marché »** —
+      alors qu'une heure plus tôt il souhaitait le citer pour ne pas perdre un client vers un confrère.
+      **→ le xlsx est désormais en avance sur la réalité : à trancher avec Cowork** (corriger le xlsx,
+      ou réintroduire le G3). Aucune courbe ΔP mesurée pour le G3 de toute façon.
+- [ ] **🟠 La classe M5 ne vient pas du même produit que le G4.** G4 = **TITAPLY EC** (FT 2018-020 v3 ep48,
+      FT 2018-025 v2 ep98). M5 = **PRISME PLY** (FT 2019-032 ep48, FT 2019-033 ep98) — un *autre* produit
+      Titanair. Les deux fiches concordent sur les specs (60 °C, M1, surface 2×/3×), mais NETPLY agrège
+      bien **deux produits sources**. À confirmer côté fournisseur que la gamme Netair est cohérente.
+- [ ] **🔴 « Sans couture ni colle » contredit les 4 fiches Titanair 2018**, qui portent toutes
+      **« LUT / BOND : OUI »**. La formule vient du doc commercial *Titaply EC 2013*. **PA a tranché
+      le 16/07 en tant que fabricant : c'est exact**, formulé « par un **assemblage** sans couture ni colle »
+      (c'est le montage entre grilles qui est concerné, pas le média). À faire confirmer par le fournisseur
+      si une preuve écrite est un jour nécessaire.
+- [ ] **🔴 « Incinérable : Média : oui · Cadre acier : non » n'est sourcé nulle part** — absent des 4 fiches
+      2018. **Confirmé par PA le 16/07.** Seule fiche des 18 à porter cette ligne, alors que NETPLAN a
+      lui aussi média + cadre acier → à harmoniser.
+- [x] **« Démontable / tri sélectif » RETIRÉ (16/07/2026).** Chez Titanair, la déconstruction repose sur des
+      **bouchons de tri brevetés** (*« EXCLUSIVITÉ Groupe TITANAIR »*, doc 2013). Le NETPLY n'est **pas**
+      démontable ; PA a précisé que seule la **séparation média / cadre acier** est vraie. Ne jamais
+      réintroduire « démontable » ni « éco-conception » (notion juridiquement encadrée).
+- [x] **« Sans fibre de verre » sourcé** : `Gamme_References_Netair.xlsx` → FIBRE = SYNTHÉTIQUE,
+      TYPE FIBRE = **POLYESTER**. Le taux (100 % ?) n'est pas documenté → écrit « (polyester) » sans
+      pourcentage, contrairement à NETFIL qui affiche « 100% polyester » (sourcé, lui).
+- [ ] **Surface filtrante 2× (48 mm) / 3× (98 mm)** : confirmé sur les 4 fiches sources, en G4 comme en M5.
+      Le descriptif annonce « 2 à 3 fois la surface frontale ».
+- [ ] **Tableau dimensions : que du 48 mm** (5 sections). PA (16/07) : *« le standard est ce qui est tenu
+      en stock, le gros du marché est en 48 mm ; le 98 mm est une épaisseur standard mais pas tenu en
+      stock »*. → note à ajouter sous le tableau ; **bloc dimensions pas encore revu avec PA**.
+
 ### NETPLAN 🟡
 - [ ] **Photo** Netair (placeholder).
 - [ ] **ΔP > 2 m/s** : extrapolée au-delà de la plage mesurée (fiche 2018 ≤ 2 m/s) → à confirmer.
-- [ ] Gamme G2/G3 annoncée (ép. 8–25) : seul G4 (ép. 25) tracé.
+
+**Contenu retravaillé et validé par PA le 16/07/2026** (descriptif · points clés · caractéristiques).
+Arbitrages — *ne pas les rouvrir sans PA* :
+
+- [ ] **🟠 G2/G3 annoncés SANS COURBE — décision PA du 16/07 : on les garde.** La fiche affiche
+      « Coarse 40% · 50% · 65% » et « G2 · G3 · G4 (réf. : G4) », mais **seul le G4 est tracé** : le graphe
+      G3 de la source Titanair était une **copie du G4** (vérifié via le cache Excel), donc écarté.
+      ⚠️ **Décision CONTRAIRE à celle prise sur NETPLY le même jour** (G3 retiré, « pas de marché ») :
+      ici le G2/G3 se vend en filtre plan. Cohérent avec `Gamme_References_Netair.xlsx` (G3/G4).
+      **→ Courbes G2 et G3 à mesurer en R&D.** Tant qu'elles manquent, la fiche annonce trois classes
+      et n'en documente qu'une.
+- [ ] **🔴 « Sans couture ni colle » et « Incinérable » confirmés par PA, non sourcés.** Même situation que
+      NETPLY : les fiches Titanair 2018 portent « LUT / BOND : OUI ». PA a tranché en tant que fabricant
+      le 16/07 — le média n'est ni collé ni cousu, donc il se sépare du cadre acier, donc la ligne
+      « Incinérable » est vraie. **Ne pas les retirer faute de source écrite.** À faire confirmer par le
+      fournisseur si une preuve devient nécessaire.
+- [x] **« Parois cellule : Acier galvanisé » retirée** (16/07) : sourcée par la fiche Titanair 2018, mais
+      redondante avec « Structure : 2 grilles galvanisées » + « Cadre : acier galvanisé ép. 8/10 ».
+      NETPLY n'en a pas.
+- [x] **Descriptif précédent retiré** : il portait « **garantit** une excellente tenue mécanique et une
+      longue durée de service » (« garantit » est un mot banni ; le reste est invérifiable) et
+      « robuste et économique » (jugements sans information).
+- [x] **Sur mesure confirmé par PA** (16/07) — aucune source écrite ne le mentionne.
+- [x] Alignements de gamme appliqués : « Surface média » → « **Surface filtrante** » ; **ISO 16890 avant
+      EN 779** ; « Classement au feu » remonté auprès des efficacités ; média précisé « (polyester) ».
+      Pages : 286,4 et 290,6 mm — les deux tiennent dans l'A4 **sans** `compact_fort` (fiche mono-classe).
 
 ### NETMETAL 🟡
 - [ ] **Photo** Netair (placeholder Titanair).
@@ -158,7 +408,7 @@ Surface média (cadre 592×592) : 380 → 3,46 m² · 500 = 550 → 5,11 m² · 
 - [ ] **Photo** : `TITABAG/Titabag.jpg` détourée = placeholder → photo produit Netair.
 
 ### NETPAK S CILIA 🟡
-Compact mini-plis (équiv. TITAPAK S PRISME A). Multi-classes **M5→F9 × ép. 48/98**, fiche **3 pages** (moteur `multi_classe`).
+Compact miniplis (équiv. TITAPAK S PRISME A). Multi-classes **M5→F9 × ép. 48/98**, fiche **3 pages** (moteur `multi_classe`).
 Données ΔP **réelles** : M5/M6/F8/F9 = **TITAPAK S HPE PRISME A 2018** ; **F7 = TITAPAK S GR PRISME A** (GREENTEX, ePM1 50%).
 Polynômes : `DONNEES_PDC` l.38-47.
 
@@ -226,7 +476,7 @@ Moteur : nouveaux drapeaux `deux_epaisseurs` (1 famille × 2 épaisseurs) + `dp_
 - [ ] **🟠 Classe ISO 10121-3 (LD/MD/HD + %)** : non fournie par Titanair (fiche < 2022) → marquée « à déterminer par essai ». **À mesurer / faire certifier** (essai GPACD ISO 10121-2) avant toute revendication de classe.
 - [ ] **Capacité d'adsorption / durée de vie** : 15 % en masse (charge max., donnée Titanair) ; durée de vie réelle = fonction de la charge polluante → **à préciser R&D** (grammage/type de charbon).
 - [ ] **T° 40 °C / HR 50 %** : limites propres au charbon (≠ média synthétique 60 °C) — confirmer sur média Netair.
-- [ ] **Surface média** : tableau = surface **frontale** (le mini-plis charbon développe davantage ; surface développée non communiquée par le fournisseur).
+- [ ] **Surface média** : tableau = surface **frontale** (le miniplis charbon développe davantage ; surface développée non communiquée par le fournisseur).
 - [ ] **Page 2** : 1167 px (≈ +44 px / A4) — léger débord, **bien inférieur** aux fiches multi-courbes déjà tolérées (NETPLY 1344, AZUR 1375). Laissé tel quel (cohérent décision PA 22/06).
 - [ ] **Photo** : `CARB.png` (grains de charbon) aplatie sur blanc = placeholder → visuel produit Netair (cellule PRISME CARB).
 

@@ -81,7 +81,87 @@ def build_specs(specs):
     return "\n".join("              " + r for r in rows)
 
 
+def debit_nominal(d, dim):
+    """Débit qui fait passer l'air à la vitesse nominale de référence dans cette section.
+
+    À média, épaisseur et vitesse identiques, la ΔP est identique : c'est pourquoi le débit
+    de chaque section doit suivre sa surface frontale. Sert à valider les débits saisis.
+    """
+    vnom = (d.get("debit_nom", 3400) / 3600) / d.get("aref", AREF)
+    return vnom * ((dim["L"] / 1000) * (dim["H"] / 1000)) * 3600
+
+
+def classes_fusion(d):
+    """Classes à afficher en colonnes ΔP : une seule si la fiche est mono-classe, sinon deux."""
+    low, high = d["classes"]["low"], d["classes"]["high"]
+    return [low] if d.get("mono_classe") else [low, high]
+
+
+def check_dims_fusionnees(d):
+    """`dims_fusionnees` suppose des classes portant chacune un poly et un dp, des références
+    portant la classe, et le tableau du gabarit standard. Toute autre combinaison produirait une
+    sortie fausse en silence (colonnes identiques, réglage jamais lu) : on refuse au lieu de passer."""
+    if d.get("deux_epaisseurs"):
+        raise RuntimeError(
+            "dims_fusionnees + deux_epaisseurs : les deux colonnes ΔP seraient identiques.")
+    if d.get("ref_simple"):
+        raise RuntimeError(
+            "dims_fusionnees + ref_simple : ref_simple produit un code sans classe, donc deux "
+            "colonnes identiques, et renomme l'en-tête que dims_fusionnees doit remplacer. "
+            "Incompatibles — traiter ce produit autrement.")
+    if d.get("series") or d.get("tailles"):
+        raise RuntimeError(
+            "dims_fusionnees + series/tailles : ces modes ont leur propre constructeur de "
+            "tableau (build_dimensions_series / _multi) qui ne lit pas ce réglage.")
+    for cls in classes_fusion(d):
+        if "dp" not in cls:
+            raise RuntimeError(
+                f'dims_fusionnees : la classe {cls.get("label")} n\'a pas de dp — c\'est la ΔP '
+                "affichée par le tableau.")
+    # Le tableau affiche une ΔP unique par classe (celle du débit nominal). Ce n'est vrai que
+    # si chaque section est bien à la vitesse nominale : on refuse tout débit qui s'en écarte,
+    # sinon la ligne serait invérifiable (ex. 287×592 à 1700 m³/h → 67 Pa, pas 63).
+    for dim in d["dimensions"]:
+        attendu = debit_nominal(d, dim)
+        ecart = abs(dim["debit"] - attendu) / attendu
+        if ecart > 0.01:
+            raise RuntimeError(
+                f'dims_fusionnees : section {dim["L"]}x{dim["H"]} — débit {dim["debit"]} m³/h, '
+                f'soit {ecart:.1%} d\'écart avec le débit nominal ({attendu:.0f} m³/h). '
+                "La ΔP affichée serait fausse pour cette ligne. Corriger le débit.")
+
+
+def build_dimensions_fusion(d):
+    check_dims_fusionnees(d)
+    classes = classes_fusion(d)
+    facteur = d.get("surface_facteur", 2)
+    c = "padding:4px 7px;"
+    rows = []
+    for i, dim in enumerate(d["dimensions"], start=1):
+        L, H, P = dim["L"], dim["H"], dim["P"]
+        tr = ' style="background:#F2F6FB;"' if i % 2 == 0 else ""
+        dp = "".join(f'<td style="{c}">{cls["dp"]}</td>' for cls in classes)
+        rows.append(
+            f'<tr{tr}>'
+            f'<td style="{c}">{L}</td>'
+            f'<td style="{c}">{H}</td>'
+            f'<td style="{c}">{P}</td>'
+            f'<td style="{c}">{fr_surface(L, H, facteur)}</td>'
+            f'<td style="{c}">{fr_debit(dim["debit"])}</td>'
+            f'{dp}</tr>'
+        )
+    rows.append(
+        '<tr style="background:#E6F5F7;">'
+        '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="5">Sur mesure</td>'
+        f'<td style="padding:4px 7px; color:#5A6573; font-style:italic;" colspan="{len(classes)}">'
+        'sur demande — délai à confirmer</td></tr>'
+    )
+    return "\n".join("              " + r for r in rows)
+
+
 def build_dimensions(d):
+    if d.get("dims_fusionnees"):
+        return build_dimensions_fusion(d)
     nom = d["nom"]
     low, high = d["classes"]["low"], d["classes"]["high"]
     mono = d.get("mono_classe", False) or d.get("deux_epaisseurs", False)
@@ -702,7 +782,7 @@ def generer_series(d, html):
     # #4 photo + slug
     html = html.replace('src="assets/netply-photo.jpg" alt="Filtre NETPLY"',
                         f'src="assets/{d["photo"]}" alt="{d["photo_alt"]}"')
-    for tok in ("netply-photo", "netply-img", "netply-ph", "netply-file"):
+    for tok in ("netply-photo", "netply-img"):
         html = re.sub(r"\b" + tok + r"\b", f"{slug}-" + tok.split("-", 1)[1], html)
 
     # #5 description
@@ -759,7 +839,7 @@ def generer_series(d, html):
     # --- légende (1 entrée par série)
     html = sub1(
         html,
-        r'(margin-top:3mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">\n)(.*?)'
+        r'(margin-top:2mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">\n)(.*?)'
         r'(\n            <div style="margin-left:auto; font-style:italic;)',
         lambda m: m.group(1) + build_series_legend(d) + m.group(3), flags=re.DOTALL)
 
@@ -985,7 +1065,7 @@ def build_multi_section(d):
         </div>
 
         <div style="margin-top:3mm; border:1px solid #E1E7EF; border-radius:8px; padding:3mm 6mm 2mm 4mm; background:#FCFDFE;">
-          <svg id="curveSvg" viewBox="0 0 600 292" style="width:100%; height:auto; display:block;">
+          <svg id="curveSvg" viewBox="0 0 600 292" style="width:80%; height:auto; display:block; margin:0 auto;">
             <line x1="52" y1="16" x2="580" y2="16" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="74.5" x2="580" y2="74.5" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="133" x2="580" y2="133" stroke="#EDF1F6" stroke-width="1"></line>
@@ -1058,9 +1138,9 @@ def build_multi_section(d):
             </div>
             <div>
               <div style="display:flex; gap:7px;">
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
                 <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP finale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpFinal"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
               </div>
               <div style="font-size:9.5px; color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span></div>
             </div>
@@ -1082,39 +1162,39 @@ def build_multi_section(d):
               </div>
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Débit d'air</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="debitVal"></span> m³/h</span>
               </div>
-              <input type="range" id="inDebit" min="500" max="6000" step="50" value="{dnom}" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDebit" min="500" max="6000" step="50" value="{dnom}" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Durée de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="dureeVal"></span> h/jour</span>
               </div>
-              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Jours de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="joursVal"></span> j/an · <span id="heuresVal"></span> h/an</span>
               </div>
-              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Rendement moto-ventilateur</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="etaVal"></span> %</span>
               </div>
-              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Prix de l'électricité</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="prixVal"></span> €/kWh</span>
               </div>
-              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
           </div>
 
@@ -1355,7 +1435,7 @@ def generer_multi(d, html):
     # #4 photo + slug
     html = html.replace('src="assets/netply-photo.jpg" alt="Filtre NETPLY"',
                         f'src="assets/{d["photo"]}" alt="{d["photo_alt"]}"')
-    for tok in ("netply-photo", "netply-img", "netply-ph", "netply-file"):
+    for tok in ("netply-photo", "netply-img"):
         html = re.sub(r"\b" + tok + r"\b", f"{slug}-" + tok.split("-", 1)[1], html)
 
     # #5 description
@@ -1402,7 +1482,21 @@ def generer_multi(d, html):
 
 
 # ----------------------------------------------------------------- moteur ----
+def bouton_retour(d, html):
+    """Cible du bouton « Retour au produit » du gabarit (flottant, hors A4, masqué à
+    l'impression par .no-print). Appliqué AVANT le routage vers les 3 moteurs, donc aux
+    18 fiches par le même code : le balisage des fiches est ailleurs dupliqué entre le
+    gabarit et generer.py, et une correction n'avait touché que 17 fiches sur 18.
+    Le gabarit porte le slug de l'ancre (netply) → test d'identité préservé."""
+    avant = 'href="/produits/netply"'
+    if avant not in html:
+        raise RuntimeError(
+            "bouton_retour : ancre 'href=\"/produits/netply\"' introuvable dans le gabarit.")
+    return html.replace(avant, f'href="/produits/{d["slug"]}"')
+
+
 def generer(d, html):
+    html = bouton_retour(d, html)
     if d.get("series"):
         return generer_series(d, html)
     if d.get("multi_classe"):
@@ -1440,7 +1534,7 @@ def generer(d, html):
     # --- #4 photo (src + alt) puis identifiants d'éléments (slug)
     html = html.replace('src="assets/netply-photo.jpg" alt="Filtre NETPLY"',
                         f'src="assets/{d["photo"]}" alt="{d["photo_alt"]}"')
-    for tok in ("netply-photo", "netply-img", "netply-ph", "netply-file"):
+    for tok in ("netply-photo", "netply-img"):
         html = re.sub(r"\b" + tok + r"\b", f"{slug}-" + tok.split("-", 1)[1], html)
 
     # --- #5 description
@@ -1626,6 +1720,22 @@ def generer(d, html):
     if d.get("ref_simple"):
         html = html.replace(">Efficacité ISO 16890<", ">Filtration<")
 
+    # Sans le réglage, l'en-tête du gabarit reste intact : c'est ce qui laisse l'ancre du
+    # test d'identité (_gabarit_ref.json) inchangée.
+    if d.get("dims_fusionnees"):
+        th = '<th style="padding:6px 7px; text-align:left; font-weight:600;">'
+        ancien = (f'                {th}ΔP (Pa)</th>\n'
+                  f'                {th}Efficacité ISO 16890</th>\n'
+                  f'                {th}Référence complète</th>\n')
+        nouveau = "".join(f'                {th}ΔP {cls["iso"]} ({cls["label"]})</th>\n'
+                          for cls in classes_fusion(d))
+        if ancien not in html:
+            raise RuntimeError(
+                "dims_fusionnees : en-tête du tableau dimensions introuvable. Cause probable : "
+                "un réglage antérieur a déjà réécrit ces <th> (vérifier l'ordre des blocs dans "
+                "generer()), ou le gabarit a changé.")
+        html = html.replace(ancien, nouveau)
+
     # --- page 1 compacte (par produit) : réduit les marges verticales pour
     #     faire tenir un contenu plus dense sur l'A4, sans toucher les autres fiches.
     if d.get("compact_p1"):
@@ -1648,8 +1758,42 @@ def generer(d, html):
                             'gap:7mm; margin-top:4mm; align-items:stretch;">')                   # grille calculateur
         html = html.replace('margin-top:7mm; background:#F2F6FB;',
                             'margin-top:4mm; background:#F2F6FB;')                               # note méthode
-        html = html.replace('<svg id="curveSvg" viewBox="0 0 600 300" style="width:100%; height:auto; display:block;">',
-                            '<svg id="curveSvg" viewBox="0 0 600 300" style="width:84%; height:auto; display:block; margin:0 auto;">')
+        # (la taille de la courbe n'est plus réglée ici : 80 % est le STANDARD du gabarit
+        #  depuis le 17/07/2026. compact_p2 ne s'occupe plus que des marges de la page 2.)
+
+    # (courbe_large a existé le 17/07/2026 pour rendre à la courbe la place du calculateur sur
+    #  NETMETAL. SUPPRIMÉ le jour même : ses réglages sont devenus le STANDARD du gabarit — courbe
+    #  80 % + calculateur 11 px + suppression des interlignes fantômes — donc appliqués aux 18 fiches
+    #  sans drapeau. Si un .json porte encore "courbe_large", generer.py le refuse : cf. main().)
+
+    # --- compact_fort : tenir une fiche MULTI-CLASSES en 2 pages A4. Ses sélecteurs de classe
+    #     et d'épaisseur, que les fiches mono-classe n'affichent pas, coûtent ~26 mm en page 2.
+    #     Doit passer APRÈS compact_p1/compact_p2 : il resserre les valeurs qu'ils ont posées.
+    #     ⚠️ VIDÉ de ses réglages de PAGE 2 le 17/07/2026 : la courbe (80 %), le calculateur (11 px),
+    #     les curseurs en display:block, les étiquettes, la note et la légende sont désormais le
+    #     STANDARD du gabarit, commun aux 18 fiches (décision PA). compact_fort ne garde que ce qui
+    #     lui est PROPRE : la page 1 (colonne photo, marges) et les légendes multi-classes.
+    if d.get("compact_fort"):
+        if not (d.get("compact_p1") and d.get("compact_p2")):
+            raise RuntimeError(
+                "compact_fort exige compact_p1 ET compact_p2 : il resserre les valeurs qu'ils posent.")
+        low, high = d["classes"]["low"], d["classes"]["high"]
+        remplacements = [
+            ("grid-template-columns:70mm 1fr", "grid-template-columns:52mm 1fr"),
+            ('<div style="margin-top:6mm;">', '<div style="margin-top:4mm;">'),
+            ("margin:6mm 0 5mm 0;", "margin:4mm 0 4mm 0;"),
+            ("Média propre — air à 20 °C", "Média propre · air à 20 °C"),
+        ]
+        for cls in (low, high):
+            lab = f'{cls["label"]} · {cls["iso"]}'
+            for ep in ("48", "98"):
+                remplacements.append((f'{lab} — {ep} mm', f'{cls["label"]} · {ep} mm'))
+        for avant, apres in remplacements:
+            if avant not in html:
+                raise RuntimeError(
+                    f"compact_fort : ancre introuvable « {avant[:46]}… ». Le gabarit a changé, "
+                    "ou compact_fort s'exécute avant compact_p1/compact_p2.")
+            html = html.replace(avant, apres)
 
     return html
 
@@ -1667,6 +1811,13 @@ def main():
 
     with open(json_path, encoding="utf-8") as f:
         d = json.load(f)
+
+    # Clés retirées du moteur : mieux vaut refuser que les ignorer en silence.
+    if d.get("courbe_large"):
+        sys.exit(
+            "❌ « courbe_large » n'existe plus (supprimé le 17/07/2026) : la courbe à 80 % et le "
+            "calculateur à 11 px sont le STANDARD du gabarit, appliqué aux 18 fiches. "
+            f"Retirer cette clé de {json_path}.")
     smooth_curves_origin(d)   # courbes lisses partant de 0 (sauf ancre du test d'identité)
     with open(BASE, encoding="utf-8") as f:
         html = f.read()
