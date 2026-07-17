@@ -129,7 +129,6 @@
       "epaisseur": 25
     }
   },
-  "compact_p2": true,
   "dims_fusionnees": true,
   "_note_dp": "note_dimensions ne doit contenir AUCUN chiffre. La ΔP affichée par le tableau est recalculée par generer.py depuis le polynôme (smooth_curves_origin) : le « dp » du JSON n'est qu'un cache. Une valeur figée dans la note divergerait en silence — c'est ce qui s'est produit avant le 16/07 : la colonne affichait 43 Pa et la note « ≈ 42 Pa ». Ne pas non plus laisser note_dimensions absente : le gabarit retomberait sur sa note par défaut, écrite pour NETPLY (« 2 × la surface frontale », « 3400 m³/h ») donc fausse ici. Références RETIRÉES du tableau (dims_fusionnees, décision PA 16/07) : le client commande au nom du filtre, les codes servent à Incwo. Fiche MONO-CLASSE → une seule colonne ΔP.",
   "note_dimensions": "Surface filtrante = surface frontale (L × H). Le débit indiqué est le débit nominal ; la ΔP initiale est donnée à ce débit, média propre.",
