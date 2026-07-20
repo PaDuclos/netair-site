@@ -882,6 +882,19 @@ def build_series_script(d):
     return js
 
 
+def appliquer_titre_fs(d, html, nom):
+    # titre_fs (opt-in) : corps du titre P1 réduit pour tenir sur UNE ligne quand les badges
+    # longs (ex. « ePM10 50% → ePM1 80% ») compriment la zone titre. Partagé par les chemins
+    # base et série ; lève une erreur franche si l'ancre du gabarit change (pas d'échec muet).
+    if not d.get("titre_fs"):
+        return html
+    avant = (f'font-size:40px; font-weight:700; color:#0F3261; line-height:.98; '
+             f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
+    if avant not in html:
+        raise RuntimeError("titre_fs : ancre du titre P1 (40px) introuvable dans le gabarit.")
+    return html.replace(avant, avant.replace("40px", f'{d["titre_fs"]}px'), 1)
+
+
 def generer_series(d, html):
     nom = d["nom"]; slug = d["slug"]
 
@@ -892,15 +905,7 @@ def generer_series(d, html):
     html = html.replace('letter-spacing:-.6px; text-align:center;">NETPLY</div>',
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
     html = html.replace('letter-spacing:-.3px;">NETPLY</div>', f'letter-spacing:-.3px;">{nom}</div>')
-    # titre_fs (opt-in) : corps du titre P1 réduit pour tenir sur UNE ligne quand les
-    # badges longs (ex. « ePM10 50% → ePM1 80% ») compriment la zone titre (constaté
-    # sur AZUR : 40px passe sur 2 lignes là où BORA, badges courts, tient en 1).
-    if d.get("titre_fs"):
-        html = html.replace(
-            f'font-size:40px; font-weight:700; color:#0F3261; line-height:.98; '
-            f'letter-spacing:-.6px; text-align:center;">{nom}</div>',
-            f'font-size:{d["titre_fs"]}px; font-weight:700; color:#0F3261; line-height:.98; '
-            f'letter-spacing:-.6px; text-align:center;">{nom}</div>', 1)
+    html = appliquer_titre_fs(d, html, nom)
 
     # #2 sous-titre
     html = html.replace(">Filtre plissé — Préfiltre synthétique</div>", f">{d['soustitre']}</div>")
@@ -1722,14 +1727,7 @@ def generer(d, html):
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
     html = html.replace('letter-spacing:-.3px;">NETPLY</div>',
                         f'letter-spacing:-.3px;">{nom}</div>')
-    # titre_fs (opt-in) : même réglage que le chemin série (cf. generer_series) — corps du
-    # titre P1 réduit pour tenir sur UNE ligne quand les badges longs compriment la zone titre.
-    if d.get("titre_fs"):
-        html = html.replace(
-            f'font-size:40px; font-weight:700; color:#0F3261; line-height:.98; '
-            f'letter-spacing:-.6px; text-align:center;">{nom}</div>',
-            f'font-size:{d["titre_fs"]}px; font-weight:700; color:#0F3261; line-height:.98; '
-            f'letter-spacing:-.6px; text-align:center;">{nom}</div>', 1)
+    html = appliquer_titre_fs(d, html, nom)
 
     # --- #2 sous-titre
     html = html.replace(">Filtre plissé — Préfiltre synthétique</div>",

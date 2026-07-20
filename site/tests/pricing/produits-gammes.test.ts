@@ -8,7 +8,7 @@ import {
   produitsSansCadresDeclares,
 } from "../../src/lib/pricing/produits-gammes";
 import type { GammeProduit } from "../../src/lib/pricing/produits-gammes";
-import { efficaciteFigee } from "../../src/lib/pricing/options";
+import { efficaciteFigee, optionsDuCode } from "../../src/lib/pricing/options";
 import { calculerPrix } from "../../src/lib/pricing/index";
 
 /**
@@ -148,6 +148,38 @@ describe("épaisseurs des produits sur devis", () => {
     // Un défaut absent du menu retomberait silencieusement sur la première valeur.
     if (gamme.epaisseurDefaut === undefined) return;
     expect(gamme.epaisseursDevis ?? []).toContain(gamme.epaisseurDefaut);
+  });
+});
+
+describe("étiquettes ISO par produit (etiquettesIso)", () => {
+  // L'override n'existe que parce que la fiche fait foi contre la table ISO globale de
+  // l'Excel (BORA : média spécial → ePM1 50 %, décision PA 18/07/2026). On relit la fiche
+  // pour que l'étiquette ne puisse pas diverger en silence à la resynchro Excel.
+  const ficheJson = (slug: string) =>
+    JSON.parse(
+      readFileSync(
+        fileURLToPath(new URL(`../../../fiches-techniques/Generateur/produits/${slug}.json`, import.meta.url)),
+        "utf8",
+      ),
+    );
+
+  it("NETPAK S BORA affiche « ePM1 50 % (F7) » — l'ISO de sa fiche, pas la table globale", () => {
+    const etiquette = GAMME_PRODUIT["netpak-s-bora"].etiquettesIso?.F7;
+    // L'ISO de la fiche ("ePM1 50%") normalisé à la charte ("ePM1 50 %") + la classe.
+    const isoFiche = String(ficheJson("netpak-s-bora").classes.low.iso).replace(/\s*%/, " %");
+    expect(etiquette).toBe(`${isoFiche} (F7)`);
+  });
+
+  it.each(tousProduits)("%s : chaque clé d'etiquettesIso vise une classe réellement proposée", (_id, gamme) => {
+    // Une clé orpheline (faute de frappe, classe retirée) serait un override mort : le menu
+    // repasserait silencieusement sur la table globale. On l'attrape ici.
+    const cles = Object.keys(gamme.etiquettesIso ?? {});
+    if (cles.length === 0) return;
+    const proposees = [
+      ...(gamme.efficacitesDevis ?? []),
+      ...optionsDuCode(gamme.code).classes.map((c) => c.valeur),
+    ];
+    for (const cle of cles) expect(proposees, `clé « ${cle} » sans classe proposée`).toContain(cle);
   });
 });
 

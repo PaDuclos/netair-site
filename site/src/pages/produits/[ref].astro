@@ -109,7 +109,7 @@ const filtreClasses = (classes: { valeur: string; libelle: string }[]) =>
   classes
     .filter((c) => !classesIncluses || classesIncluses.includes(c.valeur))
     .filter((c) => !classesExclues.includes(c.valeur))
-    .map((c) => (etiquetteIso[c.valeur] ? { ...c, libelle: etiquetteIso[c.valeur] } : c));
+    .map((c) => ({ ...c, libelle: etiquetteIso[c.valeur] ?? c.libelle }));
 
 // Options lues dans le calculateur, pour les produits calculables ET sur devis.
 const optsReelles = codeGamme ? optionsDuCode(codeGamme) : null;
