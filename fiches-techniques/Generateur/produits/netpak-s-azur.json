@@ -28,7 +28,7 @@
     "Sans fibre de verre",
     "Architecture en V (polydièdre)",
     "Faible perte de charge",
-    "Cadre en plastique ABS",
+    "Cadre en plastique",
     "Utilisable sans préfiltre"
   ],
   "specs": [
@@ -42,7 +42,7 @@
     ],
     [
       "Parois cellule",
-      "Plastique ABS"
+      "Plastique"
     ],
     [
       "Efficacités ISO 16890",
@@ -173,7 +173,7 @@
     "(2) GAMME M5 → F9 — DÉCISION FABRICANT, PARTIELLEMENT NON SOURCÉE. La doc Titanair SV-GD donne M6/F7/F8/F9 (pas de M5) ; l'Excel tarifaire (cat. 11) vend M5→F9. PA a tranché : la fiche annonce M5 → F9, aligné boutique. Le M5 n'a ni courbe, ni efficacité mesurée, ni mention dans la doc produit ; le M6 est sourcé (DEHS 60-65 %) mais sans courbe. Courbes tracées : F7/F8/F9 seulement.",
     "(3) NOTE « COURBES DONNÉES POUR F7/F8/F9 » RETIRÉE — réserve d'honnêteté écartée par PA. La note sous le tableau a d'abord porté cette mention (option choisie avec la décision M5/M6), puis PA a demandé la phrase courte type NETPLY sans l'avertissement. La fiche annonce donc M5 → F9 avec un graphe à 3 classes, sans dire que M5/M6 n'ont pas de courbe. Assumé.",
     "(4) MÉDIA « PAPIER POLYPROPYLÈNE » (déc. PA). Fiches 2018 : « POLYPROPYLENE » sec ; doc commerciale Titanair : « papier polypropylène » (l'innovation revendiquée contre le papier fibres de verre). L'ancien « microfibres de polypropylène » effaçait cet argument.",
-    "(5) PAROIS « PLASTIQUE ABS » — DÉCLARATION FABRICANT NON SOURCÉE. Les fiches 2018 disent POLYSTYRENE ; la décision antérieure était « Plastique » neutre. PA confirme l'ABS comme info fabricant. Le configurateur du site reste volontairement sur « Plastique » (écart fiche↔site assumé, déc. PA 17/07) ; le code interne du cadre reste « pp » (sigle historique).",
+    "(5) PAROIS « PLASTIQUE » — L'ABS (déclaration fabricant non sourcée, déc. PA 17/07) a été RETIRÉ le 18/07 sur décision PA (passe BORA) : retour au « Plastique » neutre, spec + point clé. L'écart fiche↔configurateur est résorbé (les deux disent « Plastique ») ; le code interne du cadre reste « pp » (sigle historique). Les fiches 2018 disent POLYSTYRENE.",
     "(6) SOUS-TITRE « FILTRE À POCHES RIGIDES » (texte PA) — sourcé : c'est la catégorie Titanair du produit (« FILTRES A POCHES RIGIDES PAPIER POLYPROPYLENE »). Diverge du « compact » des 4 autres NETPAK S ; harmonisation de gamme à voir plus tard.",
     "(7) DESCRIPTIF COURT (texte PA, retouché avec accord) : 3 phrases, sans classes ni dimensions (portées par le tableau). Doublons points clés ↔ descriptif (papier PP, architecture en V, faible perte de charge) vus et assumés par PA. « Sans fibre de verre » vit dans les points clés seulement.",
     "(8) HUMIDITÉ RELATIVE 100 % (sans condensation) — AJOUTÉE, NON SOURCÉE. Déclaration fabricant, alignement sur les autres préfiltres (même statut que NETFIL/NETMETAL/NETFIBRE). Séparateurs (hot melt) retirés du tableau (déc. PA).",

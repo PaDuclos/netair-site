@@ -102,17 +102,21 @@ if (fautifs.length > 0) {
 // puis liste noire (`classesExclues`, ex. NETFIBRE G3 douteux). Sinon, toutes les tarifées.
 const classesIncluses = gamme?.classesIncluses ?? null;
 const classesExclues = gamme?.classesExclues ?? [];
+// Étiquettes ISO propres au produit (`etiquettesIso`) : priment sur la table globale de
+// l'Excel — la fiche technique fait foi (ex. BORA F7 = ePM1 50 %, média spécial).
+const etiquetteIso = gamme?.etiquettesIso ?? {};
 const filtreClasses = (classes: { valeur: string; libelle: string }[]) =>
   classes
     .filter((c) => !classesIncluses || classesIncluses.includes(c.valeur))
-    .filter((c) => !classesExclues.includes(c.valeur));
+    .filter((c) => !classesExclues.includes(c.valeur))
+    .map((c) => (etiquetteIso[c.valeur] ? { ...c, libelle: etiquetteIso[c.valeur] } : c));
 
 // Options lues dans le calculateur, pour les produits calculables ET sur devis.
 const optsReelles = codeGamme ? optionsDuCode(codeGamme) : null;
 const classesCalc = filtreClasses(optsReelles?.classes ?? []);
 // Stopgap : efficacités d'un produit sur devis non encore saisi au calculateur (ex. BORA G4→F9),
 // pour que le client précise son besoin de filtration. À retirer quand l'Excel les couvre.
-const classesStopgap = (gamme?.efficacitesDevis ?? []).map((v) => ({ valeur: v, libelle: libelleClasse(v) }));
+const classesStopgap = (gamme?.efficacitesDevis ?? []).map((v) => ({ valeur: v, libelle: etiquetteIso[v] ?? libelleClasse(v) }));
 const menus = {
   classes: classesCalc.length > 0 ? classesCalc : classesStopgap,
   epaisseurs: optsReelles?.epaisseurs ?? [],

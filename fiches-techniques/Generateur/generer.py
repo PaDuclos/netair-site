@@ -1722,6 +1722,14 @@ def generer(d, html):
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
     html = html.replace('letter-spacing:-.3px;">NETPLY</div>',
                         f'letter-spacing:-.3px;">{nom}</div>')
+    # titre_fs (opt-in) : même réglage que le chemin série (cf. generer_series) — corps du
+    # titre P1 réduit pour tenir sur UNE ligne quand les badges longs compriment la zone titre.
+    if d.get("titre_fs"):
+        html = html.replace(
+            f'font-size:40px; font-weight:700; color:#0F3261; line-height:.98; '
+            f'letter-spacing:-.6px; text-align:center;">{nom}</div>',
+            f'font-size:{d["titre_fs"]}px; font-weight:700; color:#0F3261; line-height:.98; '
+            f'letter-spacing:-.6px; text-align:center;">{nom}</div>', 1)
 
     # --- #2 sous-titre
     html = html.replace(">Filtre plissé — Préfiltre synthétique</div>",

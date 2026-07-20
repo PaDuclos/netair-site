@@ -1,9 +1,10 @@
 {
-  "_commentaire": "NETPAK S BORA — panneau compact à brides DSK, média GREENTEX (équiv. Titanair TITAPAK S GR DSK). Fiche MONO-CLASSE F7 / ePM1 50%. Décision dirigeant : retenir la version GREENTEX (média recyclé, argument éco) car c'est la courbe disponible et cohérente. Données ΔP RÉELLES lues sur la courbe image 'TITAPAK S GR DSK F7.png' (TITAPAK S GR DSK ePM1 50% - F7, 592×592×100), recoupées par FORMULE_PDC (polynôme GREENTEX 5,83·v²+13,44·v−2,24). Fit PNG : 7,16·v²+11,42·v−1,13 (R²=0,9998). Courbe mesurée jusqu'à ~3100 m³/h (≈70 Pa) → Vmax 2,46, débit nominal 3000. Specs fiche HPE DSK F7 2020 (FT 2020-044) : épaisseur 100 mm, parois polystyrène, média PP, M1, 60°C (acc.65/1h), HR 100%, EN13053 init+100, technologie D.S.K (pleine surface sans préfiltre, remplace poches souples). Surface média n.c. Photo TITAPAK S DSK réelle = placeholder.",
+  "_commentaire": "NETPAK S BORA — filtre compact à brides 100 mm (équiv. Titanair TITAPAK S DSK). v1.1 (18/07/2026) : contenu retravaillé et validé PA — voir _arbitrages_pad. Fiche affiche la plage G4 → F9 (présentation type AZUR + G4) mais ne trace QUE la courbe F7 / ePM1 50 % (média spécial recyclé — étiquette dérogatoire, cf. mémoire ; PAS 55 %). Données ΔP réelles lues sur la courbe image 'TITAPAK S GR DSK F7.png' (592×592×100), recoupées FORMULE_PDC (5,83·v²+13,44·v−2,24). Fit PNG : 7,16·v²+11,42·v−1,13 (R²=0,9998). Courbe mesurée jusqu'à ~3100 m³/h (≈70 Pa) → Vmax 2,5, débit nominal 3000, dp 67 Pa. Specs fiche 2020 (FT 2020-044) : épaisseur 100 mm, bride 25 mm, M1, 60°C (acc.65/1h), HR 100% s.c., EN13053. Parois « Plastique » (fiche 2020 dit polystyrène — libellé neutre, déc. PA). Technologie sans préfiltre (pleine surface, remplace poches souples). Surface média n.c. Photo TITAPAK S DSK réelle = placeholder.",
   "slug": "netpak-s-bora",
   "nom": "NETPAK S BORA",
-  "soustitre": "Panneau compact à brides — Filtration fine",
+  "soustitre": "Filtre compact à brides",
   "mono_classe": true,
+  "titre_fs": 33,
   "no_dimensions": true,
   "surface_facteur": 1,
   "vmax": 2.5,
@@ -16,42 +17,50 @@
   },
   "photo": "netpak-s-bora-photo.jpg",
   "photo_alt": "Panneau compact à brides NETPAK S BORA",
-  "description": "Le NETPAK S BORA est un panneau filtrant compact à brides, de 100 mm d'épaisseur, conçu pour remplacer les filtres à poches souples en filtration fine des centrales de traitement d'air. Son média en microfibres synthétiques exploite toute son épaisseur : la poussière pénètre dans la profondeur du média et la surface filtrante est pleinement utilisée, sans préfiltre, pour une grande capacité de rétention et une faible perte de charge. Sans microfibre de verre. Classe F7 / ePM1 50 % selon EN 779 / EN ISO 16890, épaisseur 100 mm, cadre 592×592 mm.",
+  "description": "Le filtre compact à brides BORA est destiné à la filtration fine de l'air dans les centrales de traitement d'air. Sa bride de 25 mm permet une installation en lieu et place d'un filtre à poches souples. Disponible dans les dimensions adaptées à chaque installation, il associe un média en fibres synthétiques à un pas d'interplis de 6 mm favorisant la filtration en profondeur, pour une utilisation sans préfiltre, une faible perte de charge et une grande capacité de rétention des poussières.",
   "points_cles": [
-    "Filtration en profondeur du média",
-    "Remplace les filtres à poches",
-    "Pleine surface sans préfiltre",
-    "Faible perte de charge",
-    "Sans fibre de verre"
+    "Bride de 25 mm",
+    "Dimensions sur mesure",
+    "Utilisable sans préfiltre",
+    "Sans fibre de verre",
+    "Faible perte de charge"
   ],
   "specs": [
     [
       "Média filtrant",
-      "Microfibres synthétiques"
+      "Papier polypropylène"
     ],
     [
       "Type",
-      "Panneau compact à brides — filtration en profondeur"
+      "Compact à brides — filtration en profondeur"
+    ],
+    [
+      "Bride",
+      "25 mm"
+    ],
+    [
+      "Pas interplis",
+      "6 mm"
+    ],
+    [
+      "Parois cellule",
+      "Plastique"
+    ],
+    [
+      "Efficacités ISO 16890",
+      "Coarse 65 %  ·  ePM10 50 %  ·  ePM2,5 50 %  ·  ePM1 50 %  ·  70 %  ·  80 %"
+    ],
+    [
+      "Efficacités EN 779",
+      "G4  ·  M5  ·  M6  ·  F7  ·  F8  ·  F9"
     ],
     [
       "Épaisseur",
       "100 mm"
     ],
     [
-      "Parois cellule",
-      "Polystyrène"
-    ],
-    [
-      "Efficacité EN 779",
-      "F7"
-    ],
-    [
-      "Efficacité ISO 16890",
-      "ePM1 50 %"
-    ],
-    [
       "Dimensions cadre",
-      "592×592 mm (et dimensions standard)"
+      "Standard et sur mesure"
     ],
     [
       "Classement au feu",
@@ -67,17 +76,17 @@
     ],
     [
       "ΔP finale recommandée",
-      "min(ΔP initiale + 100 Pa ; 3 × ΔP initiale) — EN 13053"
+      "min(ΔP initiale + 50 Pa [Coarse] / + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"
     ]
   ],
   "badges_p1": [
-    "ISO 16890 : ePM1 50%",
-    "EN 779 : F7",
+    "ISO 16890 : Coarse 65% → ePM1 80%",
+    "EN 779 : G4 → F9",
     "EN 13053"
   ],
   "badges_p2": [
-    "ISO 16890 : ePM1 50%",
-    "EN 779 : F7",
+    "ISO 16890 : Coarse 65% → ePM1 80%",
+    "EN 779 : G4 → F9",
     "EN 13053"
   ],
   "classes": {
@@ -121,5 +130,19 @@
       "dp": 67,
       "epaisseur": 100
     }
-  }
+  },
+  "_arbitrages_pad": [
+    "PASSE DE CONTENU v1.1 — 18/07/2026. Arbitrages de Pierre-Alain, à NE PAS rouvrir sans le consulter.",
+    "(1) SOUS-TITRE « Filtre compact à brides » — style v1.1 (forme physique seule) ; « — Filtration fine » retiré.",
+    "(2) DESCRIPTIF FOURNI PAR PA (version corrigée : « Disponible dans les dimensions…, il associe… »). « PAS D'INTERPLIS DE 6 MM » = CONNAISSANCE PRODUIT PA, NON SOURCÉE (le doc 2013 ne décrit pas le plissage) : interplis retravaillé pour s'affranchir du préfiltre — les compacts fibre de verre classiques ont un pitch ~3,5 mm. PA : même formulation à reprendre pour CILIA.",
+    "(3) POINTS CLÉS = LISTE PA (5) : Bride de 25 mm · Dimensions sur mesure · Utilisable sans préfiltre · Sans fibre de verre · Faible perte de charge. L'argument sourcé « remplace les compacts dièdres » (doc 2013) est ABANDONNÉ volontairement (signalé, écarté).",
+    "(4) MÉDIA « PAPIER POLYPROPYLÈNE » — décision PA (« le même libellé qu'AZUR »), prise CONTRE la source doc 2013 qui dit « microfibre de polypropylène ».",
+    "(5) PLAGE G4 → F9 — DÉCISION FABRICANT, NON SOURCÉE TITANAIR (doc 2013 : « existe en efficacité M5 et F7 » seulement) ; alignée sur l'Excel code 16 / configurateur devis. Présentation type AZUR (chaque classe listée, badges en plage) ; SEULE la courbe F7 est tracée (voulu). La divergence structurante fiche(F7)↔configurateur(G4→F9) est résolue dans le sens du configurateur.",
+    "(6) F7 = ePM1 50 % PARTOUT (média spécial) — « c'est ePM1 50% qui est juste » (PA 18/07). Configurateur corrigé via `etiquettesIso` (produits-gammes.ts + [ref].astro) : la table ISO globale de l'Excel dit 55 %, l'override par produit prime. AZUR (55 % affiché, conforme à SA fiche) et CILIA non touchés → resynchro Excel.",
+    "(7) ΔP FINALE « min(ΔP initiale + 50 Pa [Coarse] / + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053 » : double barème dès qu'un Coarse entre dans la plage (règle gamme).",
+    "(8) PAROIS CELLULE « PLASTIQUE » — libellé neutre (déc. PA ; la fiche Titanair 2020 dit POLYSTYRENE). Dans la foulée, ABS RETIRÉ D'AZUR (spec + point clé) → AZUR v1.2 au registre, écart fiche↔configurateur résorbé.",
+    "(9) DIMENSIONS : pas de tableau (produit sur devis, aucune liste sourcée) ; spec « Dimensions cadre : Standard et sur mesure » ; descriptif « dimensions adaptées à chaque installation ».",
+    "(10) TITRE_FS 33 PORTÉ AU CHEMIN DE BASE du générateur (les badges en plage faisaient passer le titre sur 2 lignes ; PA exige 1 ligne). Batterie : test d'identité diff vide + 17 autres fiches byte-identiques.",
+    "(11) RÉSERVES MAINTENUES (cf. CHECKLIST § BORA) : courbe lue sur image (±2-3 Pa, à confirmer R&D) ; plage mesurée ≤ 3100 m³/h ; variante haute efficacité 55 % non tracée ; surface média n.c. ; photo placeholder Titanair ; épaisseur 100 mm en rustine site (à porter dans l'Excel) ; séparateur « INT + colle OUI » (fiche 2020) vs « sans séparateur de colle » (livret) à clarifier."
+  ]
 }

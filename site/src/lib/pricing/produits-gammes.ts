@@ -190,6 +190,13 @@ export interface GammeProduit {
    */
   efficacitesDevis?: string[];
   /**
+   * Étiquette ISO 16890 propre au produit, par classe EN 779 (libellé complet affiché).
+   * Prime sur la table ISO globale de l'Excel quand le média du produit a une efficacité
+   * différente (ex. BORA : média spécial → « ePM1 50 % (F7) » là où la table globale
+   * dit 55 %). La fiche technique fait foi (décision PA 18/07/2026).
+   */
+  etiquettesIso?: Record<string, string>;
+  /**
    * Dimensions L×H ouvertes par défaut dans le configurateur. Utile pour les produits
    * dont la grille tarifaire ne couvre pas le 592×592 générique (ex. laminaire = formats
    * standard) : on ouvre alors sur une dimension réellement tarifée plutôt que sur un
@@ -301,7 +308,7 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
     ],
   },
   // panneau à brides, sur devis : épaisseur 100 mm + efficacité G4→F9 (le client précise son besoin)
-  "netpak-s-bora": { code: "16", mode: "devis", epaisseursDevis: [100], efficacitesDevis: ["G4", "M5", "M6", "F7", "F8", "F9"] },
+  "netpak-s-bora": { code: "16", mode: "devis", epaisseursDevis: [100], efficacitesDevis: ["G4", "M5", "M6", "F7", "F8", "F9"], etiquettesIso: { F7: "ePM1 50 % (F7)" } },
   // AZUR = catégorie 11 de l'Excel (libellé erroné « NETBAG S » dans l'Excel → à corriger, cf. CHECKLIST).
   // Specs concordantes : profondeur 292, dimensions 287×592 / 490×592 / 592×592, classes M5→F9.
   "netpak-s-azur": {
