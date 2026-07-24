@@ -22,7 +22,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK S AZUR | 🟡 | **⚠️ TARIF (site B2, 30/06) : = catégorie Excel 11 (mal étiquetée « NETBAG S » dans l'Excel → À RENOMMER en AZUR). Branché à l'achat (3 dim 287/490/592×592×292, M5→F9, prix). ~~Vérifier que M5/M6 sont bien standard~~ → TRANCHÉ le 17/07 (déc. PA) : fiche alignée sur **M5 → F9** (M5 sans source ni courbe, cf. § détaillé). Parois : « Plastique » partout — **ABS retiré le 18/07 (déc. PA, passe BORA), fiche v1.2 au registre, écart fiche↔configurateur résorbé**.** |
 | NETPAK S LUMEN | 🟡 | **⚠️ TARIF (site B2, 30/06) : l'Excel n'a que 2 dimensions (287×592, 592×592) — il MANQUE le 490×592 (3ᵉ format standard, déc. PA) → à AJOUTER dans l'Excel puis ré-exporter (apparaîtra tout seul). Fiche MAJ : efficacités M5→F9 ajoutées, cadre « plastique ». Classes M5→F9 gardées (déc. PA).** |
 | NETBAG (G4 préfiltration) | ⬜ | Courbe G4 à mesurer |
-| NETPAK S CILIA | 🟡 | F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · F7 GREENTEX croisement ép.48/98 · photo |
+| NETPAK S CILIA | 🟡 | **contenu retravaillé v1.1 (23/07) — voir `_arbitrages_pad` de netpak-s-cilia.json AVANT toute retouche** · fiche **2 pages** (courbe à cases F7 seule cochée, dimensions en p.1) · **surfaces m²/m² corrigées** (l'ancien ≈33/68 était une double division — vraies valeurs 12,55/25,65, média F7) · **cellulose pelliculée (-C)** ajoutée (fiche + configurateur, à tarifer Excel) · étiquette F7 = ePM1 50 % partout (`etiquettesIso`) · F9 ép.48 = F8+10 Pa (suspect) · F8 ép.98 7ᵉ pt extrapolé · croisement F7 ép.48/98 · photo |
 | NETPAK S AZUR | 🟡 | F8 = F9×0,95 (dérivé, réserve ROUVERTE 17/07) · M5 ET M6 sans courbe (M5 sans source) · courbe >4000 extrapolée · surface média n.c. · photo |
 | NETPAK S LUMEN | 🟡 | Variantes fournisseurs 2024-25 (MFILTER/FILTECH) · surface média n.c. · photo (Titanair visible) |
 | NETPAK S BORA | 🟡 | **contenu retravaillé v1.1 (18/07) — voir `_arbitrages_pad` de netpak-s-bora.json AVANT toute retouche** · plage **G4 → F9** affichée (déc. PA — doc 2013 : M5/F7 seulement), courbe F7 seule · **F7 = ePM1 50 % partout** (média spécial ; étiquette configurateur corrigée via `etiquettesIso` — AZUR/CILIA à trancher à la resynchro) · variante haute efficacité 55% non tracée · courbe lue sur image · surface n.c. · photo |
@@ -412,15 +412,26 @@ Surface média (cadre 592×592) : 380 → 3,46 m² · 500 = 550 → 5,11 m² · 
 - [ ] **Photo** : `TITABAG/Titabag.jpg` détourée = placeholder → photo produit Netair.
 
 ### NETPAK S CILIA 🟡
-Compact miniplis (équiv. TITAPAK S PRISME A). Multi-classes **M5→F9 × ép. 48/98**, fiche **3 pages** (moteur `multi_classe`).
-Données ΔP **réelles** : M5/M6/F8/F9 = **TITAPAK S HPE PRISME A 2018** ; **F7 = TITAPAK S GR PRISME A** (GREENTEX, ePM1 50%).
+Filtre compact miniplis (équiv. TITAPAK S PRISME A). **Contenu retravaillé v1.1 (23/07/2026) — voir
+`_arbitrages_pad` de netpak-s-cilia.json AVANT toute retouche.** Multi-classes **M5→F9 × ép. 48/98**,
+fiche **2 pages** depuis v1.1 (clés `dims_p1`, `sans_dp_table`, `calc_p2`, `courbe_cases`, `dims_pdc`).
+Données ΔP **réelles** : M5/M6/F8/F9 = **TITAPAK S HPE PRISME A 2018** ; **F7 = TITAPAK S GR PRISME A** (média spécial, ePM1 50%).
 Polynômes : `DONNEES_PDC` l.38-47.
 
 - [ ] **🟠 F9 ép. 48 mm = F8 ép. 48 mm + 10 Pa EXACTEMENT** (33=23+10, 53=43+10, … sur les 7 points) → offset/copie suspecte dans l'Excel Titanair (en ép. 98, F8≠F9 proprement). **À trancher par une mesure R&D du F9 ép. 48.**
 - [ ] **F8 ép. 98 mm — 7ᵉ point extrapolé** : 6 points mesurés (0,79→2,78 m/s) ; le point à 3,17 m/s (≈ 137 Pa) est calculé par le polynôme → à mesurer.
 - [ ] **F7 (GREENTEX) — croisement ép. 48/ép. 98 à haute vitesse** : au-delà de ~2 m/s la courbe ép. 98 repasse **au-dessus** de l'ép. 48 (ep48 12·20·30·40·51·63·76 / ep98 10·19·29·40·52·67·86), contraire à l'attendu (plus épais = plus de surface = ΔP plus basse). Présent tel quel dans la fiche source GR PRISME A → à confirmer en R&D.
 - [ ] **F7 (GREENTEX) ΔP < M5/M6** : média basse résistance → la courbe F7 passe sous M5/M6. Cohérent avec la techno GREENTEX mais à confirmer (mélange HPE/GR dans une même fiche).
-- [ ] **Surface média m²/m²** : le tableau dimensions affiche les valeurs HPE (11,68 m² ép. 48 / 23,87 ép. 98 @592×592) comme représentatives ; le F7 GREENTEX diffère (12,55 / 25,65 m²) → préciser si on distingue par classe.
+- [x] **Surface média m²/m² — CORRIGÉE le 23/07/2026 (erreur détectée par PA)** : les « m² » des fiches
+      2018 sont en réalité des **m²/m² de section** (preuve géométrique : 2×48 ÷ pitch 7,5 ≈ 12,8), pas des
+      m² par cellule. L'affichage ≈33/68 créé le 22/06 (valeur ÷ 0,3505) était une **double division fausse**.
+      Affiché depuis v1.1 : **12,55 / 25,65 m²/m²** = média F7 (déc. PA ; l'HPE des autres classes vaut
+      11,68/23,87). La colonne Surface du tableau dimensions a été **supprimée** à la refonte (dims_pdc).
+- [ ] **Cellulose pelliculée (-C)** : suffixe tranché par PA (23/07), proposée au configurateur **au même
+      prix** que les autres cadres (cadre neutre) → **ligne tarifaire à créer dans l'Excel** quand les cadres
+      seront structurés (cf. « CADRE = info TARIFAIRE »).
+- [ ] **Étiquette ISO F7 au configurateur** : « ePM1 50 % (F7) » via la rustine `etiquettesIso` (la table ISO
+      globale de l'Excel dit 55 %) → à porter dans l'Excel à la resynchro (comme BORA ; reste AZUR à trancher).
 - [ ] **Photo** : TITAPAK PRISME A HD (© A. Périer) détourée sur blanc = placeholder → photo produit Netair.
 
 ### NETPAK S AZUR 🟡 — v1.1 « Validée PA » (passe de contenu 17/07/2026, arbitrages dans `_arbitrages_pad` du JSON)

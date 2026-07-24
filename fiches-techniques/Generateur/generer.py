@@ -1146,11 +1146,25 @@ def build_dp_table(d):
 
 
 def build_dimensions_multi(d):
-    """Tableau dimensions/surfaces (dimension-centré, indépendant de la classe)."""
+    """Tableau dimensions/surfaces (dimension-centré, indépendant de la classe).
+
+    dims_pdc (opt-in, déc. PA 23/07/2026 — passe CILIA) : liste de classes (ex. ["M5","F7","F9"]).
+    Le tableau abandonne alors Surface/Classes/Référence au profit d'une colonne ΔP initiale
+    par classe, lue dans dim["dp"][classe] au débit nominal de la ligne."""
     rows = []
+    classes_pdc = d.get("dims_pdc")
     for i, dim in enumerate(d["dimensions_multi"], start=1):
         tr = ' style="background:#F2F6FB;"' if (i % 2 == 0) else ""
         c = "padding:4px 7px;"
+        if classes_pdc:
+            cells = (
+                f'<td style="{c}">{dim["L"]}</td>'
+                f'<td style="{c}">{dim["H"]}</td>'
+                f'<td style="{c}">{dim["P"]}</td>'
+                f'<td style="{c}">{fr_debit(dim["debit"])}</td>'
+                + "".join(f'<td style="{c}">{dim["dp"][cl]} Pa</td>' for cl in classes_pdc))
+            rows.append(f'<tr{tr}>{cells}</tr>')
+            continue
         cref = ("padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;")
         ref = f'NETPAK S CILIA · [classe] · {dim["L"]}×{dim["H"]}×{dim["P"]} · -A/-P'
         rows.append(
@@ -1163,9 +1177,10 @@ def build_dimensions_multi(d):
             f'<td style="{c}">M5 → F9</td>'
             f'<td style="{cref}">{ref}</td>'
             f'</tr>')
+    colspan = 3 + len(classes_pdc) if classes_pdc else 6
     rows.append(
         '<tr style="background:#E6F5F7;">'
-        '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="6">Sur mesure</td>'
+        f'<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="{colspan}">Sur mesure</td>'
         '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">sur demande — toute dimension</td></tr>')
     return "\n".join("              " + r for r in rows)
 
@@ -1206,6 +1221,15 @@ def build_multi_pagebreak(d, num):
 
 def build_dimensions_block_multi(d):
     """Bloc « Dimensions & références » complet (titre + table 7 colonnes + note)."""
+    if d.get("dims_pdc"):
+        entetes = ['L (mm)', 'H (mm)', 'P (mm)', 'Débit nom. (m³/h)'] + [
+            f'ΔP init. {cl} (Pa)' for cl in d["dims_pdc"]]
+    else:
+        entetes = ['L (mm)', 'H (mm)', 'P (mm)', 'S. média (m²)', 'Débit nom. (m³/h)',
+                   'Classes', 'Référence complète']
+    ths = "".join(
+        f'                <th style="padding:6px 7px; text-align:left; font-weight:600;">{e}</th>\n'
+        for e in entetes)
     return (
         '        <!-- Dimensions -->\n'
         '        <div style="margin-top:6mm;">\n'
@@ -1216,13 +1240,7 @@ def build_dimensions_block_multi(d):
         '          <table style="width:100%; border-collapse:collapse; font-size:10px; margin-top:7px; white-space:nowrap;">\n'
         '            <thead>\n'
         '              <tr style="background:#0F3261; color:#fff;">\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">L (mm)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">H (mm)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">P (mm)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">S. média (m²)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">Débit nom. (m³/h)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">Classes</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">Référence complète</th>\n'
+        f'{ths}'
         '              </tr>\n'
         '            </thead>\n'
         '            <tbody>\n'
@@ -1255,11 +1273,15 @@ def build_multi_section(d):
         for yp, k in yvals)
     annot = _frnum(round(vnom, 1)) + f" m/s ≈ {dnom} m³/h · 592×592"
     xn = f"{_mapx(vnom, vmax):.1f}"
-    dims_block = build_dimensions_block_multi(d)
-    dp_block = build_dp_table(d)
-    pagebreak = build_multi_pagebreak(d, 2)
+    dims_block = "" if d.get("dims_p1") else build_dimensions_block_multi(d)
+    # sans_dp_table (opt-in, déc. PA 23/07/2026 — passe CILIA) : retire le tableau
+    # « Perte de charge initiale par classe » ; la courbe à sélecteur reste la référence.
+    dp_block = "" if d.get("sans_dp_table") else build_dp_table(d)
+    # calc_p2 (opt-in, déc. PA 23/07/2026 — passe CILIA) : plus de saut de page avant le
+    # calculateur → fiche 2 pages (la renumérotation des pieds de page suit dans generer_multi).
+    pagebreak = "" if d.get("calc_p2") else build_multi_pagebreak(d, 2)
 
-    return f'''{dims_block}
+    section = f'''{dims_block}
 
 {dp_block}
 
@@ -1434,6 +1456,140 @@ def build_multi_section(d):
           <strong style="color:#0F3261;">Méthode :</strong> P = (Q ⁄ 3600) × ΔP ⁄ η &nbsp;·&nbsp; Énergie = P × heures de fonctionnement. Valeurs indicatives à but de comparaison — base CO₂ 0,079 kgCO₂/kWh — 79 g (mix électrique France). η = rendement global du moto-ventilateur.
         </div>'''
 
+    if d.get("courbe_cases"):
+        # courbe_cases (opt-in, déc. PA — passe CILIA) : les boutons de classe de la courbe
+        # deviennent des cases à cocher façon série (AZUR) — plusieurs classes superposables,
+        # marqueurs/survol actifs quand UNE seule classe est cochée. Palette = celle des
+        # fiches série (NETBAG S). Ancres vérifiées, remplacements en erreur franche.
+        PALETTE = {"m5": "#0897A5", "m6": "#1B9E5A", "f7": "#0F3261", "f8": "#6A4C93", "f9": "#C0392B"}
+        eff0 = d.get("eff_default", classes[0]["id"])
+        cks = ['        <div style="display:flex; align-items:center; gap:14px; margin-top:4px; flex-wrap:wrap;">',
+               '          <span style="font-size:11px; font-weight:600; color:#5A6573; white-space:nowrap;">Afficher :</span>']
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            checked = " checked" if c["id"] == eff0 else ""
+            cks.append(
+                '          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; '
+                'font-size:11.5px; color:#3a4654; white-space:nowrap;">'
+                f'<input type="checkbox" id="ck_{c["id"]}"{checked} style="width:14px; height:14px; '
+                f'accent-color:{col}; cursor:pointer;">{c["label"]} · {c["iso"]}</label>')
+        cks.append('        </div>')
+        sel_row = "\n".join(cks)
+        m = re.search(
+            r'        <div style="display:flex; align-items:center; gap:14px; margin-top:4px; '
+            r'flex-wrap:wrap;">.*?id="clsIso"[^>]*></span>\n        </div>',
+            section, flags=re.DOTALL)
+        if not m:
+            raise RuntimeError("courbe_cases : rangée du sélecteur de classe introuvable.")
+        section = section.replace(m.group(0), sel_row, 1)
+
+        paths = []
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            paths.append(f'<path id="p98_{c["id"]}" d="" fill="none" stroke="{col}" stroke-width="2" '
+                         'stroke-dasharray="5 3" stroke-linecap="round" stroke-linejoin="round" '
+                         'style="display:none;"></path>')
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            paths.append(f'<path id="p48_{c["id"]}" d="" fill="none" stroke="{col}" stroke-width="2.3" '
+                         'stroke-linecap="round" stroke-linejoin="round" style="display:none;"></path>')
+        m = re.search(r'            <path id="p98" [^>]*></path>\n            <path id="p48" [^>]*></path>',
+                      section)
+        if not m:
+            raise RuntimeError("courbe_cases : paths p48/p98 introuvables.")
+        section = section.replace(m.group(0), "\n".join("            " + p for p in paths), 1)
+
+        legende = (
+            '<div style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; '
+            'background:#5A6573; display:inline-block; border-radius:2px;"></span><span>48 mm — trait plein</span></div>\n'
+            '            <div style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:0; '
+            'border-top:3px dashed #5A6573; display:inline-block;"></span><span>98 mm — pointillé</span></div>')
+        m = re.search(r'<div id="leg48" .*?</div>\n            <div id="leg98" .*?</div>', section, flags=re.DOTALL)
+        if not m:
+            raise RuntimeError("courbe_cases : légende leg48/leg98 introuvable.")
+        section = section.replace(m.group(0), legende, 1)
+
+        # marqueurs nominaux PAR CLASSE (un couple 48/98 par classe cochée, couleur de la classe)
+        TXT = ('paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" '
+               'font-family="\'IBM Plex Mono\',monospace" font-size="10" font-weight="600"')
+        marks = ['<g id="fixedMarks">']
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            marks.append(f'            <circle id="c48_{c["id"]}" cx="0" cy="0" r="0" fill="{col}"></circle>')
+            marks.append(f'            <circle id="c98_{c["id"]}" cx="0" cy="0" r="0" fill="{col}"></circle>')
+            marks.append(f'            <text id="t48_{c["id"]}" x="0" y="0" text-anchor="end" {TXT} fill="{col}"></text>')
+            marks.append(f'            <text id="t98_{c["id"]}" x="0" y="0" text-anchor="start" {TXT} fill="{col}"></text>')
+        marks.append('            </g>')
+        m = re.search(r'<g id="fixedMarks">.*?</g>', section, flags=re.DOTALL)
+        if not m:
+            raise RuntimeError("courbe_cases : groupe fixedMarks introuvable.")
+        section = section.replace(m.group(0), "\n".join(marks), 1)
+
+        # survol PAR CLASSE : une paire de repères 48/98 par classe cochée
+        hov = ['<g id="hoverG" style="display:none;">',
+               '              <line id="hvV" x1="0" y1="16" x2="0" y2="250" stroke="#0F3261" '
+               'stroke-width="1" stroke-dasharray="3 3" opacity="0.4"></line>']
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            for ep in ("48", "98"):
+                hov.append(f'              <line id="hh{ep}_{c["id"]}" x1="52" y1="0" x2="0" y2="0" '
+                           f'stroke="{col}" stroke-width="1" stroke-dasharray="3 3" opacity="0.32" '
+                           'style="display:none;"></line>')
+                hov.append(f'              <circle id="hd{ep}_{c["id"]}" r="0" fill="{col}"></circle>')
+                hov.append(f'              <text id="ht{ep}_{c["id"]}" text-anchor="start" {TXT} fill="{col}"></text>')
+        hov.append('              <text id="hvel" x="0" y="244" text-anchor="middle" paint-order="stroke" '
+                   'stroke="#fff" stroke-width="3.5" stroke-linejoin="round" '
+                   'font-family="\'IBM Plex Mono\',monospace" font-size="10.5" font-weight="700" '
+                   'fill="#0F3261"></text>')
+        hov.append('            </g>')
+        m = re.search(r'<g id="hoverG" style="display:none;">.*?</g>', section, flags=re.DOTALL)
+        if not m:
+            raise RuntimeError("courbe_cases : groupe hoverG introuvable.")
+        section = section.replace(m.group(0), "\n".join(hov), 1)
+
+    if d.get("calc_p2"):
+        # Compaction de la page 2 (courbe + calculateur multi sur UNE A4) : le calculateur
+        # multi porte deux sélecteurs de plus que le standard (~26 mm) — on les absorbe en
+        # densifiant le calculateur, ce qui laisse la courbe presque pleine largeur (77 %).
+        # Ancres vérifiées : une ancre introuvable = erreur franche, jamais un no-op muet.
+        for avant, apres in [
+            ('style="width:80%; height:auto; display:block; margin:0 auto;"',
+             'style="width:85%; height:auto; display:block; margin:0 auto;"'),
+            ('<div style="margin-top:3mm; border:1px solid #E1E7EF;',
+             '<div style="margin-top:2mm; border:1px solid #E1E7EF;'),
+            ('gap:10px; margin-top:7mm;">', 'gap:10px; margin-top:4mm;">'),
+            ('gap:7mm; margin-top:5mm; align-items:stretch;">',
+             'gap:7mm; margin-top:3mm; align-items:stretch;">'),
+            ('<div style="margin-top:6mm; background:#F2F6FB; border-left:3px solid #0897A5;',
+             '<div style="margin-top:3mm; background:#F2F6FB; border-left:3px solid #0897A5;'),
+            ('flex-direction:column; gap:11px; padding-top:1px; min-width:0;',
+             'flex-direction:column; gap:6px; padding-top:1px; min-width:0;'),
+            ('<div style="display:flex; flex-direction:column; gap:11px;">',
+             '<div style="display:flex; flex-direction:column; gap:6px;">'),
+            ("color:#9aa6b4; margin-bottom:7px;\">Classe d'efficacité",
+             "color:#9aa6b4; margin-bottom:4px;\">Classe d'efficacité"),
+            ('color:#9aa6b4; margin-bottom:7px;">Épaisseur',
+             'color:#9aa6b4; margin-bottom:4px;">Épaisseur'),
+            ('color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale',
+             'color:#9aa6b4; margin-top:4px; line-height:1.4;">ΔP finale'),
+        ]:
+            if avant not in section:
+                raise RuntimeError(f"calc_p2 : ancre introuvable « {avant[:50]}… »")
+            section = section.replace(avant, apres, 1)
+        # remplacements multiples (tuiles ΔP ×3, champs L/H ×2, boutons de classe ×5)
+        for avant, apres, n in [
+            ('padding:8px 6px; text-align:center;', 'padding:6px 6px; text-align:center;', 3),
+            ('border-radius:6px; padding:7px 9px; outline:none;',
+             'border-radius:6px; padding:5px 9px; outline:none;', 2),
+            ('flex:1; padding:7px 2px; border:none;', 'flex:1; padding:6px 2px; border:none;', 5),
+            ('align-items:baseline; margin-bottom:2px;', 'align-items:baseline; margin-bottom:0;', 5),
+        ]:
+            if section.count(avant) != n:
+                raise RuntimeError(
+                    f"calc_p2 : {section.count(avant)} occurrence(s) de « {avant[:40]}… », {n} attendues")
+            section = section.replace(avant, apres)
+    return section
+
 
 def build_multi_js(d):
     """Bloc <script> du composant interactif multi-classes."""
@@ -1453,7 +1609,7 @@ def build_multi_js(d):
     iso = ", ".join(f"{c['id']}: '{c['iso']}'" for c in classes)
     ids = ", ".join(f"'{c['id']}'" for c in classes)
 
-    return f'''<script>
+    js = f'''<script>
 (function () {{
   "use strict";
   var POLY = {{
@@ -1610,6 +1766,86 @@ def build_multi_js(d):
 }})();
 </script>'''
 
+    if d.get("courbe_cases"):
+        # Mode cases à cocher : mêmes calculs, mais l'état « courbe » devient un ensemble de
+        # classes cochées. Marqueurs nominaux et survol ne s'affichent que pour UNE classe
+        # cochée (sinon illisible). Chaque remplacement est vérifié — erreur franche sinon.
+        show_init = ", ".join(
+            f"{c['id']}: {'true' if c['id'] == eff0 else 'false'}" for c in classes)
+        remplacements = [
+            (f"var state = {{ eff: '{eff0}', calcEff:",
+             f"var state = {{ show: {{ {show_init} }}, calcEff:"),
+            ("    var eff = state.eff;          // courbe\n", ""),
+            ("    var co48 = POLY[eff][48], co98 = POLY[eff][98];\n", ""),
+            ("    $('p48').setAttribute('d', curve(co48));\n"
+             "    $('p98').setAttribute('d', curve(co98));",
+             "    IDS.forEach(function (id) {\n"
+             "      $('p48_' + id).style.display = state.show[id] ? '' : 'none';\n"
+             "      $('p98_' + id).style.display = state.show[id] ? '' : 'none';\n"
+             "    });"),
+            ("    pt('c48', 't48', pdc(co48, Vnom), -9, -8);\n"
+             "    pt('c98', 't98', pdc(co98, Vnom), 9, 14);",
+             "    IDS.forEach(function (id) {\n"
+             "      var on = state.show[id];\n"
+             "      ['48', '98'].forEach(function (ep) {\n"
+             "        var cEl = $('c' + ep + '_' + id), tEl = $('t' + ep + '_' + id);\n"
+             "        if (!on) { cEl.setAttribute('r', 0); tEl.textContent = ''; return; }\n"
+             "        var yPa = pdc(POLY[id][ep], Vnom), y = mapY(yPa);\n"
+             "        cEl.setAttribute('cx', mx.toFixed(1)); cEl.setAttribute('cy', y.toFixed(1)); cEl.setAttribute('r', 3.2);\n"
+             "        tEl.setAttribute('x', (mx + (ep === '48' ? -9 : 9)).toFixed(1));\n"
+             "        tEl.setAttribute('y', (y + (ep === '48' ? -8 : 14)).toFixed(1));\n"
+             "        tEl.textContent = fr(yPa) + ' Pa';\n"
+             "      });\n"
+             "    });"),
+            ("      var b = $('cls_' + id);\n"
+             "      if (b) b.setAttribute('style', SEL + (id === eff ? ON : OFF));\n", ""),
+            ("    $('clsIso').textContent = LAB[eff] + ' · ' + ISO[eff];\n"
+             "    $('leg48t').textContent = LAB[eff] + ' · ' + ISO[eff] + ' — 48 mm';\n"
+             "    $('leg98t').textContent = LAB[eff] + ' · ' + ISO[eff] + ' — 98 mm';\n", ""),
+            ("    if (b) b.addEventListener('click', function () { state.eff = id; render(); });",
+             "    var k = $('ck_' + id);\n"
+             "    if (k) k.addEventListener('change', function () { state.show[id] = k.checked; render(); });"),
+            ("    var eff = state.eff;\n"
+             "    fixedMarks.style.display = 'none';\n"
+             "    hoverG.style.display = '';\n"
+             "    $('hvV').setAttribute('x1', x.toFixed(1)); $('hvV').setAttribute('x2', x.toFixed(1));\n"
+             "    function lane(n, yPa, dy) {\n"
+             "      var hd = $('hd' + n), hh = $('hh' + n), ht = $('ht' + n), y = mapY(yPa);\n"
+             "      hd.setAttribute('cx', x.toFixed(1)); hd.setAttribute('cy', y.toFixed(1)); hd.setAttribute('r', 3);\n"
+             "      hh.style.display = ''; hh.setAttribute('x2', x.toFixed(1)); hh.setAttribute('y1', y.toFixed(1)); hh.setAttribute('y2', y.toFixed(1));\n"
+             "      ht.setAttribute('x', (x + 7).toFixed(1)); ht.setAttribute('y', (y + dy).toFixed(1)); ht.textContent = fr(yPa) + ' Pa';\n"
+             "    }\n"
+             "    lane(1, pdcD(POLY[eff][48], v), -5);\n"
+             "    lane(2, pdcD(POLY[eff][98], v), 13);",
+             "    fixedMarks.style.display = 'none';\n"
+             "    hoverG.style.display = '';\n"
+             "    $('hvV').setAttribute('x1', x.toFixed(1)); $('hvV').setAttribute('x2', x.toFixed(1));\n"
+             "    function lane(key, on, yPa, dy) {\n"
+             "      var hd = $('hd' + key), hh = $('hh' + key), ht = $('ht' + key);\n"
+             "      if (!on) { hd.setAttribute('r', 0); hh.style.display = 'none'; ht.textContent = ''; return; }\n"
+             "      var y = mapY(yPa);\n"
+             "      hd.setAttribute('cx', x.toFixed(1)); hd.setAttribute('cy', y.toFixed(1)); hd.setAttribute('r', 3);\n"
+             "      hh.style.display = ''; hh.setAttribute('x2', x.toFixed(1)); hh.setAttribute('y1', y.toFixed(1)); hh.setAttribute('y2', y.toFixed(1));\n"
+             "      ht.setAttribute('x', (x + 7).toFixed(1)); ht.setAttribute('y', (y + dy).toFixed(1)); ht.textContent = fr(yPa) + ' Pa';\n"
+             "    }\n"
+             "    IDS.forEach(function (id) {\n"
+             "      var on = state.show[id];\n"
+             "      lane('48_' + id, on, pdcD(POLY[id][48], v), -5);\n"
+             "      lane('98_' + id, on, pdcD(POLY[id][98], v), 13);\n"
+             "    });"),
+            ("  render();\n})();",
+             "  IDS.forEach(function (id) {\n"
+             "    $('p48_' + id).setAttribute('d', curve(POLY[id][48]));\n"
+             "    $('p98_' + id).setAttribute('d', curve(POLY[id][98]));\n"
+             "  });\n"
+             "  render();\n})();"),
+        ]
+        for avant, apres in remplacements:
+            if avant not in js:
+                raise RuntimeError(f"courbe_cases (JS) : ancre introuvable « {avant[:60]}… »")
+            js = js.replace(avant, apres, 1)
+    return js
+
 
 def _jsf(x):
     """Nombre pour le JS : 3.17 -> '3.17', 2 -> '2'."""
@@ -1630,6 +1866,7 @@ def generer_multi(d, html):
     html = html.replace('letter-spacing:-.6px; text-align:center;">NETPLY</div>',
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
     html = html.replace('letter-spacing:-.3px;">NETPLY</div>', f'letter-spacing:-.3px;">{nom}</div>')
+    html = appliquer_titre_fs(d, html, nom)
 
     # #2 sous-titre
     html = html.replace(">Filtre plissé — Préfiltre synthétique</div>", f">{d['soustitre']}</div>")
@@ -1662,17 +1899,26 @@ def generer_multi(d, html):
     html = sub1(html, r"(<!-- Caractéristiques techniques -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
                 lambda m: m.group(1) + build_specs(d["specs"]) + m.group(3), flags=re.DOTALL)
 
-    # #8 dimensions : retirées de la page 1 (relocalisées en page 2 par build_multi_section)
+    # #8 dimensions : retirées de la page 1 (relocalisées en page 2 par build_multi_section) ;
+    # dims_p1 (opt-in, déc. PA 23/07/2026 — passe CILIA) : le tableau reste en page 1, sous les specs.
+    remplacement_dims = ("\n" + build_dimensions_block_multi(d)) if d.get("dims_p1") else ""
     html = sub1(
         html,
         r"\n        <!-- Dimensions -->\n        <div style=\"margin-top:8mm;\">.*?\n        </div>",
-        lambda m: "", flags=re.DOTALL)
+        lambda m: remplacement_dims, flags=re.DOTALL)
 
-    # #9 pied de page (fiche 3 pages : P1 = 1/3, le footer du gabarit P2 devient 3/3)
+    # #9 pied de page (fiche 3 pages : P1 = 1/3, le footer du gabarit P2 devient 3/3 ;
+    # avec calc_p2 la fiche reste en 2 pages → numérotation 1/2 et 2/2 du gabarit conservée)
     html = html.replace("Fiche n° FT-NETPLY-001", f"Fiche n° {d['fiche']['num']}")
     vd = f"{d['fiche']['version']} — {d['fiche']['date']}"
-    html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/3")
-    html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 3/3")
+    if d.get("calc_p2"):
+        html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/2")
+        html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 2/2")
+        # filet d'en-tête de la page 2 resserré (même réglage que compact_p2)
+        html = html.replace("margin:7mm 0 7mm 0;", "margin:4mm 0 4mm 0;")
+    else:
+        html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/3")
+        html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 3/3")
 
     # remplacer toute la section courbe + calculateur (page 2)
     html = sub1(html,

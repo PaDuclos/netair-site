@@ -42,6 +42,7 @@ export type ModeProduit = "calcul" | "devis";
 export const CADRE_SUFFIXE = {
   galva: "A",
   pp: "P",
+  cellulose: "C",
   acier_acier: "AA",
   acier_alu: "AL",
   inox_inox: "II",
@@ -252,10 +253,17 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   "netpak-s-cilia": {
     code: "7",
     mode: "calcul",
+    // Cadres alignés sur la fiche v1.1 (déc. PA 23/07/2026) : « Plastique » (et non
+    // « Polypropylène »), cellulose pelliculée ajoutée au même prix (le cadre est neutre
+    // côté prix tant que l'Excel ne le structure pas — cf. CHECKLIST « CADRE = info
+    // TARIFAIRE ») ; suffixe -C acté côté codification. F7 = ePM1 50 % (média spécial,
+    // la fiche fait foi — même override que BORA).
     cadres: [
       { valeur: "galva", libelle: "Acier galvanisé" },
-      { valeur: "pp", libelle: "Polypropylène" },
+      { valeur: "pp", libelle: "Plastique" },
+      { valeur: "cellulose", libelle: "Cellulose pelliculée" },
     ],
+    etiquettesIso: { F7: "ePM1 50 % (F7)" },
   },
   // 🟢 méthode D · parois cellule acier galvanisé (cf. fiche). L'option « cellulose pelliculée
   // incinérable » de la fiche n'est pas encore proposée : elle demande une lettre de suffixe de
