@@ -160,6 +160,11 @@ const variantesConfig =
 // Efficacité unique → champ figé (libellé affiché + valeur transmise au moteur), jamais un menu
 // à une seule ligne : ce serait un faux choix. Règle et cas limites dans `efficaciteFigee`.
 const effFixe = efficaciteFigee(menus.classes, variantesConfig?.map((v) => v.classes) ?? []);
+
+// Produit vendu uniquement en formats standard (ex. polydièdre, laminaire) : l'intro
+// « dimensions exactes / sur mesure » serait fausse — on annonce le choix d'un format.
+const formatsSeuls =
+  variantesConfig != null && variantesConfig.every((v) => v.saisie === 'formats');
 ---
 
 <BaseLayout
@@ -269,7 +274,9 @@ const effFixe = efficaciteFigee(menus.classes, variantesConfig?.map((v) => v.cla
   <!-- Configurateur + Panier + Demande de devis -->
   <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined} data-cadrefixe={cadreFixe?.valeur} data-cadrefixelabel={cadreFixe?.libelle}>
     <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
-    <p class="mt-1 text-sm text-muted">Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.</p>
+    <p class="mt-1 text-sm text-muted">{formatsSeuls
+      ? 'Choisissez votre format standard : achetez au tarif catalogue, ou ajoutez à une demande de devis.'
+      : 'Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.'}</p>
 
     <div class="mt-4 grid gap-7 lg:grid-cols-[1.3fr_1fr]">
 

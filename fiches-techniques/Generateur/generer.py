@@ -464,8 +464,21 @@ def _serie_key(s):
     return f'{s["cls"]}_{s["len"]}'
 
 
+def _disp_defaut(d):
+    # courbes_affichees (opt-in, LUMEN) : classes cochées à l'ouverture, les autres
+    # restant activables d'un clic. Défaut : toutes affichées (fiches série inchangées).
+    order = d["classes_order"]
+    if not d.get("courbes_affichees"):
+        return {c: True for c in order}
+    inconnues = set(d["courbes_affichees"]) - set(order)
+    if inconnues:
+        raise RuntimeError(f"courbes_affichees : classes inconnues {sorted(inconnues)}")
+    return {c: c in d["courbes_affichees"] for c in order}
+
+
 def build_series_checkboxes(d):
     cdef = d["classes_def"]; order = d["classes_order"]; series = d["courbes"]
+    disp0 = _disp_defaut(d)
     primary = {}
     for s in series:
         primary.setdefault(s["cls"], s["color"])
@@ -478,10 +491,11 @@ def build_series_checkboxes(d):
             continue
         col = primary[cls]
         lab = f'{cdef[cls]["label"]} · {cdef[cls]["iso"]}'
+        coche = "checked " if disp0[cls] else ""
         rows.append(
             '          <label style="display:inline-flex; align-items:center; gap:6px; '
             'cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;">'
-            f'<input type="checkbox" id="cb_{cls}" checked style="width:14px; height:14px; '
+            f'<input type="checkbox" id="cb_{cls}" {coche}style="width:14px; height:14px; '
             f'accent-color:{col}; cursor:pointer;">{lab}</label>')
     rows.append('        </div>')
     return "\n".join(rows)
@@ -606,18 +620,27 @@ def build_dimensions_series(d):
             cells.append(f'<td style="{cref}">{ref}</td>')
         rows.append(f'<tr{tr}>' + "".join(cells) + '</tr>')
 
+    # dims_classes (opt-in, LUMEN) : restreint le tableau des dimensions aux classes
+    # réellement tenues en stock, sans toucher aux courbes ni au calculateur.
+    courbes = d["courbes"]
+    if d.get("dims_classes"):
+        inconnues = set(d["dims_classes"]) - {s["cls"] for s in courbes}
+        if inconnues:
+            raise RuntimeError(f"dims_classes : classes inconnues {sorted(inconnues)}")
+        courbes = [s for s in courbes if s["cls"] in d["dims_classes"]]
+
     # Mode multi-tailles (opt-in "tailles") : pour chaque cadre standard, les N classes.
     # Le débit nominal est propre à la taille (proportionnel à la section). Sinon : 1 ligne
     # par classe au cadre 592×592 (comportement d'origine, autres fiches série inchangées).
     if d.get("tailles"):
         if tri_classe:
-            paires = [(t, s) for s in d["courbes"] for t in d["tailles"]]
+            paires = [(t, s) for s in courbes for t in d["tailles"]]
         else:
-            paires = [(t, s) for t in d["tailles"] for s in d["courbes"]]
+            paires = [(t, s) for t in d["tailles"] for s in courbes]
         for i, (t, s) in enumerate(paires, start=1):
             emit(i, t["L"], t["H"], s, t.get("debit", dnom))
     else:
-        for i, s in enumerate(d["courbes"], start=1):
+        for i, s in enumerate(courbes, start=1):
             emit(i, 592, 592, s, dnom)
     # dims_sans_surmesure (opt-in) : pas de ligne « Sur mesure » quand le produit
     # n'existe qu'en cadres standard.
@@ -828,7 +851,7 @@ def build_series_script(d):
     cls = {k: {"label": v["label"], "iso": v["iso"], "add": v["add"], "rule": v["rule"]}
            for k, v in d["classes_def"].items()}
     order = [c for c in d["classes_order"] if any(s["cls"] == c for s in d["courbes"])]
-    disp0 = {c: True for c in order}
+    disp0 = _disp_defaut(d)
     js = SERIES_JS
     js = js.replace("__SERIES__", _json.dumps(series, ensure_ascii=False))
     js = js.replace("__CLS__", _json.dumps(cls, ensure_ascii=False))
