@@ -8,7 +8,7 @@ import {
   type Produit,
 } from '../../lib/familles';
 import { gammeDuProduit, produitsSansCadresDeclares } from '../../lib/pricing/produits-gammes';
-import { optionsDuCode, formatsDuCode, libelleClasse, efficaciteFigee } from '../../lib/pricing/options';
+import { optionsDuCode, formatsDuCode, libelleClasse, efficaciteFigee, comparerClasses } from '../../lib/pricing/options';
 import { trouverGamme } from '../../lib/pricing/lookups';
 import { MIN_COMMANDE_HT } from '../../lib/boutique';
 
@@ -117,13 +117,25 @@ const classesCalc = filtreClasses(optsReelles?.classes ?? []);
 // Stopgap : efficacités d'un produit sur devis non encore saisi au calculateur (ex. BORA G4→F9),
 // pour que le client précise son besoin de filtration. À retirer quand l'Excel les couvre.
 const classesStopgap = (gamme?.efficacitesDevis ?? []).map((v) => ({ valeur: v, libelle: etiquetteIso[v] ?? libelleClasse(v) }));
+// Classes annoncées par la fiche mais non tarifées (ex. NETBAG S G4/M5) : ajoutées au menu d'un
+// produit calculable, à leur rang EN 779, pour partir en devis faute de prix.
+const classesHorsTarif = (gamme?.classesSurDevis ?? [])
+  .filter((v) => !classesCalc.some((c) => c.valeur === v))
+  .map((v) => ({ valeur: v, libelle: etiquetteIso[v] ?? libelleClasse(v) }));
 const menus = {
-  classes: classesCalc.length > 0 ? classesCalc : classesStopgap,
+  classes:
+    classesCalc.length > 0
+      ? [...classesCalc, ...classesHorsTarif].sort((a, b) => comparerClasses(a.valeur, b.valeur))
+      : classesStopgap,
   epaisseurs: optsReelles?.epaisseurs ?? [],
 };
 // Épaisseurs : celles du calculateur ; à défaut, stopgap `epaisseursDevis` (ex. BORA 100 mm,
 // en attendant que l'épaisseur soit ajoutée au calculateur — cf. CHECKLIST).
-const epaisseursAffichees = menus.epaisseurs.length > 0 ? menus.epaisseurs : (gamme?.epaisseursDevis ?? []);
+// Épaisseurs de la variante par défaut si elle en déclare (ex. NETBAG S standard = 380/550,
+// sous-ensemble mesuré ET tarifé) ; sinon celles du calculateur, sinon le stopgap devis.
+const epaisseursVarDefaut = gamme?.variantes?.[0]?.epaisseurs;
+const epaisseursAffichees =
+  epaisseursVarDefaut ?? (menus.epaisseurs.length > 0 ? menus.epaisseurs : (gamme?.epaisseursDevis ?? []));
 // Épaisseur pré-sélectionnée : celle déclarée si elle est bien proposée, sinon la première
 // du menu. L'ordre étant croissant, s'en remettre au premier reviendrait à pousser la plus fine.
 const epDefaut = epaisseursAffichees.includes(gamme?.epaisseurDefaut as number)
@@ -142,10 +154,20 @@ const effSelection = choisirEff(menus.classes, codeGamme);
 // (ex. laminaire). Pour chaque variante on calcule ici (côté serveur) les efficacités
 // tarifées et, en mode "formats" sans liste explicite, les dimensions standard depuis
 // la grille. Transmis au script via un attribut de données.
+// Un produit SUR DEVIS peut aussi n'exister qu'en formats standard (ex. NETBAG S) : ses formats
+// sont alors déclarés en dur dans `produits-gammes.ts`, faute de grille tarifaire où les lire.
 const variantesConfig =
-  modeProduit === 'calcul' && gamme?.variantes
+  gamme?.variantes
     ? gamme.variantes.map((v) => {
-        const classes = filtreClasses(optionsDuCode(v.code).classes);
+        // Sur devis, `optionsDuCode` ne rend rien (pas de code tarifaire) → on retombe sur les
+        // efficacités déclarées, sinon le script client viderait le menu « Efficacité ».
+        const classesCode = filtreClasses(optionsDuCode(v.code).classes);
+        const classesBase = classesCode.length > 0 ? classesCode : classesStopgap;
+        // Classes non tarifées annoncées par la fiche : mêmes règles que le menu principal.
+        const classes =
+          classesCode.length > 0 && classesHorsTarif.length > 0
+            ? [...classesBase, ...classesHorsTarif].sort((a, b) => comparerClasses(a.valeur, b.valeur))
+            : classesBase;
         const formatsBase =
           v.saisie === 'formats'
             ? v.formats ?? formatsDuCode(v.code, classes[0]?.valeur)
@@ -153,7 +175,7 @@ const variantesConfig =
         // formatsGrandDabord : premier = sélection par défaut → plein format en tête.
         const formats =
           formatsBase && v.formatsGrandDabord ? [...formatsBase].reverse() : formatsBase;
-        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
+        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, epaisseurs: v.epaisseurs ?? null, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
       })
     : null;
 
@@ -165,6 +187,17 @@ const effFixe = efficaciteFigee(menus.classes, variantesConfig?.map((v) => v.cla
 // « dimensions exactes / sur mesure » serait fausse — on annonce le choix d'un format.
 const formatsSeuls =
   variantesConfig != null && variantesConfig.every((v) => v.saisie === 'formats');
+
+// Intro du configurateur. Un produit sur devis n'a pas de prix : lui promettre d'« acheter au
+// tarif catalogue » est faux (son bouton panier est désactivé). Trois cas distincts.
+const introConfig =
+  modeProduit === 'devis'
+    ? (formatsSeuls
+        ? 'Choisissez votre format standard et ajoutez ce filtre à votre demande de devis. Les autres dimensions sont étudiées sur demande.'
+        : 'Précisez votre besoin et ajoutez ce filtre à votre demande de devis.')
+    : (formatsSeuls
+        ? 'Choisissez votre format standard : achetez au tarif catalogue, ou ajoutez à une demande de devis.'
+        : 'Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.');
 ---
 
 <BaseLayout
@@ -274,9 +307,7 @@ const formatsSeuls =
   <!-- Configurateur + Panier + Demande de devis -->
   <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined} data-cadrefixe={cadreFixe?.valeur} data-cadrefixelabel={cadreFixe?.libelle}>
     <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
-    <p class="mt-1 text-sm text-muted">{formatsSeuls
-      ? 'Choisissez votre format standard : achetez au tarif catalogue, ou ajoutez à une demande de devis.'
-      : 'Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.'}</p>
+    <p class="mt-1 text-sm text-muted">{introConfig}</p>
 
     <div class="mt-4 grid gap-7 lg:grid-cols-[1.3fr_1fr]">
 
@@ -318,7 +349,7 @@ const formatsSeuls =
               déclare une (ex. BORA 100 mm, à capturer dans la demande de devis). */}
           {(epaisseursAffichees.length > 1 || (modeProduit === 'devis' && epaisseursAffichees.length === 1)) && (
             <label class="block">
-              <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
+              <span class="eyebrow text-[11px] text-muted">{gamme?.labelEpaisseur ?? 'Épaisseur'}</span>
               <select id="inEp"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
                 {epaisseursAffichees.map((ep) => (
@@ -550,6 +581,14 @@ const formatsSeuls =
           setFormatOptions(v.formats || []);
         }
         setEffOptions(v.classes || [], v.effSelection);
+        // Épaisseurs propres à la variante (ex. NETBAG S : 380/550 en standard — tarifés —
+        // contre les 4 longueurs de la fiche en sur-mesure, qui part en devis).
+        if (v.epaisseurs && $('inEp')) {
+          const garde = $('inEp').value;
+          $('inEp').innerHTML = v.epaisseurs.map((ep) =>
+            '<option value="' + ep + '"' + (String(ep) === garde ? ' selected' : '') + '>' + ep + ' mm</option>'
+          ).join('');
+        }
         refresh();
       }
 
@@ -625,7 +664,17 @@ const formatsSeuls =
 
       function refRef(c) {
         const effPart = c.eff ? ('-' + c.eff) : '';
-        if (c.formatLabel) return `${code}${effPart}-${c.formatLabel.replace(/\s+/g, '')}`;
+        if (c.formatLabel) {
+          // L'épaisseur n'entre dans la référence que lorsqu'elle est un CHOIX indépendant du
+          // format (variante à `epaisseurs` propres, ex. NETBAG S : longueur de poche 380 ou
+          // 550 mm, prix différents). Ailleurs le libellé la porte déjà (« 287 × 592 × 292 mm »)
+          // ou elle n'a pas de sens (rouleau NETFIBRE) — l'ajouter ferait une référence fausse.
+          const base = c.formatLabel.replace(/\s+/g, '');
+          const epIndep = activeVar && activeVar.epaisseurs && c.ep != null;
+          return epIndep
+            ? `${code}${effPart}-${base.replace(/mm$/, '')}×${c.ep}mm`
+            : `${code}${effPart}-${base}`;
+        }
         const epPart = c.ep != null ? ('x' + c.ep) : '';
         const cadrePart = c.cadre ? ('-' + c.cadre) : '';
         return `${code}${effPart}-${c.L}x${c.H}${epPart}${cadrePart}`;

@@ -147,7 +147,14 @@ describe("épaisseurs des produits sur devis", () => {
   it.each(tousProduits)("%s : l'épaisseur par défaut est réellement proposée", (_id, gamme) => {
     // Un défaut absent du menu retomberait silencieusement sur la première valeur.
     if (gamme.epaisseurDefaut === undefined) return;
-    expect(gamme.epaisseursDevis ?? []).toContain(gamme.epaisseurDefaut);
+    // Mêmes sources que le configurateur, dans le même ordre : épaisseurs de la variante
+    // par défaut (ex. NETBAG S standard 380/550), sinon la grille tarifaire, sinon le
+    // stopgap « sur devis ». Sans cet alignement, le test validerait un menu qui n'existe pas.
+    const proposees =
+      gamme.variantes?.[0]?.epaisseurs ??
+      (gamme.code ? optionsDuCode(gamme.code).epaisseurs : []);
+    const menu = proposees.length > 0 ? proposees : gamme.epaisseursDevis ?? [];
+    expect(menu).toContain(gamme.epaisseurDefaut);
   });
 });
 

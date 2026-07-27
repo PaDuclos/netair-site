@@ -74,6 +74,20 @@ const ORDRE_CLASSES = [
   "E10", "E11", "E12", "H13", "H14", "U15",
 ];
 
+/**
+ * Comparateur d'affichage des classes, exporté pour que l'appelant qui COMPLÈTE la liste
+ * tarifée (classes annoncées par la fiche mais non tarifées) les insère au bon rang plutôt
+ * que de les coller en fin de menu.
+ */
+export function comparerClasses(a: string, b: string): number {
+  const ia = ORDRE_CLASSES.indexOf(a);
+  const ib = ORDRE_CLASSES.indexOf(b);
+  if (ia === -1 && ib === -1) return a.localeCompare(b);
+  if (ia === -1) return 1;
+  if (ib === -1) return -1;
+  return ia - ib;
+}
+
 /** Table de correspondance EN 779 ↔ ISO 16890 (libellés bruts de l'Excel). */
 const ISO = tables.iso16890;
 
@@ -122,14 +136,7 @@ export function optionsDuCode(code: string): OptionsProduit {
   collecter(tables.prix_surface);
   collecter(tables.prix_surface_hf);
 
-  const classesTriees = [...classes].sort((a, b) => {
-    const ia = ORDRE_CLASSES.indexOf(a);
-    const ib = ORDRE_CLASSES.indexOf(b);
-    if (ia === -1 && ib === -1) return a.localeCompare(b);
-    if (ia === -1) return 1;
-    if (ib === -1) return -1;
-    return ia - ib;
-  });
+  const classesTriees = [...classes].sort(comparerClasses);
 
   return {
     classes: classesTriees.map((valeur) => ({ valeur, libelle: libelleClasse(valeur) })),

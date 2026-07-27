@@ -547,10 +547,17 @@ def build_series_legend(d):
     # legende_sans_longueur (opt-in) : profondeur unique déjà affichée ailleurs → inutile
     # de la répéter sur chaque entrée de légende.
     sans_len = d.get("legende_sans_longueur", False)
+    # legende_courte (opt-in, NETBAG S) : « M5 · 380 mm » au lieu de « M5 · ePM10 50% — 380 mm ».
+    # La classe ISO reste lisible juste au-dessus, dans les cases « Afficher : » ; sur une fiche
+    # à 10 séries la légende passe ainsi de 4 lignes à 2 (format déjà retenu par compact_fort).
+    courte = d.get("legende_courte", False)
     for s in d["courbes"]:
         k = _serie_key(s)
-        lab = f'{cdef[s["cls"]]["label"]} · {cdef[s["cls"]]["iso"]}' + (
-            '' if sans_len else f' — {s["len"]} mm')
+        if courte:
+            lab = f'{cdef[s["cls"]]["label"]}' + ('' if sans_len else f' · {s["len"]} mm')
+        else:
+            lab = f'{cdef[s["cls"]]["label"]} · {cdef[s["cls"]]["iso"]}' + (
+                '' if sans_len else f' — {s["len"]} mm')
         if s.get("avalider"):
             lab += " (à valider)"
         out.append(
@@ -1060,6 +1067,30 @@ def generer_series(d, html):
         # (l'ancre série diffère de celle du gabarit, compact_p2 ne la voit pas)…
         html = html.replace('gap:14px; margin-top:7px; flex-wrap:wrap;',
                             'gap:14px; margin-top:4px; flex-wrap:wrap;')
+
+    # --- debit_curseur_max (opt-in, NETBAG S) : plafond du curseur de débit du calculateur.
+    #     Le gabarit va à 6000 m³/h ; sur une fiche dont les mesures s'arrêtent plus tôt, cela
+    #     laisse lire des ΔP extrapolées sans avertissement. Le borner à la fin des mesures
+    #     garantit qu'aucune valeur hors plage n'est affichée (déc. PA 26/07/2026).
+    if d.get("debit_curseur_max"):
+        ancre = '<input type="range" id="inDebit" min="500" max="6000"'
+        if ancre not in html:
+            raise RuntimeError("debit_curseur_max : ancre du curseur de débit introuvable.")
+        html = html.replace(
+            ancre, ancre.replace('max="6000"', f'max="{d["debit_curseur_max"]}"'), 1)
+
+    # --- courbe_pct (opt-in, NETBAG S) : largeur du graphe. Le STANDARD du gabarit est 80 %
+    #     (charte 17/07/2026) ; calc_formats_fixes pose déjà 85 % pour AZUR/LUMEN — les deux
+    #     clés sont donc exclusives. Toute hausse gonfle la hauteur de la page 2 : à réserver
+    #     aux fiches qui la compensent (compact_p2, legende_courte).
+    if d.get("courbe_pct"):
+        if d.get("calc_formats_fixes"):
+            raise RuntimeError("courbe_pct et calc_formats_fixes règlent tous deux la largeur "
+                               "du graphe : clés exclusives.")
+        ancre = 'id="curveSvg" viewBox="0 0 600 300" style="width:80%;'
+        if ancre not in html:
+            raise RuntimeError("courbe_pct : ancre du graphe (width:80%) introuvable.")
+        html = html.replace(ancre, ancre.replace("width:80%", f'width:{d["courbe_pct"]}%'), 1)
 
     # --- légende (1 entrée par série)
     html = sub1(

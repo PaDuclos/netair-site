@@ -97,6 +97,13 @@ export interface VarianteProduit {
    */
   formats?: FormatRouleau[];
   /**
+   * Épaisseurs propres à cette variante, quand elles diffèrent de la grille tarifaire.
+   * Ex. NETBAG S : la variante « standard » ne propose que les longueurs de poche à la fois
+   * MESURÉES (courbe sur la fiche) et TARIFÉES — 380 et 550 — tandis que la variante
+   * « sur mesure », qui part en devis, ouvre les 4 longueurs annoncées par la fiche.
+   */
+  epaisseurs?: number[];
+  /**
    * Présente les formats du plus grand au plus petit : le premier de la liste est
    * la sélection par défaut, et le cadre plein format (ex. 592×592) est le cas
    * d'usage courant. Les dimensions restent lues dans la grille tarifaire.
@@ -185,11 +192,24 @@ export interface GammeProduit {
    */
   epaisseurDefaut?: number;
   /**
+   * Libellé du champ d'épaisseur (défaut « Épaisseur »). Sur un filtre à poches, la dimension
+   * en jeu est la LONGUEUR de poche (jusqu'à 650 mm) : « Épaisseur » serait impropre.
+   */
+  labelEpaisseur?: string;
+  /**
    * Efficacités (EN 779) à proposer pour un produit EN « sur devis », pour que le client
    * précise son besoin de filtration dans la demande de prix (ex. BORA = G4→F9).
    * Stopgap : à terme elles viennent du calculateur. Cf. CHECKLIST.
    */
   efficacitesDevis?: string[];
+  /**
+   * Classes que la FICHE annonce mais que la grille tarifaire ne couvre pas (ex. NETBAG S :
+   * G4 et M5 ont des courbes mesurées, pas de prix). Ajoutées au menu d'un produit
+   * calculable : le moteur répond `classe_indisponible`, donc aucun prix n'est affiché, et
+   * le client peut malgré tout l'ajouter à sa demande de devis. Sans elles, la fiche
+   * annoncerait une classe que la boutique ne saurait même pas nommer.
+   */
+  classesSurDevis?: string[];
   /**
    * Étiquette ISO 16890 propre au produit, par classe EN 779 (libellé complet affiché).
    * Prime sur la table ISO globale de l'Excel quand le média du produit a une efficacité
@@ -279,7 +299,46 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // 🟠 NETBAG S : DEUX produits distincts en tarif (11 = poches 292 mm, média lourd, M5, ~25-51 € ;
   // 17 = poches 360-600 mm, média léger, sans M5, ~7-11 €), et la fiche annonce G4/M5 non tarifés.
   // Contradiction fiche/tarif → sur devis tant que la R&D n'a pas tranché (CHECKLIST). Pas de prix devine.
-  "netbag-s": { code: "", mode: "devis" },
+  // Sur devis, mais le client précise tout ce qui est chiffrable : les 2 cadres standard de la
+  // fiche (le sur-mesure passe par la demande libre — déc. PA 26/07/2026), sa classe parmi
+  // G4→F9 et sa longueur de poche parmi 380/500/550/650. Défaut 380 mm, comme le calculateur
+  // de la fiche (cas le plus contraignant, pas le plus flatteur).
+  // Tarifé sur le code 17 (déc. PA 26/07/2026) — le 11, homonyme dans l'Excel, est en réalité
+  // AZUR. Deux variantes : les 2 cadres standard sont chiffrés en ligne, le hors-standard part
+  // en devis (le moteur répond `hors_fabrication`, le bouton devis reste actif).
+  // ⚠️ Divergence fiche ↔ tarif assumée : le tarif 17 vend 360/380/530/550/600 mm, la fiche
+  // mesure 380/500/550/650. La variante standard ne propose donc que 380 et 550 — les seules
+  // à la fois mesurées ET tarifées. G4 et M5 (courbes mais pas de prix) partent en devis.
+  // À rouvrir quand l'Excel sera aligné : cf. CHECKLIST.
+  "netbag-s": {
+    code: "17",
+    mode: "calcul",
+    sansCadre: true, // cadre acier galvanisé ou plastique : pas de suffixe de référence tranché
+    classesSurDevis: ["G4", "M5"],
+    epaisseurDefaut: 380,
+    labelEpaisseur: "Longueur de poche",
+    variantes: [
+      {
+        id: "standard",
+        label: "Dimensions standard",
+        code: "17",
+        saisie: "formats",
+        labelChamp: "Dimensions standard (L × H)",
+        epaisseurs: [380, 550],
+        formats: [
+          { label: "592 × 592 mm", largeur: 592, hauteur: 592, defaut: true },
+          { label: "287 × 592 mm", largeur: 287, hauteur: 592 },
+        ],
+      },
+      {
+        id: "surmesure",
+        label: "Sur mesure",
+        code: "17",
+        saisie: "dimensions",
+        epaisseurs: [380, 500, 550, 650],
+      },
+    ],
+  },
   // 🟢 méthode F (24 « AZUR » est vide) · parois cellule polyester fixe (cf. fiche) : pas de
   // choix de cadre à offrir — le polyester n'a pas de suffixe de référence (codification).
   "netcel-v-azur": { code: "13", mode: "calcul", sansCadre: true },
