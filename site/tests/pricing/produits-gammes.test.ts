@@ -147,14 +147,38 @@ describe("épaisseurs des produits sur devis", () => {
   it.each(tousProduits)("%s : l'épaisseur par défaut est réellement proposée", (_id, gamme) => {
     // Un défaut absent du menu retomberait silencieusement sur la première valeur.
     if (gamme.epaisseurDefaut === undefined) return;
-    // Mêmes sources que le configurateur, dans le même ordre : épaisseurs de la variante
-    // par défaut (ex. NETBAG S standard 380/550), sinon la grille tarifaire, sinon le
-    // stopgap « sur devis ». Sans cet alignement, le test validerait un menu qui n'existe pas.
-    const proposees =
+    // RÉPLIQUE EXACTE de la cascade `epaisseursAffichees` de [ref].astro (revue 27/07) :
+    // épaisseurs de la variante par défaut (?? — une liste vide serait utilisée telle
+    // quelle), sinon la grille tarifaire si non vide, sinon le stopgap « sur devis ».
+    const grille = gamme.code ? optionsDuCode(gamme.code).epaisseurs : [];
+    const menu =
       gamme.variantes?.[0]?.epaisseurs ??
-      (gamme.code ? optionsDuCode(gamme.code).epaisseurs : []);
-    const menu = proposees.length > 0 ? proposees : gamme.epaisseursDevis ?? [];
+      (grille.length > 0 ? grille : gamme.epaisseursDevis ?? []);
     expect(menu).toContain(gamme.epaisseurDefaut);
+  });
+
+  it.each(tousProduits)("%s : une variante à épaisseurs déclarées n'a jamais une liste vide", (_id, gamme) => {
+    // `??` ne saute que null/undefined : une liste [] donnerait un menu d'épaisseurs vide
+    // (et un readCfg sans épaisseur). On l'interdit à la source.
+    for (const v of gamme.variantes ?? []) {
+      if (v.epaisseurs !== undefined) expect(v.epaisseurs.length).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe("NETBAG S (code 17) — statuts garantis sur les trous de la matrice", () => {
+  // La divergence fiche ↔ tarif est ASSUMÉE (déc. PA 26/07/2026, arbitrage 8 de
+  // netbag-s.json) : ces tests figent que les trous répondent par un STATUT, jamais un prix.
+  it("M5 592×592×380 (courbe réelle, pas de prix au code 17) → classe_indisponible", () => {
+    const r = calculerPrix({ codeGamme: "17", largeur_mm: 592, hauteur_mm: 592, profondeur_mm: 380, classe: "M5", quantite: 6 });
+    expect(r.statut).toBe("classe_indisponible");
+    expect(r.prixUnitaireHT).toBeUndefined();
+  });
+
+  it("F7 592×592×500 (longueur mesurée, non tarifée) → hors_fabrication", () => {
+    const r = calculerPrix({ codeGamme: "17", largeur_mm: 592, hauteur_mm: 592, profondeur_mm: 500, classe: "F7", quantite: 6 });
+    expect(r.statut).toBe("hors_fabrication");
+    expect(r.prixUnitaireHT).toBeUndefined();
   });
 });
 

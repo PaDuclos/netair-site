@@ -305,7 +305,7 @@ const introConfig =
   )}
 
   <!-- Configurateur + Panier + Demande de devis -->
-  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined} data-cadrefixe={cadreFixe?.valeur} data-cadrefixelabel={cadreFixe?.libelle}>
+  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined} data-cadrefixe={cadreFixe?.valeur} data-cadrefixelabel={cadreFixe?.libelle} data-labelep={gamme?.labelEpaisseur}>
     <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
     <p class="mt-1 text-sm text-muted">{introConfig}</p>
 
@@ -689,6 +689,14 @@ const introConfig =
         // Produit « sur devis » : aucun prix public, on oriente vers la demande de devis.
         if (mode !== 'calcul') {
           afficherPrix(null, null, 'Ce produit est proposé sur devis. Ajoutez-le à votre demande de devis.');
+          return { c, unit: null, ok: false };
+        }
+
+        // Variante à épaisseurs déclarées (ex. NETBAG S : la longueur de poche fait le prix) :
+        // une épaisseur absente ne doit jamais partir au moteur avec le « 48 neutre » ci-dessous —
+        // refus explicite plutôt qu'un statut hors_fabrication trompeur (revue 27/07).
+        if (activeVar && activeVar.epaisseurs && c.ep == null) {
+          afficherPrix(null, null, 'Sélectionnez une ' + (root.dataset.labelep || 'épaisseur').toLowerCase() + '.');
           return { c, unit: null, ok: false };
         }
 
