@@ -985,12 +985,24 @@ def generer_series(d, html):
             th_iso,
             th_iso + '                <th style="padding:6px 7px; text-align:left; '
                      'font-weight:600;">EN 779</th>\n', 1)
+    # dims_entete_eff (opt-in, NETCEL V AZUR) : l'en-tête « Efficacité ISO 16890 » du gabarit
+    # est faux pour un filtre absolu → libellé remplacé (ex. « Efficacité EN 1822 »).
+    # Après dims_en779_col (qui s'ancre sur le libellé d'origine), avant la répartition
+    # des largeurs (qui vise aussi ce libellé — d'où le even_label ci-dessous).
+    if d.get("dims_entete_eff"):
+        th_eff = ('                <th style="padding:6px 7px; text-align:left; '
+                  'font-weight:600;">Efficacité ISO 16890</th>\n')
+        if th_eff not in html:
+            raise RuntimeError("dims_entete_eff : en-tête « Efficacité ISO 16890 » introuvable.")
+        html = html.replace(
+            th_eff, th_eff.replace("Efficacité ISO 16890", d["dims_entete_eff"]), 1)
+
     # 7 colonnes au lieu de 9 : sans largeurs imposées elles se tassent à gauche et
     # laissent un vide à droite. On les répartit sur toute la largeur du tableau.
     if d.get("dims_sans_ref") and d.get("dims_sans_surface") and d.get("dims_en779_col"):
         for label, pct in (("L (mm)", 13), ("H (mm)", 13), ("P (mm)", 13),
                            ("Débit (m³/h)", 15), ("ΔP (Pa)", 13),
-                           ("Efficacité ISO 16890", 19), ("EN 779", 14)):
+                           (d.get("dims_entete_eff", "Efficacité ISO 16890"), 19), ("EN 779", 14)):
             html = html.replace(
                 f'<th style="padding:6px 7px; text-align:left; font-weight:600;">{label}</th>',
                 f'<th style="padding:6px 7px; text-align:left; font-weight:600; '

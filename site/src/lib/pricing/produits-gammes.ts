@@ -341,7 +341,18 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   },
   // 🟢 méthode F (24 « AZUR » est vide) · parois cellule polyester fixe (cf. fiche) : pas de
   // choix de cadre à offrir — le polyester n'a pas de suffixe de référence (codification).
-  "netcel-v-azur": { code: "13", mode: "calcul", sansCadre: true },
+  // Offre limitée aux classes EPA/HEPA de la fiche (déc. PA 02/08/2026) : l'onglet Excel 13
+  // tarife AUSSI M6→F9 (multidièdre particulaire) que la fiche ne documente pas — dont un
+  // F8 490×592 à 3,50 € manifestement erroné (~31,50 attendu) qui partait au panier à 12 €.
+  // Plage fiche E10 → H14 (déc. fabricant) : H14 sans prix ni courbe → au menu via
+  // classesSurDevis, part en demande de devis. Correction Excel à la source : cf. CHECKLIST.
+  "netcel-v-azur": {
+    code: "13",
+    mode: "calcul",
+    sansCadre: true,
+    classesIncluses: ["E10", "E11", "E12", "H13"],
+    classesSurDevis: ["H14"],
+  },
   // 🟢 méthode F · parois cellule « Plastique » (cf. fiche) — pas de variante acier
   "netcel-v-nival": { code: "15", mode: "calcul", cadreFixe: { valeur: "pp", libelle: "Plastique" } },
   // 🟢 méthode F — laminaire : pas de sur-mesure, dimensions en menu déroulant (formats
