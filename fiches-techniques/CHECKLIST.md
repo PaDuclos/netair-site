@@ -29,7 +29,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK S DUO | 🟡 | ✅ créée (F7 GREENTEX + CA, ep48) · capacité charbon (grammage) à préciser R&D · A4 p2 OK · photo |
 | NETCEL V LAM | 🟡 | ✅ créée (HEPA H14, flux laminaire, A4 OK) · capacité/colmatage à confirmer · photo HEPA |
 | NETCEL V NIVAL | 🟡 | E10 & H14 sans courbe (H14 = copie H13) · 610×610 sur moteur 592 · photo |
-| NETCEL V AZUR | 🟡 | H13 extrapolé >2400 m³/h · curseur débit init 3400 (calc OK 2400) · photo = idem NETPAK AZUR · nom à valider |
+| NETCEL V AZUR | 🟡 | **contenu retravaillé v1.1 (02/08) — voir `_arbitrages_pad` de netcel-v-azur.json AVANT toute retouche** · **courbe H13 corrigée (axe débit +20 %, erreur détectée PA — DONNEES_PDC réaligné)** · plage E10 → H14 (H14 sur devis, à tarifer — action PA) · ~~curseur init 3400~~ ✅ corrigé moteur · boutique formats standard + classes EPA/HEPA seules (F8 à 12 € neutralisé) · surface retirée (à mesurer) · H13 extrapolé 3000-3500 sur courbe · photo = idem NETPAK AZUR · nom à valider |
 | NETCARB CILIA | 🟡 | ✅ créée (charbon actif, ISO 10121, 2 épaisseurs) · classe LD/MD/HD à déterminer par essai · capacité/durée de vie gaz R&D · photo (grains) |
 | NETCARB AZUR | 🟡 | ✅ créée (charbon dièdre, mono-classe 292) · courbe 2020 QL-CARB (piège 2023 F7=F8 écarté) · classe LD/MD/HD & capacité R&D · photo blend placeholder |
 | NETCARB NIVAL | 🟡 | ✅ créée (polydièdre, mono 292) · ⚠ courbe ΔP partagée AZUR (V-CARB sans courbe propre → R&D) · parois polyester à confirmer · photo Q-carb (code visible→remplacer) |
@@ -190,7 +190,8 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
       **Restent 4 fiches à traiter** (AZUR réglée le 17/07 : 1123/1123 ✅ ; **LUMEN réglée le 26/07 :
       1123/1123 ✅** en passe v1.1 ; **NETBAG S traitée le 26/07 : 1286/1458 → 1146,6/1201,9, débords
       résiduels +6/+21 mm ASSUMÉS PA** — coût des 2 rangées de sélecteurs, `compact_fort` vérifié
-      inapplicable au chemin série) : NETCEL V AZUR (—/1375), NETCEL V NIVAL (—/1375),
+      inapplicable au chemin série) — **NETCEL V AZUR réglée le 02/08 : 1123/1123 ✅ (passe v1.1,
+      `compact_p2` + `calc_formats_fixes`, avec la courbe montée à 90 %)**. Restent : NETCEL V NIVAL (—/1375),
       NETCARB CILIA (—/1167), NETCARB AZUR (1129/—). Pour celles sans `compact_p2`, commencer par
       l'ajouter (≈ −33 mm) avant tout autre levier — il marche désormais sur les fiches série aussi.
       ⚠️ `compact_fort` suppose 2 classes distinctes et le gabarit standard : ne pas l'appliquer en
@@ -511,11 +512,17 @@ Courbe **H13** réelle (cache Excel) : `DONNEES_PDC` l.56. Fit 9,44·v²+75,31·
 - [ ] **Photo** : TITACEL V.png réelle nettoyée = placeholder → photo produit Netair.
 
 ### NETCEL V AZUR 🟡
-Filtre absolu HEPA multidièdre (équiv. TITAPAK V-GD), 592×592×292, surface 24 m² (H13). **Mode HEPA** (ΔP finale = 2×init).
-Courbes **E10 + H13** réelles (caches Excel) : `DONNEES_PDC` l.57-58.
+Filtre absolu multidièdre (équiv. TITAPAK V-GD), 592×592×292. **Contenu retravaillé v1.1 (02/08/2026) — voir
+`_arbitrages_pad` de netcel-v-azur.json AVANT toute retouche.** **Mode HEPA** (ΔP finale = 2×init).
+Courbes **E10 + H13** réelles (caches Excel) : `DONNEES_PDC` l.57-58 — **H13 CORRIGÉE le 02/08** (l'extraction
+comprimait l'axe débit de 20 % : 400-2400 au lieu de 500-3000 — erreur détectée PA ; DONNEES_PDC réaligné le
+jour même). Plage **E10 → H14** (déc. fabricant), nominaux 3000/2500/1500, boutique formats standard.
 
-- [ ] **H13 extrapolé > 2400 m³/h** (1,9 m/s) : mesuré jusqu'à 2400 ; au-delà la courbe est calculée par le polynôme → à mesurer si usage haut débit.
-- [ ] **🟠 Curseur débit s'initialise à 3400** alors que le calcul utilise bien `debit_nom` (2400) — le moteur série ne synchronise pas l'attribut `value` du slider quand debit_nom ≠ 3400. Décalage cosmétique au chargement → à corriger dans le moteur série.
+- [x] ~~**H13 extrapolé > 2400 m³/h**~~ → **SANS OBJET depuis la correction** : H13 mesuré jusqu'à **3 000**. Nouvelle réserve : la courbe affichée va à 3 500 → **tronçon H13 3 000-3 500 extrapolé** (écart à la règle « fin des mesures » assumé PA 02/08 ; l'E10 est mesuré jusqu'à 3 500 ; le curseur du calculateur reste borné à 3 000).
+- [x] ~~**🟠 Curseur débit s'initialise à 3400**~~ → **CORRIGÉ dans le moteur série (02/08)** : le curseur suit désormais toujours `debit_nom` (no-op octet à octet pour les fiches à nominal 3400).
+- [ ] **Surface média 24 m² RETIRÉE de la fiche (prudence PA 02/08)** : sourcée cache Titanair 2018 mais non vérifiée sur le média actuel → à mesurer si on veut la réafficher. Enjeu réel : Camfil affiche 29,6 m² sur ce format et tient 250 Pa à 3 000 — un média Netair mesuré meilleur permettrait un affichage plus favorable.
+- [ ] **287×592** : sourcé par le TARIF seul (les fiches 2018 ne connaissent que 592 et 490) → à confirmer fabricant.
+- [ ] **Humidité 100 %** (Camfil dit 100 %, AFPRO 90 %) et **« Étanchéité contrôlée »** : données fabricant non sourcées Titanair.
 - [ ] **Photo = même polydièdre SV-GD que NETPAK S AZUR** → trouver/faire une photo distincte du V-GD HEPA.
 - [ ] **Nom « AZUR »** partagé avec NETPAK S AZUR (familles différentes, OK par convention) → confirmer.
 

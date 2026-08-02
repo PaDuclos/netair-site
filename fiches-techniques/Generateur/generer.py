@@ -490,7 +490,10 @@ def build_series_checkboxes(d):
         if cls not in primary:
             continue
         col = primary[cls]
-        lab = f'{cdef[cls]["label"]} · {cdef[cls]["iso"]}'
+        # classes_sans_iso (opt-in, NETCEL V AZUR) : la classe seule — le détail (MPPS…)
+        # reste porté par le tableau technique de la page 1 (déc. PA 02/08/2026).
+        lab = (cdef[cls]["label"] if d.get("classes_sans_iso")
+               else f'{cdef[cls]["label"]} · {cdef[cls]["iso"]}')
         coche = "checked " if disp0[cls] else ""
         rows.append(
             '          <label style="display:inline-flex; align-items:center; gap:6px; '
@@ -570,8 +573,12 @@ def build_series_legend(d):
 def build_series_selector(d):
     cdef = d["classes_def"]; order = d["classes_order"]
     present = [c for c in order if any(s["cls"] == c for s in d["courbes"])]
-    btns = "".join(
-        f'<button id="be_{c}" style="flex:1; font-size:10px;">{cdef[c]["iso"]} ({cdef[c]["label"]})</button>' for c in present)
+    if d.get("classes_sans_iso"):
+        btns = "".join(
+            f'<button id="be_{c}" style="flex:1; font-size:10px;">{cdef[c]["label"]}</button>' for c in present)
+    else:
+        btns = "".join(
+            f'<button id="be_{c}" style="flex:1; font-size:10px;">{cdef[c]["iso"]} ({cdef[c]["label"]})</button>' for c in present)
     # calc_formats_fixes (opt-in) : la profondeur est unique → le bloc « Longueur de
     # poche » n'apporte rien, on le retire pour rendre la place à la courbe.
     poche = (
@@ -822,10 +829,15 @@ __SERIES_NOMLABELS__
 </script>"""
 
 
-def _series_nomlabels_js():
+def _series_nomlabels_js(gauche=False):
     """Bloc JS (injecté dans render(), opt-in "points_nominaux") qui place les étiquettes
     ΔP sur chaque point nominal, écarte celles qui se chevauchent, et efface celle d'une
-    classe masquée. Même rendu que les pt() du gabarit NETPLY, généralisé à N courbes."""
+    classe masquée. Même rendu que les pt() du gabarit NETPLY, généralisé à N courbes.
+    `gauche` (opt-in points_nominaux_gauche, NETCEL V AZUR) : nominal en BOUT d'axe →
+    étiquettes ancrées à gauche du point, sinon le cadre du graphe les tronque."""
+    pose = ("        arr[j].t.setAttribute('x', (mx - 8).toFixed(1));\n"
+            "        arr[j].t.setAttribute('text-anchor', 'end');\n") if gauche else (
+            "        arr[j].t.setAttribute('x', (mx + 8).toFixed(1));\n")
     return (
         "    (function () {\n"
         "      var arr = [];\n"
@@ -839,7 +851,7 @@ def _series_nomlabels_js():
         "      for (var j = 1; j < arr.length; j++) { if (arr[j].y < arr[j - 1].y + 11) arr[j].y = arr[j - 1].y + 11; }\n"
         "      var mx = mapX(Vnom);\n"
         "      for (var j = 0; j < arr.length; j++) {\n"
-        "        arr[j].t.setAttribute('x', (mx + 8).toFixed(1));\n"
+        + pose +
         "        arr[j].t.setAttribute('y', (arr[j].y + 3).toFixed(1));\n"
         "        arr[j].t.textContent = fr(arr[j].v) + ' Pa';\n"
         "      }\n"
@@ -871,7 +883,8 @@ def build_series_script(d):
     js = js.replace("__LEN0__", str(d.get("len0", d["courbes"][0]["len"])))
     js = js.replace("__DISP0__", _json.dumps(disp0))
     js = js.replace("__SERIES_NOMLABELS__\n",
-                    _series_nomlabels_js() if d.get("points_nominaux") else "")
+                    _series_nomlabels_js(d.get("points_nominaux_gauche", False))
+                    if d.get("points_nominaux") else "")
     if d.get("calc_formats_fixes"):
         # lenBtns retiré du DOM → le constructeur d'épaisseurs se retire proprement
         js = js.replace("var cont = $('lenBtns'); cont.innerHTML = '';",
@@ -1034,6 +1047,17 @@ def generer_series(d, html):
             vtxt = _frnum(round((dnom / 3600) / d.get("aref", AREF), 1))
             html = html.replace(f'>Débit nominal {dnom} m³/h</text>',
                                 f'>{vtxt} m/s ≈ {dnom} m³/h · 592×592</text>')
+            # annot_fin_axe (opt-in, NETCEL V AZUR) : nominal = plafond de l'axe → une
+            # annotation centrée déborderait du cadre ; on l'ancre à droite.
+            if d.get("annot_fin_axe"):
+                mtxt = f'{vtxt} m/s ≈ {dnom} m³/h · 592×592'
+                m = re.search(r'<text x="[\d.]+" y="11"[^>]*>' + re.escape(mtxt) + '</text>', html)
+                if not m:
+                    raise RuntimeError("annot_fin_axe : annotation nominale introuvable.")
+                elem = m.group(0)
+                if 'text-anchor="middle"' not in elem:
+                    raise RuntimeError("annot_fin_axe : ancre text-anchor=middle absente.")
+                html = html.replace(elem, elem.replace('text-anchor="middle"', 'text-anchor="end"'), 1)
 
     # --- bloc « Afficher : » (cases par classe)
     html = sub1(
@@ -1091,18 +1115,25 @@ def generer_series(d, html):
         html = html.replace(
             ancre, ancre.replace('max="6000"', f'max="{d["debit_curseur_max"]}"'), 1)
 
-    # --- courbe_pct (opt-in, NETBAG S) : largeur du graphe. Le STANDARD du gabarit est 80 %
-    #     (charte 17/07/2026) ; calc_formats_fixes pose déjà 85 % pour AZUR/LUMEN — les deux
-    #     clés sont donc exclusives. Toute hausse gonfle la hauteur de la page 2 : à réserver
-    #     aux fiches qui la compensent (compact_p2, legende_courte).
+    # --- curseur de débit synchronisé sur le nominal (correctif de bug, 02/08/2026).
+    #     Le gabarit fige value="3400" : sur une fiche dont le nominal diffère, le curseur
+    #     s'affichait à 3400 alors que le calcul (state.debit = Dnom) utilisait le nominal
+    #     (bug répertorié au CHECKLIST sur NETCEL V AZUR). No-op octet à octet quand
+    #     debit_nom = 3400 — les autres fiches série ne bougent pas.
+    html = sub1(html, r'(id="inDebit" min="500" max="\d+" step="50" value=")3400(")',
+                lambda m: m.group(1) + str(d.get("debit_nom", 3400)) + m.group(2))
+
+    # --- courbe_pct (opt-in, NETBAG S / NETCEL V AZUR) : largeur du graphe. Le STANDARD du
+    #     gabarit est 80 % (charte 17/07/2026) ; calc_formats_fixes pose déjà 85 % — quand les
+    #     deux clés sont présentes, courbe_pct PRIME (déc. PA 02/08/2026, courbe NETCEL à 90 %).
+    #     Toute hausse gonfle la hauteur de la page 2 : à réserver aux fiches qui la
+    #     compensent (compact_p2, legende_courte).
     if d.get("courbe_pct"):
-        if d.get("calc_formats_fixes"):
-            raise RuntimeError("courbe_pct et calc_formats_fixes règlent tous deux la largeur "
-                               "du graphe : clés exclusives.")
-        ancre = 'id="curveSvg" viewBox="0 0 600 300" style="width:80%;'
+        base = "85%" if d.get("calc_formats_fixes") else "80%"
+        ancre = f'id="curveSvg" viewBox="0 0 600 300" style="width:{base};'
         if ancre not in html:
-            raise RuntimeError("courbe_pct : ancre du graphe (width:80%) introuvable.")
-        html = html.replace(ancre, ancre.replace("width:80%", f'width:{d["courbe_pct"]}%'), 1)
+            raise RuntimeError(f"courbe_pct : ancre du graphe (width:{base}) introuvable.")
+        html = html.replace(ancre, ancre.replace(f"width:{base}", f'width:{d["courbe_pct"]}%'), 1)
 
     # --- légende (1 entrée par série)
     html = sub1(

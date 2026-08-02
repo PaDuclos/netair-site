@@ -346,12 +346,18 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // F8 490×592 à 3,50 € manifestement erroné (~31,50 attendu) qui partait au panier à 12 €.
   // Plage fiche E10 → H14 (déc. fabricant) : H14 sans prix ni courbe → au menu via
   // classesSurDevis, part en demande de devis. Correction Excel à la source : cf. CHECKLIST.
+  // Dimensions STANDARD uniquement (déc. PA 02/08/2026, « comme NETPAK S AZUR ») : un filtre
+  // absolu testé se fabrique en formats normalisés — la fiche v1.1 n'a plus de ligne
+  // « sur mesure ». Formats lus dans la grille (287/490/592×592), plein format en tête.
   "netcel-v-azur": {
     code: "13",
     mode: "calcul",
     sansCadre: true,
     classesIncluses: ["E10", "E11", "E12", "H13"],
     classesSurDevis: ["H14"],
+    variantes: [
+      { id: "standard", label: "Multidièdre", code: "13", saisie: "formats", formatsGrandDabord: true, labelChamp: "Dimensions (L × H)" },
+    ],
   },
   // 🟢 méthode F · parois cellule « Plastique » (cf. fiche) — pas de variante acier
   "netcel-v-nival": { code: "15", mode: "calcul", cadreFixe: { valeur: "pp", libelle: "Plastique" } },
