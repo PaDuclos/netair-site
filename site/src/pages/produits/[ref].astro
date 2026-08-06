@@ -173,8 +173,23 @@ const variantesConfig =
             ? v.formats ?? formatsDuCode(v.code, classes[0]?.valeur)
             : null;
         // formatsGrandDabord : premier = sélection par défaut → plein format en tête.
-        const formats =
+        const formatsOrdonnes =
           formatsBase && v.formatsGrandDabord ? [...formatsBase].reverse() : formatsBase;
+        // formatDefaut : désigne le format d'ouverture par ses dimensions (les formats issus
+        // de la grille ne peuvent pas porter `defaut` eux-mêmes). Ordre des côtés indifférent.
+        let formats = formatsOrdonnes;
+        if (formatsOrdonnes && v.formatDefaut) {
+          const { largeur: fl, hauteur: fh } = v.formatDefaut;
+          const i = formatsOrdonnes.findIndex(
+            (f) => (f.largeur === fl && f.hauteur === fh) || (f.largeur === fh && f.hauteur === fl),
+          );
+          if (i < 0) {
+            throw new Error(
+              `formatDefaut ${fl}×${fh} absent de la grille du code ${v.code} (${produit.id}).`,
+            );
+          }
+          formats = formatsOrdonnes.map((f, j) => (j === i ? { ...f, defaut: true } : f));
+        }
         return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, epaisseurs: v.epaisseurs ?? null, refBase: v.refBase ?? null, sansCadre: v.sansCadre ?? false, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
       })
     : null;

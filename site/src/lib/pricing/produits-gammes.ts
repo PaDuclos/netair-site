@@ -122,6 +122,14 @@ export interface VarianteProduit {
    * d'usage courant. Les dimensions restent lues dans la grille tarifaire.
    */
   formatsGrandDabord?: boolean;
+  /**
+   * Format pré-sélectionné à l'ouverture, désigné par ses dimensions (l'ordre des deux
+   * valeurs est indifférent). Utile quand les formats viennent de la grille tarifaire et
+   * ne peuvent donc pas porter `defaut` : sur un laminaire, le module de plafond 610×610
+   * est le cas d'usage courant, alors qu'il tombe au milieu d'une liste de 17 formats.
+   * Un format introuvable dans la grille lève à la construction de la page.
+   */
+  formatDefaut?: { largeur: number; hauteur: number };
   /** Libellé du menu de formats (défaut « Dimensions »). Ex. « Format de rouleau ». */
   labelChamp?: string;
 }
@@ -385,10 +393,16 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   "netcel-v-lam": {
     code: "14",
     mode: "calcul",
-    classesIncluses: ["H14"],
+    // Offre ouverte aux 5 classes tarifées par l'onglet 14 (déc. PA 04/08/2026), alors que la
+    // fiche v1.1 ne documente que le H14 : écart fiche ↔ boutique ASSUMÉ, consigné au CHECKLIST.
+    // ⚠️ U15 = ULPA (EN 1822), pas HEPA — les badges et le sous-titre de la fiche parlent H14.
+    // Aucune de ces 4 classes n'a de courbe ΔP mesurée : le calculateur de la fiche reste H14.
+    classesIncluses: ["E11", "E12", "H13", "H14", "U15"],
     sansCadre: true, // caisson laminaire à cadre aluminium fixe (pas de choix de cadre)
     variantes: [
-      { id: "standard", label: "Laminaire", code: "14", saisie: "formats", labelChamp: "Dimensions standard" },
+      // 610×610 = module de plafond soufflant, cas d'usage courant : il ouvre le menu alors
+      // qu'il tombe au milieu des 17 formats de la grille (déc. PA 04/08/2026).
+      { id: "standard", label: "Laminaire", code: "14", saisie: "formats", formatDefaut: { largeur: 610, hauteur: 610 }, labelChamp: "Dimensions standard" },
     ],
   },
 

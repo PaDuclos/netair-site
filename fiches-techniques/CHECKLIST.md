@@ -27,7 +27,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK S LUMEN | 🟡 | Variantes fournisseurs 2024-25 (MFILTER/FILTECH) · surface média n.c. · courbe > 4 000 m³/h extrapolée · photo (Titanair visible) |
 | NETPAK S BORA | 🟡 | **contenu retravaillé v1.1 (18/07) — voir `_arbitrages_pad` de netpak-s-bora.json AVANT toute retouche** · plage **G4 → F9** affichée (déc. PA — doc 2013 : M5/F7 seulement), courbe F7 seule · **F7 = ePM1 50 % partout** (média spécial ; étiquette configurateur corrigée via `etiquettesIso` — AZUR/CILIA à trancher à la resynchro) · variante haute efficacité 55% non tracée · courbe lue sur image · surface n.c. · photo |
 | NETPAK S DUO | 🟡 | ✅ créée (F7 GREENTEX + CA, ep48) · capacité charbon (grammage) à préciser R&D · A4 p2 OK · photo |
-| NETCEL V LAM | 🟡 | ✅ créée (HEPA H14, flux laminaire, A4 OK) · capacité/colmatage à confirmer · photo HEPA |
+| NETCEL V LAM | 🟡 | **contenu retravaillé v1.1 (04/08) — voir `_arbitrages_pad` de netcel-v-lam.json AVANT toute retouche** · **épaisseur 68 mm corrigée À LA SOURCE dans l'Excel tarifaire** (disait 69 → 0 prix à 68 ; prix inchangés au centime) · **boutique ouverte à E11/E12/H13/U15** (déc. PA) alors qu'**aucune n'a de courbe ΔP** et que **U15 = ULPA** · 6 formats sur les 17 tarifés · surface média retirée (ne valait que pour le 610×610) · **axe courbe en VITESSE** (écart assumé à la convention « axe débit ») · T° 80 °C vs 60 °C sur AZUR (cadre alu — T° d'AZUR à rouvrir) · hot melt à 80 °C et humidité 100 % non sourcés · ΔP 125 Pa mieux-disante que Camfil (140 Pa à 66 mm) · capacité/colmatage à confirmer · photo HEPA |
 | NETCEL V NIVAL | 🟡 | E10 & H14 sans courbe (H14 = copie H13) · 610×610 sur moteur 592 · photo |
 | NETCEL V AZUR | 🟡 | **contenu retravaillé v1.1 (02/08) — voir `_arbitrages_pad` de netcel-v-azur.json AVANT toute retouche** · **courbe H13 corrigée (axe débit +20 %, erreur détectée PA — DONNEES_PDC réaligné)** · plage E10 → H14 (H14 sur devis, à tarifer — action PA) · ~~curseur init 3400~~ ✅ corrigé moteur · boutique formats standard + classes EPA/HEPA seules (F8 à 12 € neutralisé) · surface retirée (à mesurer) · H13 extrapolé 3000-3500 sur courbe · photo = idem NETPAK AZUR · nom à valider |
 | NETCARB CILIA | 🟡 | ✅ créée (charbon actif, ISO 10121, 2 épaisseurs) · classe LD/MD/HD à déterminer par essai · capacité/durée de vie gaz R&D · photo (grains) |
@@ -43,6 +43,32 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 > configurateur doit afficher (épaisseur, efficacité, dimensions, cadre) doit vivre dans l'Excel ;
 > le site le lit après ré-export. Une seule source, mises à jour faciles, pas de divergence fiche↔site.
 > Tant qu'une info manque dans l'Excel, le site a une **rustine temporaire** (flaggée) ou n'affiche rien.
+
+### 🔴 BLOQUANT AVANT MISE EN LIGNE — la chaîne Excel → site est ROMPUE (constaté le 04/08/2026)
+
+> **Ne PAS lancer `export_excel.py` avant d'avoir traité ce point : le site perdrait tous ses prix.**
+
+Constat, en tentant de ré-exporter pour corriger l'épaisseur du code 14 (export **annulé et restauré**,
+prix vérifiés identiques au centime). Un ré-export depuis `Calculateur_Netair.xltm` produirait aujourd'hui :
+
+| Effet | Détail |
+|---|---|
+| **Plus aucun prix sur le site** | les ~20 gammes calculées (méthodes A→F) repassent toutes en `sur_devis` |
+| **7 gammes supprimées** | codes 12, 101, 102, 103, 129, 130, 150 |
+| **Retour de noms Titanair / anciens** | NETCARB AZUR → « EDELWEISS », NETCARB → « C-CARB », NETBAG S → « NETPAK S AZUR », NETPAK S DUO → « NETPAK S CILIA DUO », NETCARB CILIA → « NETPAK S CILIA P » |
+| **Prix et poids modifiés** | 55 lignes L×l · 42 surface · 18 pièce · 14 surface HF · 9 poids |
+
+Cause : le `tables.json` en service a été **exporté le 01/07 depuis un fichier aujourd'hui rangé dans
+`_Archive/Calculateurs/BLOC1/Calculateur_Netair.xlsx`** (empreinte SHA-256 concordante). Depuis, tout le
+travail de **renommage Netair** et d'**affectation des méthodes de calcul** ne vit **que dans `tables.json`**
+et n'a jamais été reporté dans le classeur de référence `.xltm`.
+
+- [ ] **Décider du sens de la resynchronisation** : soit reporter dans le `.xltm` ce qui n'existe que dans
+      `tables.json` (noms, méthodes, 7 gammes), soit acter que `tables.json` devient la source et adapter
+      le principe figé ci-dessus. **Tant que ce n'est pas tranché, toute correction tarifaire doit se faire
+      par patch chirurgical des deux côtés** (méthode employée pour l'épaisseur du code 14, cf. plus bas).
+- [ ] **Vérifier au passage** que `DEVIS AUTO/Calculateur_Netair.xltm` (exemplaire du pipeline) n'a pas
+      divergé lui aussi — le LISEZ-MOI de `Grille_Couts_Internes/` signale déjà des empreintes distinctes.
 
 À ajouter / corriger dans `Calculateur_Netair.xlsx` puis ré-exporter :
 - [ ] **RENOMMAGE PRODUIT (01/07) : NETPAK V LAM → NETCEL V LAM** (code 14, famille HEPA). Fait partout côté site/fiche/docs/code ; **reste à changer le nom de gamme dans les 4 classeurs Excel** (`Calculateur_Netair.xlsx` + `.xltm`, `Gamme_References_Netair.xlsx`, `Bibliotheque_Fiches_Techniques_Netair.xlsx`, `DONNEES_PDC_Netair.xlsx`) via Rechercher-Remplacer « NETPAK V LAM » → « NETCEL V LAM », **puis ré-exporter** `tables.json` (le code 14 ne change pas). FDS à renommer aussi (`FDS_NETPAK_V_LAM` → `FDS_NETCEL_V_LAM`).
@@ -71,7 +97,9 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 - [x] ~~**NETPAK S LUMEN** : ajouter la 3ᵉ dimension **490×592**~~ → **CADUC (déc. PA 26/07/2026, passe v1.1) : LUMEN reste aux 2 formats sourcés (287×592 / 592×592), la fiche les affiche seuls — l'Excel est déjà correct tel quel.**
 - [ ] **NETFIBRE — G3 panneau** : ~~corriger le tarif~~ → **SUPPRIMER la classe G3** de l'Excel : la gamme est G4 SEUL (déc. PA 17/07). La rustine `classesExclues:["G3"]` reste en place et devient définitive.
 - [ ] **NETFIBRE — tarifs rouleau (code 5)** : incohérence au m² (cf. tableau ci-dessus) — `20 m × 1 m` à 5,26 €/m² vs `10 m × 2 m` à 8,42 €/m² pour 20 m² dans les deux cas ; +1,45 € seulement pour 10 m² de plus entre `10 m × 1 m` et `20 m × 1 m`. À vérifier en R&D puis corriger à la source. **Tant que ce n'est pas fait, seul le 20 m × 2 m est vendu (rustine `formats` à un seul élément dans `produits-gammes.ts`) → à rouvrir aux 5 formats une fois les tarifs fiables.**
-- [ ] **NETCEL V LAM** : ne garder que **H14** au tarif si c'est la seule classe vendue (sinon retirer la rustine `classesIncluses`).
+- [x] ~~**NETCEL V LAM** : ne garder que **H14** au tarif si c'est la seule classe vendue~~ → **TRANCHÉ (déc. PA 04/08/2026) : l'offre est OUVERTE aux 5 classes tarifées** par l'onglet 14 (E11 · E12 · H13 · H14 · U15) ; `classesIncluses` les liste toutes et la fiche v1.1 annonce la plage E11 → U15. ⚠️ **Réserve ouverte ci-dessous** (courbes ΔP absentes pour 4 d'entre elles).
+- [x] ~~**NETCEL V LAM — épaisseur 69 mm**~~ → **CORRIGÉE À LA SOURCE le 04/08/2026 (déc. PA)**. La fiche dit 68 mm (Titanair 2022 + AFPRO référence un « 610×610×68 H14 ») ; l'Excel disait 69, si bien qu'une demande à 68 mm renvoyait `hors_fabrication` (0 prix sur 160 combinaisons). Corrigé **par patch chirurgical, PAS par ré-export** (cf. l'alerte 🔴 ci-dessous) : `Calculateur_Netair.xltm` onglet **Prix_L_et_l C259:C326** (68 cellules) + **Tableau_Gammes E14**, et côté site `tables.json` (68 lignes + `ep_defaut`) et `golden-vectors.json` (340 vecteurs). Sauvegarde : `Calculateur_Netair.xltm.bak_avant_ep68_20260804`. **Preuve : 160 combinaisons, prix à 68 mm après = prix à 69 mm avant, au centime, 0 écart ; 195 tests verts.** ⚠️ Ces fichiers sont **hors du dépôt Git** (BLOC1) : la modification n'est pas couverte par le commit.
+- [ ] **🔴 NETCEL V LAM — tarifer les classes sans courbe / mesurer leurs ΔP** : E11, E12, H13 et U15 sont **vendues** depuis le 04/08 mais **aucune n'a de courbe ΔP mesurée** — la courbe, le calculateur et les ΔP du tableau de la fiche restent ceux du **H14** (dit dans la note). À mesurer en R&D, sinon un client comparant deux classes verra la même perte de charge. ⚠️ **U15 = ULPA**, pas HEPA : vérifier que Netair sait effectivement produire et tester cette classe avant de la laisser au menu.
 - [ ] **Produits sur devis** (NETMETAL, DUO, NETCARB AZUR/NIVAL/BAG, BORA) : les **saisir dans le calculateur** avec leurs **épaisseurs/classes/dimensions** (marqués sur devis, sans prix) → le configurateur affichera alors ces champs tout seuls.
 - [ ] **NETPAK S BORA** : épaisseur **100 mm** (actuellement rustine `epaisseursDevis:[100]` côté site → à porter dans l'Excel).
 - [ ] **NETPAK S BORA — étiquette ISO F7** : « ePM1 50 % (F7) » via rustine `etiquettesIso` côté site (la table ISO globale de l'Excel dit 55 %) → à porter dans l'Excel à la resynchro, et trancher AZUR/CILIA au passage.
@@ -149,6 +177,23 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
 
 ## Transverse (toute la gamme)
 
+- [ ] **« (papier HEPA) » retiré du média sur NETCEL V LAM et NETCEL V AZUR (déc. PA 04/08/2026)** —
+      **NETCEL V NIVAL le porte encore** (« Fibre de verre microfine (papier HEPA) »). Fiche en v1.0,
+      passe de contenu non faite → à traiter **à sa passe**, pas avant. À noter : AZUR a été modifiée
+      **sans bump de version** (déc. PA : retouche de trois mots deux jours après sa v1.1, écart consigné
+      au registre — précédent BORA/CILIA/DUO).
+- [ ] **Titre « DIMENSIONS & RÉFÉRENCES STANDARD » devenu inexact** : la colonne « Référence complète »
+      est retirée de NETCEL V AZUR et NETCEL V LAM (déc. PA du 16/07, appliquée au passage de chaque fiche),
+      mais le titre du bloc — qui vit dans `gabarit_base.html`, donc **commun aux 18 fiches** — annonce
+      toujours des références. **Décision de gamme à prendre** : le changer touche les 18 fiches (et
+      relance la batterie complète) ; le laisser maintient un titre qui promet une colonne absente sur
+      les fiches déjà passées. Ne pas trancher fiche par fiche.
+- [x] **Registre `Bibliotheque_Fiches_Techniques_Netair.xlsx` — XML CORROMPU, RÉPARÉ le 04/08/2026.**
+      Deux « & » nus (« R&D ») et un « < » nu (« F7 < M5/M6 »), introduits par des passes antérieures
+      (lignes NETPAK S AZUR / NETPAK S CILIA), rendaient le fichier **illisible par tout parseur XML**
+      (openpyxl échouait ; Excel aurait proposé une réparation). Corrigé en `&amp;` / `&lt;` — **le texte
+      affiché est inchangé**, vérifié cellule par cellule. ⚠️ **Leçon pour les prochaines passes : toujours
+      échapper `&` et `<` avant d'écrire une chaîne inline dans un `.xlsx`, et revalider avec openpyxl.**
 - [ ] **Photos produit Netair** : toutes les fiches créées utilisent une **photo Titanair détourée
       en placeholder** → remplacer par des photos réelles du produit Netair.
 - [ ] **RÉGÉNÉRATION AUTO DES FICHES (01/07) — décision déploiement à trancher.** Les fiches se
@@ -539,6 +584,23 @@ jour même). Plage **E10 → H14** (déc. fabricant), nominaux 3000/2500/1500, b
 - [ ] **Humidité 100 %** (Camfil dit 100 %, AFPRO 90 %) et **« Étanchéité contrôlée »** : données fabricant non sourcées Titanair.
 - [ ] **Photo = même polydièdre SV-GD que NETPAK S AZUR** → trouver/faire une photo distincte du V-GD HEPA.
 - [ ] **Nom « AZUR »** partagé avec NETPAK S AZUR (familles différentes, OK par convention) → confirmer.
+
+### NETCEL V LAM 🟡
+Filtre à flux laminaire (équiv. TITAPAK V LAM), 610×610×68, **moteur mono-classe** (chemin legacy).
+**Contenu retravaillé v1.1 (04/08/2026) — voir `_arbitrages_pad` de netcel-v-lam.json AVANT toute retouche.**
+**Mode HEPA** (ΔP finale = 2×init via `dp_final_mode:"x2"` ; la clé `hepa` est réservée au moteur série).
+Courbe **H14** réelle (cache Excel 2022) : 97,91·v²+263,287·v−12,4 (R²=0,9999), ΔP ≈125 Pa @600 m³/h.
+
+- [ ] **🔴 Courbes ΔP absentes pour E11 / E12 / H13 / U15** — classes **vendues** depuis le 04/08 (déc. PA) mais non mesurées : la courbe, le calculateur et les ΔP du tableau restent en **H14**. Deux classes différentes affichent donc aujourd'hui la même perte de charge. À mesurer en R&D. ⚠️ **U15 = ULPA** (≥ 99,9995 % MPPS), pas HEPA — confirmer que Netair sait produire et tester cette classe.
+- [ ] **Séparateur hot melt donné à 80 °C en continu** — valeur fabricant (fiche 2022) **non vérifiée** : c'est une colle thermofusible, 80 °C en service continu est haut. À confirmer R&D. C'est cette T° qui justifie l'écart avec NETCEL V AZUR (60 °C, cadre plastique).
+- [ ] **T° de NETCEL V AZUR à rouvrir (déc. PA 04/08)** : même média microfibres de verre, 60 °C contre 80 °C ici. L'écart est assumé et justifié par le cadre (alu vs plastique), mais AZUR doit être réexaminée dans une passe dédiée — **avec bump de version**, la fiche étant figée en v1.1.
+- [ ] **Humidité 100 % (sans condensation)** ajoutée le 04/08 — **non sourcée** chez Titanair (Camfil dit 100 %, AFPRO 90 %), comme sur toute la gamme.
+- [ ] **ΔP 125 Pa mieux-disante que la concurrence** : Camfil Megalam ProSafe MD (610×610×**66**) annonce **600 m³/h / 140 Pa**. Notre débit nominal est donc corroboré, mais notre ΔP est **11 % plus basse** pour 2 mm de plus. Plausible, à confirmer avant d'en faire un argument commercial.
+- [ ] **Surface média 5,83 m² retirée** (déc. PA 04/08) : ne décrivait que le 610×610 alors que la grille vend **17 formats** (jusqu'au 1220×1220, ~4× la surface). À réafficher **par format** seulement si la R&D mesure le média réel.
+- [ ] **11 des 17 formats tarifés ne sont pas dans la fiche** : la page 1 ne peut en porter que ~6 (mesuré : 99 px de blanc = 4,6 lignes ; 17 formats = 459 px). Les 6 retenus couvrent la gamme (305×305 → 1220×1220) et la note renvoie aux autres. À revoir si un format s'avère très demandé.
+- [ ] **Axe de la courbe en VITESSE — écart assumé** à la convention v1.1 « axe débit » (NETBAG, NETCEL V AZUR) : les 6 formats vont de 150 à 2400 m³/h (rapport 1 à 16), un axe en débit ne vaudrait que pour un format. À rouvrir seulement si la convention de gamme est retranchée.
+- [ ] **Photo** : placeholder HEPA → photo produit Netair.
+- [ ] **Capacité / colmatage** à confirmer (réserve d'origine, non levée).
 
 ### NETCARB CILIA 🟡
 Filtre **compact à charbon actif** (filtration moléculaire), équiv. PRISME CARB. **PAS de classe particulaire** (filtre de gaz) → cadre **ISO 10121**.

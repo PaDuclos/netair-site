@@ -221,7 +221,7 @@ describe("les produits à efficacité figée gardent un prix", () => {
   it.each([
     ["netfil", { codeGamme: "2", largeur_mm: 592, hauteur_mm: 592, profondeur_mm: 48, classe: "G3", quantite: 6 }, 7.89],
     ["netfibre panneau", { codeGamme: "4", largeur_mm: 592, hauteur_mm: 592, profondeur_mm: 48, classe: "G4", quantite: 6 }, 8.57],
-    ["netcel-v-lam", { codeGamme: "14", largeur_mm: 305, hauteur_mm: 305, profondeur_mm: 69, classe: "H14", quantite: 6 }, 71.37],
+    ["netcel-v-lam", { codeGamme: "14", largeur_mm: 305, hauteur_mm: 305, profondeur_mm: 68, classe: "H14", quantite: 6 }, 71.37],
   ])("%s : prix au centime", (_nom, demande, attendu) => {
     const r = calculerPrix(demande as never);
     expect(r.statut).toBe("ok");

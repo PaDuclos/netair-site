@@ -1,14 +1,14 @@
 {
-  "_commentaire": "NETCEL V LAM — filtre HEPA à FLUX LAMINAIRE H14 (équiv. Titanair TITAPAK V LAM). Nom validé PA (22/06/2026, pas de nom signature — volontaire). PARADIGME HEPA (EN 1822, pas ePM/Coarse) → 1re fiche du moteur en mode HEPA : aref=610² (dimensions effectives 610×610×68, pas 592), basse vitesse laminaire (Vmax 0,5 m/s, nominal 0,45 m/s ≈ 600 m³/h), règle ΔP finale = 2 × ΔP initiale (dp_final_mode x2, EN 1822) au lieu de +100 ePM. Source = TITAPAK V LAM H14 2022 (cache Excel) : courbe ΔP en débit 120→600 m³/h → ΔP 12·38·65·95·125 Pa ; en vraie vitesse (aire 610²=0,3721 m²) v=0,09→0,45 m/s. Polynôme ajusté 97,91·v²+263,287·v−12,4 (R²=0,9999), ΔP nom ≈125 Pa @600 m³/h. Specs fiche 2022 : classe EN 1822 H14, média FIBRE DE VERRE, cadre ALUMINIUM, séparateur hot melt, surface média 5,83 m², T° continue 80°C (acc.85/1h), feu M1, ΔP finale absolue (colmatage) 400 Pa. PHOTO = placeholder (à remplacer par visuel HEPA Netair).",
+  "_commentaire": "NETCEL V LAM — filtre à flux laminaire (équiv. Titanair TITAPAK V LAM). ✅ CONTENU RETRAVAILLÉ v1.1, VALIDÉ PA le 04/08/2026 — arbitrages dans _arbitrages_pad, NE PAS retoucher sans son accord. Moteur MONO-CLASSE (chemin legacy), PARADIGME HEPA (EN 1822) : aref=610² (610×610×68), basse vitesse laminaire, ΔP finale = 2 × ΔP initiale (dp_final_mode x2 — la clé `hepa` est réservée au moteur série). Source ΔP = TITAPAK V LAM H14 2022 (cache Excel) : débit 120→600 m³/h → ΔP 12·38·65·95·125 Pa ; polynôme 97,91·v²+263,287·v−12,4 (R²=0,9999), ΔP nom ≈125 Pa @600 m³/h (v=0,4479 m/s). Specs fiche 2022 : média FIBRE DE VERRE, cadre ALUMINIUM, séparateur hot melt, T° 80°C (acc.85/1h), feu M1, ΔP finale absolue 400 Pa. Surface média 5,83 m² RETIRÉE (ne vaut que pour le 610×610 sur 17 formats vendus — argument PA). ÉPAISSEUR 68 mm : l'Excel tarifaire disait 69 → CORRIGÉ à la source le 04/08 (cf. _arbitrages_pad §7). PHOTO = placeholder (à remplacer par visuel HEPA Netair).",
   "slug": "netcel-v-lam",
   "nom": "NETCEL V LAM",
-  "soustitre": "Filtre HEPA à flux laminaire — H14 (EN 1822)",
+  "soustitre": "Filtre à flux laminaire",
   "mono_classe": true,
   "surface_facteur": 15.67,
   "aref": 0.3721,
   "dim_ref": "610×610",
   "vmax": 0.5,
-  "pmax": 150,
+  "pmax": 160,
   "debit_nom": 600,
   "debit_min": 120,
   "debit_max": 1200,
@@ -16,31 +16,28 @@
   "dp_final_mode": "x2",
   "fiche": {
     "num": "FT-NETCEL-V-LAM-001",
-    "version": "v1.0",
-    "date": "22/06/2026"
+    "version": "v1.1",
+    "date": "04/08/2026"
   },
   "photo": "netcel-v-lam-photo.jpg",
   "photo_alt": "Filtre HEPA à flux laminaire NETCEL V LAM H14",
-  "description": "Le NETCEL V LAM est un filtre HEPA terminal à flux laminaire de classe H14 (EN 1822), destiné aux applications exigeant un air ultra-pur : salles propres, blocs opératoires, plafonds soufflants, industries pharmaceutique et agroalimentaire. Son média en microfibres de verre, plissé serré entre séparateurs et cerclé d'un cadre aluminium, retient plus de 99,995 % des particules les plus pénétrantes (MPPS). Conçu pour fonctionner à faible vitesse frontale (flux laminaire), il garantit une diffusion homogène et une perte de charge maîtrisée. Dimensions effectives 610 × 610 × 68 mm.",
+  "description": "Le filtre à flux laminaire NETCEL V LAM est destiné à la filtration de très haute efficacité de l'air dans les blocs opératoires, les plafonds soufflants et les environnements à exigences de propreté. Son média en microfibres de verre est plissé entre séparateurs et intégré dans un cadre en aluminium. Conçu pour les applications terminales à faible vitesse frontale, il assure une diffusion uniforme de l'air sur toute la section de soufflage.",
   "points_cles": [
-    "HEPA H14 — ≥ 99,995 % MPPS",
-    "Flux laminaire (basse vitesse)",
-    "Média microfibres de verre",
-    "Cadre aluminium robuste",
-    "Salles propres · plafonds soufflants"
+    "Flux laminaire",
+    "Très haute efficacité de filtration",
+    "Cadre en aluminium",
+    "Grande surface filtrante",
+    "Blocs opératoires et salles propres",
+    "Certificat d'essai individuel"
   ],
   "specs": [
     [
-      "Type",
-      "HEPA terminal à flux laminaire"
-    ],
-    [
-      "Classe EN 1822-2010",
-      "H14 (≥ 99,995 % MPPS)"
-    ],
-    [
       "Média filtrant",
       "Microfibres de verre"
+    ],
+    [
+      "Type",
+      "Filtre à flux laminaire"
     ],
     [
       "Parois cellule",
@@ -51,12 +48,16 @@
       "Hot melt"
     ],
     [
-      "Dimensions effectives",
-      "610 × 610 × 68 mm"
+      "Classes EN 1822",
+      "E11  ·  E12  ·  H13  ·  H14  ·  U15"
     ],
     [
-      "Surface média",
-      "5,83 m²"
+      "Efficacité (MPPS)",
+      "E11 ≥ 95 %  ·  E12 ≥ 99,5 %  ·  H13 ≥ 99,95 %  ·  H14 ≥ 99,995 %  ·  U15 ≥ 99,9995 %"
+    ],
+    [
+      "Profondeur",
+      "68 mm"
     ],
     [
       "Classement au feu",
@@ -67,18 +68,22 @@
       "80 °C (accidentelle 85 °C / 1 h)"
     ],
     [
+      "Humidité relative max.",
+      "100 % (sans condensation)"
+    ],
+    [
       "ΔP finale recommandée",
-      "2 × ΔP initiale — EN 1822 (limite de colmatage ≈ 400 Pa)"
+      "2 × ΔP initiale  ·  max 400 Pa  ·  EN 1822"
     ]
   ],
   "badges_p1": [
-    "EN 1822 : H14",
-    "≥ 99,995 % MPPS",
+    "EN 1822 : E11 → U15",
+    "Filtre absolu",
     "Flux laminaire"
   ],
   "badges_p2": [
-    "EN 1822 : H14",
-    "≥ 99,995 % MPPS",
+    "EN 1822 : E11 → U15",
+    "Filtre absolu",
     "Flux laminaire"
   ],
   "classes": {
@@ -123,13 +128,66 @@
       "epaisseur": 68
     }
   },
-  "note_dimensions": "Dimensions effectives 610 × 610 × 68 mm. Surface média 5,83 m². Filtre à flux laminaire : vitesse frontale nominale ≈ 0,45 m/s (≈ 600 m³/h). ΔP de référence ≈ 125 Pa au débit nominal ; ΔP finale de colmatage ≈ 400 Pa (EN 1822).",
+  "note_dimensions": "Le débit indiqué est le débit nominal de chaque format à vitesse frontale constante (≈ 0,45 m/s) ; la ΔP initiale est donnée à ce débit, média propre, pour la classe H14. Autres formats standard disponibles : nous consulter.",
   "dimensions": [
     {
       "L": 610,
       "H": 610,
       "P": 68,
       "debit": 600
+    },
+    {
+      "L": 1220,
+      "H": 610,
+      "P": 68,
+      "debit": 1200
+    },
+    {
+      "L": 1220,
+      "H": 1220,
+      "P": 68,
+      "debit": 2400
+    },
+    {
+      "L": 610,
+      "H": 305,
+      "P": 68,
+      "debit": 300
+    },
+    {
+      "L": 508,
+      "H": 508,
+      "P": 68,
+      "debit": 420
+    },
+    {
+      "L": 305,
+      "H": 305,
+      "P": 68,
+      "debit": 150
     }
+  ],
+  "dims_sans_surface": true,
+  "dims_sans_ref": true,
+  "dims_sans_surmesure": true,
+  "dims_entete_eff": "Efficacité EN 1822",
+  "compact_p1": true,
+  "legende_courte": true,
+  "dims_classe_dabord": true,
+  "_arbitrages_pad": [
+    "PASSE DE CONTENU v1.1 — 04/08/2026. Arbitrages de Pierre-Alain, à NE PAS rouvrir sans le consulter.",
+    "(1) SOUS-TITRE « Filtre à flux laminaire » — forme physique seule ; suffixe « — H14 (EN 1822) » retiré (doublon avec les badges + tiret long). PA a écarté « Filtre absolu à flux laminaire » (proposé pour la symétrie avec NETCEL V AZUR) au profit de la version courte. Le « Type » des specs reprend le sous-titre mot pour mot (un objet, un mot).",
+    "(2) DESCRIPTIF FOURNI PA, 3 itérations. Réserve de Claude sur la 2e version (« applications terminales à faible vitesse frontale […] répond aux exigences des installations à flux laminaire » = redite dans la même phrase) ; PA a retenu l'hybride qui garde « à faible vitesse frontale » (vrai différenciateur : 0,45 m/s contre ~2,4 sur AZUR) et termine par « sur toute la section de soufflage ». Plus aucun chiffre en prose (la v1.0 écrivait « Dimensions effectives 610 × 610 × 68 mm » — interdit par PROCESS).",
+    "(3) POINTS CLÉS = LISTE PA (5 + 1 ajouté) : Flux laminaire · Très haute efficacité de filtration · Cadre en aluminium · Grande surface filtrante · Blocs opératoires et salles propres · Certificat d'essai individuel. « Blocs opératoires et salles propres » : PA a tranché « salles propres » (normatif ISO 14644) contre « environnements maîtrisés ». RÉSERVE DE CLAUDE ÉCARTÉE : c'est un USAGE, pas un attribut, et il redit le descriptif situé juste au-dessus (les 6 points d'AZUR sont tous des attributs). « Grande surface filtrante » = même écart assumé qu'AZUR vs « Surface filtrante développée » de NETBAG. 6e point « Certificat d'essai individuel » : PA proposait « certificat de conformité » — écarté sur réserve de Claude (confusion possible avec la déclaration CE, non tranchée au BLOC0) ; la formulation retenue est exacte au sens EN 1822 (test pièce à pièce obligatoire en classe H) et engage Netair sur du concret.",
+    "(4) SPECS ordre canonique (média · type · parois · séparateur · classes · efficacité · profondeur · feu · T° · humidité · ΔP finale) ; la v1.0 avait le Type en tête. « Classe » → « Classes EN 1822 » au pluriel après ouverture de la plage. Média aligné sur AZUR ; « (papier HEPA) » RETIRÉ des DEUX fiches sur demande PA (NETCEL V NIVAL le porte encore, v1.0, à traiter à sa passe). HUMIDITÉ 100 % (sans condensation) AJOUTÉE — LAM était la DERNIÈRE des 18 sans cette ligne ; NON SOURCÉE (Camfil dit 100 %, AFPRO 90 %), comme sur AZUR. ΔP finale « 2 × ΔP initiale · max 400 Pa · EN 1822 » (400 Pa sourcé fiche 2022, sans tirets longs).",
+    "(5) TEMPÉRATURE 80 °C (acc. 85 °C / 1 h) MAINTENUE, sourcée fiche 2022, alors que NETCEL V AZUR — MÊME MÉDIA microfibres de verre — est à 60 °C, ce qui contredit la règle de gamme « à média identique, même T° ». Justification retenue : ce n'est pas le verre qui limite mais l'enveloppe (cadre ALUMINIUM ici vs PLASTIQUE sur AZUR). DÉCISION PA : garder 80 °C et ROUVRIR LA T° D'AZUR dans une passe dédiée (avec bump de version). ⚠️ RÉSERVE NON LEVÉE : tenue du séparateur HOT MELT à 80 °C en continu — c'est une colle thermofusible, valeur fabricant non vérifiée R&D.",
+    "(6) SURFACE MÉDIA 5,83 m² RETIRÉE des specs, du tableau et de la note. Argument de PA, plus fort que la prudence de sourcing invoquée sur AZUR : la valeur ne décrit QUE le 610×610 alors que la grille tarifaire vend 17 formats (jusqu'à 1220×1220, ~4× la surface) — elle était donc fausse pour 16 formats sur 17. Le point clé « Grande surface filtrante » subsiste, non chiffré.",
+    "(7) 🔴 ÉPAISSEUR 68 mm — CORRIGÉE À LA SOURCE. La fiche disait 68 (Titanair 2022, confirmé par AFPRO qui référence un « 610×610×68 H14 »), la grille tarifaire disait 69 : toute demande à 68 mm renvoyait `hors_fabrication` (0 prix sur 160 combinaisons). DÉCISION PA : corriger l'Excel. Fait par PATCH CHIRURGICAL — PAS de réexport (cf. §12) : Calculateur_Netair.xltm, onglet Prix_L_et_l C259:C326 (68 cellules) + Tableau_Gammes E14 (épaisseur par défaut) ; côté site tables.json (68 lignes + ep_defaut) et golden-vectors.json (340 vecteurs). Sauvegarde : Calculateur_Netair.xltm.bak_avant_ep68_20260804. PREUVE : 160 combinaisons, prix à 68 mm après = prix à 69 mm avant, AU CENTIME, 0 écart ; 195 tests verts.",
+    "(8) TABLEAU DIMENSIONS : 6 formats (610×610 · 1220×610 · 1220×1220 · 610×305 · 508×508 · 305×305) au lieu d'un seul — choix PA après mesure : 99 px de blanc en page 1 = ~4,6 lignes, les 17 formats de la grille auraient demandé 459 px (impossible, dit à PA plutôt que proposé). Débits PROPORTIONNELS à la surface frontale, calés sur le module 610×610 = 600 m³/h → vitesse constante 0,4479 m/s ; ΔP identique (125 Pa) sur tous les formats, ce qui est la logique de vitesse constante déjà retenue sur AZUR. Le débit nominal de 600 m³/h au 610×610 est CORROBORÉ par Camfil (Megalam ProSafe MD, 610×610×66 : 600 m³/h, ΔP 140 Pa) — notre 125 Pa est 11 % sous Camfil à 2 mm de plus, plausible mais mieux-disant, à confirmer R&D. Colonnes SURFACE et RÉFÉRENCE COMPLÈTE retirées (déc. PA du 16/07 « à leur passage »), en-tête « Efficacité EN 1822 » au lieu d'« ISO 16890 » (faux pour un absolu), ligne « Sur mesure » supprimée (le configurateur ne vend que des formats standard). Colonne d'efficacité : CLASSE D'ABORD « H14 (≥ 99,995 % MPPS) » — demande PA, le titre de la colonne annonce l'EN 1822 donc la classe prime (nouvelle clé dims_classe_dabord).",
+    "(9) COURBE : AXE EN VITESSE CONSERVÉ — ÉCART ASSUMÉ à la convention v1.1 (NETBAG et AZUR sont en débit). Motif accepté par PA : LAM se vend en 6 formats dont les débits vont de 150 à 2400 m³/h (rapport 1 à 16) ; un axe en débit ne vaudrait que pour un format, la vitesse frontale est la seule grandeur commune. Axe Y porté de 150 à 160 Pa pour des graduations ENTIÈRES (0/40/80/120/160 — demande PA : les quarts de 150 donnaient 37,5 et 112,5) ; la courbe culmine ≈145 Pa. Légende « H14 · 68 mm » (classe seule + épaisseur, déc. AZUR ; portage de legende_courte sur le moteur mono-classe).",
+    "(10) 🔴 CONFIGURATEUR — OFFRE OUVERTE AUX 5 CLASSES tarifées par l'onglet 14 (E11 · E12 · H13 · H14 · U15), DÉCISION PA contre la restriction retenue sur AZUR. La fiche a suivi : plage E11 → U15 annoncée avec les MPPS NORMATIFS EN 1822-1 (valeurs de la norme, PAS des mesures), badges « EN 1822 : E11 → U15 » + « Filtre absolu ». ⚠️ RÉSERVES : U15 = ULPA, pas HEPA ; AUCUNE des 4 classes ajoutées n'a de courbe ΔP mesurée → courbe, calculateur et ΔP du tableau restent en H14 (dit dans la note). Prix inchangés au centime (159 combinaisons relevées avant/après) : l'ouverture ne touche que l'offre visible.",
+    "(11) FORMAT PAR DÉFAUT 610×610 (déc. PA : « il faut que ça soit le 610x610 qui doit être visible »). Les formats venant de la grille tarifaire ne peuvent pas porter `defaut` → nouvelle clé formatDefaut dans produits-gammes.ts, qui lève si le format est absent de la grille. Sans elle, le menu s'ouvrait sur le plus petit format (305×305) et le module de plafond arrivait en 13e position sur 17.",
+    "(12) 🔴 DÉCOUVERTE HORS PÉRIMÈTRE — DIVERGENCE EXCEL ↔ SITE, consignée au CHECKLIST en bloquant. Un réexport depuis Calculateur_Netair.xltm (tenté puis ANNULÉ et restauré, prix vérifiés identiques au centime) ferait : toutes les gammes calculées → `sur_devis` (plus AUCUN prix sur le site), 7 gammes supprimées (12, 101, 102, 103, 129, 130, 150), retour de noms Titanair (EDELWEISS, C-CARB…), et 129 lignes de prix/poids modifiées. Le tables.json en service a été exporté le 01/07 depuis un fichier aujourd'hui rangé dans _Archive/ : la chaîne Excel → site est rompue depuis un mois et le travail de renommage/méthodes ne vit que dans tables.json. À traiter AVANT toute mise en ligne — ça touche tous les prix du site.",
+    "(13) RÉSERVES MAINTENUES (cf. CHECKLIST § NETCEL V LAM) : capacité/colmatage à confirmer ; photo = placeholder HEPA ; hot melt à 80 °C non vérifié ; humidité 100 % non sourcée ; ΔP 125 Pa mieux-disante que Camfil ; courbes ΔP absentes pour E11/E12/H13/U15 ; titre « DIMENSIONS & RÉFÉRENCES STANDARD » devenu inexact depuis le retrait de la colonne référence (question de GAMME : AZUR est dans le même cas) ; renommage NETPAK V LAM → NETCEL V LAM encore à faire dans les 4 classeurs Excel et les FDS."
   ]
 }

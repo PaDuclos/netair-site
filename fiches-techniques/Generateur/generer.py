@@ -190,6 +190,14 @@ def build_dimensions(d):
     # ref_simple : code article = [NOM sans espaces]-[L]x[H]x[P] (codification charbon /
     #   produit sans classe particulaire) ; eff = libellé de classe seul. Défaut : legacy.
     simple = d.get("ref_simple", False)
+    # Portage des réglages de tableau du moteur série vers le mono-classe (NETCEL V LAM,
+    # 02/08/2026) : surface non vérifiée, référence retirée (déc. PA 16/07), sur-mesure
+    # absent des produits vendus en formats standard seuls. Défauts = comportement legacy.
+    sans_surf = d.get("dims_sans_surface", False)
+    sans_ref = d.get("dims_sans_ref", False)
+    sans_sm = d.get("dims_sans_surmesure", False)
+    classe_dabord = d.get("dims_classe_dabord", False)
+    ncols = 8 - int(sans_surf) - int(sans_ref)
     rows = []
     i = 0  # index global (striping continu sur toutes les lignes de données)
 
@@ -206,23 +214,26 @@ def build_dimensions(d):
             eff = cls["label"]
             ref = f'{nom.replace(" ", "-")}-{L}x{H}x{P}'
         else:
-            eff = f'{cls["iso"]} ({cls["label"]})'
+            # dims_classe_dabord (opt-in, NETCEL V LAM 04/08/2026) : la colonne s'intitule
+            # « Efficacité EN 1822 » → la CLASSE passe devant, le MPPS entre parenthèses.
+            # Défaut : ISO d'abord (comportement legacy des 17 autres fiches).
+            eff = (f'{cls["label"]} ({cls["iso"]})' if classe_dabord
+                   else f'{cls["iso"]} ({cls["label"]})')
             ref = f'{nom}-{cls["iso"]}-{cls["label"]}-{L}x{H}x{P}'
         c = "padding:4px 7px;"
         cref = ("padding:4px 7px; font-family:'IBM Plex Mono',monospace; "
                 "color:#0F3261;")
-        rows.append(
-            f'<tr{tr}>'
-            f'<td style="{c}">{L}</td>'
-            f'<td style="{c}">{H}</td>'
-            f'<td style="{c}">{P}</td>'
-            f'<td style="{c}">{surface}</td>'
-            f'<td style="{c}">{debit}</td>'
-            f'<td style="{c}">{dp}</td>'
-            f'<td style="{c}">{eff}</td>'
-            f'<td style="{cref}">{ref}</td>'
-            f'</tr>'
-        )
+        cells = [f'<td style="{c}">{L}</td>',
+                 f'<td style="{c}">{H}</td>',
+                 f'<td style="{c}">{P}</td>']
+        if not sans_surf:
+            cells.append(f'<td style="{c}">{surface}</td>')
+        cells += [f'<td style="{c}">{debit}</td>',
+                  f'<td style="{c}">{dp}</td>',
+                  f'<td style="{c}">{eff}</td>']
+        if not sans_ref:
+            cells.append(f'<td style="{cref}">{ref}</td>')
+        rows.append(f'<tr{tr}>' + "".join(cells) + '</tr>')
 
     for dim in d["dimensions"]:      # toutes les lignes classe basse…
         emit(dim, low)
@@ -230,13 +241,14 @@ def build_dimensions(d):
         for dim in d["dimensions"]:
             emit(dim, high)
 
-    rows.append(
-        '<tr style="background:#E6F5F7;">'
-        '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" '
-        'colspan="7">Sur mesure</td>'
-        '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
-        'sur demande — délai à confirmer</td></tr>'
-    )
+    if not sans_sm:
+        rows.append(
+            '<tr style="background:#E6F5F7;">'
+            '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" '
+            f'colspan="{ncols - 1}">Sur mesure</td>'
+            '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
+            'sur demande — délai à confirmer</td></tr>'
+        )
     return "\n".join("              " + r for r in rows)
 
 
@@ -2133,17 +2145,23 @@ def generer(d, html):
     html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 2/2")
 
     # --- #10a libellés courbe/calculateur (cases, légende, boutons)
-    lab_low = f'{low["label"]} · {low["iso"]}'
-    lab_high = f'{high["label"]} · {high["iso"]}'
+    # legende_courte (portage du moteur série sur le mono-classe, NETCEL V LAM 02/08/2026) :
+    # « H14 · 68 mm » au lieu de « H14 · ≥ 99,995 % MPPS — 68 mm ». L'efficacité reste lisible
+    # dans les badges et le tableau technique (déc. PA sur NETCEL V AZUR). Défaut = legacy.
+    courte = d.get("legende_courte", False)
+    lab_low = low["label"] if courte else f'{low["label"]} · {low["iso"]}'
+    lab_high = high["label"] if courte else f'{high["label"]} · {high["iso"]}'
+    sep_ep = " · " if courte else " — "
     html = sub1(html, r'(id="cbG4"[^>]*>\s*).*?(\s*</label>)',
                 lambda m: m.group(1) + lab_low + m.group(2), flags=re.DOTALL)
     html = sub1(html, r'(id="cbM5"[^>]*>\s*).*?(\s*</label>)',
                 lambda m: m.group(1) + lab_high + m.group(2), flags=re.DOTALL)
     mono = d.get("mono_classe", False)
     ep = low.get("epaisseur")
-    leg_low_a = f"{lab_low} — {_frnum(ep)} mm" if mono else f"{lab_low} — 48 mm"
-    for eid, txt in (("legG4a", leg_low_a), ("legG4b", f"{lab_low} — 98 mm"),
-                     ("legM5a", f"{lab_high} — 48 mm"), ("legM5b", f"{lab_high} — 98 mm")):
+    leg_low_a = (f"{lab_low}{sep_ep}{_frnum(ep)} mm" if mono
+                 else f"{lab_low}{sep_ep}48 mm")
+    for eid, txt in (("legG4a", leg_low_a), ("legG4b", f"{lab_low}{sep_ep}98 mm"),
+                     ("legM5a", f"{lab_high}{sep_ep}48 mm"), ("legM5b", f"{lab_high}{sep_ep}98 mm")):
         html = sub1(html, r'(id="' + eid + r'"[^>]*>.*?</span>)(.*?)(</div>)',
                     lambda m, t=txt: m.group(1) + t + m.group(3), flags=re.DOTALL)
     html = sub1(html, r'(id="btnEffG4"[^>]*>)([^<]*)(</button>)',
@@ -2276,6 +2294,23 @@ def generer(d, html):
     #     pour les produits sans classe particulaire (charbon / moléculaire → ref_simple).
     if d.get("ref_simple"):
         html = html.replace(">Efficacité ISO 16890<", ">Filtration<")
+
+    # --- en-têtes du tableau dimensions (mono-classe) : retirés/renommés en même temps que
+    #     leurs colonnes dans build_dimensions. Portage des clés du moteur série (NETCEL V LAM,
+    #     02/08/2026). Ancres vérifiées : une ancre absente lève, jamais de retrait silencieux.
+    _th = '                <th style="padding:6px 7px; text-align:left; font-weight:600;">%s</th>\n'
+    for _cle, _lib in (("dims_sans_surface", "S. filtrante (m²)"),
+                       ("dims_sans_ref", "Référence complète")):
+        if d.get(_cle):
+            _anc = _th % _lib
+            if _anc not in html:
+                raise RuntimeError(f"{_cle} : en-tête « {_lib} » introuvable dans le tableau dimensions.")
+            html = html.replace(_anc, "", 1)
+    if d.get("dims_entete_eff"):
+        _anc = _th % "Efficacité ISO 16890"
+        if _anc not in html:
+            raise RuntimeError("dims_entete_eff : en-tête « Efficacité ISO 16890 » introuvable.")
+        html = html.replace(_anc, _th % d["dims_entete_eff"], 1)
 
     # Sans le réglage, l'en-tête du gabarit reste intact : c'est ce qui laisse l'ancre du
     # test d'identité (_gabarit_ref.json) inchangée.
