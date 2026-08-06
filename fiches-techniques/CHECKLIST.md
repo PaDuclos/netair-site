@@ -54,17 +54,19 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 - [ ] **🔴 NETCEL V AZUR — prix F8 490×592 ERRONÉ dans l'Excel (code 13) : 3,50 € au lieu de ~31,50 €** (grille : F8 = 24 € en 287, 33 € en 592 ; F9 490 = 31,50 €). Vendait un filtre à **12 € au lieu de ~108 €** en boutique. **Neutralisé le 02/08** : l'offre du produit est restreinte aux classes EPA/HEPA (`classesIncluses` E10-E12/H13) — le F8 n'est plus commandable sur cette page — mais **la cellule Excel reste fausse**, à corriger à la source puis ré-exporter. **Adresse pour PA** : famille « 3. Filtres HEPA / T.H.E. » · gamme code 13 (NETCEL V AZUR, grille L×l) · ligne ép. 292 / petite 490 / grande 592 · colonne F8 (constaté sur l'export `tables.json` du 01/07 — Excel « v1.0 — 25/06 » ; si l'Excel a été corrigé depuis, simple ré-export).
 - [ ] **NETCEL V AZUR — statuer sur les classes particulaires M6→F9 de l'onglet 13** : tarifées dans l'Excel mais absentes de la fiche (filtre absolu). S'il existe un vrai multidièdre particulaire à vendre, c'est un AUTRE produit (page + fiche à créer) ; sinon purger ces colonnes de l'onglet 13.
 - [x] ~~**🔴 NETCEL V AZUR — corriger la courbe H13 dans `DONNEES_PDC_Netair.xlsx`**~~ → **FAIT le 02/08/2026** (demande PA : la source de vérité devait suivre immédiatement). L'extraction du cache Excel avait **comprimé l'axe débit de 20 %** (couples 400→2400 au lieu de 500→3000 — erreur détectée par PA sur la fiche source PDF `SV-GD/TITAPAK V-GD 592 H13.pdf`). Ligne 58 : coefficients 31,8/119,76 → **20,3525/95,8058** (c −14,7 et R² 0,9993 inchangés), commentaire corrigé et daté ; ligne 57 (E10, données conformes) : ΔP@nominal 134 → **176** (nominal fiche passé à 3 000 m³/h). Fiche = JSON = DONNEES_PDC réalignés ; aucune autre ligne touchée, zip revalidé.
-- [ ] **🟠 NETPAK S LUMEN — CRÉER L'OFFRE « RECHARGES » (trou dans la raquette, signalé PA 02/08/2026).**
-      Tout l'argumentaire de la fiche v1.1 repose sur « seules les cassettes filtrantes sont remplacées »,
-      mais un client ne peut NI voir NI chiffrer NI commander les cassettes seules : aucun code tarifaire,
-      aucune donnée produit, aucune mention commerciale. Ce qui existe déjà : la **codification `-CAS`**
-      (CODIFICATION_PRODUITS.md, suffixe cassette des rechargeables) et la **mécanique `variantes`** du
-      configurateur (prête à porter « Filtre complet / Recharge »). À faire, dans l'ordre :
-      **(1) PA/R&D** : définir le produit recharge (nb de cassettes par cadre 592×592 et 287×592, classes
-      F7/F8/F9, conditionnement) ; **(2) Excel** : créer le code tarifaire recharges + prix, ré-exporter ;
-      **(3) site** : variante « Recharge (cassettes seules) » sur la page LUMEN (relevé de prix obligatoire) ;
-      **(4) fiche LUMEN (figée v1.1)** : mention « recharges disponibles » → bump v1.2 avec accord PA.
-      ⚠️ Le même trou existera pour tout futur produit rechargeable — vérifier à chaque passe.
+- [x] ~~**🟠 NETPAK S LUMEN — CRÉER L'OFFRE « RECHARGES »**~~ → **BRANCHÉE le 02/08/2026** (trou signalé
+      PA le jour même ; le tarif existait en réalité déjà — **code 10 « RECHARGES NETPAK S LUMEN »** de
+      l'Excel, repéré par PA, coeff 0,5 / ratio 4, lignes sans épaisseur). Page LUMEN : menu
+      « Conditionnement » **Filtre complet / Recharge (cassettes seules)**, formats 287×592 et 592×592
+      lus dans la grille, références `Recharge_NETPAK_S_LUMEN-<classe>-<format>` (format technique à
+      tirets bas, déc. PA — nouveau mécanisme `refBase` par variante). Prix de vente vérifiés au centime
+      (= grille × 4) : 287 M5-F7 **67,68 €** · F8/F9 82,08 € · 592 M5-F7 **80,64 €** · F8/F9 148,32 € ;
+      490×592 → hors_fabrication ; le filtre complet (code 9) n'a pas bougé d'un centime (non-régression
+      contre l'arbitrage (10) de la passe LUMEN). **Restent :** (a) confirmation PA de l'unité vendue
+      (= jeu de cassettes pour UN cadre ?) ; (b) mention « recharges disponibles » sur la fiche LUMEN
+      figée → bump v1.2 avec accord PA ; (c) suffixe `-CAS` de la codification NON utilisé dans la
+      référence boutique (déc. PA : format `Recharge_…`) → à réconcilier avec CODIFICATION_PRODUITS.md
+      au moment du catalogue Incwo. ⚠️ Vérifier ce point à chaque futur produit rechargeable.
 - [ ] **NETCEL V AZUR — AJOUTER LE H14 AU TARIF (action PA, demandé le 02/08)** : plage fiche E10 → H14 (déc. fabricant) mais ni prix ni courbe aujourd'hui → part en devis via `classesSurDevis`. À faire : ajouter la colonne/valeurs H14 au code 13 dans `Calculateur_Netair.xlsx`, ré-exporter (il apparaîtra tout seul au menu avec prix, la rustine `classesSurDevis` sera alors à retirer). Courbe H14 à mesurer par ailleurs (réserve déjà ouverte sur NIVAL : la source H14 était une copie du H13).
 - [x] ~~**NETPAK S LUMEN** : ajouter la 3ᵉ dimension **490×592**~~ → **CADUC (déc. PA 26/07/2026, passe v1.1) : LUMEN reste aux 2 formats sourcés (287×592 / 592×592), la fiche les affiche seuls — l'Excel est déjà correct tel quel.**
 - [ ] **NETFIBRE — G3 panneau** : ~~corriger le tarif~~ → **SUPPRIMER la classe G3** de l'Excel : la gamme est G4 SEUL (déc. PA 17/07). La rustine `classesExclues:["G3"]` reste en place et devient définitive.
@@ -497,7 +499,7 @@ Données ΔP **réelles** : courbes vectorielles PDF QUARTZ 2018 (FT 2019-041), 
 - [ ] **Surface média développée non communiquée** (n.c.) → à obtenir.
 - [ ] **Largeur 287** : non mesurée indépendamment (extrapolée du 592).
 - [ ] **Courbes > 4 000 m³/h extrapolées** (v1.1) : l'axe va au débit max annoncé 4 500 (doc 2015) mais les mesures 2018 s'arrêtent à 4 000 → tronçon 4 000-4 500 calculé par le polynôme (même approche qu'AZUR). À mesurer si usage haut débit.
-- [ ] **🟠 Offre « recharges » inexistante (signalé PA 02/08)** : la fiche vend le remplacement des cassettes, rien ne permet de les acheter — cf. le point détaillé § calculateur (codification `-CAS` prête, mécanique `variantes` prête ; manquent données produit + code tarifaire).
+- [x] ~~**🟠 Offre « recharges » inexistante**~~ → **BRANCHÉE le 02/08** sur le code 10 de l'Excel (repéré PA) : menu « Filtre complet / Recharge (cassettes seules) » sur la page produit, réf. `Recharge_NETPAK_S_LUMEN-…`, prix au centime — cf. le point détaillé § calculateur (restent : unité vendue à confirmer, mention sur la fiche → v1.2, réconciliation `-CAS`).
 - [ ] **Photo** : Quartz.jpg (concept recharge) — **marque « Titanair » visible** sur la cassette → à remplacer en priorité par photo produit Netair.
 
 ### NETPAK S BORA 🟡

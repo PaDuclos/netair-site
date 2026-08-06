@@ -175,7 +175,7 @@ const variantesConfig =
         // formatsGrandDabord : premier = sélection par défaut → plein format en tête.
         const formats =
           formatsBase && v.formatsGrandDabord ? [...formatsBase].reverse() : formatsBase;
-        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, epaisseurs: v.epaisseurs ?? null, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
+        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, epaisseurs: v.epaisseurs ?? null, refBase: v.refBase ?? null, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
       })
     : null;
 
@@ -663,6 +663,9 @@ const introConfig =
       }
 
       function refRef(c) {
+        // Base de référence propre à la variante (ex. « Recharge pour NETPAK S LUMEN ») :
+        // sans elle, filtre complet et recharge partageraient la même référence au panier.
+        const base0 = (activeVar && activeVar.refBase) || code;
         const effPart = c.eff ? ('-' + c.eff) : '';
         if (c.formatLabel) {
           // L'épaisseur n'entre dans la référence que lorsqu'elle est un CHOIX indépendant du
@@ -672,12 +675,12 @@ const introConfig =
           const base = c.formatLabel.replace(/\s+/g, '');
           const epIndep = activeVar && activeVar.epaisseurs && c.ep != null;
           return epIndep
-            ? `${code}${effPart}-${base.replace(/mm$/, '')}×${c.ep}mm`
-            : `${code}${effPart}-${base}`;
+            ? `${base0}${effPart}-${base.replace(/mm$/, '')}×${c.ep}mm`
+            : `${base0}${effPart}-${base}`;
         }
         const epPart = c.ep != null ? ('x' + c.ep) : '';
         const cadrePart = c.cadre ? ('-' + c.cadre) : '';
-        return `${code}${effPart}-${c.L}x${c.H}${epPart}${cadrePart}`;
+        return `${base0}${effPart}-${c.L}x${c.H}${epPart}${cadrePart}`;
       }
 
       // Calcule et affiche le prix réel via le moteur. Renvoie { c, unit, ok }.

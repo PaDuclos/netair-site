@@ -97,6 +97,13 @@ export interface VarianteProduit {
    */
   formats?: FormatRouleau[];
   /**
+   * Base de la référence générée pour CETTE variante, quand elle diffère du nom du produit.
+   * Ex. recharges LUMEN : « Recharge_NETPAK_S_LUMEN » (format technique à tirets bas, déc. PA
+   * 02/08/2026) — sans elle, une recharge F7 592×592 serait indiscernable d'un filtre complet
+   * au panier.
+   */
+  refBase?: string;
+  /**
    * Épaisseurs propres à cette variante, quand elles diffèrent de la grille tarifaire.
    * Ex. NETBAG S : la variante « standard » ne propose que les longueurs de poche à la fois
    * MESURÉES (courbe sur la fiche) et TARIFÉES — 380 et 550 — tandis que la variante
@@ -289,12 +296,18 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // incinérable » de la fiche n'est pas encore proposée : elle demande une lettre de suffixe de
   // référence à trancher (codification). Cf. CHECKLIST.
   "netcarb-cilia": { code: "8", mode: "calcul", cadreFixe: { valeur: "galva", libelle: "Acier galvanisé" } },
-  // Polydièdre : dimensions en menu déroulant (formats générés depuis la grille), cadre plastique fixe.
+  // Polydièdre : dimensions en menu déroulant (formats générés depuis la grille), cadre plastique
+  // fixe. Deux conditionnements (déc. PA 02/08/2026) : le filtre complet (code 9) et la RECHARGE —
+  // jeu de cassettes seul, support conservé (code 10 « RECHARGES NETPAK S LUMEN » de l'Excel,
+  // coeff/ratio propres, lignes sans épaisseur). Réf. recharge : formulation PA + classe + format.
   "netpak-s-lumen": {
     code: "9",
     mode: "calcul",
     cadreFixe: { valeur: "pp", libelle: "Plastique" },
-    variantes: [{ id: "standard", label: "Polydièdre", code: "9", saisie: "formats", labelChamp: "Dimensions (L × H)" }],
+    variantes: [
+      { id: "standard", label: "Filtre complet", code: "9", saisie: "formats", labelChamp: "Dimensions (L × H)" },
+      { id: "recharge", label: "Recharge (cassettes seules)", code: "10", saisie: "formats", refBase: "Recharge_NETPAK_S_LUMEN", labelChamp: "Dimensions (L × H)" },
+    ],
   },
   // 🟠 NETBAG S : DEUX produits distincts en tarif (11 = poches 292 mm, média lourd, M5, ~25-51 € ;
   // 17 = poches 360-600 mm, média léger, sans M5, ~7-11 €), et la fiche annonce G4/M5 non tarifés.
