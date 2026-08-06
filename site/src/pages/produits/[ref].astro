@@ -175,7 +175,7 @@ const variantesConfig =
         // formatsGrandDabord : premier = sélection par défaut → plein format en tête.
         const formats =
           formatsBase && v.formatsGrandDabord ? [...formatsBase].reverse() : formatsBase;
-        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, epaisseurs: v.epaisseurs ?? null, refBase: v.refBase ?? null, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
+        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, epaisseurs: v.epaisseurs ?? null, refBase: v.refBase ?? null, sansCadre: v.sansCadre ?? false, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
       })
     : null;
 
@@ -581,6 +581,9 @@ const introConfig =
           setFormatOptions(v.formats || []);
         }
         setEffOptions(v.classes || [], v.effSelection);
+        // Variante sans cadre (ex. recharge LUMEN : cassettes seules, le support est conservé) :
+        // le champ « Cadre » du produit ne la concerne pas.
+        $('wrapCadre') && $('wrapCadre').classList.toggle('hidden', !!v.sansCadre);
         // Épaisseurs propres à la variante (ex. NETBAG S : 380/550 en standard — tarifés —
         // contre les 4 longueurs de la fiche en sur-mesure, qui part en devis).
         if (v.epaisseurs && $('inEp')) {
@@ -650,13 +653,16 @@ const introConfig =
         // Trois cas : menu (cadre au choix), cadre imposé lu sur le conteneur (affiché en
         // lecture seule, il compte quand même dans la référence), ou rien (ex. NETFIBRE).
         const cadreEl = $('inCadre');
-        const cadreVal = cadreEl ? cadreEl.value : (root.dataset.cadrefixe || null);
+        // Variante sans cadre (ex. recharge LUMEN : cassettes seules) : ni suffixe de
+        // référence, ni « · Plastique » sur la ligne de panier.
+        const varSansCadre = !!(activeVar && activeVar.sansCadre);
+        const cadreVal = varSansCadre ? null : (cadreEl ? cadreEl.value : (root.dataset.cadrefixe || null));
         // Suffixe lu dans la table partagée (jamais recopié ici) : un cadre sans suffixe
         // tranché est refusé en amont par les tests.
         const cadre = cadreVal ? CADRE_SUFFIXE[cadreVal] ?? null : null;
         // Libellé lu dans le menu (et non déduit de la valeur) : un même cadre `pp` s'affiche
         // « Polypropylène » ou « Plastique » selon la fiche du produit.
-        const cadreLabel = cadreEl?.selectedOptions[0]?.text ?? root.dataset.cadrefixelabel ?? null;
+        const cadreLabel = varSansCadre ? null : (cadreEl?.selectedOptions[0]?.text ?? root.dataset.cadrefixelabel ?? null);
         const qty = Math.max(1, +$('inQ').value || 1);
         const codeUsed = activeVar ? activeVar.code : codeGamme;
         return { L, H, ep, eff, effLabel, cadre, cadreLabel, qty, codeUsed, formatLabel };

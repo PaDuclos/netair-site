@@ -104,6 +104,12 @@ export interface VarianteProduit {
    */
   refBase?: string;
   /**
+   * Cette variante n'a PAS de cadre, même si le produit en déclare un (`cadreFixe`/`cadres`).
+   * Ex. recharge LUMEN : cassettes seules, le support est justement ce que le client conserve
+   * (déc. PA 02/08/2026) — le champ « Cadre » est masqué et la ligne de panier ne le cite pas.
+   */
+  sansCadre?: boolean;
+  /**
    * Épaisseurs propres à cette variante, quand elles diffèrent de la grille tarifaire.
    * Ex. NETBAG S : la variante « standard » ne propose que les longueurs de poche à la fois
    * MESURÉES (courbe sur la fiche) et TARIFÉES — 380 et 550 — tandis que la variante
@@ -306,7 +312,7 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
     cadreFixe: { valeur: "pp", libelle: "Plastique" },
     variantes: [
       { id: "standard", label: "Filtre complet", code: "9", saisie: "formats", labelChamp: "Dimensions (L × H)" },
-      { id: "recharge", label: "Recharge (cassettes seules)", code: "10", saisie: "formats", refBase: "Recharge_NETPAK_S_LUMEN", labelChamp: "Dimensions (L × H)" },
+      { id: "recharge", label: "Recharge (cassettes seules)", code: "10", saisie: "formats", refBase: "Recharge_NETPAK_S_LUMEN", sansCadre: true, labelChamp: "Dimensions (L × H)" },
     ],
   },
   // 🟠 NETBAG S : DEUX produits distincts en tarif (11 = poches 292 mm, média lourd, M5, ~25-51 € ;
