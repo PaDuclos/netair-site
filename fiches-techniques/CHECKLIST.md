@@ -93,6 +93,15 @@ et n'a jamais été reporté dans le classeur de référence `.xltm`.
       figée → bump v1.2 avec accord PA ; (c) suffixe `-CAS` de la codification NON utilisé dans la
       référence boutique (déc. PA : format `Recharge_…`) → à réconcilier avec CODIFICATION_PRODUITS.md
       au moment du catalogue Incwo. ⚠️ Vérifier ce point à chaque futur produit rechargeable.
+- [ ] **⏳ NETCEL V NIVAL — VÉRIFIER 2 PRIX DU CODE 15 (action PA, annoncée le 15/08 pour le lendemain)** :
+      onglet `Prix_L_et_l`, **colonne W = H13, colonne X = H14**, NIVAL aux lignes **327-354** (4 lignes
+      par format, même valeur → corriger un prix = 4 cellules). **(a)** `X327:X330` — 592×287 en H14 à
+      **108,00 €**, soit +42,75 € (+66 %) sur son H13, quand l'écart vaut +1,80 à +9,50 € ailleurs ; le
+      **450×450, au même H13 de 65,25 €, est à 67,50 €** en H14. **(b)** `W351:W354` — 610×610 en H13 à
+      **103,00 €**, moins cher que le 592×592 (105,75 €) plus petit, et **égal à sa propre case E12**
+      (les deux formats sont pourtant au même prix en H14). Ni l'un ni l'autre n'est une erreur prouvée :
+      PA vérifie. **Rien n'a été modifié.** Détail complet et prix de vente correspondants : § NETCEL V
+      NIVAL plus bas.
 - [ ] **NETCEL V AZUR — AJOUTER LE H14 AU TARIF (action PA, demandé le 02/08)** : plage fiche E10 → H14 (déc. fabricant) mais ni prix ni courbe aujourd'hui → part en devis via `classesSurDevis`. À faire : ajouter la colonne/valeurs H14 au code 13 dans `Calculateur_Netair.xlsx`, ré-exporter (il apparaîtra tout seul au menu avec prix, la rustine `classesSurDevis` sera alors à retirer). Courbe H14 à mesurer par ailleurs (réserve déjà ouverte sur NIVAL : la source H14 était une copie du H13).
 - [x] ~~**NETPAK S LUMEN** : ajouter la 3ᵉ dimension **490×592**~~ → **CADUC (déc. PA 26/07/2026, passe v1.1) : LUMEN reste aux 2 formats sourcés (287×592 / 592×592), la fiche les affiche seuls — l'Excel est déjà correct tel quel.**
 - [ ] **NETFIBRE — G3 panneau** : ~~corriger le tarif~~ → **SUPPRIMER la classe G3** de l'Excel : la gamme est G4 SEUL (déc. PA 17/07). La rustine `classesExclues:["G3"]` reste en place et devient définitive.
@@ -697,12 +706,29 @@ E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 1
       2,857. **C'est exactement la formule du moteur du site**, arrondi intermédiaire compris. L'écart
       d'impression vient de ce que la grille stocke le **prix d'achat** (65,25 €) là où le devis affiche
       le **prix de vente** (214,40 €).
-- [ ] **🟠 2 anomalies tarifaires du code 15, MAINTENUES EN L'ÉTAT sur décision PA du 15/08** (« garde
-      les valeurs du calculateur Netair ») : **(a)** 592×287 — H13 214,40 € mais H14 **354,86 €**, soit
-      **+65 %** quand l'écart H13→H14 vaut +2 à +9 % ailleurs (le 450×450, au **même** H13 de 65,25 € en
-      grille, est à 67,50 € en H14) ; **(b)** en H13, le **610×610 (338,43 €) est moins cher que le
-      592×592 (347,46 €)**, plus petit, et sa valeur de grille (103 €) est **identique à son E12**.
-      Les deux sont désormais visibles du client. → à revoir si PA change d'avis.
+- [ ] **⏳ ACTION PA — VÉRIFIER 2 PRIX DU CODE 15 DANS L'EXCEL** (annoncé le 15/08 pour le lendemain).
+      Fichier `BLOC1_Gamme_Produits/Grille_Couts_Internes/Calculateur_Netair.xltm`, onglet
+      **`Prix_L_et_l`** — colonne **W = H13**, colonne **X = H14**. Chaque format occupe **4 lignes**
+      (un palier de quantité chacune) portant la **même** valeur : corriger un prix = corriger 4 cellules.
+      NETCEL V NIVAL occupe les lignes **327 à 354**.
+
+      **(a) 592×287 en H14 → cellules `X327:X330` = 108,00 €.** L'écart H13→H14 y vaut **+42,75 € (+66 %)**
+      quand il vaut +1,80 € à +9,50 € sur les six autres formats. Argument le plus net : le **450×450 a
+      exactement le même H13 (65,25 €)** et son H14 est à **67,50 €** — 40 € d'écart entre deux formats
+      au même prix la classe d'avant. De plus le 592×287 est un DEMI-filtre : à 108 € il approche le
+      592×592 entier (112,50 €). Prix de vente correspondants : 214,40 € en H13, **354,86 € en H14**.
+
+      **(b) 610×610 en H13 → cellules `W351:W354` = 103,00 €.** Le **grand format coûte moins cher que le
+      petit** : le 592×592 est à 105,75 € pour 6 % de surface en moins. Deux indices d'une recopie de
+      colonne plutôt que d'un choix : en **H14 les deux formats sont au même prix** (112,50 €), donc
+      l'inversion n'existe qu'en H13 ; et **103 € est exactement la valeur de la case E12 voisine**
+      (610×610 : E10 99 · E11 101,25 · E12 **103** · H13 **103** · H14 112,50).
+
+      ⚠️ **Ce ne sont pas des erreurs prouvées** — une raison métier (média moins cher, série plus
+      longue) les justifierait. PA vérifie. **Rien n'a été modifié** : décision du 15/08 de garder les
+      valeurs du calculateur. Les deux sont désormais **visibles du client**, les formats concernés
+      étant à la vente. Si PA donne les valeurs corrigées : patch des 4 cellules par format, sauvegarde
+      préalable, et preuve qu'aucun autre prix ne bouge (méthode du 04/08, correction d'épaisseur LAM).
 - [x] ~~**E12 et H13 au même prix**~~ → **RETIRÉ DE LA LISTE DES ANOMALIES (correction du 15/08)** :
       je l'avais signalé comme une erreur, à tort. Le motif est **identique sur les deux formats** qui
       portent les deux classes (610×305 et 610×610), ce qui ressemble à une décision tarifaire et non
