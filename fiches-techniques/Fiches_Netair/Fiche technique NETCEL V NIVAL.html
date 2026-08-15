@@ -137,12 +137,10 @@
             </thead>
             <tbody>
               <tr><td style="padding:4px 7px;">610</td><td style="padding:4px 7px;">610</td><td style="padding:4px 7px;">292</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">270</td><td style="padding:4px 7px;">H13 (≥ 99,95 % MPPS)</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">292</td><td style="padding:4px 7px;">3&nbsp;200</td><td style="padding:4px 7px;">270</td><td style="padding:4px 7px;">H13 (≥ 99,95 % MPPS)</td></tr>
-              <tr><td style="padding:4px 7px;">610</td><td style="padding:4px 7px;">305</td><td style="padding:4px 7px;">292</td><td style="padding:4px 7px;">1&nbsp;700</td><td style="padding:4px 7px;">270</td><td style="padding:4px 7px;">H13 (≥ 99,95 % MPPS)</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">287</td><td style="padding:4px 7px;">292</td><td style="padding:4px 7px;">1&nbsp;550</td><td style="padding:4px 7px;">270</td><td style="padding:4px 7px;">H13 (≥ 99,95 % MPPS)</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">610</td><td style="padding:4px 7px;">305</td><td style="padding:4px 7px;">292</td><td style="padding:4px 7px;">1&nbsp;700</td><td style="padding:4px 7px;">270</td><td style="padding:4px 7px;">H13 (≥ 99,95 % MPPS)</td></tr>
             </tbody>
           </table>
-          <div style="font-size:10px; color:#8b97a6; margin-top:6px; line-height:1.45;">Le débit indiqué est le débit nominal de chaque cadre à vitesse frontale constante (≈ 2,5 m/s) ; la ΔP initiale est donnée à ce débit, média propre, pour la classe H13. Les classes E10, E11 et E12 sont disponibles sur les cadres 610×610 et 610×305. Courbes mesurées : H13 jusqu'à 3 840 m³/h, E10 jusqu'à 4 000 m³/h.</div>
+          <div style="font-size:10px; color:#8b97a6; margin-top:6px; line-height:1.45;">Le débit indiqué est le débit nominal de chaque cadre à vitesse frontale constante (≈ 2,5 m/s) ; la ΔP initiale est donnée à ce débit, média propre, pour la classe H13. Ces deux cadres sont les seuls disponibles dans les cinq classes E10 à H14. Autres formats standard : 592×592 et 592×287 (H13 et H14), nous consulter. Courbes mesurées : H13 jusqu'à 3 840 m³/h, E10 jusqu'à 4 000 m³/h.</div>
         </div>
 
       </div>
@@ -528,7 +526,7 @@
   var hit = $('hoverHit'); hit.addEventListener('mousemove', moveHover);
   hit.addEventListener('mouseleave', function () { hoverG.style.display = 'none'; fixedMarks.style.display = ''; });
 
-  var FMTS = [{"L": 610, "H": 610, "d": 3400}, {"L": 592, "H": 592, "d": 3200}, {"L": 610, "H": 305, "d": 1700}, {"L": 592, "H": 287, "d": 1550}];
+  var FMTS = [{"L": 610, "H": 610, "d": 3400}, {"L": 610, "H": 305, "d": 1700}];
   function buildFmtBtns() {
     var c = $('fmtBtns'); if (!c) return; c.innerHTML = '';
     FMTS.forEach(function (f) {
