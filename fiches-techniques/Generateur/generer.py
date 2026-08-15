@@ -260,6 +260,25 @@ def _co(co):
 AREF = 0.592 * 0.592   # surface frontale de référence (m²)
 
 
+def dims_ref(d):
+    """(L, H) de la cellule réelle, déduits de `dim_ref` et contrôlés contre `aref`.
+
+    `aref` et `dim_ref` décrivent le même objet par deux chemins : une incohérence entre
+    les deux (ex. aref 610² avec dim_ref « 592×592 ») donnerait une vitesse et une surface
+    fausses sans aucun signal. On refuse plutôt que d'imprimer un chiffre faux.
+    """
+    L, H = (re.split(r"[×x]", d.get("dim_ref", "592×592")) + ["592", "592"])[:2]
+    L, H = L.strip(), H.strip()
+    if not (L.isdigit() and H.isdigit()):
+        raise RuntimeError(f"dim_ref : « {d.get('dim_ref')} » n'est pas au format « L×H ».")
+    aref = d.get("aref")
+    if aref and abs(int(L) * int(H) / 1e6 - aref) > 0.01 * aref:
+        raise RuntimeError(
+            f"aref ({aref} m²) et dim_ref ({L}×{H} = {int(L) * int(H) / 1e6:.4f} m²) "
+            f"décrivent deux cellules différentes.")
+    return L, H
+
+
 def _frnum(x):
     """Nombre format français : 2 -> '2', 1.5 -> '1,5', 0.5 -> '0,5'."""
     return f"{x:g}".replace(".", ",")
@@ -631,7 +650,15 @@ def build_dimensions_series(d):
         cl = cdef[s["cls"]]
         P = s["len"]
         surf = f'{s["surface"]:.2f}'.replace(".", ",") if "surface" in s else "n.c."
-        eff = cl["iso"] if en779_col else f'{cl["iso"]} ({cl["label"]})'
+        # dims_classe_dabord (opt-in) : porté du chemin mono-classe (LAM 04/08/2026). Quand
+        # la colonne s'intitule « Efficacité EN 1822 », la CLASSE passe devant et le MPPS
+        # entre parenthèses. Défaut inchangé (ISO d'abord) : AZUR et les autres ne bougent pas.
+        if en779_col:
+            eff = cl["iso"]
+        elif d.get("dims_classe_dabord"):
+            eff = f'{cl["label"]} ({cl["iso"]})'
+        else:
+            eff = f'{cl["iso"]} ({cl["label"]})'
         ref = f'{nom}-{cl["iso"]}-{cl["label"]}-{L}x{H}x{P}'
         dp = f'{s["dp"]}*' if s.get("avalider") else f'{s["dp"]}'
         cells = [f'<td style="{c}">{L}</td>', f'<td style="{c}">{H}</td>',
@@ -897,6 +924,20 @@ def build_series_script(d):
     js = js.replace("__SERIES_NOMLABELS__\n",
                     _series_nomlabels_js(d.get("points_nominaux_gauche", False))
                     if d.get("points_nominaux") else "")
+    # aref (opt-in, NETCEL V NIVAL 14/08/2026) : surface frontale de référence du produit.
+    # SERIES_JS l'écrit en dur à 592×592 ; sur une cellule 610×610 le calculateur affichait
+    # 0,35 m² et 2,7 m/s pour un filtre qui fait 0,37 m² et 2,5 m/s. Le chemin mono-classe
+    # (LAM) savait déjà le faire : c'est un rattrapage, pas un mode nouveau. Les fiches série
+    # qui ne déclarent pas `aref` gardent 592² et restent byte-identiques.
+    # ⚠️ Les coefficients des courbes sont ajustés sur CETTE surface : changer `aref` sans
+    # refaire l'ajustement déplacerait toutes les ΔP.
+    if d.get("aref"):
+        cl, cw = dims_ref(d)
+        for ancre, neuf in (("var Aref = 0.592 * 0.592;", f"var Aref = {d['aref']};"),
+                            ("flen: 592, fwid: 592", f"flen: {cl}, fwid: {cw}")):
+            if ancre not in js:
+                raise RuntimeError(f"aref : ancre « {ancre} » introuvable dans SERIES_JS.")
+            js = js.replace(ancre, neuf)
     if d.get("calc_formats_fixes"):
         # lenBtns retiré du DOM → le constructeur d'épaisseurs se retire proprement
         js = js.replace("var cont = $('lenBtns'); cont.innerHTML = '';",
@@ -1085,6 +1126,17 @@ def generer_series(d, html):
     # --- groupe de survol (lanes créées par le JS)
     html = sub1(html, r'            <!-- survol interactif -->.*?\n(            <rect id="hoverHit")',
                 lambda m: build_series_hover() + "\n" + m.group(1), flags=re.DOTALL)
+
+    # --- aref (opt-in) : les champs L/H du calculateur portent la cellule réelle. Sans ça,
+    #     ils afficheraient 592 pendant que le calcul tourne sur 610 (cf. build_series_script).
+    #     Sans effet quand calc_formats_fixes a déjà remplacé ces champs par des boutons.
+    #     Pas de garde d'ancre ici : calc_formats_fixes retire légitimement ces champs.
+    if d.get("aref"):
+        cl, cw = dims_ref(d)
+        html = html.replace('id="inLen" min="50" max="2000" value="592"',
+                            f'id="inLen" min="50" max="2000" value="{cl}"')
+        html = html.replace('id="inWid" min="50" max="2000" value="592"',
+                            f'id="inWid" min="50" max="2000" value="{cw}"')
 
     # --- calc_formats_fixes (opt-in) : dimensions imposées par les cadres standard.
     #     Les champs libres L/H deviennent des boutons (1 par cadre) qui règlent aussi le

@@ -1,67 +1,185 @@
 {
-  "_commentaire": "NETCEL V NIVAL — filtre absolu HEPA à polydièdres (équiv. Titanair TITACEL V). Fiche série en MODE HEPA (hepa:true → ΔP finale = 2×initiale, EN 1822, pas la règle ePM ; pas d'étiquette énergie Eurovent). Donnée ΔP RÉELLE = cache Excel TITACEL V H13 : débit [640,1280,1920,2560,3200,3840] → ΔP [39,85,137,189,250,316]. Fit (v=débit/3600/0,3505) : 9,44·v²+75,31·v−1,20 (R²=0,9999), ΔP@3400≈270. Surface média 40 m² (documentée). ⚠️ Décision PA : on ne met que la courbe H13 ; E10 (Excel sans cache, PDF non extractible) et H14 (courbe = copie exacte du H13 = piège) annoncés en specs/gamme mais SANS courbe → à mesurer/ajouter (CHECKLIST). ⚠️ Filtre 610×610 alors que le moteur série calcule la vitesse sur 592×592 → axe vitesse/annotation cosmétiquement décalés (le couple débit↔ΔP reste juste). Specs fiche 2018 : média fibre de verre, parois plastique, M1, 60°C, ΔP finale max 750 Pa (H13). Photo TITACEL V.png réelle = placeholder.",
-
+  "_commentaire": "NETCEL V NIVAL — filtre absolu à polydièdres (équiv. Titanair TITACEL V, vendu aussi sous TITAPAK V CU : mêmes specs, même courbe). ✅ CONTENU RETRAVAILLÉ v1.1, VALIDÉ PA le 15/08/2026 — arbitrages dans _arbitrages_pad, NE PAS retoucher sans son accord. Fiche SÉRIE en MODE HEPA (hepa:true → ΔP finale = 2×initiale, EN 1822 ; pas d'étiquette énergie Eurovent). ⚠️ SURFACE FRONTALE DE RÉFÉRENCE = 610×610 (aref 0,3721) et NON 592×592 : le moteur série l'écrivait en dur, corrigé le 15/08 (clé `aref`, cf. _arbitrages_pad §8). Les coefficients des DEUX courbes sont ajustés SUR CETTE SURFACE — les changer sans refaire l'ajustement déplacerait toutes les ΔP. Données ΔP RÉELLES = caches Excel des fiches 2018, contrôlés point par point contre le graphe du PDF (pas de compression d'axe, contrairement à NETCEL V AZUR) : H13 (TITACEL V H13) débit [640,1280,1920,2560,3200,3840] → ΔP [39,85,137,189,250,316] ; E10 (TITACEL V E10) débit [1000,1500,2000,2500,3000,3500,4000] → ΔP [40,53,71,91,115,150,200]. Fits (v = débit/3600/0,3721) : H13 10,6394·v²+79,9550·v−1,20 (R²=0,9999) ; E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 148 Pa. ⚠️ H14 SANS COURBE : la source (TITAPAK V CU H14) recopie EXACTEMENT les 6 valeurs du H13 — impossible, un H14 est plus résistant. À mesurer R&D (CHECKLIST). Specs fiches 2018 : média fibre de verre, parois PLASTIQUE (H13) / POLYSTYRÈNE (E10), séparateur hot melt, lut oui, M1, 60 °C (acc. 65 °C/1 h), ΔP finale 750 Pa sur les DEUX classes. Surface 40 m² documentée pour le seul cadre 610×610 — CONSERVÉE À L'AFFICHAGE sur décision PA, avec la mention du cadre (cf. _arbitrages_pad §5). Photo TITACEL V.png nettoyée = placeholder.",
   "slug": "netcel-v-nival",
   "nom": "NETCEL V NIVAL",
-  "soustitre": "Filtre absolu HEPA polydièdre — Très haute efficacité",
+  "soustitre": "Filtre absolu à très haute efficacité",
   "series": true,
   "hepa": true,
   "compact_p1": true,
   "axe_debit": true,
-  "vmax": 3.05,
-  "pmax": 330,
+  "vmax": 2.9861,
+  "pmax": 320,
   "debit_nom": 3400,
   "eff0": "h13",
   "len0": 292,
-
-  "fiche": { "num": "FT-NETCEL-V-NIVAL-001", "version": "v1.0", "date": "22/06/2026" },
-
+  "fiche": {
+    "num": "FT-NETCEL-V-NIVAL-001",
+    "version": "v1.1",
+    "date": "15/08/2026"
+  },
   "photo": "netcel-v-nival-photo.jpg",
   "photo_alt": "Filtre absolu HEPA polydièdre NETCEL V NIVAL",
-
-  "description": "Le NETCEL V NIVAL est un filtre absolu (T.H.E) à polydièdres rigides, destiné à la filtration de très haute efficacité des centrales de traitement d'air, salles propres et environnements sensibles. Son média en fibre de verre microfine, plissé en dièdres sur une grande surface (40 m²), retient les particules les plus fines jusqu'aux classes HEPA. Disponible en E10, H13 et H14 selon EN 1822, sur cadre 610×610×292 mm. Classement au feu M1, température de service 60 °C.",
-
+  "description": "Le filtre absolu NETCEL V NIVAL est destiné à la filtration de très haute efficacité de l'air dans les centrales de traitement d'air. Il est particulièrement adapté aux environnements à exigences de propreté, tels que les salles propres, les établissements de santé, les laboratoires et les applications industrielles sensibles. Son média en microfibres de verre permet d'atteindre les niveaux de filtration requis pour ces applications.",
   "points_cles": [
-    "Filtre absolu HEPA (T.H.E)",
-    "Grande surface média (40 m²)",
-    "Gamme E10 → H14 (EN 1822)",
-    "Média fibre de verre microfine",
-    "Polydièdres rigides"
+    "Très haute efficacité de filtration",
+    "Grande surface filtrante",
+    "Cadre plastique ou acier galvanisé",
+    "Salles propres et environnements sensibles",
+    "Applications hospitalières et industrielles"
   ],
-
   "specs": [
-    ["Média filtrant", "Fibre de verre microfine (papier HEPA)"],
-    ["Type", "Polydièdre T.H.E (filtre absolu)"],
-    ["Parois cellule", "Plastique"],
-    ["Surface média", "40 m²"],
-    ["Classe EN 1822", "E10 · H13 · H14"],
-    ["Efficacité (MPPS)", "H13 ≥ 99,95 % · H14 ≥ 99,995 %"],
-    ["Profondeur", "292 mm"],
-    ["Dimensions cadre", "610×610×292 mm"],
-    ["Classement au feu", "M1"],
-    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
-    ["ΔP finale recommandée", "2 × ΔP initiale (EN 1822 — pratique ; max 750 Pa [H13])"]
+    [
+      "Média filtrant",
+      "Microfibres de verre"
+    ],
+    [
+      "Type",
+      "Filtre absolu polydièdre"
+    ],
+    [
+      "Parois cellule",
+      "Plastique ou acier galvanisé"
+    ],
+    [
+      "Classes EN 1822",
+      "E10 · E11 · E12 · H13 · H14"
+    ],
+    [
+      "Efficacité (MPPS)",
+      "E10 ≥ 85 % · E11 ≥ 95 % · E12 ≥ 99,5 % · H13 ≥ 99,95 % · H14 ≥ 99,995 %"
+    ],
+    [
+      "Profondeur",
+      "292 mm"
+    ],
+    [
+      "Dimensions cadre",
+      "610×610  ·  592×592  ·  610×305  ·  592×287 mm"
+    ],
+    [
+      "Surface média",
+      "40 m² (cadre 610×610)"
+    ],
+    [
+      "Classement au feu",
+      "M1"
+    ],
+    [
+      "Température de service",
+      "60 °C (accidentelle 65 °C / 1 h)"
+    ],
+    [
+      "Humidité relative max.",
+      "100 % (sans condensation)"
+    ],
+    [
+      "ΔP finale recommandée",
+      "2 × ΔP initiale  ·  max 750 Pa  ·  EN 1822"
+    ]
   ],
-
   "badges_p1": [
     "EN 1822 : E10 → H14",
-    "Filtre absolu (T.H.E)",
+    "Polydièdre",
     "HEPA"
   ],
   "badges_p2": [
     "EN 1822 : E10 → H14",
-    "Filtre absolu (T.H.E)",
+    "Polydièdre",
     "HEPA"
   ],
-
   "classes_def": {
-    "h13": { "label": "H13", "iso": "≥ 99,95% MPPS", "add": 0, "rule": "classe H13 (EN 1822)" }
+    "e10": {
+      "label": "E10",
+      "iso": "≥ 85 % MPPS",
+      "add": 0,
+      "rule": "classe E10 (EN 1822)"
+    },
+    "h13": {
+      "label": "H13",
+      "iso": "≥ 99,95 % MPPS",
+      "add": 0,
+      "rule": "classe H13 (EN 1822)"
+    }
   },
-  "classes_order": ["h13"],
-
-  "courbes": [
-    { "cls": "h13", "len": 292, "a": 9.44, "b": 75.31, "c": -1.20, "surface": 40, "dp": 270, "color": "#0F3261" }
+  "classes_order": [
+    "e10",
+    "h13"
   ],
-
-  "note_dimensions": "Polydièdre 610×610×292 mm · surface média 40 m². Gamme E10 / H13 / H14 (EN 1822). Courbe H13 mesurée ; E10 et H14 disponibles (courbes à ajouter). ΔP finale recommandée = 2 × ΔP initiale."
+  "courbes": [
+    {
+      "cls": "e10",
+      "len": 292,
+      "a": 23.7547,
+      "b": -19.9658,
+      "c": 44.1429,
+      "dp": 148,
+      "color": "#0897A5"
+    },
+    {
+      "cls": "h13",
+      "len": 292,
+      "a": 10.6394,
+      "b": 79.955,
+      "c": -1.2,
+      "surface": 40,
+      "dp": 270,
+      "color": "#0F3261"
+    }
+  ],
+  "note_dimensions": "Le débit indiqué est le débit nominal de chaque cadre à vitesse frontale constante (≈ 2,5 m/s) ; la ΔP initiale est donnée à ce débit, média propre, pour la classe H13. Les classes E10, E11 et E12 sont disponibles sur les cadres 610×610 et 610×305. Courbes mesurées : H13 jusqu'à 3 840 m³/h, E10 jusqu'à 4 000 m³/h.",
+  "aref": 0.3721,
+  "dim_ref": "610×610",
+  "axe_debit_max": 4000,
+  "debit_curseur_max": 3840,
+  "tailles": [
+    {
+      "L": 610,
+      "H": 610,
+      "debit": 3400
+    },
+    {
+      "L": 592,
+      "H": 592,
+      "debit": 3200
+    },
+    {
+      "L": 610,
+      "H": 305,
+      "debit": 1700
+    },
+    {
+      "L": 592,
+      "H": 287,
+      "debit": 1550
+    }
+  ],
+  "dims_classes": [
+    "h13"
+  ],
+  "dims_sans_surface": true,
+  "dims_sans_ref": true,
+  "dims_sans_surmesure": true,
+  "dims_entete_eff": "Efficacité EN 1822",
+  "dims_classe_dabord": true,
+  "classes_sans_iso": true,
+  "legende_courte": true,
+  "calc_formats_fixes": true,
+  "points_nominaux": true,
+  "compact_p2": true,
+  "_arbitrages_pad": [
+    "PASSE DE CONTENU v1.1 — 15/08/2026. Arbitrages de Pierre-Alain, à NE PAS rouvrir sans le consulter.",
+    "(1) 🟢 DÉCOUVERTE — LA COURBE E10 EXISTAIT. La CHECKLIST portait depuis juin « E10 : Excel sans cache, extraction PDF échouée ». C'EST FAUX : le cache du graphe de TITACEL V E10.xlsx contient les 7 couples, et le graphe du PDF les confirme un à un. Double contrôle fait exprès à cause de l'erreur d'axe détectée par PA sur NETCEL V AZUR — ici AUCUNE compression, axe 1000→4000 des deux côtés. La courbe H13 déjà en place a été recontrôlée de la même façon : juste elle aussi. DÉCISION PA : ajouter l'E10. La fiche passe donc à 2 courbes, sélecteur de classe et calculateur sur les deux (modèle AZUR). ⚠️ RÉSERVE ASSUMÉE : la mesure E10 est plate au départ puis décolle, forme qu'une parabole passant par l'origine suit mal. Écart de la courbe affichée à la mesure : ≈11 Pa EN MOINS à 1000 m³/h (28,6 contre 40) ET ≈11 Pa EN MOINS à 4000 m³/h (188,7 contre 200) ; exacte au nominal. L'affichage est donc légèrement FLATTEUR aux deux bouts de la plage E10. Le H13, lui, colle à moins d'1 Pa partout. À redresser si on mesure l'E10 en R&D.",
+    "(2) SOUS-TITRE « Filtre absolu à très haute efficacité » — FORMULATION PA, retenue CONTRE ma réserve, réaffirmée après discussion. Ma réserve, consignée : (a) le badge « Filtre absolu (T.H.E) » est l'abréviation littérale de ce sous-titre — d'où le remplacement du badge, cf. §4 ; (b) la forme physique disparaît du sous-titre alors que la convention posée sur AZUR (« Filtre absolu multidièdre ») et LAM (« Filtre à flux laminaire ») est « la forme seule, un objet un mot » ; (c) NIVAL et AZUR deviennent indiscernables au sous-titre. Le « Type » des specs porte donc seul la forme : « Filtre absolu polydièdre » — c'est LUI qui suit la convention, pas le sous-titre.",
+    "(3) DESCRIPTIF FOURNI PA, retenu TEL QUEL contre ma réserve, réaffirmé après discussion. Apport réel de sa version, reconnu : elle nomme les APPLICATIONS (salles propres, établissements de santé, laboratoires, industries sensibles) là où ma proposition restait abstraite. Ma réserve, consignée : (a) la 3e phrase est circulaire — « son média permet d'atteindre les niveaux de filtration requis » est vrai de tout filtre ; sur AZUR et LAM cette phrase portait la construction ET la plage EN 1822 ; (b) la plage E10 → H14 n'est donc annoncée nulle part en prose ; (c) cumulé au sous-titre (§2), le mot « polydièdre » ne figure plus dans la moitié haute de la page — il ne subsiste qu'au badge, au « Type » des specs et au libellé de la variante du configurateur. « Établissements de santé » : vocabulaire courant du marché (Camfil, Deltrian), n'engage aucune certification — vérifié.",
+    "(4) BADGES — « Filtre absolu (T.H.E) » REMPLACÉ PAR « Polydièdre ». Conséquence directe du §2 : le badge d'AZUR aurait redit le sous-titre mot pour mot. « Polydièdre » remet la forme physique en tête de page, là où le sous-titre et le descriptif ne la portent plus. Les 3 badges sont donc « EN 1822 : E10 → H14 » · « Polydièdre » · « HEPA » (le gabarit en impose exactement 3). ⚠️ ÉCART ASSUMÉ : AZUR garde « EN 1822 : E10 → H14 » · « Filtre absolu (T.H.E) » · « HEPA ».",
+    "(5) SURFACE MÉDIA 40 m² CONSERVÉE À L'AFFICHAGE — DÉCISION PA, contre le précédent d'AZUR (24 m² retirés par prudence) et de LAM (5,83 m² retirés parce que la valeur ne vaut que pour 1 format sur 17). Motif retenu : c'est la donnée la mieux sourcée du lot, elle figure sur les DEUX fiches source (E10 et H13). Garde-fou posé à sa demande : la ligne dit « 40 m² (cadre 610×610) », le cadre auquel elle se rapporte étant nommé — sans quoi on répétait l'erreur corrigée sur LAM. La colonne « S. filtrante » du tableau reste RETIRÉE : on ne connaît la mesure que pour le 610×610, les autres auraient été calculées par nous, donc non sourcées.",
+    "(6) POINTS CLÉS = LISTE PA (5). ⚠️ « Cadre plastique ou acier galvanisé » = DÉCISION FABRICANT ASSUMÉE, prise en connaissance de cause après vérification : l'acier galvanisé N'EST SOURCÉ NULLE PART — les 4 fiches Titanair du produit disent PLASTIQUE (H13, TITAPAK V CU H13/H14) ou POLYSTYRÈNE (E10), et le mot « galva » n'apparaît dans aucun document Titanair du dossier. La grille tarifaire n'a qu'un prix par format et par classe, sans variante de cadre. PA tranche : Netair fabriquera les deux, comme la plage E10→H14 d'AZUR. La ligne « Parois cellule » et le configurateur ont suivi (cf. §9). Précédent de gamme : NETBAG S et NETPAK S CILIA offrent déjà ce double choix. ⚠️ RÉSERVE DE CLAUDE CONSIGNÉE, NON LEVÉE : 2 des 5 points clés (« Salles propres et environnements sensibles », « Applications hospitalières et industrielles ») sont des USAGES, pas des attributs, et redisent presque mot pour mot la 2e phrase du descriptif situé juste au-dessus. PA informé, maintenus — même arbitrage que « Blocs opératoires et salles propres » sur LAM.",
+    "(7) SPECS à l'ordre canonique (média · type · parois · classes · efficacité · profondeur · dimensions · surface · feu · T° · humidité · ΔP finale) ; la v1.0 avait la surface en 4e position. Média aligné sur AZUR et LAM : « Microfibres de verre », « (papier HEPA) » RETIRÉ — NIVAL était la dernière des 18 à le porter (demande PA du 04/08). PLAGE COMPLÈTE E10 · E11 · E12 · H13 · H14 annoncée (la v1.0 disait « E10 · H13 · H14 » en specs mais n'en listait que 2 en efficacité — incohérence corrigée) : c'est la plage TARIFÉE par la grille, et les MPPS des 5 classes sont les valeurs NORMATIVES EN 1822-1, pas des mesures. HUMIDITÉ 100 % (sans condensation) AJOUTÉE — NIVAL était l'une des 2 dernières fiches sans cette ligne (avec NETCARB BAG, qui reste à traiter) ; NON SOURCÉE (Camfil dit 100 %, AFPRO 90 %), comme sur toute la gamme. ΔP finale « 2 × ΔP initiale · max 750 Pa · EN 1822 » (750 Pa sourcé sur les DEUX fiches — pas de split par classe, contrairement à AZUR ; sans tirets longs, demande PA). Séparateur HOT MELT NON AJOUTÉ bien que sourcé : LAM affiche cette ligne, AZUR non — incohérence de gamme signalée à PA, à trancher hors passe.",
+    "(8) 🔴 CORRECTION MOTEUR — SURFACE FRONTALE DE RÉFÉRENCE. Le calculateur de la fiche annonçait « 0,35 m² · 2,7 m/s » et un cadre 592×592 pour un filtre 610×610, sur la même page qu'un tableau technique disant 610×610 : la surface était écrite EN DUR dans le code du chemin « série », alors que le chemin « mono-classe » (LAM) savait déjà la lire dans le fichier produit. Rattrapage, pas mode nouveau : clés `aref` + `dim_ref`, sous garde-fou opt-in. Les coefficients des 2 courbes ont été RÉAJUSTÉS sur 0,3721 — le couple débit↔ΔP est inchangé (H13 : 270 Pa à 3400 avant comme après), seule la vitesse affichée devient juste (2,5 m/s au lieu de 2,7). PREUVES : test d'identité du gabarit vide, 17 autres fiches régénérées BYTE-IDENTIQUES, 2 pages à 1122,52 px, 0 erreur console. REVUE DE CODE (demandée par PA) : 2 défauts trouvés et corrigés — (a) ÉLEVÉ, les 4 substitutions échouaient EN SILENCE alors que tous les autres réglages du fichier lèvent une erreur franche ; une dérive d'ancre aurait fait afficher 291 Pa au lieu de 270 comme une mesure ; (b) MOYEN, rien ne vérifiait que `aref` et `dim_ref` décrivent la même cellule → contrôle ajouté (L×H ≈ aref à 1 %), testé sur un couple incohérent (refusé) et sur « 610 x 610 » avec espaces (accepté). ⚠️ LE MÊME DÉFAUT SUBSISTE SUR LE 3e CHEMIN du générateur (multi-classes, NETPAK S CILIA) : sans gêne aujourd'hui car CILIA est un 592, à corriger avant toute fiche multi-classes sur un autre cadre.",
+    "(9) CONFIGURATEUR (code 15, méthode F). CADRE AU CHOIX Plastique / Acier galvanisé (§6), « Plastique » en tête car c'est la matière sourcée ; le cadre reste NEUTRE côté prix tant que l'Excel ne le structure pas — même traitement que NETBAG S. DIMENSIONS STANDARD : les 4 cadres de la fiche, 610×610 en tête. Les 305×305, 381×381 et 450×450 de la grille sont ÉCARTÉS DE L'OFFRE (déc. PA : « des filtres qui ne passent jamais ») — ils restent tarifés dans l'Excel, seule la vitrine les ignore. La SAISIE LIBRE de dimensions est supprimée. ⚠️ Formats déclarés EN DUR à dessein : `formatsDuCode` filtre sur la PREMIÈRE classe du menu (E10), tarifée sur 2 cadres seulement — le menu se serait réduit tout seul à 610×610 et 610×305. ⚠️ E10/E11/E12 ne sont pas tarifées sur 592×592 ni 287×592 : ces 6 combinaisons répondent « Efficacité … non disponible dans ce format », prix vide et bouton panier désactivé — VÉRIFIÉ dans le navigateur. Jamais de prix faux. RELEVÉ AVANT/APRÈS : 175 combinaisons (7 formats × 5 classes × 5 paliers), 0 écart au centime.",
+    "(10) TABLEAU DES FORMATS : 4 lignes (610×610 · 592×592 · 610×305 · 592×287), débits à VITESSE FRONTALE CONSTANTE 2,538 m/s calés sur le nominal 3400 du 610×610 → 3400 / 3200 / 1700 / 1550 m³/h, d'où une ΔP identique de 270 Pa partout (logique déjà retenue sur LAM). La v1.0 n'avait qu'UNE ligne, annoncée 592×592 — en CONTRADICTION avec la ligne « Dimensions cadre » et la note de la même page, qui disaient 610×610 (le moteur remplissait le tableau avec son cadre par défaut). Colonnes surface et « Référence complète » retirées (cette dernière fabriquait un code illisible : « NETCEL V NIVAL-≥ 99,95% MPPS-H13-592x592x292 »), en-tête « Efficacité EN 1822 » au lieu d'« ISO 16890 » (faux pour un absolu), ligne « Sur mesure » supprimée (le configurateur ne vend que du standard), CLASSE EN TÊTE « H13 (≥ 99,95 % MPPS) » — convention LAM du 04/08, portée ici sur le chemin série (nouvelle clé sur ce chemin ; AZUR reste en ISO d'abord, à aligner avec accord PA).",
+    "(11) COURBE ET CALCULATEUR : axe borné à 4000 m³/h (fin des mesures E10) au lieu de 4500 — le H13 n'est donc extrapolé que sur 3840→4000, soit 4 % (contre 17 % assumés sur AZUR) ; dit dans la note. Échelle Y portée à 320 Pa pour des graduations ENTIÈRES (0/80/160/240/320 — la v1.0 affichait 82,5/165/247,5, défaut déjà corrigé sur LAM) ; le H13 culmine à 316 Pa. Curseur du calculateur borné à 3840 (fin des mesures H13) : aucune ΔP extrapolée n'est lisible. Points nominaux affichés (270 et 148 Pa). Cases, légende et boutons en CLASSE SEULE (classes_sans_iso + legende_courte, déc. AZUR). « LONGUEUR DE POCHE » supprimée du calculateur — un filtre absolu n'a pas de poche : remplacée par les 4 boutons de format (calc_formats_fixes). compact_p2 ajouté : sans lui la page 2 mesurait 1184 px et débordait de 62 px. Typographie « ≥ 99,95 % MPPS » (espace avant %) alignée entre les specs, le tableau et le calculateur — AZUR écrit encore « 99,95% ».",
+    "(12) 🔴 ANOMALIES TARIFAIRES NON CORRIGÉES (hors périmètre, pour la séance Excel de PA). Prix de VENTE = prix grille × 2,857 × 1,15. (a) 287×592 : H13 214,40 € mais H14 354,86 €, soit +65 % quand l'écart H13→H14 est de +2 à +9 % ailleurs — et 354,86 € pour un demi-filtre quand le 592×592 entier en H14 vaut 369,66 €. (b) En H13, le 610×610 (338,43 €) est MOINS CHER que le 592×592 (347,46 €), plus petit. (c) E12 et H13 sont au MÊME prix sur les deux cadres qui portent les deux classes. Même signature que le F8 490×592 à 3,50 € trouvé sur AZUR. Ces 3 anomalies sont désormais VISIBLES DU CLIENT puisque les formats concernés sont à la vente.",
+    "(13) RÉSERVES MAINTENUES (cf. CHECKLIST § NETCEL V NIVAL) : courbe H14 à mesurer (source = copie du H13) ; courbes E11 et E12 inexistantes alors que les classes sont vendues ; écart de ≈11 Pa de la courbe E10 aux deux bouts de sa plage ; humidité 100 % non sourcée ; « acier galvanisé » non sourcé et non tarifé ; surface 40 m² valable pour le seul 610×610 ; séparateur hot melt absent des specs alors qu'il est sourcé ; 3 anomalies tarifaires du code 15 ; défaut de surface de référence restant sur le chemin multi-classes ; titre « DIMENSIONS & RÉFÉRENCES STANDARD » devenu inexact depuis le retrait de la colonne référence (question de gamme, AZUR et LAM dans le même cas) ; photo = placeholder Titanair ; nom « NIVAL » partagé avec NETCARB NIVAL (familles différentes, OK par convention) à confirmer."
+  ]
 }

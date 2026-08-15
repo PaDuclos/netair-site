@@ -386,8 +386,41 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
       { id: "standard", label: "Multidièdre", code: "13", saisie: "formats", formatsGrandDabord: true, labelChamp: "Dimensions (L × H)" },
     ],
   },
-  // 🟢 méthode F · parois cellule « Plastique » (cf. fiche) — pas de variante acier
-  "netcel-v-nival": { code: "15", mode: "calcul", cadreFixe: { valeur: "pp", libelle: "Plastique" } },
+  // 🟢 méthode F · polydièdre absolu.
+  // CADRE AU CHOIX (déc. PA 15/08/2026) : les 4 fiches source Titanair de ce filtre ne
+  // connaissent que le plastique/polystyrène — l'acier galvanisé est une DÉCISION FABRICANT,
+  // comme la plage E10→H14 d'AZUR. Le cadre reste neutre côté prix tant que l'Excel ne le
+  // structure pas (même traitement que NETBAG S) ; « Plastique » en tête = matière sourcée.
+  // DIMENSIONS STANDARD : les 4 cadres retenus avec la fiche v1.1. Les 305×305, 381×381 et
+  // 450×450 de la grille sont écartés de l'offre (« des filtres qui ne passent jamais », PA).
+  // ⚠️ Formats déclarés EN DUR, à dessein : `formatsDuCode` filtre sur la PREMIÈRE classe du
+  // menu (E10), tarifée sur 2 cadres seulement — le menu se serait réduit à 610×610 et 610×305.
+  // ⚠️ E10/E11/E12 ne sont pas tarifées sur 592×592 ni 287×592 : ces 6 combinaisons répondent
+  // « Cette efficacité n'est pas disponible dans ce format » (message honnête, jamais un prix
+  // faux). À lever en tarifant ces classes dans l'Excel — cf. CHECKLIST § NETCEL V NIVAL.
+  "netcel-v-nival": {
+    code: "15",
+    mode: "calcul",
+    cadres: [
+      { valeur: "pp", libelle: "Plastique" },
+      { valeur: "galva", libelle: "Acier galvanisé" },
+    ],
+    variantes: [
+      {
+        id: "standard",
+        label: "Polydièdre",
+        code: "15",
+        saisie: "formats",
+        formats: [
+          { label: "610 × 610 × 292 mm", largeur: 610, hauteur: 610, defaut: true },
+          { label: "592 × 592 × 292 mm", largeur: 592, hauteur: 592 },
+          { label: "305 × 610 × 292 mm", largeur: 305, hauteur: 610 },
+          { label: "287 × 592 × 292 mm", largeur: 287, hauteur: 592 },
+        ],
+        labelChamp: "Dimensions (L × H)",
+      },
+    ],
+  },
   // 🟢 méthode F — laminaire : pas de sur-mesure, dimensions en menu déroulant (formats
   // standard générés depuis la grille) et efficacité verrouillée sur H14.
   "netcel-v-lam": {

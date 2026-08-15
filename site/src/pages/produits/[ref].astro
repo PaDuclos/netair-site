@@ -680,7 +680,10 @@ const introConfig =
         const cadreLabel = varSansCadre ? null : (cadreEl?.selectedOptions[0]?.text ?? root.dataset.cadrefixelabel ?? null);
         const qty = Math.max(1, +$('inQ').value || 1);
         const codeUsed = activeVar ? activeVar.code : codeGamme;
-        return { L, H, ep, eff, effLabel, cadre, cadreLabel, qty, codeUsed, formatLabel };
+        // Le cadre est-il un CHOIX du client (menu) ou une donnée imposée ? Seul un choix doit
+        // apparaître dans la référence d'un produit à formats standard — cf. refRef().
+        const cadreAuChoix = !!cadreEl && !varSansCadre;
+        return { L, H, ep, eff, effLabel, cadre, cadreLabel, cadreAuChoix, qty, codeUsed, formatLabel };
       }
 
       function refRef(c) {
@@ -688,7 +691,15 @@ const introConfig =
         // sans elle, filtre complet et recharge partageraient la même référence au panier.
         const base0 = (activeVar && activeVar.refBase) || code;
         const effPart = c.eff ? ('-' + c.eff) : '';
+        const cadrePart = c.cadre ? ('-' + c.cadre) : '';
+        // Branche « formats standard » : le suffixe de cadre n'y était pas ajouté du tout. Sans
+        // lui, NETCEL V NIVAL plastique et acier galvanisé — deux filtres différents au MÊME prix
+        // — portaient la même référence, et rien ne disait à l'atelier lequel monter.
+        // Restreint au cadre AU CHOIX : l'ajouter aussi pour un cadre imposé changerait les
+        // références de NETPAK S AZUR et NETPAK S LUMEN, deux produits figés (écart de convention
+        // avec la branche « dimensions libres », qui l'ajoute toujours — consigné à la CHECKLIST).
         if (c.formatLabel) {
+          const cadreFmt = c.cadreAuChoix ? cadrePart : '';
           // L'épaisseur n'entre dans la référence que lorsqu'elle est un CHOIX indépendant du
           // format (variante à `epaisseurs` propres, ex. NETBAG S : longueur de poche 380 ou
           // 550 mm, prix différents). Ailleurs le libellé la porte déjà (« 287 × 592 × 292 mm »)
@@ -696,11 +707,10 @@ const introConfig =
           const base = c.formatLabel.replace(/\s+/g, '');
           const epIndep = activeVar && activeVar.epaisseurs && c.ep != null;
           return epIndep
-            ? `${base0}${effPart}-${base.replace(/mm$/, '')}×${c.ep}mm`
-            : `${base0}${effPart}-${base}`;
+            ? `${base0}${effPart}-${base.replace(/mm$/, '')}×${c.ep}mm${cadreFmt}`
+            : `${base0}${effPart}-${base}${cadreFmt}`;
         }
         const epPart = c.ep != null ? ('x' + c.ep) : '';
-        const cadrePart = c.cadre ? ('-' + c.cadre) : '';
         return `${base0}${effPart}-${c.L}x${c.H}${epPart}${cadrePart}`;
       }
 
