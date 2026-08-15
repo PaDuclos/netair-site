@@ -661,6 +661,14 @@ E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 1
       15/08** (le cache porte même un 7ᵉ point d'abscisse sans ordonnée, signature du copier-coller).
       Le H14 est **vendu** sans courbe. Idem **E11 et E12**, vendues sans courbe : trois classes
       affichent aujourd'hui la perte de charge du H13 ou de l'E10. À mesurer R&D.
+- [ ] **🟠 Trois lignes de specs ne valent que pour le cadre PLASTIQUE** depuis l'ouverture du cadre
+      acier : **Température 60 °C**, **Classement au feu M1**, **ΔP finale 750 Pa**. Ces trois-là
+      dépendent de l'enveloppe, pas du média — c'est démontré par le relevé du 15/08 sur 20 fiches
+      Titanair : les **11** absolus en fibre de verre à cadre plastique sont à **60 °C**, les seuls à
+      **80 °C** sont les laminaires à cadre **aluminium**. Un cadre acier ne serait pas bridé à 60 °C.
+      **Aucune source** : pas un seul absolu fibre de verre à cadre acier dans le dossier Titanair.
+      **Décision PA du 15/08 : garder 60 °C pour les deux versions** (valeur la plus basse, jamais de
+      sur-promesse). → à reprendre si la version acier est caractérisée en R&D.
 - [ ] **🔴 « Cadre plastique ou acier galvanisé » — NON SOURCÉ** (déc. fabricant PA du 15/08, prise en
       connaissance de cause). Les **4 fiches Titanair** du produit disent PLASTIQUE (H13, TITAPAK V CU
       H13/H14) ou POLYSTYRÈNE (E10) ; le mot « galva » n'apparaît dans **aucun** document Titanair du
