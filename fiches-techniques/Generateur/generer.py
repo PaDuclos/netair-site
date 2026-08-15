@@ -433,15 +433,15 @@ def smooth_curves_origin(d):
     """Force toutes les courbes de la fiche à partir de l'origine et recalcule la perte de
     charge nominale (dp) affichée pour rester cohérente.
 
-    Désactivable par "no_smooth_origin", dans DEUX cas légitimes :
-      1. l'ANCRE du test d'identité, qui doit reproduire le gabarit à l'octet près ;
-      2. une courbe dont le terme constant est GROS (cf. NETCEL V NIVAL E10, c ≈ 44 Pa).
-         La reformulation suppose un c faible : l'écart reste alors < 2 Pa. Sur un c de 44 Pa
-         elle dérape à 11 Pa et APLATIT le haut de la plage. Il vaut mieux garder le polynôme
-         mesuré et laisser `pdcD` (côté JS) fondre le terme constant sous le premier point
-         mesuré — c'est exactement ce pour quoi ce fondu existe. Quand on choisit ce mode,
-         renseigner `dp` à la main (il n'est plus recalculé) et borner `debit_min` au premier
-         point mesuré, pour que le calculateur ne lise jamais la zone de fondu.
+    Désactivable par "no_smooth_origin", réservé à l'ANCRE du test d'identité, qui doit
+    reproduire le gabarit à l'octet près.
+
+    ⚠️ LIMITE CONNUE (mesurée le 15/08/2026 sur la courbe E10 du NETCEL V NIVAL) : la
+    reformulation suppose un terme constant FAIBLE — l'écart reste alors sous 2 Pa. Sur un
+    c d'environ 44 Pa elle dérape à 11 Pa et APLATIT le haut de la plage. Garder le polynôme
+    brut n'est pas la parade : le fondu de `pdcD` produit alors un ÉPAULEMENT visible. La
+    solution retenue a été d'ajuster autrement la courbe elle-même (parabole par l'origine
+    ancrée sur le dernier point mesuré), sans toucher à ce mécanisme.
     """
     if d.get("no_smooth_origin"):
         return
@@ -952,6 +952,11 @@ def build_series_script(d):
                 raise RuntimeError(f"aref : ancre « {ancre} » introuvable dans SERIES_JS.")
             js = js.replace(ancre, neuf)
 
+    # `calc_formats` ne vit qu'à l'intérieur du bloc ci-dessous : déclarée seule, elle serait
+    # ignorée en silence alors que tout le reste du fichier lève une erreur franche.
+    if d.get("calc_formats") and not d.get("calc_formats_fixes"):
+        raise RuntimeError("calc_formats exige calc_formats_fixes (sinon aucun bouton de format).")
+
     if d.get("calc_formats_fixes"):
         # lenBtns retiré du DOM → le constructeur d'épaisseurs se retire proprement
         js = js.replace("var cont = $('lenBtns'); cont.innerHTML = '';",
@@ -1164,11 +1169,6 @@ def generer_series(d, html):
         html = html.replace('id="inWid" min="50" max="2000" value="592"',
                             f'id="inWid" min="50" max="2000" value="{cw}"')
 
-    # Le cadre sur lequel les courbes ont été mesurées se dit dans la NOTE sous le tableau des
-    # dimensions (`note_dimensions`), jamais dans le titre de section ni dans la légende du
-    # graphe : ces deux-là sont identiques sur les 18 fiches (constat PA 15/08/2026, après deux
-    # tentatives de ma part qui rompaient la convention).
-
     # --- calc_formats_fixes (opt-in) : dimensions imposées par les cadres standard.
     #     Les champs libres L/H deviennent des boutons (1 par cadre) qui règlent aussi le
     #     débit nominal du cadre ; la place gagnée est rendue à la courbe (width 80→85 %).
@@ -1217,19 +1217,6 @@ def generer_series(d, html):
     #     debit_nom = 3400 — les autres fiches série ne bougent pas.
     html = sub1(html, r'(id="inDebit" min="500" max="\d+" step="50" value=")3400(")',
                 lambda m: m.group(1) + str(d.get("debit_nom", 3400)) + m.group(2))
-
-    # --- debit_min (opt-in) : plancher du curseur, symétrique de debit_curseur_max. Sur une
-    #     fiche qui garde son polynôme mesuré (no_smooth_origin), la courbe fond son terme
-    #     constant vers 0 sous le premier point mesuré alors que le calculateur, lui, lit le
-    #     polynôme brut : sans plancher, les deux se contrediraient dans cette zone — qui n'est
-    #     de toute façon pas mesurée. Le chemin mono-classe a déjà cette clé.
-    #     Placé APRÈS la synchronisation du nominal, dont l'ancre attend encore min="500".
-    if d.get("debit_min"):
-        ancre = '<input type="range" id="inDebit" min="500"'
-        if ancre not in html:
-            raise RuntimeError("debit_min : ancre du curseur de débit introuvable.")
-        html = html.replace(
-            ancre, ancre.replace('min="500"', f'min="{d["debit_min"]}"'), 1)
 
     # --- courbe_pct (opt-in, NETBAG S / NETCEL V AZUR) : largeur du graphe. Le STANDARD du
     #     gabarit est 80 % (charte 17/07/2026) ; calc_formats_fixes pose déjà 85 % — quand les
