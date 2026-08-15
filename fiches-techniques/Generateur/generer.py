@@ -434,9 +434,15 @@ def smooth_curves_origin(d):
         return
     vmax = d.get("vmax", 3.17)
     vnom = (d.get("debit_nom", 3400) / 3600) / d.get("aref", AREF)
-    nom = lambda co: int(round(co["a"] * vnom * vnom + co["b"] * vnom))
+    # "cube" (opt-in) : terme en v³, pour une courbe dont la courbure AUGMENTE avec le débit —
+    # une parabole ne peut alors pas la suivre et s'aplatit en haut de plage (cas mesuré du
+    # NETCEL V NIVAL E10 : 11 Pa manquants à 4000 m³/h). Absent partout ailleurs = 0.
+    nom = lambda co: int(round(co.get("cube", 0.0) * vnom ** 3
+                               + co["a"] * vnom * vnom + co["b"] * vnom))
 
     for s in d.get("courbes", []):
+        # Une courbe cubique est fournie DÉJÀ passante par l'origine (c = 0) : force_origin,
+        # qui ne sait reformuler qu'une parabole, la laisse alors intacte (retour anticipé).
         a, b, _ = force_origin(s["a"], s["b"], s["c"], vmax)
         s["a"], s["b"], s["c"] = round(a, 4), round(b, 4), 0.0
         if "dp" in s:
@@ -903,7 +909,11 @@ def build_series_script(d):
     # ne pas gonfler le JSON des autres fiches série, qui doivent rester byte-identiques.
     with_dp = d.get("points_nominaux", False)
     series = [{"k": _serie_key(s), "cls": s["cls"], "len": s["len"],
-               "co": {"a": s["a"], "b": s["b"], "c": s["c"]}, "color": s["color"],
+               "co": {"a": s["a"], "b": s["b"], "c": s["c"],
+                      # sérialisé seulement s'il existe : sans lui le `co` des autres fiches
+                      # série est inchangé, donc leur HTML aussi (contrôle byte à byte).
+                      **({"cube": s["cube"]} if "cube" in s else {})},
+               "color": s["color"],
                **({"dp": s["dp"]} if with_dp and "dp" in s else {})}
               for s in d["courbes"]]
     cls = {k: {"label": v["label"], "iso": v["iso"], "add": v["add"], "rule": v["rule"]}
@@ -937,6 +947,22 @@ def build_series_script(d):
                             ("flen: 592, fwid: 592", f"flen: {cl}, fwid: {cw}")):
             if ancre not in js:
                 raise RuntimeError(f"aref : ancre « {ancre} » introuvable dans SERIES_JS.")
+            js = js.replace(ancre, neuf)
+
+    # "cube" (opt-in) : ajoute le terme en v³ aux DEUX évaluateurs du polynôme. Appliqué
+    # seulement si une courbe le déclare → le script des autres fiches série reste inchangé,
+    # ce que vérifie la comparaison byte à byte des 17 autres fiches.
+    if any("cube" in s for s in d["courbes"]):
+        for ancre, neuf in (
+            ("function pdc(co, v) { return Math.max(0, co.a * v * v + co.b * v + co.c); }",
+             "function pdc(co, v) { return Math.max(0, (co.cube || 0) * v * v * v "
+             "+ co.a * v * v + co.b * v + co.c); }"),
+            ("    return Math.max(0, co.a * v * v + co.b * v + co.c * g);",
+             "    return Math.max(0, (co.cube || 0) * v * v * v "
+             "+ co.a * v * v + co.b * v + co.c * g);"),
+        ):
+            if ancre not in js:
+                raise RuntimeError(f"cube : ancre « {ancre[:48]}… » introuvable dans SERIES_JS.")
             js = js.replace(ancre, neuf)
     if d.get("calc_formats_fixes"):
         # lenBtns retiré du DOM → le constructeur d'épaisseurs se retire proprement

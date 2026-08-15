@@ -198,11 +198,10 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
       aujourd'hui — NETPAK S CILIA est bien un 592×592 — mais **toute future fiche multi-classes sur un
       autre cadre afficherait une vitesse et une surface fausses**. À corriger de la même façon
       (`d.get("aref", AREF)` + garde d'ancre + contrôle `aref` ↔ `dim_ref`).
-- [ ] **🟠 Lien mort dans le pied de page de TOUT le site** : `Footer.astro` pointe vers
-      `/gammes/poches-souples` alors que la famille s'appelle **`poches-souples-rigides`**
-      (`site/src/lib/familles.ts`). Erreur 404 sur **chaque page** du site, y compris les pages figées.
-      Trouvé le 15/08 en contrôlant la console de la page produit NIVAL ; **hors périmètre de la passe,
-      non corrigé**. Correction = un mot dans `Footer.astro`.
+- [x] ~~**🟠 Lien mort dans le pied de page de TOUT le site**~~ → **CORRIGÉ le 15/08/2026**
+      (demande PA) : `Footer.astro` pointait vers `/gammes/poches-souples` alors que la famille
+      s'appelle `poches-souples-rigides`. Les 7 liens de gamme du pied de page répondent 200, et le
+      balayage de tous les liens internes d'une page produit ne trouve plus aucun 404.
 
 - [x] ~~**« (papier HEPA) » retiré du média sur NETCEL V LAM et NETCEL V AZUR (déc. PA 04/08/2026)**~~
       → **SOLDÉ le 15/08/2026** : NETCEL V NIVAL, dernière fiche à le porter, est passée à
@@ -599,11 +598,12 @@ E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 1
 - [x] ~~**E10 — courbe à ajouter** : « Excel sans cache, extraction PDF échouée »~~ → **RÉSERVE FAUSSE,
       LEVÉE le 15/08/2026**. Le cache du graphe de `TITACEL V E10.xlsx` contient bien les 7 couples
       (débit 1000→4000 → ΔP 40/53/71/91/115/150/200) et le graphe du PDF les confirme un à un.
-      **Courbe ajoutée** (déc. PA). ⚠️ **Nouvelle réserve** : la mesure E10 est plate au départ puis
-      décolle, forme qu'une parabole passant par l'origine suit mal → la courbe affichée est
-      **flatteuse d'environ 11 Pa aux DEUX bouts** de la plage (28,6 Pa affichés contre 40 mesurés à
-      1000 m³/h ; 188,7 contre 200 à 4000 m³/h), exacte au nominal. Le H13 colle à moins d'1 Pa partout.
-      → à redresser si l'E10 est mesuré en R&D.
+      **Courbe ajoutée** (déc. PA), puis **AJUSTÉE EN CUBIQUE le 15/08** : PA a vu que le haut de la
+      courbe était **aplati**. La courbure de cette mesure augmente avec le débit, ce qu'une parabole
+      ne peut pas suivre (elle manquait ≈11 Pa à 1000 **et** à 4000 m³/h). Terme en v³ ajouté sous clé
+      opt-in `cube` → **écart max 1,6 Pa sur les 7 points**, courbe strictement croissante de 0 à
+      4200 m³/h, ΔP nominale recalée de 148 à 143 Pa. ⚠️ Le coefficient de v² est **négatif** : c'est
+      un ajustement de FORME, pas un modèle physique — **ne rien extrapoler au-delà de 4000 m³/h**.
 - [x] ~~**610×610 sur moteur série calibré 592×592**~~ → **CORRIGÉ le 15/08/2026** (clés `aref` +
       `dim_ref` portées sur le chemin série). Ce n'était pas cosmétique : le **calculateur affichait
       « 0,35 m² · 2,7 m/s » et un cadre 592×592** sur la même page qu'un tableau disant 610×610.

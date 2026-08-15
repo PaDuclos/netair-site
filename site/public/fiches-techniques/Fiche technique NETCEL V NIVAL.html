@@ -360,7 +360,7 @@
 <script>
 (function () {
   "use strict";
-  var SERIES = [{"k": "e10_292", "cls": "e10", "len": 292, "co": {"a": 11.1372, "b": 29.9319, "c": 0.0}, "color": "#0897A5", "dp": 148}, {"k": "h13_292", "cls": "h13", "len": 292, "co": {"a": 10.9824, "b": 78.5986, "c": 0.0}, "color": "#0F3261", "dp": 270}];
+  var SERIES = [{"k": "e10_292", "cls": "e10", "len": 292, "co": {"a": -29.4915, "b": 69.8145, "c": 0.0, "cube": 9.5348}, "color": "#0897A5", "dp": 143}, {"k": "h13_292", "cls": "h13", "len": 292, "co": {"a": 10.9824, "b": 78.5986, "c": 0.0}, "color": "#0F3261", "dp": 270}];
   var CLS    = {"e10": {"label": "E10", "iso": "≥ 85 % MPPS", "add": 0, "rule": "classe E10 (EN 1822)"}, "h13": {"label": "H13", "iso": "≥ 99,95 % MPPS", "add": 0, "rule": "classe H13 (EN 1822)"}};
   var ORDER  = ["e10", "h13"];
   var Vmax = 2.9861, Pmax = 320, Dnom = 3400;
@@ -375,7 +375,7 @@
   var $  = function (id) { return document.getElementById(id); };
   var Dmax = 4000; var mapX = function (v) { return 52 + ((v * Aref * 3600) / Dmax) * 528; };
   var mapY = function (p) { return 250 - (Math.min(p, Pmax) / Pmax) * 234; };
-  function pdc(co, v) { return Math.max(0, co.a * v * v + co.b * v + co.c); }
+  function pdc(co, v) { return Math.max(0, (co.cube || 0) * v * v * v + co.a * v * v + co.b * v + co.c); }
   // Rendu lissé : la courbe part de (0,0) et rejoint le polynôme réel dès le 1er
   // point mesuré (≈ 25 % de Vmax). Sous ce seuil — zone non mesurée — le terme
   // constant c est fondu progressivement (smoothstep), ce qui supprime la « bosse »
@@ -384,7 +384,7 @@
   function pdcD(co, v) {
     if (v >= Vblend) return pdc(co, v);
     var t = v / Vblend, g = t * t * (3 - 2 * t);
-    return Math.max(0, co.a * v * v + co.b * v + co.c * g);
+    return Math.max(0, (co.cube || 0) * v * v * v + co.a * v * v + co.b * v + co.c * g);
   }
   function curve(co) {
     var pts = [], v;
