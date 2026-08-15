@@ -428,21 +428,25 @@ def force_origin(a, b, c, vmax, n=24):
 
 def smooth_curves_origin(d):
     """Force toutes les courbes de la fiche à partir de l'origine et recalcule la perte de
-    charge nominale (dp) affichée pour rester cohérente. Désactivable par "no_smooth_origin"
-    (réservé à l'ANCRE du test d'identité, qui doit reproduire le gabarit à l'octet près)."""
+    charge nominale (dp) affichée pour rester cohérente.
+
+    Désactivable par "no_smooth_origin", dans DEUX cas légitimes :
+      1. l'ANCRE du test d'identité, qui doit reproduire le gabarit à l'octet près ;
+      2. une courbe dont le terme constant est GROS (cf. NETCEL V NIVAL E10, c ≈ 44 Pa).
+         La reformulation suppose un c faible : l'écart reste alors < 2 Pa. Sur un c de 44 Pa
+         elle dérape à 11 Pa et APLATIT le haut de la plage. Il vaut mieux garder le polynôme
+         mesuré et laisser `pdcD` (côté JS) fondre le terme constant sous le premier point
+         mesuré — c'est exactement ce pour quoi ce fondu existe. Quand on choisit ce mode,
+         renseigner `dp` à la main (il n'est plus recalculé) et borner `debit_min` au premier
+         point mesuré, pour que le calculateur ne lise jamais la zone de fondu.
+    """
     if d.get("no_smooth_origin"):
         return
     vmax = d.get("vmax", 3.17)
     vnom = (d.get("debit_nom", 3400) / 3600) / d.get("aref", AREF)
-    # "cube" (opt-in) : terme en v³, pour une courbe dont la courbure AUGMENTE avec le débit —
-    # une parabole ne peut alors pas la suivre et s'aplatit en haut de plage (cas mesuré du
-    # NETCEL V NIVAL E10 : 11 Pa manquants à 4000 m³/h). Absent partout ailleurs = 0.
-    nom = lambda co: int(round(co.get("cube", 0.0) * vnom ** 3
-                               + co["a"] * vnom * vnom + co["b"] * vnom))
+    nom = lambda co: int(round(co["a"] * vnom * vnom + co["b"] * vnom))
 
     for s in d.get("courbes", []):
-        # Une courbe cubique est fournie DÉJÀ passante par l'origine (c = 0) : force_origin,
-        # qui ne sait reformuler qu'une parabole, la laisse alors intacte (retour anticipé).
         a, b, _ = force_origin(s["a"], s["b"], s["c"], vmax)
         s["a"], s["b"], s["c"] = round(a, 4), round(b, 4), 0.0
         if "dp" in s:
@@ -909,11 +913,7 @@ def build_series_script(d):
     # ne pas gonfler le JSON des autres fiches série, qui doivent rester byte-identiques.
     with_dp = d.get("points_nominaux", False)
     series = [{"k": _serie_key(s), "cls": s["cls"], "len": s["len"],
-               "co": {"a": s["a"], "b": s["b"], "c": s["c"],
-                      # sérialisé seulement s'il existe : sans lui le `co` des autres fiches
-                      # série est inchangé, donc leur HTML aussi (contrôle byte à byte).
-                      **({"cube": s["cube"]} if "cube" in s else {})},
-               "color": s["color"],
+               "co": {"a": s["a"], "b": s["b"], "c": s["c"]}, "color": s["color"],
                **({"dp": s["dp"]} if with_dp and "dp" in s else {})}
               for s in d["courbes"]]
     cls = {k: {"label": v["label"], "iso": v["iso"], "add": v["add"], "rule": v["rule"]}
@@ -949,21 +949,6 @@ def build_series_script(d):
                 raise RuntimeError(f"aref : ancre « {ancre} » introuvable dans SERIES_JS.")
             js = js.replace(ancre, neuf)
 
-    # "cube" (opt-in) : ajoute le terme en v³ aux DEUX évaluateurs du polynôme. Appliqué
-    # seulement si une courbe le déclare → le script des autres fiches série reste inchangé,
-    # ce que vérifie la comparaison byte à byte des 17 autres fiches.
-    if any("cube" in s for s in d["courbes"]):
-        for ancre, neuf in (
-            ("function pdc(co, v) { return Math.max(0, co.a * v * v + co.b * v + co.c); }",
-             "function pdc(co, v) { return Math.max(0, (co.cube || 0) * v * v * v "
-             "+ co.a * v * v + co.b * v + co.c); }"),
-            ("    return Math.max(0, co.a * v * v + co.b * v + co.c * g);",
-             "    return Math.max(0, (co.cube || 0) * v * v * v "
-             "+ co.a * v * v + co.b * v + co.c * g);"),
-        ):
-            if ancre not in js:
-                raise RuntimeError(f"cube : ancre « {ancre[:48]}… » introuvable dans SERIES_JS.")
-            js = js.replace(ancre, neuf)
     if d.get("calc_formats_fixes"):
         # lenBtns retiré du DOM → le constructeur d'épaisseurs se retire proprement
         js = js.replace("var cont = $('lenBtns'); cont.innerHTML = '';",
@@ -1164,6 +1149,15 @@ def generer_series(d, html):
         html = html.replace('id="inWid" min="50" max="2000" value="592"',
                             f'id="inWid" min="50" max="2000" value="{cw}"')
 
+    # --- courbe_conditions (opt-in) : la légende de bas de graphe dit les conditions de mesure.
+    #     Utile quand la fiche couvre PLUSIEURS cadres alors que les courbes n'ont été mesurées
+    #     que sur un seul : sans ça, rien ne dit au lecteur à quel format la courbe se rapporte.
+    if d.get("courbe_conditions"):
+        ancre = "Média propre — air à 20 °C"
+        if ancre not in html:
+            raise RuntimeError("courbe_conditions : légende « Média propre » introuvable.")
+        html = html.replace(ancre, d["courbe_conditions"])
+
     # --- calc_formats_fixes (opt-in) : dimensions imposées par les cadres standard.
     #     Les champs libres L/H deviennent des boutons (1 par cadre) qui règlent aussi le
     #     débit nominal du cadre ; la place gagnée est rendue à la courbe (width 80→85 %).
@@ -1212,6 +1206,19 @@ def generer_series(d, html):
     #     debit_nom = 3400 — les autres fiches série ne bougent pas.
     html = sub1(html, r'(id="inDebit" min="500" max="\d+" step="50" value=")3400(")',
                 lambda m: m.group(1) + str(d.get("debit_nom", 3400)) + m.group(2))
+
+    # --- debit_min (opt-in) : plancher du curseur, symétrique de debit_curseur_max. Sur une
+    #     fiche qui garde son polynôme mesuré (no_smooth_origin), la courbe fond son terme
+    #     constant vers 0 sous le premier point mesuré alors que le calculateur, lui, lit le
+    #     polynôme brut : sans plancher, les deux se contrediraient dans cette zone — qui n'est
+    #     de toute façon pas mesurée. Le chemin mono-classe a déjà cette clé.
+    #     Placé APRÈS la synchronisation du nominal, dont l'ancre attend encore min="500".
+    if d.get("debit_min"):
+        ancre = '<input type="range" id="inDebit" min="500"'
+        if ancre not in html:
+            raise RuntimeError("debit_min : ancre du curseur de débit introuvable.")
+        html = html.replace(
+            ancre, ancre.replace('min="500"', f'min="{d["debit_min"]}"'), 1)
 
     # --- courbe_pct (opt-in, NETBAG S / NETCEL V AZUR) : largeur du graphe. Le STANDARD du
     #     gabarit est 80 % (charte 17/07/2026) ; calc_formats_fixes pose déjà 85 % — quand les

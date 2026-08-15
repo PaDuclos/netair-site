@@ -606,12 +606,22 @@ E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 1
 - [x] ~~**E10 — courbe à ajouter** : « Excel sans cache, extraction PDF échouée »~~ → **RÉSERVE FAUSSE,
       LEVÉE le 15/08/2026**. Le cache du graphe de `TITACEL V E10.xlsx` contient bien les 7 couples
       (débit 1000→4000 → ΔP 40/53/71/91/115/150/200) et le graphe du PDF les confirme un à un.
-      **Courbe ajoutée** (déc. PA), puis **AJUSTÉE EN CUBIQUE le 15/08** : PA a vu que le haut de la
-      courbe était **aplati**. La courbure de cette mesure augmente avec le débit, ce qu'une parabole
-      ne peut pas suivre (elle manquait ≈11 Pa à 1000 **et** à 4000 m³/h). Terme en v³ ajouté sous clé
-      opt-in `cube` → **écart max 1,6 Pa sur les 7 points**, courbe strictement croissante de 0 à
-      4200 m³/h, ΔP nominale recalée de 148 à 143 Pa. ⚠️ Le coefficient de v² est **négatif** : c'est
-      un ajustement de FORME, pas un modèle physique — **ne rien extrapoler au-delà de 4000 m³/h**.
+      **Courbe ajoutée** (déc. PA). ⚠️ **La mesure E10 est incompatible avec un passage par
+      l'origine** : la pente 0→1000 (0,040 Pa par m³/h) est **plus forte** que la pente mesurée
+      1000→1500 (0,026), or une courbe convexe partant de 0 ne peut pas ralentir. **Le graphe Titanair
+      démarre d'ailleurs son axe à 1000 m³/h** — ils n'ont jamais prétendu passer par 0. Toute courbe
+      fidèle aux 7 points fait donc une bosse. **3 tentatives, tranchées par PA le 15/08** : parabole
+      ajustée sur l'ensemble (lisse mais s'arrête à 190 au lieu de 200 → **aplatie en haut, refusée**) ;
+      cubique (fidèle à 1,6 Pa mais inflexion à 1380 m³/h → **vague visible, refusée**) ; polynôme brut
+      + fondu du terme constant (**épaulement pire encore, refusé**). **RETENU** : parabole par
+      l'origine **ancrée exactement sur (4000 ; 200)**, `13,8943·v² + 25,4889·v` — lisse, convexe,
+      concavité nulle au pixel (vérifié au navigateur). **Prix payé : surestimation d'environ 12 Pa au
+      milieu de plage** (127 affichés contre 115 mesurés à 3000) — sens prudent — et 27 contre 40 à
+      1000, dans la zone que Titanair ne montre pas. ΔP nominale E10 = 154 Pa.
+      ⚠️ **Leçon de méthode** : un contrôle numérique de la concavité avait conclu « 0,017 pixel,
+      invisible » alors que l'épaulement crevait les yeux à l'écran — la courbure était mesurée sur un
+      pas de 10 m³/h avant conversion en pixels. **Sur une question d'allure de courbe, le rendu tranche,
+      pas le calcul.**
 - [x] ~~**610×610 sur moteur série calibré 592×592**~~ → **CORRIGÉ le 15/08/2026** (clés `aref` +
       `dim_ref` portées sur le chemin série). Ce n'était pas cosmétique : le **calculateur affichait
       « 0,35 m² · 2,7 m/s » et un cadre 592×592** sur la même page qu'un tableau disant 610×610.
