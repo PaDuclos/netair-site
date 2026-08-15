@@ -177,6 +177,14 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
 
 ## Transverse (toute la gamme)
 
+- [ ] **🟠 Les références générées par le site ne suivent pas `CODIFICATION_PRODUITS.md`.** Le site
+      produit `NETCEL_V_NIVAL-H13-610×610×292mm-P` (nom complet, tirets bas, « × » typographique,
+      suffixe « mm ») là où la codification impose `NETCEL-NIVAL-H13-610x610x292-A` (signature courte,
+      « x » simple, sans « mm ») — c'est la forme retenue au catalogue INCWO. L'écart est **antérieur à
+      la passe NIVAL** et vaut pour **tous** les produits (ex. `NETPAK_S_AZUR-F7-592×592×292mm`). Deux
+      codes différents pour le même article entre la boutique et l'ERP. → trancher, puis aligner d'un
+      côté ou de l'autre. Chantier à part : il touche toutes les pages produit.
+
 - [ ] **🟠 Suffixe de cadre dans la référence : deux conventions coexistent.** La branche
       « dimensions libres » ajoute TOUJOURS le suffixe (NETPLY `-A`, NETPAK S CILIA `-A`/`-P`/`-C`,
       même quand le cadre est imposé) ; la branche « formats standard » ne l'ajoutait **jamais**.
@@ -634,12 +642,24 @@ E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 1
       sourcée sur les DEUX fiches 2018, mais **pour le seul cadre 610×610** — d'où la mention du cadre
       dans la ligne. La colonne « S. filtrante » du tableau reste retirée (les 3 autres formats auraient
       des surfaces calculées par nous, donc non sourcées). À mesurer sur le média réel Netair.
-- [ ] **🔴 3 anomalies tarifaires du code 15, désormais VISIBLES DU CLIENT** (prix de vente = grille ×
-      2,857 × 1,15) : **(a)** 287×592 — H13 **214,40 €** mais H14 **354,86 €**, soit **+65 %** quand
-      l'écart H13→H14 est de +2 à +9 % ailleurs ; ce demi-filtre en H14 approche le 592×592 entier
-      (369,66 €). **(b)** En H13, le **610×610 (338,43 €) est MOINS CHER que le 592×592 (347,46 €)**,
-      plus petit. **(c)** **E12 et H13 sont au même prix** sur les deux cadres qui portent les deux
-      classes. Même signature que le F8 490×592 à 3,50 € trouvé sur AZUR. → séance Excel de PA.
+- [x] ~~**Divergence suspectée entre l'Excel et le site**~~ → **AUCUNE ERREUR, vérifié le 15/08/2026**
+      à la demande de PA. Les **4 exemplaires** du calculateur (BLOC1 + DEVIS AUTO, en local et sur
+      OneDrive) portent des valeurs **identiques entre eux et identiques à `tables.json`**. La chaîne de
+      formules de l'Excel a été remontée cellule par cellule : colonne `PU 15` = (100 % + `Frais de
+      livraison` 15 %) × prix de grille → `PRU HT` = ROUND(…, 2) → `PTU HT` = PRU × `Ratio prix tarif`
+      2,857. **C'est exactement la formule du moteur du site**, arrondi intermédiaire compris. L'écart
+      d'impression vient de ce que la grille stocke le **prix d'achat** (65,25 €) là où le devis affiche
+      le **prix de vente** (214,40 €).
+- [ ] **🟠 2 anomalies tarifaires du code 15, MAINTENUES EN L'ÉTAT sur décision PA du 15/08** (« garde
+      les valeurs du calculateur Netair ») : **(a)** 592×287 — H13 214,40 € mais H14 **354,86 €**, soit
+      **+65 %** quand l'écart H13→H14 vaut +2 à +9 % ailleurs (le 450×450, au **même** H13 de 65,25 € en
+      grille, est à 67,50 € en H14) ; **(b)** en H13, le **610×610 (338,43 €) est moins cher que le
+      592×592 (347,46 €)**, plus petit, et sa valeur de grille (103 €) est **identique à son E12**.
+      Les deux sont désormais visibles du client. → à revoir si PA change d'avis.
+- [x] ~~**E12 et H13 au même prix**~~ → **RETIRÉ DE LA LISTE DES ANOMALIES (correction du 15/08)** :
+      je l'avais signalé comme une erreur, à tort. Le motif est **identique sur les deux formats** qui
+      portent les deux classes (610×305 et 610×610), ce qui ressemble à une décision tarifaire et non
+      à une faute de saisie.
 - [ ] **E10/E11/E12 non tarifées sur 592×592 et 287×592** : ces **6 combinaisons** répondent
       « Efficacité … non disponible dans ce format », prix vide et bouton panier désactivé (vérifié au
       navigateur — jamais de prix faux). À lever en les tarifant dans l'Excel.
