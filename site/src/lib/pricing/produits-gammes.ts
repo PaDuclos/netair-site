@@ -404,9 +404,9 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // 450×450 de la grille sont écartés de l'offre (« des filtres qui ne passent jamais », PA).
   // ⚠️ Formats déclarés EN DUR, à dessein : `formatsDuCode` filtre sur la PREMIÈRE classe du
   // menu (E10), tarifée sur 2 cadres seulement — le menu se serait réduit à 610×610 et 610×305.
-  // ⚠️ E10/E11/E12 ne sont pas tarifées sur 592×592 ni 287×592 : ces 6 combinaisons répondent
-  // « Cette efficacité n'est pas disponible dans ce format » (message honnête, jamais un prix
-  // faux). À lever en tarifant ces classes dans l'Excel — cf. CHECKLIST § NETCEL V NIVAL.
+  // ⚠️ E10/E11/E12 ne sont pas tarifées sur 592×592 ni 287×592 : ces 6 combinaisons n'affichent
+  // pas de prix (jamais un prix faux) mais restent COMMANDABLES via la demande de devis, dont le
+  // bouton reste actif. À lever en tarifant ces classes dans l'Excel — cf. CHECKLIST § NIVAL.
   "netcel-v-nival": {
     code: "15",
     mode: "calcul",

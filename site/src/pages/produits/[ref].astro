@@ -621,10 +621,15 @@ const introConfig =
 
       // Message lisible pour un statut non vendable renvoyé par le moteur.
       function messageStatut(r) {
+        // `classe_indisponible` ne veut PAS dire indisponible : la combinaison est bien proposée
+        // au menu, elle n'a simplement pas de prix catalogue en ligne, et le bouton de devis
+        // reste actif juste en dessous. Annoncer une indisponibilité serait faux (déc. PA
+        // 15/08/2026). Traité AVANT le passe-plat : le message du moteur, factuel, sert au
+        // diagnostic mais ne s'adresse pas au client.
+        if (r.statut === 'classe_indisponible') return 'Prix sur devis dans ce format — ajoutez-le à votre demande.';
         if (r.message) return r.message;
         switch (r.statut) {
           case 'sur_devis': return 'Produit proposé sur devis — ajoutez-le à votre demande.';
-          case 'classe_indisponible': return "Cette efficacité n'est pas disponible dans ce format.";
           case 'hors_fabrication': return 'Dimensions hors des limites de fabrication.';
           case 'quantite_insuffisante': return r.quantiteMini ? ('Quantité minimale : ' + r.quantiteMini + '.') : 'Quantité insuffisante.';
           case 'gamme_inconnue': return 'Produit non disponible à la commande en ligne.';

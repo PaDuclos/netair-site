@@ -713,11 +713,12 @@ E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 1
       une vraie ligne (testé : `NETCEL_V_NIVAL-E10-592×592×292mm-A · 6 u. · E10 · 592 × 592 × 292 mm ·
       Acier galvanisé`). Seul « Ajouter au panier » se désactive, faute de prix. C'est exactement la
       règle voulue : ce qui n'est pas vendable en ligne part en demande de prix.
-- [ ] **Libellé « Efficacité … non disponible dans ce format »** : se lit comme un refus alors que le
-      devis est possible et que le bouton est juste en dessous. Une formulation du type « Non tarifé en
-      ligne dans ce format — ajoutez-le à votre demande de devis » dirait la même vérité en montrant la
-      sortie. ⚠️ Message du **moteur**, partagé par **tous** les produits, et qui reste juste pour une
-      combinaison réellement non fabricable → arbitrage de gamme avant de le changer.
+- [x] ~~**Libellé « Efficacité … non disponible dans ce format »**~~ → **CORRIGÉ le 15/08/2026**
+      (déc. PA : « dire que c'est pas disponible c'est faux, sinon on le proposerait pas »). Le client
+      lit désormais **« Prix sur devis dans ce format — ajoutez-le à votre demande »**, formulation
+      alignée sur celle du statut `sur_devis`. Corrigé **côté page produit uniquement** : le message du
+      moteur reste factuel pour le diagnostic, et les tests ne portent que sur le statut, jamais sur le
+      texte. Vaut pour **tous** les produits, pas seulement NIVAL.
 - [x] ~~**Séparateur hot melt absent des specs**~~ → **AJOUTÉ le 15/08/2026 sur NIVAL ET SUR AZUR**
       (accord exprès de PA : « c'est une information vraie »). Sourcé : les **4** fiches de NIVAL
       (TITACEL V H13/E10 + TITAPAK V CU H13/H14) et les **2** fiches H13 d'AZUR portent « HOT MELT » ;
