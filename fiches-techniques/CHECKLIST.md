@@ -674,6 +674,11 @@ E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 1
       **Aucune source** : pas un seul absolu fibre de verre à cadre acier dans le dossier Titanair.
       **Décision PA du 15/08 : garder 60 °C pour les deux versions** (valeur la plus basse, jamais de
       sur-promesse). → à reprendre si la version acier est caractérisée en R&D.
+- [x] ~~**Le configurateur laissait commander un 592×592 en plastique**~~ → **CORRIGÉ le 15/08/2026**
+      (info PA) : les cadres **592** (592×592 et 287×592) n'existent **qu'en acier galvanisé** ; seuls
+      les **610** (610×610 et 305×610) sont proposés dans les deux matières. Le menu des cadres est
+      désormais filtré selon le format choisi, et un contrôle au build casse la génération si un format
+      demande un cadre absent du menu du produit. Prix inchangés au centime (175 combinaisons).
 - [ ] **🔴 « Cadre plastique ou acier galvanisé » — NON SOURCÉ** (déc. fabricant PA du 15/08, prise en
       connaissance de cause). Les **4 fiches Titanair** du produit disent PLASTIQUE (H13, TITAPAK V CU
       H13/H14) ou POLYSTYRÈNE (E10) ; le mot « galva » n'apparaît dans **aucun** document Titanair du

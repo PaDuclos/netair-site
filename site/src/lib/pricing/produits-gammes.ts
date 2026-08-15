@@ -75,6 +75,15 @@ export interface FormatRouleau {
   hauteur: number;
   /** Format pré-sélectionné à l'ouverture. À défaut, le premier de la liste. */
   defaut?: boolean;
+  /**
+   * Cadres réellement fabriqués DANS CE FORMAT, quand ils ne sont pas tous disponibles
+   * partout (ex. NETCEL V NIVAL : les cadres 592 n'existent qu'en acier galvanisé, les 610
+   * dans les deux matières). Sous-ensemble des `cadres` du produit. Absent = tous.
+   *
+   * ⚠️ Le cadre n'entre PAS dans le calcul du prix (cf. NETBAG S) : cette liste ne sert
+   * qu'à ne pas laisser commander une combinaison qui n'existe pas.
+   */
+  cadres?: CadreValeur[];
 }
 
 /**
@@ -411,11 +420,14 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
         label: "Polydièdre",
         code: "15",
         saisie: "formats",
+        // Cadres par format (PA 15/08/2026) : les 610 existent en plastique ET en acier,
+        // les 592 en acier SEULEMENT. Sans ça le configurateur laissait commander un
+        // 592×592 plastique, qui n'existe pas.
         formats: [
-          { label: "610 × 610 × 292 mm", largeur: 610, hauteur: 610, defaut: true },
-          { label: "592 × 592 × 292 mm", largeur: 592, hauteur: 592 },
-          { label: "305 × 610 × 292 mm", largeur: 305, hauteur: 610 },
-          { label: "287 × 592 × 292 mm", largeur: 287, hauteur: 592 },
+          { label: "610 × 610 × 292 mm", largeur: 610, hauteur: 610, defaut: true, cadres: ["pp", "galva"] },
+          { label: "592 × 592 × 292 mm", largeur: 592, hauteur: 592, cadres: ["galva"] },
+          { label: "305 × 610 × 292 mm", largeur: 305, hauteur: 610, cadres: ["pp", "galva"] },
+          { label: "287 × 592 × 292 mm", largeur: 287, hauteur: 592, cadres: ["galva"] },
         ],
         labelChamp: "Dimensions (L × H)",
       },
@@ -508,4 +520,29 @@ export function produitsSansCadresDeclares(catalogue: Record<string, GammeProdui
       const attendu = g.mode === "calcul" ? "exactement 1" : "au plus 1";
       return `${id} (${casCadreDeclares(g)} cas déclarés, attendu ${attendu})`;
     });
+}
+
+/**
+ * Formats dont la liste `cadres` sort du menu de cadres du produit.
+ *
+ * Le configurateur filtre le menu selon le format choisi. Si un format demande un cadre que
+ * le produit ne propose pas, le filtre ne rendrait RIEN — et le code client retomberait
+ * silencieusement sur le menu complet, proposant donc des cadres qui n'existent pas dans ce
+ * format : la protection sauterait sans que personne ne le voie. On casse le build à la place
+ * (cf. appel dans `[ref].astro`). Renvoie TOUS les fautifs, pas seulement le premier.
+ */
+export function formatsAuxCadresInconnus(catalogue: Record<string, GammeProduit> = GAMME_PRODUIT): string[] {
+  const fautes: string[] = [];
+  for (const [id, g] of Object.entries(catalogue)) {
+    const offerts = new Set((g.cadres ?? []).map((c) => c.valeur));
+    for (const v of g.variantes ?? []) {
+      for (const f of v.formats ?? []) {
+        const inconnus = (f.cadres ?? []).filter((c) => !offerts.has(c));
+        if (inconnus.length > 0) {
+          fautes.push(`${id} / ${v.id} / « ${f.label} » : cadre(s) ${inconnus.join(", ")} hors du menu du produit`);
+        }
+      }
+    }
+  }
+  return fautes;
 }

@@ -7,7 +7,7 @@ import {
   SLUG_FAMILLE,
   type Produit,
 } from '../../lib/familles';
-import { gammeDuProduit, produitsSansCadresDeclares } from '../../lib/pricing/produits-gammes';
+import { gammeDuProduit, produitsSansCadresDeclares, formatsAuxCadresInconnus } from '../../lib/pricing/produits-gammes';
 import { optionsDuCode, formatsDuCode, libelleClasse, efficaciteFigee, comparerClasses } from '../../lib/pricing/options';
 import { trouverGamme } from '../../lib/pricing/lookups';
 import { MIN_COMMANDE_HT } from '../../lib/boutique';
@@ -96,6 +96,15 @@ if (fautifs.length > 0) {
   throw new Error(
     `Cadres non déclarés pour : ${fautifs.join(', ')}. Renseigner « cadres » dans produits-gammes.ts ` +
       `d'après la ligne « Cadre » de la fiche technique, ou « sansCadre: true » si le cadre est unique.`,
+  );
+}
+// Un format ne peut restreindre le cadre qu'à des matières que le produit propose déjà : sinon
+// le filtre du configurateur ne rendrait rien et retomberait sur le menu complet, en silence.
+const cadresFormatsFautifs = formatsAuxCadresInconnus();
+if (cadresFormatsFautifs.length > 0) {
+  throw new Error(
+    `Cadres de format inconnus : ${cadresFormatsFautifs.join(' ; ')}. Le « cadres » d'un format doit ` +
+      `être un sous-ensemble du « cadres » du produit, dans produits-gammes.ts.`,
   );
 }
 // Filtrage des efficacités proposées : liste blanche (`classesIncluses`, ex. laminaire = H14)
@@ -714,8 +723,35 @@ const introConfig =
         return `${base0}${effPart}-${c.L}x${c.H}${epPart}${cadrePart}`;
       }
 
+      // Cadres du produit, capturés à l'ouverture : le menu est ensuite FILTRÉ selon le format
+      // choisi, certains cadres n'existant pas dans tous les formats (ex. NETCEL V NIVAL, dont
+      // les cadres 592 ne sont fabriqués qu'en acier galvanisé).
+      const CADRES_TOUS = [...(($('inCadre') || {}).options || [])]
+        .map((o) => ({ valeur: o.value, libelle: o.text }));
+
+      function majCadresSelonFormat() {
+        const sel = $('inCadre');
+        if (!sel || !CADRES_TOUS.length) return;
+        const f = activeVar && activeVar.saisie === 'formats'
+          ? (activeVar.formats || [])[+(($('inFormat') || {}).value) || 0]
+          : null;
+        const permis = f && f.cadres && f.cadres.length ? f.cadres : null;
+        const liste = permis ? CADRES_TOUS.filter((c) => permis.indexOf(c.valeur) >= 0) : CADRES_TOUS;
+        // Rien d'autorisé (donnée incohérente) : on laisse le menu complet plutôt que vide,
+        // un menu vide enverrait un cadre `null` au panier sans que personne ne le voie.
+        if (!liste.length) return;
+        const memes = liste.length === sel.options.length
+          && liste.every((c, i) => sel.options[i].value === c.valeur);
+        if (memes) return;
+        const avant = sel.value;
+        sel.innerHTML = liste
+          .map((c) => '<option value="' + c.valeur + '">' + c.libelle + '</option>').join('');
+        sel.value = liste.some((c) => c.valeur === avant) ? avant : liste[0].valeur;
+      }
+
       // Calcule et affiche le prix réel via le moteur. Renvoie { c, unit, ok }.
       function refresh() {
+        majCadresSelonFormat();
         const c = readCfg();
         $('pQty').textContent = c.qty;
         $('genRef').textContent = refRef(c);
