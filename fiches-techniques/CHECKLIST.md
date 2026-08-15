@@ -707,9 +707,17 @@ E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 1
       je l'avais signalé comme une erreur, à tort. Le motif est **identique sur les deux formats** qui
       portent les deux classes (610×305 et 610×610), ce qui ressemble à une décision tarifaire et non
       à une faute de saisie.
-- [ ] **E10/E11/E12 non tarifées sur 592×592 et 287×592** : ces **6 combinaisons** répondent
-      « Efficacité … non disponible dans ce format », prix vide et bouton panier désactivé (vérifié au
-      navigateur — jamais de prix faux). À lever en les tarifant dans l'Excel.
+- [x] ~~**E10/E11/E12 non tarifées sur 592×592 et 287×592 : 6 combinaisons en cul-de-sac**~~ →
+      **AFFIRMATION ERRONÉE DE MA PART, corrigée le 15/08** après vérification demandée par PA. Ce
+      n'est **pas** un cul-de-sac : le bouton **« Ajouter à ma demande de devis » reste ACTIF** et crée
+      une vraie ligne (testé : `NETCEL_V_NIVAL-E10-592×592×292mm-A · 6 u. · E10 · 592 × 592 × 292 mm ·
+      Acier galvanisé`). Seul « Ajouter au panier » se désactive, faute de prix. C'est exactement la
+      règle voulue : ce qui n'est pas vendable en ligne part en demande de prix.
+- [ ] **Libellé « Efficacité … non disponible dans ce format »** : se lit comme un refus alors que le
+      devis est possible et que le bouton est juste en dessous. Une formulation du type « Non tarifé en
+      ligne dans ce format — ajoutez-le à votre demande de devis » dirait la même vérité en montrant la
+      sortie. ⚠️ Message du **moteur**, partagé par **tous** les produits, et qui reste juste pour une
+      combinaison réellement non fabricable → arbitrage de gamme avant de le changer.
 - [x] ~~**Séparateur hot melt absent des specs**~~ → **AJOUTÉ le 15/08/2026 sur NIVAL ET SUR AZUR**
       (accord exprès de PA : « c'est une information vraie »). Sourcé : les **4** fiches de NIVAL
       (TITACEL V H13/E10 + TITAPAK V CU H13/H14) et les **2** fiches H13 d'AZUR portent « HOT MELT » ;

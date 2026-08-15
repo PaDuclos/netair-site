@@ -420,13 +420,15 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
         label: "Polydièdre",
         code: "15",
         saisie: "formats",
-        // Cadres par format (PA 15/08/2026) : les 610 existent en plastique ET en acier,
-        // les 592 en acier SEULEMENT. Sans ça le configurateur laissait commander un
-        // 592×592 plastique, qui n'existe pas.
+        // Les deux 610 en TÊTE (déc. PA 15/08/2026) : ce sont les grands standards, seuls
+        // formats tarifés dans les cinq classes et seuls proposés dans les deux cadres — les
+        // 592 suivent. Cadres par format : les 610 en plastique ET en acier, les 592 en acier
+        // SEULEMENT ; sans ça le configurateur laissait commander un 592×592 plastique, qui
+        // n'existe pas.
         formats: [
           { label: "610 × 610 × 292 mm", largeur: 610, hauteur: 610, defaut: true, cadres: ["pp", "galva"] },
-          { label: "592 × 592 × 292 mm", largeur: 592, hauteur: 592, cadres: ["galva"] },
           { label: "305 × 610 × 292 mm", largeur: 305, hauteur: 610, cadres: ["pp", "galva"] },
+          { label: "592 × 592 × 292 mm", largeur: 592, hauteur: 592, cadres: ["galva"] },
           { label: "287 × 592 × 292 mm", largeur: 287, hauteur: 592, cadres: ["galva"] },
         ],
         labelChamp: "Dimensions (L × H)",
