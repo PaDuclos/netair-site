@@ -1106,15 +1106,22 @@ def generer_series(d, html):
                                    d.get("axe_debit_max", AXE_DEBIT_DMAX))
         # annot_vitesse (opt-in) : annotation nominale au format NETPLY
         # « 2,7 m/s ≈ 3400 m³/h · 592×592 » au lieu de « Débit nominal 3400 m³/h ».
+        # C'EST ICI que la fiche dit sur quel cadre la courbe a été mesurée — pas dans le
+        # titre de section ni dans la légende (constat PA 15/08/2026 : 15 fiches sur 18 le
+        # portent, dont NETPLY et NETPAK S CILIA).
+        # ⚠️ Le cadre était ÉCRIT EN DUR à 592×592 : sur une cellule 610×610 l'annotation
+        # aurait affiché un format faux. Il est désormais lu dans `dim_ref` — absent partout
+        # ailleurs, donc les autres fiches gardent 592×592 à l'octet près.
         if d.get("annot_vitesse"):
             dnom = d.get("debit_nom", 3400)
+            cadre = d.get("dim_ref", "592×592")
             vtxt = _frnum(round((dnom / 3600) / d.get("aref", AREF), 1))
             html = html.replace(f'>Débit nominal {dnom} m³/h</text>',
-                                f'>{vtxt} m/s ≈ {dnom} m³/h · 592×592</text>')
+                                f'>{vtxt} m/s ≈ {dnom} m³/h · {cadre}</text>')
             # annot_fin_axe (opt-in, NETCEL V AZUR) : nominal = plafond de l'axe → une
             # annotation centrée déborderait du cadre ; on l'ancre à droite.
             if d.get("annot_fin_axe"):
-                mtxt = f'{vtxt} m/s ≈ {dnom} m³/h · 592×592'
+                mtxt = f'{vtxt} m/s ≈ {dnom} m³/h · {cadre}'
                 m = re.search(r'<text x="[\d.]+" y="11"[^>]*>' + re.escape(mtxt) + '</text>', html)
                 if not m:
                     raise RuntimeError("annot_fin_axe : annotation nominale introuvable.")
@@ -1461,7 +1468,9 @@ def build_multi_section(d):
     ylab = "\n".join(
         f'            <text x="46" y="{yp}" text-anchor="end" font-family="\'IBM Plex Mono\',monospace" font-size="11" fill="#5A6573">{int(round(pmax * k / 4))}</text>'
         for yp, k in yvals)
-    annot = _frnum(round(vnom, 1)) + f" m/s ≈ {dnom} m³/h · 592×592"
+    # même correctif que sur le chemin série : le cadre vient de `dim_ref`, plus d'écriture
+    # en dur (NETPAK S CILIA ne le déclare pas → 592×592, fiche inchangée).
+    annot = _frnum(round(vnom, 1)) + f" m/s ≈ {dnom} m³/h · {d.get('dim_ref', '592×592')}"
     xn = f"{_mapx(vnom, vmax):.1f}"
     dims_block = "" if d.get("dims_p1") else build_dimensions_block_multi(d)
     # sans_dp_table (opt-in, déc. PA 23/07/2026 — passe CILIA) : retire le tableau

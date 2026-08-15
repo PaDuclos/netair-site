@@ -177,6 +177,17 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
 
 ## Transverse (toute la gamme)
 
+- [ ] **Le cadre de mesure manque sur 2 fiches** : l'annotation du point nominal porte le format sur
+      **15 fiches sur 18** (« 2,7 m/s ≈ 3400 m³/h · 592×592 » — NETPLY, NETPAK S CILIA, NETBAG S,
+      NETCEL V AZUR, NETCEL V LAM…). **NETCEL V NIVAL** l'a reçue le 15/08 ; **NETCARB AZUR** et
+      **NETCARB NIVAL** affichent encore « Débit nominal … m³/h » sans format → à ajouter à leur passe
+      (clé `annot_vitesse`).
+- [x] ~~**Cadre écrit en dur à « 592×592 » dans l'annotation nominale**~~ → **CORRIGÉ le 15/08/2026**
+      sur les chemins **série** et **multi-classes** : le format est lu dans `dim_ref`. Sans ce
+      correctif, activer `annot_vitesse` sur NETCEL V NIVAL (cellule 610×610) aurait affiché
+      « · 592×592 » — une donnée fausse, bien lisible sur le graphe. Même nature que le défaut de
+      surface de référence corrigé le matin même. Les 17 autres fiches restent byte-identiques.
+
 - [ ] **🟠 Aucun contrôle que l'échelle Y couvre le maximum des courbes.** Sur NETCEL V NIVAL, l'axe
       était à 320 Pa alors que le H13 monte à **332,6 Pa** à 4 000 m³/h : le moteur écrête
       (`Math.min(p, Pmax)`), donc le sommet de la courbe était **rabattu à plat** contre le plafond du
