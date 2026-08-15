@@ -177,6 +177,11 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
 
 ## Transverse (toute la gamme)
 
+- [ ] **Espacement des lignes « Classes » et « Efficacité » : AZUR met DEUX espaces autour des « · »,
+      NIVAL et LAM un seul.** Aucun n'utilise d'insécable (vérifié : 0 NBSP sur ces lignes des trois
+      fiches). Purement cosmétique, mais visible quand on compare deux fiches côte à côte. Relevé le
+      15/08 ; non corrigé, AZUR venant d'être bumpée pour une autre raison.
+
 - [ ] **Le cadre de mesure manque sur 2 fiches** : l'annotation du point nominal porte le format sur
       **15 fiches sur 18** (« 2,7 m/s ≈ 3400 m³/h · 592×592 » — NETPLY, NETPAK S CILIA, NETBAG S,
       NETCEL V AZUR, NETCEL V LAM…). **NETCEL V NIVAL** l'a reçue le 15/08 ; **NETCARB AZUR** et
@@ -700,9 +705,13 @@ E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 1
 - [ ] **E10/E11/E12 non tarifées sur 592×592 et 287×592** : ces **6 combinaisons** répondent
       « Efficacité … non disponible dans ce format », prix vide et bouton panier désactivé (vérifié au
       navigateur — jamais de prix faux). À lever en les tarifant dans l'Excel.
-- [ ] **Séparateur hot melt absent des specs alors qu'il est sourcé** sur les 4 fiches du produit.
-      **LAM affiche cette ligne, AZUR non, NIVAL non plus** → incohérence des 3 fiches HEPA, signalée à
-      PA, à trancher au niveau de la gamme (hors passe).
+- [x] ~~**Séparateur hot melt absent des specs**~~ → **AJOUTÉ le 15/08/2026 sur NIVAL ET SUR AZUR**
+      (accord exprès de PA : « c'est une information vraie »). Sourcé : les **4** fiches de NIVAL
+      (TITACEL V H13/E10 + TITAPAK V CU H13/H14) et les **2** fiches H13 d'AZUR portent « HOT MELT » ;
+      la fiche E10 d'AZUR n'a pas le champ — absence, pas contradiction. Les **3 fiches absolues**
+      affichent désormais la ligne. ⚠️ **AZUR était FIGÉE en v1.1 → bumpée en v1.2** (15/08), registre
+      aligné, 18/18. Contrairement au précédent du 04/08 (retrait de « (papier HEPA) » sans bump),
+      l'ajout d'une ligne de specs entière justifiait le bump.
 - [ ] **Tableau : classe en tête sur NIVAL et LAM, ISO en tête sur AZUR.** La convention « la classe
       prime quand l'en-tête annonce l'EN 1822 » (déc. PA 04/08) est portée ici sur le chemin série ;
       **AZUR reste en `≥ 99,95% MPPS (H13)`** et écrit encore « 99,95% » sans espace avant le %.
