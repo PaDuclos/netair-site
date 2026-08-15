@@ -177,6 +177,14 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
 
 ## Transverse (toute la gamme)
 
+- [ ] **🟠 Aucun contrôle que l'échelle Y couvre le maximum des courbes.** Sur NETCEL V NIVAL, l'axe
+      était à 320 Pa alors que le H13 monte à **332,6 Pa** à 4 000 m³/h : le moteur écrête
+      (`Math.min(p, Pmax)`), donc le sommet de la courbe était **rabattu à plat** contre le plafond du
+      graphe — défaut repéré par PA le 15/08, corrigé sur NIVAL (axe porté à 360). **Rien ne garantit
+      que les 17 autres fiches soient indemnes** : `pmax` est saisi à la main dans chaque `.json`, sans
+      vérification. → contrôler les 18, puis ajouter un garde-fou au générateur (lever si
+      max(courbe) > pmax). ⚠️ Rappel : `pmax` doit garder des **graduations entières** (multiples de 4).
+
 - [ ] **🟠 Les références générées par le site ne suivent pas `CODIFICATION_PRODUITS.md`.** Le site
       produit `NETCEL_V_NIVAL-H13-610×610×292mm-P` (nom complet, tirets bas, « × » typographique,
       suffixe « mm ») là où la codification impose `NETCEL-NIVAL-H13-610x610x292-A` (signature courte,

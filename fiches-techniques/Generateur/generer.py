@@ -1149,14 +1149,10 @@ def generer_series(d, html):
         html = html.replace('id="inWid" min="50" max="2000" value="592"',
                             f'id="inWid" min="50" max="2000" value="{cw}"')
 
-    # --- courbe_conditions (opt-in) : la légende de bas de graphe dit les conditions de mesure.
-    #     Utile quand la fiche couvre PLUSIEURS cadres alors que les courbes n'ont été mesurées
-    #     que sur un seul : sans ça, rien ne dit au lecteur à quel format la courbe se rapporte.
-    if d.get("courbe_conditions"):
-        ancre = "Média propre — air à 20 °C"
-        if ancre not in html:
-            raise RuntimeError("courbe_conditions : légende « Média propre » introuvable.")
-        html = html.replace(ancre, d["courbe_conditions"])
+    # Le cadre sur lequel les courbes ont été mesurées se dit dans la NOTE sous le tableau des
+    # dimensions (`note_dimensions`), jamais dans le titre de section ni dans la légende du
+    # graphe : ces deux-là sont identiques sur les 18 fiches (constat PA 15/08/2026, après deux
+    # tentatives de ma part qui rompaient la convention).
 
     # --- calc_formats_fixes (opt-in) : dimensions imposées par les cadres standard.
     #     Les champs libres L/H deviennent des boutons (1 par cadre) qui règlent aussi le

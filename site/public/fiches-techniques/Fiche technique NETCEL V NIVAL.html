@@ -141,7 +141,7 @@
               <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">287</td><td style="padding:4px 7px;">292</td><td style="padding:4px 7px;">1&nbsp;550</td><td style="padding:4px 7px;">270</td><td style="padding:4px 7px;">H13 (≥ 99,95 % MPPS)</td></tr>
             </tbody>
           </table>
-          <div style="font-size:10px; color:#8b97a6; margin-top:6px; line-height:1.45;">Le débit indiqué est le débit nominal de chaque cadre à vitesse frontale constante (≈ 2,5 m/s) ; la ΔP initiale est donnée à ce débit, média propre, pour la classe H13. Les classes E10, E11 et E12 sont disponibles sur les cadres 610×610 et 610×305. Courbes mesurées : H13 jusqu'à 3 840 m³/h, E10 jusqu'à 4 000 m³/h.</div>
+          <div style="font-size:10px; color:#8b97a6; margin-top:6px; line-height:1.45;">Le débit indiqué est le débit nominal de chaque cadre à vitesse frontale constante (≈ 2,5 m/s) ; la ΔP initiale est donnée à ce débit, média propre, pour la classe H13. Les classes E10, E11 et E12 sont disponibles sur les cadres 610×610 et 610×305. Courbes mesurées sur le cadre 610×610×292 : H13 jusqu'à 3 840 m³/h, E10 jusqu'à 4 000 m³/h.</div>
         </div>
 
       </div>
@@ -213,10 +213,10 @@
             <line x1="52" y1="250" x2="580" y2="250" stroke="#0F3261" stroke-width="1.4"></line>
             <!-- y tick labels -->
             <text x="46" y="254" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">0</text>
-            <text x="46" y="195.5" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">80</text>
-            <text x="46" y="137" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">160</text>
-            <text x="46" y="78.5" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">240</text>
-            <text x="46" y="20" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">320</text>
+            <text x="46" y="195.5" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">90</text>
+            <text x="46" y="137" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">180</text>
+            <text x="46" y="78.5" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">270</text>
+            <text x="46" y="20" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">360</text>
             <!-- x tick labels -->
             <text x="52" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">0</text>
             <text x="118.0" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">500</text>
@@ -240,7 +240,7 @@
           <div style="display:flex; gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
             <div id="lg_e10_292" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0897A5; display:inline-block; border-radius:2px;"></span>E10 · 292 mm</div>
             <div id="lg_h13_292" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0F3261; display:inline-block; border-radius:2px;"></span>H13 · 292 mm</div>
-            <div style="margin-left:auto; font-style:italic; color:#5A6573;">Média propre · air à 20 °C · cadre 610×610×292 mm</div>
+            <div style="margin-left:auto; font-style:italic; color:#5A6573;">Média propre — air à 20 °C</div>
           </div>
         </div>
 
@@ -363,7 +363,7 @@
   var SERIES = [{"k": "e10_292", "cls": "e10", "len": 292, "co": {"a": 13.8943, "b": 25.4889, "c": 0.0}, "color": "#0897A5", "dp": 154}, {"k": "h13_292", "cls": "h13", "len": 292, "co": {"a": 10.9824, "b": 78.5986, "c": 0.0}, "color": "#0F3261", "dp": 270}];
   var CLS    = {"e10": {"label": "E10", "iso": "≥ 85 % MPPS", "add": 0, "rule": "classe E10 (EN 1822)"}, "h13": {"label": "H13", "iso": "≥ 99,95 % MPPS", "add": 0, "rule": "classe H13 (EN 1822)"}};
   var ORDER  = ["e10", "h13"];
-  var Vmax = 2.9861, Pmax = 320, Dnom = 3400;
+  var Vmax = 2.9861, Pmax = 360, Dnom = 3400;
   var HEPA = true;
   var Aref = 0.3721;
   var Vnom = (Dnom / 3600) / Aref;
