@@ -526,7 +526,7 @@
   var hit = $('hoverHit'); hit.addEventListener('mousemove', moveHover);
   hit.addEventListener('mouseleave', function () { hoverG.style.display = 'none'; fixedMarks.style.display = ''; });
 
-  var FMTS = [{"L": 610, "H": 610, "d": 3400}, {"L": 610, "H": 305, "d": 1700}];
+  var FMTS = [{"L": 610, "H": 610, "d": 3400}, {"L": 592, "H": 592, "d": 3200}, {"L": 610, "H": 305, "d": 1700}, {"L": 592, "H": 287, "d": 1550}];
   function buildFmtBtns() {
     var c = $('fmtBtns'); if (!c) return; c.innerHTML = '';
     FMTS.forEach(function (f) {

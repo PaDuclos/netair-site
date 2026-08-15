@@ -961,10 +961,15 @@ def build_series_script(d):
                         "function (e) { state.flen = +e.target.value; render(); });\n", "")
         js = js.replace("  $('inWid').addEventListener('input', "
                         "function (e) { state.fwid = +e.target.value; render(); });\n", "")
-        # boutons de format : chaque cadre standard règle L, H et son débit nominal
+        # boutons de format : chaque cadre standard règle L, H et son débit nominal.
+        # `calc_formats` (opt-in) découple cette liste de celle du TABLEAU : le tableau peut ne
+        # documenter que les grands standards pendant que le calculateur propose tout ce que la
+        # boutique vend (déc. PA 15/08/2026, NETCEL V NIVAL). À défaut, les deux listes sont la
+        # même — comportement des autres fiches, inchangé.
         fmts = _json.dumps([{"L": t["L"], "H": t["H"],
                              "d": t.get("debit", d.get("debit_nom", 3400))}
-                            for t in d.get("tailles", [])], ensure_ascii=False)
+                            for t in d.get("calc_formats", d.get("tailles", []))],
+                           ensure_ascii=False)
         prof = d["courbes"][0]["len"]
         js = js.replace(
             "\n  render();\n})();",
