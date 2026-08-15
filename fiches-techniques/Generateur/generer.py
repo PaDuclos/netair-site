@@ -267,10 +267,13 @@ def dims_ref(d):
     les deux (ex. aref 610² avec dim_ref « 592×592 ») donnerait une vitesse et une surface
     fausses sans aucun signal. On refuse plutôt que d'imprimer un chiffre faux.
     """
-    L, H = (re.split(r"[×x]", d.get("dim_ref", "592×592")) + ["592", "592"])[:2]
-    L, H = L.strip(), H.strip()
-    if not (L.isdigit() and H.isdigit()):
-        raise RuntimeError(f"dim_ref : « {d.get('dim_ref')} » n'est pas au format « L×H ».")
+    # `dim_ref` accepte « L×H » ou « L×H×P » : la profondeur, quand elle est là, sert à
+    # l'annotation du point nominal (« … · 610×610×292 ») mais PAS au contrôle de surface
+    # frontale ci-dessous, qui ne regarde que les deux premières composantes.
+    parts = [x.strip() for x in re.split(r"[×x]", d.get("dim_ref", "592×592"))]
+    if len(parts) not in (2, 3) or not all(x.isdigit() for x in parts):
+        raise RuntimeError(f"dim_ref : « {d.get('dim_ref')} » n'est ni « L×H » ni « L×H×P ».")
+    L, H = parts[0], parts[1]
     aref = d.get("aref")
     if aref and abs(int(L) * int(H) / 1e6 - aref) > 0.01 * aref:
         raise RuntimeError(

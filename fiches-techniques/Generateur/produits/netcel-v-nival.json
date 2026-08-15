@@ -128,7 +128,7 @@
   ],
   "note_dimensions": "Le débit indiqué est le débit nominal de chaque cadre à vitesse frontale constante (≈ 2,5 m/s) ; la ΔP initiale est donnée à ce débit, média propre, pour la classe H13. Les classes E10, E11 et E12 sont disponibles sur les cadres 610×610 et 610×305. Courbes mesurées : H13 jusqu'à 3 840 m³/h, E10 jusqu'à 4 000 m³/h.",
   "aref": 0.3721,
-  "dim_ref": "610×610",
+  "dim_ref": "610×610×292",
   "axe_debit_max": 4000,
   "debit_curseur_max": 3840,
   "tailles": [
@@ -184,5 +184,6 @@
     "(15) 🔴 FORMAT DE MESURE — À CÔTÉ DU POINT NOMINAL, comme 15 fiches sur 18. J'ai d'abord affirmé à PA que la gamme ne portait cette information NULLE PART sur le graphe, après n'avoir regardé que le titre de section et la légende. C'ÉTAIT FAUX : elle est dans l'ANNOTATION DU POINT NOMINAL (« 2,7 m/s ≈ 3400 m³/h · 592×592 »), que porte NETPLY, NETPAK S CILIA, NETBAG S, NETCEL V AZUR, NETCEL V LAM… PA a dû me le faire vérifier. Mes deux emplacements inventés (légende de bas de graphe, puis titre de section) sont ANNULÉS et les 2 clés de générateur créées pour l'occasion RETIRÉES. NIVAL porte désormais `annot_vitesse` comme les autres : « 2,5 m/s ≈ 3400 m³/h · 610×610 ». ⚠️ PIÈGE ÉVITÉ DE JUSTESSE : le cadre était ÉCRIT EN DUR à « 592×592 » dans le générateur (chemins série ET multi-classes) — activer la clé telle quelle aurait affiché 592×592 sur un filtre 610×610, soit une donnée FAUSSE bien visible. Corrigé : le cadre est lu dans `dim_ref`, les 17 autres fiches restent byte-identiques. ⚠️ NETCARB AZUR et NETCARB NIVAL n'ont toujours pas cette annotation (elles affichent « Débit nominal … m³/h ») → à traiter à leur passe.",
     "(13) RÉSERVES MAINTENUES (cf. CHECKLIST § NETCEL V NIVAL) : courbe H14 à mesurer (source = copie du H13) ; courbes E11 et E12 inexistantes alors que les classes sont vendues ; courbe E10 surestimée d'environ 12 Pa au milieu de plage (contrainte mathématique, cf. §1) ; humidité 100 % non sourcée ; « acier galvanisé » non sourcé et non tarifé ; surface 40 m² valable pour le seul 610×610 ; séparateur hot melt absent des specs alors qu'il est sourcé ; 3 anomalies tarifaires du code 15 ; défaut de surface de référence restant sur le chemin multi-classes ; titre « DIMENSIONS & RÉFÉRENCES STANDARD » devenu inexact depuis le retrait de la colonne référence (question de gamme, AZUR et LAM dans le même cas) ; photo = placeholder Titanair ; nom « NIVAL » partagé avec NETCARB NIVAL (familles différentes, OK par convention) à confirmer."
   ],
-  "annot_vitesse": true
+  "annot_vitesse": true,
+  "legende_sans_longueur": true
 }
