@@ -9,3 +9,6 @@
 fiches-techniques/Titanair/
 *-orig.jpg
 __pycache__/
+
+# Cache d'images du catalogue (régénérable)
+fiches-techniques/Catalogue/.cache_images/
