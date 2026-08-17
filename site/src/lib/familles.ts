@@ -58,7 +58,7 @@ export const FAMILLES: Famille[] = [
   },
   {
     slug: 'hepa',
-    titre: 'Filtres absolus (HEPA / T.H.E)',
+    titre: 'Filtres absolus',
     tag: 'E10 → H14',
     norme: 'EN 1822',
     photo: '/produits/detour/netcel-v-nival-photo.png',
