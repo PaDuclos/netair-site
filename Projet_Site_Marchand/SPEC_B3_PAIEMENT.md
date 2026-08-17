@@ -146,8 +146,8 @@ Chaque tâche est vérifiable seule et passe par `netair-site-reviewer` avant la
 | # | Tâche | Dépend de |
 |---|---|---|
 | **T1** | Passer le site en mode serveur (adaptateur) **sans rien casser** — les 34 pages doivent rester identiques | Choix hébergeur (§4.1) |
-| **T2** | `recalcul.ts` — rejouer le moteur sur un panier reçu + **tests** : panier trafiqué, produit sur devis, classe indisponible, sous le minimum, hors fabrication | T1 |
-| **T3** | TVA 20 % + totaux HT/TTC (aujourd'hui le panier affiche « TVA calculée à la commande » — à remplacer par un vrai calcul) | T2 |
+| ~~**T2**~~ | ~~`recalcul.ts` — rejouer le moteur sur un panier reçu + tests~~ ✅ **FAIT le 17/08/2026** (étape 0, voir §10) | — *(aucune dépendance : c'est du calcul pur)* |
+| ~~**T3**~~ | ~~TVA 20 % + totaux HT/TTC~~ ✅ **FAIT le 17/08/2026** (`tva.ts`). Reste à **afficher** le TTC dans `/panier`, qui dit encore « TVA calculée à la commande » | T8 |
 | **T4** | Enregistrement des commandes (base) + numérotation | §4.2 |
 | **T5** | `POST /api/commande` → session Stripe avec les montants **serveur** | T2, T3, compte Stripe |
 | **T6** | Webhook Stripe → commande payée, avec protection contre les doublons | T4, T5 |
@@ -194,3 +194,59 @@ Chaque tâche est vérifiable seule et passe par `netair-site-reviewer` avant la
 - [ ] **Acomptes / paiement à la commande** : tout payé d'avance en boutique, ou possibilité de virement pour les gros paniers ?
 - [ ] **Numérotation des commandes** : indépendante, ou alignée sur celle d'INCWO (`SO…`) ?
 - [ ] **Que fait-on d'une commande boutique dans INCWO** : commande client directe, ou devis à confirmer par vous ?
+
+---
+
+## 10. Étape 0 — réalisée le 17/08/2026
+
+**Livré** : `site/src/lib/commande/` (`types.ts` · `tva.ts` · `offre.ts` · `recalcul.ts`) et
+`site/tests/commande/` — **256 tests verts** (dont ~60 neufs), build 34 pages OK.
+Aucun fichier existant modifié : le moteur de prix B1 n'a pas été touché.
+
+### La faille fermée — les restrictions d'offre ne vivaient que dans le navigateur
+
+Découverte en écrivant l'étape : `pricing/produits-gammes.ts` retire de la vente des
+combinaisons qui restent **tarifées dans l'Excel**, et ces retraits n'étaient appliqués que
+par l'**interface**. Un panier fabriqué à la main les achetait donc au prix erroné.
+
+Deux cas prouvés par les tests, sur les erreurs déjà consignées au CHECKLIST :
+
+| Combinaison | Prix rendu par le moteur | Après contrôle d'offre |
+|---|---|---|
+| NETCEL V AZUR **F8 490×592** | **12,00 €** (au lieu de ~108 € métier) | ❌ refusée |
+| NETFIBRE panneau **G3** | **1,51 €** (au lieu de 8,57 €) | ❌ refusée |
+
+`offre.ts` ré-applique côté serveur `classesIncluses`, `classesExclues`, `classesSurDevis`,
+les formats standard et les épaisseurs de conditionnement — en **lisant la même source** que
+l'interface, sans rien dupliquer.
+
+### Quatre défauts trouvés en revue et corrigés
+
+| Gravité | Défaut | Correction |
+|---|---|---|
+| **ÉLEVÉ** | Le module **levait une exception** sur charge utile malformée (`lignes` nul, ligne `null`, panier non-objet) — sur un point d'entrée HTTP, c'est une panne offerte au premier venu | Validation défensive : refus propre, jamais d'exception |
+| **ÉLEVÉ** | Le serveur **dépendait d'une valeur magique du navigateur** : l'interface envoie une épaisseur neutre de 48 pour les gammes sans épaisseur (`[ref].astro` l. 731). Un client envoyant 0 voyait sa commande **légitime** refusée | Le serveur rétablit lui-même la profondeur neutre, d'après les données |
+| **MOYEN** | Une quantité de 1 000 000 000 était acceptée et chiffrée à **19 milliards d'euros** | Plafond `QUANTITE_MAX_LIGNE = 10 000` ⚠️ **à confirmer par PA** (garde-fou technique, pas une règle commerciale) |
+| **FAIBLE** | Dimensions en texte / `NaN` / négatives refusées par le moteur, mais avec son vocabulaire interne | Contrôle explicite en amont, message de boutique |
+
+### Deux points laissés ouverts, à traiter au bon moment
+
+1. 🔶 **Le panier actuel ne peut pas encore produire une charge utile valide.**
+   `cart.ts` (`CartItem.demande`) mémorise le **code-gamme**, pas le `produitId` ni le
+   `varianteId` — or c'est précisément le produit et son conditionnement que le serveur exige,
+   puisque le code-gamme seul contournerait les restrictions d'offre. **Le contrat du panier
+   est donc à étendre en T8**, au moment de brancher le bouton. Sans ça, rien ne casse
+   aujourd'hui (le module n'est appelé nulle part), mais la commande ne partira pas.
+2. 🔶 **TVA en Corse** : `tva.ts` applique 20 % partout. À faire confirmer par
+   `netair-juridique-fr` qu'aucune catégorie particulière ne s'applique aux filtres —
+   ainsi que l'assiette (TVA sur le total **port inclus**, ce qui est implémenté).
+
+### Choix de conception assumés
+
+- **Une ligne fautive fait tomber toute la commande** — jamais de panier amputé en silence :
+  le client paierait autre chose que ce qu'il a composé.
+- **Département non tarifé → refus de payer.** La page `/panier` laisse passer (elle
+  n'encaisse rien) ; le serveur, lui, s'apprête à débiter une carte, et on ne prélève pas sur
+  un total inconnu. *(Cas théorique : le menu du panier ne propose que les 96 départements tarifés.)*
+- **Le total affiché au client n'entre dans aucun calcul.** Il sert uniquement de contrôle :
+  en cas d'écart, refus explicite (« nos tarifs ont changé »), jamais d'alignement silencieux.
