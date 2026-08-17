@@ -55,6 +55,27 @@ def lit(s):
 
 
 # --------------------------------------------------------- fragments HTML ----
+def apply_compact_p2(d, html):
+    """Page 2 compacte (opt-in par produit) : resserre les marges de la page 2 pour
+    tenir courbe + calculateur sur une seule A4. Réglages de marges uniquement, sans
+    toucher le gabarit ni le test d'identité. Appliqué dans TOUS les chemins (base,
+    series, multi) : la page 2 a le même balisage partout."""
+    if not d.get("compact_p2"):
+        return html
+    html = html.replace("margin:7mm 0 7mm 0;", "margin:4mm 0 4mm 0;")                       # filet en-tête P2
+    html = html.replace('<div style="margin-top:6mm; border:1px solid #E1E7EF;',
+                        '<div style="margin-top:3mm; border:1px solid #E1E7EF;')             # cadre courbe
+    html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
+                        'display:flex; align-items:center; gap:18px; margin-top:4px;">')     # ligne « Afficher : »
+    html = html.replace('gap:10px; margin-top:9mm;">',
+                        'gap:10px; margin-top:5mm;">')                                       # titre Calculateur
+    html = html.replace('gap:7mm; margin-top:6mm; align-items:stretch;">',
+                        'gap:7mm; margin-top:4mm; align-items:stretch;">')                   # grille calculateur
+    html = html.replace('margin-top:7mm; background:#F2F6FB;',
+                        'margin-top:4mm; background:#F2F6FB;')                               # note méthode
+    return html
+
+
 def build_points_cles(points):
     SPAN = ('<span style="width:8px; height:8px; background:#0897A5; '
             'display:inline-block; flex:none;"></span>')
@@ -81,7 +102,87 @@ def build_specs(specs):
     return "\n".join("              " + r for r in rows)
 
 
+def debit_nominal(d, dim):
+    """Débit qui fait passer l'air à la vitesse nominale de référence dans cette section.
+
+    À média, épaisseur et vitesse identiques, la ΔP est identique : c'est pourquoi le débit
+    de chaque section doit suivre sa surface frontale. Sert à valider les débits saisis.
+    """
+    vnom = (d.get("debit_nom", 3400) / 3600) / d.get("aref", AREF)
+    return vnom * ((dim["L"] / 1000) * (dim["H"] / 1000)) * 3600
+
+
+def classes_fusion(d):
+    """Classes à afficher en colonnes ΔP : une seule si la fiche est mono-classe, sinon deux."""
+    low, high = d["classes"]["low"], d["classes"]["high"]
+    return [low] if d.get("mono_classe") else [low, high]
+
+
+def check_dims_fusionnees(d):
+    """`dims_fusionnees` suppose des classes portant chacune un poly et un dp, des références
+    portant la classe, et le tableau du gabarit standard. Toute autre combinaison produirait une
+    sortie fausse en silence (colonnes identiques, réglage jamais lu) : on refuse au lieu de passer."""
+    if d.get("deux_epaisseurs"):
+        raise RuntimeError(
+            "dims_fusionnees + deux_epaisseurs : les deux colonnes ΔP seraient identiques.")
+    if d.get("ref_simple"):
+        raise RuntimeError(
+            "dims_fusionnees + ref_simple : ref_simple produit un code sans classe, donc deux "
+            "colonnes identiques, et renomme l'en-tête que dims_fusionnees doit remplacer. "
+            "Incompatibles — traiter ce produit autrement.")
+    if d.get("series") or d.get("tailles"):
+        raise RuntimeError(
+            "dims_fusionnees + series/tailles : ces modes ont leur propre constructeur de "
+            "tableau (build_dimensions_series / _multi) qui ne lit pas ce réglage.")
+    for cls in classes_fusion(d):
+        if "dp" not in cls:
+            raise RuntimeError(
+                f'dims_fusionnees : la classe {cls.get("label")} n\'a pas de dp — c\'est la ΔP '
+                "affichée par le tableau.")
+    # Le tableau affiche une ΔP unique par classe (celle du débit nominal). Ce n'est vrai que
+    # si chaque section est bien à la vitesse nominale : on refuse tout débit qui s'en écarte,
+    # sinon la ligne serait invérifiable (ex. 287×592 à 1700 m³/h → 67 Pa, pas 63).
+    for dim in d["dimensions"]:
+        attendu = debit_nominal(d, dim)
+        ecart = abs(dim["debit"] - attendu) / attendu
+        if ecart > 0.01:
+            raise RuntimeError(
+                f'dims_fusionnees : section {dim["L"]}x{dim["H"]} — débit {dim["debit"]} m³/h, '
+                f'soit {ecart:.1%} d\'écart avec le débit nominal ({attendu:.0f} m³/h). '
+                "La ΔP affichée serait fausse pour cette ligne. Corriger le débit.")
+
+
+def build_dimensions_fusion(d):
+    check_dims_fusionnees(d)
+    classes = classes_fusion(d)
+    facteur = d.get("surface_facteur", 2)
+    c = "padding:4px 7px;"
+    rows = []
+    for i, dim in enumerate(d["dimensions"], start=1):
+        L, H, P = dim["L"], dim["H"], dim["P"]
+        tr = ' style="background:#F2F6FB;"' if i % 2 == 0 else ""
+        dp = "".join(f'<td style="{c}">{cls["dp"]}</td>' for cls in classes)
+        rows.append(
+            f'<tr{tr}>'
+            f'<td style="{c}">{L}</td>'
+            f'<td style="{c}">{H}</td>'
+            f'<td style="{c}">{P}</td>'
+            f'<td style="{c}">{fr_surface(L, H, facteur)}</td>'
+            f'<td style="{c}">{fr_debit(dim["debit"])}</td>'
+            f'{dp}</tr>'
+        )
+    rows.append(
+        '<tr style="background:#E6F5F7;">'
+        '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="5">Sur mesure</td>'
+        f'<td style="padding:4px 7px; color:#5A6573; font-style:italic;" colspan="{len(classes)}">'
+        'sur demande — délai à confirmer</td></tr>'
+    )
+    return "\n".join("              " + r for r in rows)
+
+
 def build_dimensions(d):
+    if d.get("dims_fusionnees"):
+        return build_dimensions_fusion(d)
     nom = d["nom"]
     low, high = d["classes"]["low"], d["classes"]["high"]
     mono = d.get("mono_classe", False) or d.get("deux_epaisseurs", False)
@@ -89,6 +190,14 @@ def build_dimensions(d):
     # ref_simple : code article = [NOM sans espaces]-[L]x[H]x[P] (codification charbon /
     #   produit sans classe particulaire) ; eff = libellé de classe seul. Défaut : legacy.
     simple = d.get("ref_simple", False)
+    # Portage des réglages de tableau du moteur série vers le mono-classe (NETCEL V LAM,
+    # 02/08/2026) : surface non vérifiée, référence retirée (déc. PA 16/07), sur-mesure
+    # absent des produits vendus en formats standard seuls. Défauts = comportement legacy.
+    sans_surf = d.get("dims_sans_surface", False)
+    sans_ref = d.get("dims_sans_ref", False)
+    sans_sm = d.get("dims_sans_surmesure", False)
+    classe_dabord = d.get("dims_classe_dabord", False)
+    ncols = 8 - int(sans_surf) - int(sans_ref)
     rows = []
     i = 0  # index global (striping continu sur toutes les lignes de données)
 
@@ -105,23 +214,26 @@ def build_dimensions(d):
             eff = cls["label"]
             ref = f'{nom.replace(" ", "-")}-{L}x{H}x{P}'
         else:
-            eff = f'{cls["iso"]} ({cls["label"]})'
+            # dims_classe_dabord (opt-in, NETCEL V LAM 04/08/2026) : la colonne s'intitule
+            # « Efficacité EN 1822 » → la CLASSE passe devant, le MPPS entre parenthèses.
+            # Défaut : ISO d'abord (comportement legacy des 17 autres fiches).
+            eff = (f'{cls["label"]} ({cls["iso"]})' if classe_dabord
+                   else f'{cls["iso"]} ({cls["label"]})')
             ref = f'{nom}-{cls["iso"]}-{cls["label"]}-{L}x{H}x{P}'
         c = "padding:4px 7px;"
         cref = ("padding:4px 7px; font-family:'IBM Plex Mono',monospace; "
                 "color:#0F3261;")
-        rows.append(
-            f'<tr{tr}>'
-            f'<td style="{c}">{L}</td>'
-            f'<td style="{c}">{H}</td>'
-            f'<td style="{c}">{P}</td>'
-            f'<td style="{c}">{surface}</td>'
-            f'<td style="{c}">{debit}</td>'
-            f'<td style="{c}">{dp}</td>'
-            f'<td style="{c}">{eff}</td>'
-            f'<td style="{cref}">{ref}</td>'
-            f'</tr>'
-        )
+        cells = [f'<td style="{c}">{L}</td>',
+                 f'<td style="{c}">{H}</td>',
+                 f'<td style="{c}">{P}</td>']
+        if not sans_surf:
+            cells.append(f'<td style="{c}">{surface}</td>')
+        cells += [f'<td style="{c}">{debit}</td>',
+                  f'<td style="{c}">{dp}</td>',
+                  f'<td style="{c}">{eff}</td>']
+        if not sans_ref:
+            cells.append(f'<td style="{cref}">{ref}</td>')
+        rows.append(f'<tr{tr}>' + "".join(cells) + '</tr>')
 
     for dim in d["dimensions"]:      # toutes les lignes classe basse…
         emit(dim, low)
@@ -129,13 +241,14 @@ def build_dimensions(d):
         for dim in d["dimensions"]:
             emit(dim, high)
 
-    rows.append(
-        '<tr style="background:#E6F5F7;">'
-        '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" '
-        'colspan="7">Sur mesure</td>'
-        '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
-        'sur demande — délai à confirmer</td></tr>'
-    )
+    if not sans_sm:
+        rows.append(
+            '<tr style="background:#E6F5F7;">'
+            '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" '
+            f'colspan="{ncols - 1}">Sur mesure</td>'
+            '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
+            'sur demande — délai à confirmer</td></tr>'
+        )
     return "\n".join("              " + r for r in rows)
 
 
@@ -145,6 +258,28 @@ def _co(co):
 
 
 AREF = 0.592 * 0.592   # surface frontale de référence (m²)
+
+
+def dims_ref(d):
+    """(L, H) de la cellule réelle, déduits de `dim_ref` et contrôlés contre `aref`.
+
+    `aref` et `dim_ref` décrivent le même objet par deux chemins : une incohérence entre
+    les deux (ex. aref 610² avec dim_ref « 592×592 ») donnerait une vitesse et une surface
+    fausses sans aucun signal. On refuse plutôt que d'imprimer un chiffre faux.
+    """
+    # `dim_ref` accepte « L×H » ou « L×H×P » : la profondeur, quand elle est là, sert à
+    # l'annotation du point nominal (« … · 610×610×292 ») mais PAS au contrôle de surface
+    # frontale ci-dessous, qui ne regarde que les deux premières composantes.
+    parts = [x.strip() for x in re.split(r"[×x]", d.get("dim_ref", "592×592"))]
+    if len(parts) not in (2, 3) or not all(x.isdigit() for x in parts):
+        raise RuntimeError(f"dim_ref : « {d.get('dim_ref')} » n'est ni « L×H » ni « L×H×P ».")
+    L, H = parts[0], parts[1]
+    aref = d.get("aref")
+    if aref and abs(int(L) * int(H) / 1e6 - aref) > 0.01 * aref:
+        raise RuntimeError(
+            f"aref ({aref} m²) et dim_ref ({L}×{H} = {int(L) * int(H) / 1e6:.4f} m²) "
+            f"décrivent deux cellules différentes.")
+    return L, H
 
 
 def _frnum(x):
@@ -296,8 +431,18 @@ def force_origin(a, b, c, vmax, n=24):
 
 def smooth_curves_origin(d):
     """Force toutes les courbes de la fiche à partir de l'origine et recalcule la perte de
-    charge nominale (dp) affichée pour rester cohérente. Désactivable par "no_smooth_origin"
-    (réservé à l'ANCRE du test d'identité, qui doit reproduire le gabarit à l'octet près)."""
+    charge nominale (dp) affichée pour rester cohérente.
+
+    Désactivable par "no_smooth_origin", réservé à l'ANCRE du test d'identité, qui doit
+    reproduire le gabarit à l'octet près.
+
+    ⚠️ LIMITE CONNUE (mesurée le 15/08/2026 sur la courbe E10 du NETCEL V NIVAL) : la
+    reformulation suppose un terme constant FAIBLE — l'écart reste alors sous 2 Pa. Sur un
+    c d'environ 44 Pa elle dérape à 11 Pa et APLATIT le haut de la plage. Garder le polynôme
+    brut n'est pas la parade : le fondu de `pdcD` produit alors un ÉPAULEMENT visible. La
+    solution retenue a été d'ajuster autrement la courbe elle-même (parabole par l'origine
+    ancrée sur le dernier point mesuré), sans toucher à ce mécanisme.
+    """
     if d.get("no_smooth_origin"):
         return
     vmax = d.get("vmax", 3.17)
@@ -308,7 +453,9 @@ def smooth_curves_origin(d):
         a, b, _ = force_origin(s["a"], s["b"], s["c"], vmax)
         s["a"], s["b"], s["c"] = round(a, 4), round(b, 4), 0.0
         if "dp" in s:
-            s["dp"] = nom(s)
+            # dp_fixe (opt-in) : épingle la ΔP nominale affichée à la valeur mesurée au
+            # lieu de la recalculer sur la courbe lissée (l'écart refit reste < 1 Pa).
+            s["dp"] = s.get("dp_fixe", nom(s))
 
     # multi-classes (NETPAK CILIA…) : poly par classe × épaisseur. Le tableau ΔP
     # reste basé sur les points mesurés ("points") ; seule la courbe (poly) est lissée.
@@ -361,8 +508,21 @@ def _serie_key(s):
     return f'{s["cls"]}_{s["len"]}'
 
 
+def _disp_defaut(d):
+    # courbes_affichees (opt-in, LUMEN) : classes cochées à l'ouverture, les autres
+    # restant activables d'un clic. Défaut : toutes affichées (fiches série inchangées).
+    order = d["classes_order"]
+    if not d.get("courbes_affichees"):
+        return {c: True for c in order}
+    inconnues = set(d["courbes_affichees"]) - set(order)
+    if inconnues:
+        raise RuntimeError(f"courbes_affichees : classes inconnues {sorted(inconnues)}")
+    return {c: c in d["courbes_affichees"] for c in order}
+
+
 def build_series_checkboxes(d):
     cdef = d["classes_def"]; order = d["classes_order"]; series = d["courbes"]
+    disp0 = _disp_defaut(d)
     primary = {}
     for s in series:
         primary.setdefault(s["cls"], s["color"])
@@ -374,11 +534,15 @@ def build_series_checkboxes(d):
         if cls not in primary:
             continue
         col = primary[cls]
-        lab = f'{cdef[cls]["label"]} · {cdef[cls]["iso"]}'
+        # classes_sans_iso (opt-in, NETCEL V AZUR) : la classe seule — le détail (MPPS…)
+        # reste porté par le tableau technique de la page 1 (déc. PA 02/08/2026).
+        lab = (cdef[cls]["label"] if d.get("classes_sans_iso")
+               else f'{cdef[cls]["label"]} · {cdef[cls]["iso"]}')
+        coche = "checked " if disp0[cls] else ""
         rows.append(
             '          <label style="display:inline-flex; align-items:center; gap:6px; '
             'cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;">'
-            f'<input type="checkbox" id="cb_{cls}" checked style="width:14px; height:14px; '
+            f'<input type="checkbox" id="cb_{cls}" {coche}style="width:14px; height:14px; '
             f'accent-color:{col}; cursor:pointer;">{lab}</label>')
     rows.append('        </div>')
     return "\n".join(rows)
@@ -397,6 +561,17 @@ def build_series_paths(d):
     for s in series:
         k = _serie_key(s)
         out.append(f'            <circle id="m_{k}" cx="0" cy="0" r="0" fill="{s["color"]}"></circle>')
+    # Étiquettes ΔP au point nominal (opt-in "points_nominaux") — même mécanisme que
+    # NETPLY (legacy) : texte dans fixedMarks, placé et rempli par le script série, donc
+    # dynamique (suit l'affichage des classes) et masqué au survol. Style identique.
+    if d.get("points_nominaux"):
+        for s in series:
+            k = _serie_key(s)
+            out.append(
+                f'            <text id="tlab_{k}" x="0" y="0" text-anchor="start" '
+                f'paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" '
+                f'font-family="\'IBM Plex Mono\',monospace" font-size="10" font-weight="600" '
+                f'fill="{s["color"]}"></text>')
     out.append('            </g>')
     return "\n".join(out)
 
@@ -416,9 +591,20 @@ def build_series_hover():
 def build_series_legend(d):
     cdef = d["classes_def"]
     out = []
+    # legende_sans_longueur (opt-in) : profondeur unique déjà affichée ailleurs → inutile
+    # de la répéter sur chaque entrée de légende.
+    sans_len = d.get("legende_sans_longueur", False)
+    # legende_courte (opt-in, NETBAG S) : « M5 · 380 mm » au lieu de « M5 · ePM10 50% — 380 mm ».
+    # La classe ISO reste lisible juste au-dessus, dans les cases « Afficher : » ; sur une fiche
+    # à 10 séries la légende passe ainsi de 4 lignes à 2 (format déjà retenu par compact_fort).
+    courte = d.get("legende_courte", False)
     for s in d["courbes"]:
         k = _serie_key(s)
-        lab = f'{cdef[s["cls"]]["label"]} · {cdef[s["cls"]]["iso"]} — {s["len"]} mm'
+        if courte:
+            lab = f'{cdef[s["cls"]]["label"]}' + ('' if sans_len else f' · {s["len"]} mm')
+        else:
+            lab = f'{cdef[s["cls"]]["label"]} · {cdef[s["cls"]]["iso"]}' + (
+                '' if sans_len else f' — {s["len"]} mm')
         if s.get("avalider"):
             lab += " (à valider)"
         out.append(
@@ -431,8 +617,21 @@ def build_series_legend(d):
 def build_series_selector(d):
     cdef = d["classes_def"]; order = d["classes_order"]
     present = [c for c in order if any(s["cls"] == c for s in d["courbes"])]
-    btns = "".join(
-        f'<button id="be_{c}" style="flex:1; font-size:10px;">{cdef[c]["iso"]} ({cdef[c]["label"]})</button>' for c in present)
+    if d.get("classes_sans_iso"):
+        btns = "".join(
+            f'<button id="be_{c}" style="flex:1; font-size:10px;">{cdef[c]["label"]}</button>' for c in present)
+    else:
+        btns = "".join(
+            f'<button id="be_{c}" style="flex:1; font-size:10px;">{cdef[c]["iso"]} ({cdef[c]["label"]})</button>' for c in present)
+    # calc_formats_fixes (opt-in) : la profondeur est unique → le bloc « Longueur de
+    # poche » n'apporte rien, on le retire pour rendre la place à la courbe.
+    poche = (
+        '              <div>\n'
+        '                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; '
+        'text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Longueur de poche</div>\n'
+        '                <div id="lenBtns" style="display:flex; background:#EEF3F9; '
+        'border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;"></div>\n'
+        '              </div>\n') if not d.get("calc_formats_fixes") else ''
     return (
         '            <div style="display:grid; grid-template-columns:1fr; gap:10px;">\n'
         '              <div>\n'
@@ -441,12 +640,7 @@ def build_series_selector(d):
         '                <div style="display:flex; background:#EEF3F9; border:1px solid #D5E0EF; '
         f'border-radius:9px; padding:3px; gap:3px;">{btns}</div>\n'
         '              </div>\n'
-        '              <div>\n'
-        '                <div style="font-size:10px; font-weight:700; letter-spacing:.7px; '
-        'text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Longueur de poche</div>\n'
-        '                <div id="lenBtns" style="display:flex; background:#EEF3F9; '
-        'border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;"></div>\n'
-        '              </div>\n'
+        + poche +
         '            </div>')
 
 
@@ -455,6 +649,13 @@ def build_dimensions_series(d):
     rows = []
     c = "padding:4px 7px;"
     cref = ("padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;")
+    # Réglages opt-in du tableau (AZUR) : sans la colonne référence (format non tranché,
+    # cf. CHECKLIST « références produit »), sans la surface (non communiquée), lignes
+    # groupées par efficacité plutôt que par taille. Les défauts reproduisent l'existant.
+    sans_ref = d.get("dims_sans_ref", False)
+    sans_surf = d.get("dims_sans_surface", False)
+    tri_classe = d.get("dims_tri_classe", False)
+    en779_col = d.get("dims_en779_col", False)
 
     def emit(i, L, H, s, debit):
         grey = (i % 2 == 0)
@@ -462,31 +663,60 @@ def build_dimensions_series(d):
         cl = cdef[s["cls"]]
         P = s["len"]
         surf = f'{s["surface"]:.2f}'.replace(".", ",") if "surface" in s else "n.c."
-        eff = f'{cl["iso"]} ({cl["label"]})'
+        # dims_classe_dabord (opt-in) : porté du chemin mono-classe (LAM 04/08/2026). Quand
+        # la colonne s'intitule « Efficacité EN 1822 », la CLASSE passe devant et le MPPS
+        # entre parenthèses. Défaut inchangé (ISO d'abord) : AZUR et les autres ne bougent pas.
+        if en779_col:
+            eff = cl["iso"]
+        elif d.get("dims_classe_dabord"):
+            eff = f'{cl["label"]} ({cl["iso"]})'
+        else:
+            eff = f'{cl["iso"]} ({cl["label"]})'
         ref = f'{nom}-{cl["iso"]}-{cl["label"]}-{L}x{H}x{P}'
         dp = f'{s["dp"]}*' if s.get("avalider") else f'{s["dp"]}'
-        rows.append(
-            f'<tr{tr}><td style="{c}">{L}</td><td style="{c}">{H}</td><td style="{c}">{P}</td>'
-            f'<td style="{c}">{surf}</td><td style="{c}">{fr_debit(debit)}</td><td style="{c}">{dp}</td>'
-            f'<td style="{c}">{eff}</td><td style="{cref}">{ref}</td></tr>')
+        cells = [f'<td style="{c}">{L}</td>', f'<td style="{c}">{H}</td>',
+                 f'<td style="{c}">{P}</td>']
+        if not sans_surf:
+            cells.append(f'<td style="{c}">{surf}</td>')
+        cells += [f'<td style="{c}">{fr_debit(debit)}</td>', f'<td style="{c}">{dp}</td>',
+                  f'<td style="{c}">{eff}</td>']
+        if en779_col:
+            cells.append(f'<td style="{c}">{cl["label"]}</td>')
+        if not sans_ref:
+            cells.append(f'<td style="{cref}">{ref}</td>')
+        rows.append(f'<tr{tr}>' + "".join(cells) + '</tr>')
+
+    # dims_classes (opt-in, LUMEN) : restreint le tableau des dimensions aux classes
+    # réellement tenues en stock, sans toucher aux courbes ni au calculateur.
+    courbes = d["courbes"]
+    if d.get("dims_classes"):
+        inconnues = set(d["dims_classes"]) - {s["cls"] for s in courbes}
+        if inconnues:
+            raise RuntimeError(f"dims_classes : classes inconnues {sorted(inconnues)}")
+        courbes = [s for s in courbes if s["cls"] in d["dims_classes"]]
 
     # Mode multi-tailles (opt-in "tailles") : pour chaque cadre standard, les N classes.
     # Le débit nominal est propre à la taille (proportionnel à la section). Sinon : 1 ligne
     # par classe au cadre 592×592 (comportement d'origine, autres fiches série inchangées).
     if d.get("tailles"):
-        i = 0
-        for t in d["tailles"]:
-            for s in d["courbes"]:
-                i += 1
-                emit(i, t["L"], t["H"], s, t.get("debit", dnom))
+        if tri_classe:
+            paires = [(t, s) for s in courbes for t in d["tailles"]]
+        else:
+            paires = [(t, s) for t in d["tailles"] for s in courbes]
+        for i, (t, s) in enumerate(paires, start=1):
+            emit(i, t["L"], t["H"], s, t.get("debit", dnom))
     else:
-        for i, s in enumerate(d["courbes"], start=1):
+        for i, s in enumerate(courbes, start=1):
             emit(i, 592, 592, s, dnom)
-    rows.append(
-        '<tr style="background:#E6F5F7;">'
-        '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="7">Sur mesure</td>'
-        '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
-        'sur demande — délai à confirmer</td></tr>')
+    # dims_sans_surmesure (opt-in) : pas de ligne « Sur mesure » quand le produit
+    # n'existe qu'en cadres standard.
+    if not d.get("dims_sans_surmesure"):
+        ncols = 8 - (1 if sans_ref else 0) - (1 if sans_surf else 0) + (1 if en779_col else 0)
+        rows.append(
+            '<tr style="background:#E6F5F7;">'
+            f'<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="{ncols - 1}">Sur mesure</td>'
+            '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
+            'sur demande — délai à confirmer</td></tr>')
     return "\n".join("              " + r for r in rows)
 
 
@@ -578,6 +808,7 @@ SERIES_JS = r"""<script>
       mc.setAttribute('cx', mapX(Vnom).toFixed(1)); mc.setAttribute('cy', yy.toFixed(1)); mc.setAttribute('r', show ? 2.6 : 0);
       $('lg_' + s.k).style.opacity = show ? '1' : '0.25';
     }
+__SERIES_NOMLABELS__
     for (i = 0; i < ORDER.length; i++) {
       var cb = $('cb_' + ORDER[i]); if (cb) cb.checked = state.disp[ORDER[i]] !== false;
       var be = $('be_' + ORDER[i]); if (be) be.setAttribute('style', BEB + (state.eff === ORDER[i] ? ON : OFF));
@@ -650,15 +881,48 @@ SERIES_JS = r"""<script>
 </script>"""
 
 
+def _series_nomlabels_js(gauche=False):
+    """Bloc JS (injecté dans render(), opt-in "points_nominaux") qui place les étiquettes
+    ΔP sur chaque point nominal, écarte celles qui se chevauchent, et efface celle d'une
+    classe masquée. Même rendu que les pt() du gabarit NETPLY, généralisé à N courbes.
+    `gauche` (opt-in points_nominaux_gauche, NETCEL V AZUR) : nominal en BOUT d'axe →
+    étiquettes ancrées à gauche du point, sinon le cadre du graphe les tronque."""
+    pose = ("        arr[j].t.setAttribute('x', (mx - 8).toFixed(1));\n"
+            "        arr[j].t.setAttribute('text-anchor', 'end');\n") if gauche else (
+            "        arr[j].t.setAttribute('x', (mx + 8).toFixed(1));\n")
+    return (
+        "    (function () {\n"
+        "      var arr = [];\n"
+        "      for (var j = 0; j < SERIES.length; j++) {\n"
+        "        var sj = SERIES[j], tl = $('tlab_' + sj.k);\n"
+        "        if (!tl) continue;\n"
+        "        if (state.disp[sj.cls] === false) { tl.textContent = ''; continue; }\n"
+        "        arr.push({ t: tl, y: mapY(pdc(sj.co, Vnom)), v: (sj.dp != null ? sj.dp : pdc(sj.co, Vnom)) });\n"
+        "      }\n"
+        "      arr.sort(function (a, b) { return a.y - b.y; });\n"
+        "      for (var j = 1; j < arr.length; j++) { if (arr[j].y < arr[j - 1].y + 11) arr[j].y = arr[j - 1].y + 11; }\n"
+        "      var mx = mapX(Vnom);\n"
+        "      for (var j = 0; j < arr.length; j++) {\n"
+        + pose +
+        "        arr[j].t.setAttribute('y', (arr[j].y + 3).toFixed(1));\n"
+        "        arr[j].t.textContent = fr(arr[j].v) + ' Pa';\n"
+        "      }\n"
+        "    })();\n")
+
+
 def build_series_script(d):
     import json as _json
+    # dp embarqué seulement si les étiquettes nominales le consomment (points_nominaux) :
+    # ne pas gonfler le JSON des autres fiches série, qui doivent rester byte-identiques.
+    with_dp = d.get("points_nominaux", False)
     series = [{"k": _serie_key(s), "cls": s["cls"], "len": s["len"],
-               "co": {"a": s["a"], "b": s["b"], "c": s["c"]}, "color": s["color"]}
+               "co": {"a": s["a"], "b": s["b"], "c": s["c"]}, "color": s["color"],
+               **({"dp": s["dp"]} if with_dp and "dp" in s else {})}
               for s in d["courbes"]]
     cls = {k: {"label": v["label"], "iso": v["iso"], "add": v["add"], "rule": v["rule"]}
            for k, v in d["classes_def"].items()}
     order = [c for c in d["classes_order"] if any(s["cls"] == c for s in d["courbes"])]
-    disp0 = {c: True for c in order}
+    disp0 = _disp_defaut(d)
     js = SERIES_JS
     js = js.replace("__SERIES__", _json.dumps(series, ensure_ascii=False))
     js = js.replace("__CLS__", _json.dumps(cls, ensure_ascii=False))
@@ -670,9 +934,85 @@ def build_series_script(d):
     js = js.replace("__EFF0__", _json.dumps(d.get("eff0", order[0])))
     js = js.replace("__LEN0__", str(d.get("len0", d["courbes"][0]["len"])))
     js = js.replace("__DISP0__", _json.dumps(disp0))
+    js = js.replace("__SERIES_NOMLABELS__\n",
+                    _series_nomlabels_js(d.get("points_nominaux_gauche", False))
+                    if d.get("points_nominaux") else "")
+    # aref (opt-in, NETCEL V NIVAL 14/08/2026) : surface frontale de référence du produit.
+    # SERIES_JS l'écrit en dur à 592×592 ; sur une cellule 610×610 le calculateur affichait
+    # 0,35 m² et 2,7 m/s pour un filtre qui fait 0,37 m² et 2,5 m/s. Le chemin mono-classe
+    # (LAM) savait déjà le faire : c'est un rattrapage, pas un mode nouveau. Les fiches série
+    # qui ne déclarent pas `aref` gardent 592² et restent byte-identiques.
+    # ⚠️ Les coefficients des courbes sont ajustés sur CETTE surface : changer `aref` sans
+    # refaire l'ajustement déplacerait toutes les ΔP.
+    if d.get("aref"):
+        cl, cw = dims_ref(d)
+        for ancre, neuf in (("var Aref = 0.592 * 0.592;", f"var Aref = {d['aref']};"),
+                            ("flen: 592, fwid: 592", f"flen: {cl}, fwid: {cw}")):
+            if ancre not in js:
+                raise RuntimeError(f"aref : ancre « {ancre} » introuvable dans SERIES_JS.")
+            js = js.replace(ancre, neuf)
+
+    # `calc_formats` ne vit qu'à l'intérieur du bloc ci-dessous : déclarée seule, elle serait
+    # ignorée en silence alors que tout le reste du fichier lève une erreur franche.
+    if d.get("calc_formats") and not d.get("calc_formats_fixes"):
+        raise RuntimeError("calc_formats exige calc_formats_fixes (sinon aucun bouton de format).")
+
+    if d.get("calc_formats_fixes"):
+        # lenBtns retiré du DOM → le constructeur d'épaisseurs se retire proprement
+        js = js.replace("var cont = $('lenBtns'); cont.innerHTML = '';",
+                        "var cont = $('lenBtns'); if (!cont) return; cont.innerHTML = '';")
+        # champs libres L/H retirés du DOM → leurs écouteurs aussi
+        js = js.replace("  $('inLen').addEventListener('input', "
+                        "function (e) { state.flen = +e.target.value; render(); });\n", "")
+        js = js.replace("  $('inWid').addEventListener('input', "
+                        "function (e) { state.fwid = +e.target.value; render(); });\n", "")
+        # boutons de format : chaque cadre standard règle L, H et son débit nominal.
+        # `calc_formats` (opt-in) découple cette liste de celle du TABLEAU : le tableau peut ne
+        # documenter que les grands standards pendant que le calculateur propose tout ce que la
+        # boutique vend (déc. PA 15/08/2026, NETCEL V NIVAL). À défaut, les deux listes sont la
+        # même — comportement des autres fiches, inchangé.
+        fmts = _json.dumps([{"L": t["L"], "H": t["H"],
+                             "d": t.get("debit", d.get("debit_nom", 3400))}
+                            for t in d.get("calc_formats", d.get("tailles", []))],
+                           ensure_ascii=False)
+        prof = d["courbes"][0]["len"]
+        js = js.replace(
+            "\n  render();\n})();",
+            "\n  var FMTS = " + fmts + ";\n"
+            "  function buildFmtBtns() {\n"
+            "    var c = $('fmtBtns'); if (!c) return; c.innerHTML = '';\n"
+            "    FMTS.forEach(function (f) {\n"
+            "      var b = document.createElement('button');\n"
+            "      b.textContent = f.L + ' \\u00d7 ' + f.H + ' \\u00d7 " + str(prof) + "';\n"
+            "      b.setAttribute('style', BTL + 'flex:1; ' + "
+            "(state.flen === f.L && state.fwid === f.H ? ON : OFF));\n"
+            "      b.addEventListener('click', function () {\n"
+            "        state.flen = f.L; state.fwid = f.H; state.debit = f.d;\n"
+            "        var iD = $('inDebit'); if (iD) iD.value = f.d;\n"
+            "        render();\n"
+            "      });\n"
+            "      c.appendChild(b);\n"
+            "    });\n"
+            "  }\n"
+            "  var _renderBase = render;\n"
+            "  render = function () { _renderBase(); buildFmtBtns(); };\n"
+            "  render();\n})();")
     if d.get("axe_debit"):
         js = apply_axe_debit_js(js, d.get("axe_debit_max", AXE_DEBIT_DMAX))
     return js
+
+
+def appliquer_titre_fs(d, html, nom):
+    # titre_fs (opt-in) : corps du titre P1 réduit pour tenir sur UNE ligne quand les badges
+    # longs (ex. « ePM10 50% → ePM1 80% ») compriment la zone titre. Partagé par les chemins
+    # base et série ; lève une erreur franche si l'ancre du gabarit change (pas d'échec muet).
+    if not d.get("titre_fs"):
+        return html
+    avant = (f'font-size:40px; font-weight:700; color:#0F3261; line-height:.98; '
+             f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
+    if avant not in html:
+        raise RuntimeError("titre_fs : ancre du titre P1 (40px) introuvable dans le gabarit.")
+    return html.replace(avant, avant.replace("40px", f'{d["titre_fs"]}px'), 1)
 
 
 def generer_series(d, html):
@@ -685,6 +1025,7 @@ def generer_series(d, html):
     html = html.replace('letter-spacing:-.6px; text-align:center;">NETPLY</div>',
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
     html = html.replace('letter-spacing:-.3px;">NETPLY</div>', f'letter-spacing:-.3px;">{nom}</div>')
+    html = appliquer_titre_fs(d, html, nom)
 
     # #2 sous-titre
     html = html.replace(">Filtre plissé — Préfiltre synthétique</div>", f">{d['soustitre']}</div>")
@@ -702,7 +1043,7 @@ def generer_series(d, html):
     # #4 photo + slug
     html = html.replace('src="assets/netply-photo.jpg" alt="Filtre NETPLY"',
                         f'src="assets/{d["photo"]}" alt="{d["photo_alt"]}"')
-    for tok in ("netply-photo", "netply-img", "netply-ph", "netply-file"):
+    for tok in ("netply-photo", "netply-img"):
         html = re.sub(r"\b" + tok + r"\b", f"{slug}-" + tok.split("-", 1)[1], html)
 
     # #5 description
@@ -720,6 +1061,42 @@ def generer_series(d, html):
     # #8 dimensions (lignes explicites par série)
     html = sub1(html, r"(<!-- Dimensions -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
                 lambda m: m.group(1) + build_dimensions_series(d) + m.group(3), flags=re.DOTALL)
+    # en-têtes retirés/ajoutés en même temps que leurs colonnes (opt-in, cf. build_dimensions_series)
+    if d.get("dims_sans_surface"):
+        html = html.replace('                <th style="padding:6px 7px; text-align:left; '
+                            'font-weight:600;">S. filtrante (m²)</th>\n', '', 1)
+    if d.get("dims_sans_ref"):
+        html = html.replace('                <th style="padding:6px 7px; text-align:left; '
+                            'font-weight:600;">Référence complète</th>\n', '', 1)
+    if d.get("dims_en779_col"):
+        th_iso = ('                <th style="padding:6px 7px; text-align:left; '
+                  'font-weight:600;">Efficacité ISO 16890</th>\n')
+        html = html.replace(
+            th_iso,
+            th_iso + '                <th style="padding:6px 7px; text-align:left; '
+                     'font-weight:600;">EN 779</th>\n', 1)
+    # dims_entete_eff (opt-in, NETCEL V AZUR) : l'en-tête « Efficacité ISO 16890 » du gabarit
+    # est faux pour un filtre absolu → libellé remplacé (ex. « Efficacité EN 1822 »).
+    # Après dims_en779_col (qui s'ancre sur le libellé d'origine), avant la répartition
+    # des largeurs (qui vise aussi ce libellé — d'où le even_label ci-dessous).
+    if d.get("dims_entete_eff"):
+        th_eff = ('                <th style="padding:6px 7px; text-align:left; '
+                  'font-weight:600;">Efficacité ISO 16890</th>\n')
+        if th_eff not in html:
+            raise RuntimeError("dims_entete_eff : en-tête « Efficacité ISO 16890 » introuvable.")
+        html = html.replace(
+            th_eff, th_eff.replace("Efficacité ISO 16890", d["dims_entete_eff"]), 1)
+
+    # 7 colonnes au lieu de 9 : sans largeurs imposées elles se tassent à gauche et
+    # laissent un vide à droite. On les répartit sur toute la largeur du tableau.
+    if d.get("dims_sans_ref") and d.get("dims_sans_surface") and d.get("dims_en779_col"):
+        for label, pct in (("L (mm)", 13), ("H (mm)", 13), ("P (mm)", 13),
+                           ("Débit (m³/h)", 15), ("ΔP (Pa)", 13),
+                           (d.get("dims_entete_eff", "Efficacité ISO 16890"), 19), ("EN 779", 14)):
+            html = html.replace(
+                f'<th style="padding:6px 7px; text-align:left; font-weight:600;">{label}</th>',
+                f'<th style="padding:6px 7px; text-align:left; font-weight:600; '
+                f'width:{pct}%;">{label}</th>', 1)
 
     # #9 pied de page
     html = html.replace("Fiche n° FT-NETPLY-001", f"Fiche n° {d['fiche']['num']}")
@@ -740,6 +1117,31 @@ def generer_series(d, html):
     if d.get("axe_debit"):
         html = apply_axe_debit_svg(html, d.get("debit_nom", 3400),
                                    d.get("axe_debit_max", AXE_DEBIT_DMAX))
+        # annot_vitesse (opt-in) : annotation nominale au format NETPLY
+        # « 2,7 m/s ≈ 3400 m³/h · 592×592 » au lieu de « Débit nominal 3400 m³/h ».
+        # C'EST ICI que la fiche dit sur quel cadre la courbe a été mesurée — pas dans le
+        # titre de section ni dans la légende (constat PA 15/08/2026 : 15 fiches sur 18 le
+        # portent, dont NETPLY et NETPAK S CILIA).
+        # ⚠️ Le cadre était ÉCRIT EN DUR à 592×592 : sur une cellule 610×610 l'annotation
+        # aurait affiché un format faux. Il est désormais lu dans `dim_ref` — absent partout
+        # ailleurs, donc les autres fiches gardent 592×592 à l'octet près.
+        if d.get("annot_vitesse"):
+            dnom = d.get("debit_nom", 3400)
+            cadre = d.get("dim_ref", "592×592")
+            vtxt = _frnum(round((dnom / 3600) / d.get("aref", AREF), 1))
+            html = html.replace(f'>Débit nominal {dnom} m³/h</text>',
+                                f'>{vtxt} m/s ≈ {dnom} m³/h · {cadre}</text>')
+            # annot_fin_axe (opt-in, NETCEL V AZUR) : nominal = plafond de l'axe → une
+            # annotation centrée déborderait du cadre ; on l'ancre à droite.
+            if d.get("annot_fin_axe"):
+                mtxt = f'{vtxt} m/s ≈ {dnom} m³/h · {cadre}'
+                m = re.search(r'<text x="[\d.]+" y="11"[^>]*>' + re.escape(mtxt) + '</text>', html)
+                if not m:
+                    raise RuntimeError("annot_fin_axe : annotation nominale introuvable.")
+                elem = m.group(0)
+                if 'text-anchor="middle"' not in elem:
+                    raise RuntimeError("annot_fin_axe : ancre text-anchor=middle absente.")
+                html = html.replace(elem, elem.replace('text-anchor="middle"', 'text-anchor="end"'), 1)
 
     # --- bloc « Afficher : » (cases par classe)
     html = sub1(
@@ -756,10 +1158,82 @@ def generer_series(d, html):
     html = sub1(html, r'            <!-- survol interactif -->.*?\n(            <rect id="hoverHit")',
                 lambda m: build_series_hover() + "\n" + m.group(1), flags=re.DOTALL)
 
+    # --- aref (opt-in) : les champs L/H du calculateur portent la cellule réelle. Sans ça,
+    #     ils afficheraient 592 pendant que le calcul tourne sur 610 (cf. build_series_script).
+    #     Sans effet quand calc_formats_fixes a déjà remplacé ces champs par des boutons.
+    #     Pas de garde d'ancre ici : calc_formats_fixes retire légitimement ces champs.
+    if d.get("aref"):
+        cl, cw = dims_ref(d)
+        html = html.replace('id="inLen" min="50" max="2000" value="592"',
+                            f'id="inLen" min="50" max="2000" value="{cl}"')
+        html = html.replace('id="inWid" min="50" max="2000" value="592"',
+                            f'id="inWid" min="50" max="2000" value="{cw}"')
+
+    # --- calc_formats_fixes (opt-in) : dimensions imposées par les cadres standard.
+    #     Les champs libres L/H deviennent des boutons (1 par cadre) qui règlent aussi le
+    #     débit nominal du cadre ; la place gagnée est rendue à la courbe (width 80→85 %).
+    if d.get("calc_formats_fixes"):
+        html = sub1(
+            html,
+            r'<span style="font-size:12\.5px; font-weight:600; color:#0F3261;">'
+            r'Dimensions du filtre .*?</div>\s*'
+            r'<div style="display:flex; gap:10px; align-items:center;">.*?'
+            r'</div>\s*</div>\s*</div>\n(\s*<div>\s*<div style="display:flex; '
+            r'justify-content:space-between; align-items:baseline; margin-bottom:2px;">)',
+            lambda m: (
+                '<span style="font-size:12.5px; font-weight:600; color:#0F3261;">'
+                'Dimensions du filtre <span style="font-weight:400; color:#8b97a6;">'
+                '(mm)</span></span>\n'
+                '                <span style="font-family:\'IBM Plex Mono\',monospace; '
+                'font-size:11.5px; color:#0897A5;"><span id="area"></span> m² · '
+                '<span id="vel"></span> m/s</span>\n'
+                '              </div>\n'
+                '              <div id="fmtBtns" style="display:flex; background:#EEF3F9; '
+                'border:1px solid #D5E0EF; border-radius:9px; padding:3px; gap:3px;"></div>\n'
+                '            </div>\n' + m.group(1)),
+            flags=re.DOTALL)
+        html = html.replace('id="curveSvg" viewBox="0 0 600 300" style="width:80%;',
+                            'id="curveSvg" viewBox="0 0 600 300" style="width:85%;')
+        # dernières marges pour tenir l'A4 malgré la courbe agrandie : ligne « Afficher »
+        # (l'ancre série diffère de celle du gabarit, compact_p2 ne la voit pas)…
+        html = html.replace('gap:14px; margin-top:7px; flex-wrap:wrap;',
+                            'gap:14px; margin-top:4px; flex-wrap:wrap;')
+
+    # --- debit_curseur_max (opt-in, NETBAG S) : plafond du curseur de débit du calculateur.
+    #     Le gabarit va à 6000 m³/h ; sur une fiche dont les mesures s'arrêtent plus tôt, cela
+    #     laisse lire des ΔP extrapolées sans avertissement. Le borner à la fin des mesures
+    #     garantit qu'aucune valeur hors plage n'est affichée (déc. PA 26/07/2026).
+    if d.get("debit_curseur_max"):
+        ancre = '<input type="range" id="inDebit" min="500" max="6000"'
+        if ancre not in html:
+            raise RuntimeError("debit_curseur_max : ancre du curseur de débit introuvable.")
+        html = html.replace(
+            ancre, ancre.replace('max="6000"', f'max="{d["debit_curseur_max"]}"'), 1)
+
+    # --- curseur de débit synchronisé sur le nominal (correctif de bug, 02/08/2026).
+    #     Le gabarit fige value="3400" : sur une fiche dont le nominal diffère, le curseur
+    #     s'affichait à 3400 alors que le calcul (state.debit = Dnom) utilisait le nominal
+    #     (bug répertorié au CHECKLIST sur NETCEL V AZUR). No-op octet à octet quand
+    #     debit_nom = 3400 — les autres fiches série ne bougent pas.
+    html = sub1(html, r'(id="inDebit" min="500" max="\d+" step="50" value=")3400(")',
+                lambda m: m.group(1) + str(d.get("debit_nom", 3400)) + m.group(2))
+
+    # --- courbe_pct (opt-in, NETBAG S / NETCEL V AZUR) : largeur du graphe. Le STANDARD du
+    #     gabarit est 80 % (charte 17/07/2026) ; calc_formats_fixes pose déjà 85 % — quand les
+    #     deux clés sont présentes, courbe_pct PRIME (déc. PA 02/08/2026, courbe NETCEL à 90 %).
+    #     Toute hausse gonfle la hauteur de la page 2 : à réserver aux fiches qui la
+    #     compensent (compact_p2, legende_courte).
+    if d.get("courbe_pct"):
+        base = "85%" if d.get("calc_formats_fixes") else "80%"
+        ancre = f'id="curveSvg" viewBox="0 0 600 300" style="width:{base};'
+        if ancre not in html:
+            raise RuntimeError(f"courbe_pct : ancre du graphe (width:{base}) introuvable.")
+        html = html.replace(ancre, ancre.replace(f"width:{base}", f'width:{d["courbe_pct"]}%'), 1)
+
     # --- légende (1 entrée par série)
     html = sub1(
         html,
-        r'(margin-top:3mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">\n)(.*?)'
+        r'(margin-top:2mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">\n)(.*?)'
         r'(\n            <div style="margin-left:auto; font-style:italic;)',
         lambda m: m.group(1) + build_series_legend(d) + m.group(3), flags=re.DOTALL)
 
@@ -793,6 +1267,16 @@ def generer_series(d, html):
         html = html.replace('<div style="margin-top:9mm;">', '<div style="margin-top:6mm;">')
         html = html.replace('<div style="margin-top:8mm;">', '<div style="margin-top:6mm;">')
 
+    html = apply_compact_p2(d, html)
+    # …et marges du bas de page resserrées d'un mm (après compact_p2, qui pose 5/4mm).
+    # ⚠️ Ne PAS toucher au filet d'en-tête (margin:4mm 0 4mm 0) : à 3mm il remonte dans
+    # le badge EN 13053 (constaté 17/07). Les mm se prennent sous la courbe, pas au-dessus.
+    if d.get("calc_formats_fixes"):
+        html = html.replace("gap:10px; margin-top:5mm;", "gap:10px; margin-top:4mm;")
+        html = html.replace('gap:7mm; margin-top:4mm; align-items:stretch;">',
+                            'gap:7mm; margin-top:3mm; align-items:stretch;">')
+        html = html.replace("margin-top:4mm; background:#F2F6FB;",
+                            "margin-top:3mm; background:#F2F6FB;")
     return html
 
 
@@ -854,11 +1338,25 @@ def build_dp_table(d):
 
 
 def build_dimensions_multi(d):
-    """Tableau dimensions/surfaces (dimension-centré, indépendant de la classe)."""
+    """Tableau dimensions/surfaces (dimension-centré, indépendant de la classe).
+
+    dims_pdc (opt-in, déc. PA 23/07/2026 — passe CILIA) : liste de classes (ex. ["M5","F7","F9"]).
+    Le tableau abandonne alors Surface/Classes/Référence au profit d'une colonne ΔP initiale
+    par classe, lue dans dim["dp"][classe] au débit nominal de la ligne."""
     rows = []
+    classes_pdc = d.get("dims_pdc")
     for i, dim in enumerate(d["dimensions_multi"], start=1):
         tr = ' style="background:#F2F6FB;"' if (i % 2 == 0) else ""
         c = "padding:4px 7px;"
+        if classes_pdc:
+            cells = (
+                f'<td style="{c}">{dim["L"]}</td>'
+                f'<td style="{c}">{dim["H"]}</td>'
+                f'<td style="{c}">{dim["P"]}</td>'
+                f'<td style="{c}">{fr_debit(dim["debit"])}</td>'
+                + "".join(f'<td style="{c}">{dim["dp"][cl]} Pa</td>' for cl in classes_pdc))
+            rows.append(f'<tr{tr}>{cells}</tr>')
+            continue
         cref = ("padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;")
         ref = f'NETPAK S CILIA · [classe] · {dim["L"]}×{dim["H"]}×{dim["P"]} · -A/-P'
         rows.append(
@@ -871,9 +1369,10 @@ def build_dimensions_multi(d):
             f'<td style="{c}">M5 → F9</td>'
             f'<td style="{cref}">{ref}</td>'
             f'</tr>')
+    colspan = 3 + len(classes_pdc) if classes_pdc else 6
     rows.append(
         '<tr style="background:#E6F5F7;">'
-        '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="6">Sur mesure</td>'
+        f'<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="{colspan}">Sur mesure</td>'
         '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">sur demande — toute dimension</td></tr>')
     return "\n".join("              " + r for r in rows)
 
@@ -914,6 +1413,15 @@ def build_multi_pagebreak(d, num):
 
 def build_dimensions_block_multi(d):
     """Bloc « Dimensions & références » complet (titre + table 7 colonnes + note)."""
+    if d.get("dims_pdc"):
+        entetes = ['L (mm)', 'H (mm)', 'P (mm)', 'Débit nom. (m³/h)'] + [
+            f'ΔP init. {cl} (Pa)' for cl in d["dims_pdc"]]
+    else:
+        entetes = ['L (mm)', 'H (mm)', 'P (mm)', 'S. média (m²)', 'Débit nom. (m³/h)',
+                   'Classes', 'Référence complète']
+    ths = "".join(
+        f'                <th style="padding:6px 7px; text-align:left; font-weight:600;">{e}</th>\n'
+        for e in entetes)
     return (
         '        <!-- Dimensions -->\n'
         '        <div style="margin-top:6mm;">\n'
@@ -924,13 +1432,7 @@ def build_dimensions_block_multi(d):
         '          <table style="width:100%; border-collapse:collapse; font-size:10px; margin-top:7px; white-space:nowrap;">\n'
         '            <thead>\n'
         '              <tr style="background:#0F3261; color:#fff;">\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">L (mm)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">H (mm)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">P (mm)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">S. média (m²)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">Débit nom. (m³/h)</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">Classes</th>\n'
-        '                <th style="padding:6px 7px; text-align:left; font-weight:600;">Référence complète</th>\n'
+        f'{ths}'
         '              </tr>\n'
         '            </thead>\n'
         '            <tbody>\n'
@@ -961,13 +1463,19 @@ def build_multi_section(d):
     ylab = "\n".join(
         f'            <text x="46" y="{yp}" text-anchor="end" font-family="\'IBM Plex Mono\',monospace" font-size="11" fill="#5A6573">{int(round(pmax * k / 4))}</text>'
         for yp, k in yvals)
-    annot = _frnum(round(vnom, 1)) + f" m/s ≈ {dnom} m³/h · 592×592"
+    # même correctif que sur le chemin série : le cadre vient de `dim_ref`, plus d'écriture
+    # en dur (NETPAK S CILIA ne le déclare pas → 592×592, fiche inchangée).
+    annot = _frnum(round(vnom, 1)) + f" m/s ≈ {dnom} m³/h · {d.get('dim_ref', '592×592')}"
     xn = f"{_mapx(vnom, vmax):.1f}"
-    dims_block = build_dimensions_block_multi(d)
-    dp_block = build_dp_table(d)
-    pagebreak = build_multi_pagebreak(d, 2)
+    dims_block = "" if d.get("dims_p1") else build_dimensions_block_multi(d)
+    # sans_dp_table (opt-in, déc. PA 23/07/2026 — passe CILIA) : retire le tableau
+    # « Perte de charge initiale par classe » ; la courbe à sélecteur reste la référence.
+    dp_block = "" if d.get("sans_dp_table") else build_dp_table(d)
+    # calc_p2 (opt-in, déc. PA 23/07/2026 — passe CILIA) : plus de saut de page avant le
+    # calculateur → fiche 2 pages (la renumérotation des pieds de page suit dans generer_multi).
+    pagebreak = "" if d.get("calc_p2") else build_multi_pagebreak(d, 2)
 
-    return f'''{dims_block}
+    section = f'''{dims_block}
 
 {dp_block}
 
@@ -985,7 +1493,7 @@ def build_multi_section(d):
         </div>
 
         <div style="margin-top:3mm; border:1px solid #E1E7EF; border-radius:8px; padding:3mm 6mm 2mm 4mm; background:#FCFDFE;">
-          <svg id="curveSvg" viewBox="0 0 600 292" style="width:100%; height:auto; display:block;">
+          <svg id="curveSvg" viewBox="0 0 600 292" style="width:80%; height:auto; display:block; margin:0 auto;">
             <line x1="52" y1="16" x2="580" y2="16" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="74.5" x2="580" y2="74.5" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="133" x2="580" y2="133" stroke="#EDF1F6" stroke-width="1"></line>
@@ -1058,9 +1566,9 @@ def build_multi_section(d):
             </div>
             <div>
               <div style="display:flex; gap:7px;">
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
                 <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP finale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpFinal"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
               </div>
               <div style="font-size:9.5px; color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span></div>
             </div>
@@ -1082,39 +1590,39 @@ def build_multi_section(d):
               </div>
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Débit d'air</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="debitVal"></span> m³/h</span>
               </div>
-              <input type="range" id="inDebit" min="500" max="6000" step="50" value="{dnom}" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDebit" min="500" max="6000" step="50" value="{dnom}" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Durée de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="dureeVal"></span> h/jour</span>
               </div>
-              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Jours de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="joursVal"></span> j/an · <span id="heuresVal"></span> h/an</span>
               </div>
-              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Rendement moto-ventilateur</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="etaVal"></span> %</span>
               </div>
-              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Prix de l'électricité</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="prixVal"></span> €/kWh</span>
               </div>
-              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
           </div>
 
@@ -1127,13 +1635,13 @@ def build_multi_section(d):
             <div style="height:1px; background:#E1EAF3;"></div>
             <div style="text-align:center;">
               <div style="font-size:9.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#8b97a6;">Consommation énergétique</div>
-              <div style="margin-top:6px; white-space:nowrap;"><span style="font-size:30px; font-weight:700; color:#0F3261; font-variant-numeric:tabular-nums;" id="kwh"></span> <span style="font-size:12px; color:#9aa6b4;">kWh/an</span></div>
-              <div style="font-size:9.5px; color:#9aa6b4; margin-top:4px;">sur <span id="heures2"></span> h/an</div>
+              <div style="margin-top:6px; white-space:nowrap;"><span style="font-size:30px; font-weight:700; color:#0F3261; font-variant-numeric:tabular-nums;" id="kwh"></span> <span style="font-size:12px; color:#9aa6b4;">kWh</span></div>
+              <div style="font-size:9.5px; color:#9aa6b4; margin-top:4px;">sur <span id="heures2"></span> h</div>
             </div>
             <div style="height:1px; background:#E1EAF3;"></div>
             <div style="text-align:center;">
               <div style="font-size:11.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#8b97a6;">Impact carbone</div>
-              <div style="margin-top:6px; white-space:nowrap;"><span style="font-size:25px; font-weight:700; color:#0F3261; font-variant-numeric:tabular-nums;" id="co2"></span> <span style="font-size:13px; color:#9aa6b4;">kg CO₂/an</span></div>
+              <div style="margin-top:6px; white-space:nowrap;"><span style="font-size:25px; font-weight:700; color:#0F3261; font-variant-numeric:tabular-nums;" id="co2"></span> <span style="font-size:13px; color:#9aa6b4;">kg CO₂</span></div>
             </div>
           </div>
         </div>
@@ -1141,6 +1649,140 @@ def build_multi_section(d):
         <div style="margin-top:6mm; background:#F2F6FB; border-left:3px solid #0897A5; padding:9px 14px; font-size:10.5px; color:#5A6573; line-height:1.55;">
           <strong style="color:#0F3261;">Méthode :</strong> P = (Q ⁄ 3600) × ΔP ⁄ η &nbsp;·&nbsp; Énergie = P × heures de fonctionnement. Valeurs indicatives à but de comparaison — base CO₂ 0,079 kgCO₂/kWh — 79 g (mix électrique France). η = rendement global du moto-ventilateur.
         </div>'''
+
+    if d.get("courbe_cases"):
+        # courbe_cases (opt-in, déc. PA — passe CILIA) : les boutons de classe de la courbe
+        # deviennent des cases à cocher façon série (AZUR) — plusieurs classes superposables,
+        # marqueurs/survol actifs quand UNE seule classe est cochée. Palette = celle des
+        # fiches série (NETBAG S). Ancres vérifiées, remplacements en erreur franche.
+        PALETTE = {"m5": "#0897A5", "m6": "#1B9E5A", "f7": "#0F3261", "f8": "#6A4C93", "f9": "#C0392B"}
+        eff0 = d.get("eff_default", classes[0]["id"])
+        cks = ['        <div style="display:flex; align-items:center; gap:14px; margin-top:4px; flex-wrap:wrap;">',
+               '          <span style="font-size:11px; font-weight:600; color:#5A6573; white-space:nowrap;">Afficher :</span>']
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            checked = " checked" if c["id"] == eff0 else ""
+            cks.append(
+                '          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; '
+                'font-size:11.5px; color:#3a4654; white-space:nowrap;">'
+                f'<input type="checkbox" id="ck_{c["id"]}"{checked} style="width:14px; height:14px; '
+                f'accent-color:{col}; cursor:pointer;">{c["label"]} · {c["iso"]}</label>')
+        cks.append('        </div>')
+        sel_row = "\n".join(cks)
+        m = re.search(
+            r'        <div style="display:flex; align-items:center; gap:14px; margin-top:4px; '
+            r'flex-wrap:wrap;">.*?id="clsIso"[^>]*></span>\n        </div>',
+            section, flags=re.DOTALL)
+        if not m:
+            raise RuntimeError("courbe_cases : rangée du sélecteur de classe introuvable.")
+        section = section.replace(m.group(0), sel_row, 1)
+
+        paths = []
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            paths.append(f'<path id="p98_{c["id"]}" d="" fill="none" stroke="{col}" stroke-width="2" '
+                         'stroke-dasharray="5 3" stroke-linecap="round" stroke-linejoin="round" '
+                         'style="display:none;"></path>')
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            paths.append(f'<path id="p48_{c["id"]}" d="" fill="none" stroke="{col}" stroke-width="2.3" '
+                         'stroke-linecap="round" stroke-linejoin="round" style="display:none;"></path>')
+        m = re.search(r'            <path id="p98" [^>]*></path>\n            <path id="p48" [^>]*></path>',
+                      section)
+        if not m:
+            raise RuntimeError("courbe_cases : paths p48/p98 introuvables.")
+        section = section.replace(m.group(0), "\n".join("            " + p for p in paths), 1)
+
+        legende = (
+            '<div style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; '
+            'background:#5A6573; display:inline-block; border-radius:2px;"></span><span>48 mm — trait plein</span></div>\n'
+            '            <div style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:0; '
+            'border-top:3px dashed #5A6573; display:inline-block;"></span><span>98 mm — pointillé</span></div>')
+        m = re.search(r'<div id="leg48" .*?</div>\n            <div id="leg98" .*?</div>', section, flags=re.DOTALL)
+        if not m:
+            raise RuntimeError("courbe_cases : légende leg48/leg98 introuvable.")
+        section = section.replace(m.group(0), legende, 1)
+
+        # marqueurs nominaux PAR CLASSE (un couple 48/98 par classe cochée, couleur de la classe)
+        TXT = ('paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" '
+               'font-family="\'IBM Plex Mono\',monospace" font-size="10" font-weight="600"')
+        marks = ['<g id="fixedMarks">']
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            marks.append(f'            <circle id="c48_{c["id"]}" cx="0" cy="0" r="0" fill="{col}"></circle>')
+            marks.append(f'            <circle id="c98_{c["id"]}" cx="0" cy="0" r="0" fill="{col}"></circle>')
+            marks.append(f'            <text id="t48_{c["id"]}" x="0" y="0" text-anchor="end" {TXT} fill="{col}"></text>')
+            marks.append(f'            <text id="t98_{c["id"]}" x="0" y="0" text-anchor="start" {TXT} fill="{col}"></text>')
+        marks.append('            </g>')
+        m = re.search(r'<g id="fixedMarks">.*?</g>', section, flags=re.DOTALL)
+        if not m:
+            raise RuntimeError("courbe_cases : groupe fixedMarks introuvable.")
+        section = section.replace(m.group(0), "\n".join(marks), 1)
+
+        # survol PAR CLASSE : une paire de repères 48/98 par classe cochée
+        hov = ['<g id="hoverG" style="display:none;">',
+               '              <line id="hvV" x1="0" y1="16" x2="0" y2="250" stroke="#0F3261" '
+               'stroke-width="1" stroke-dasharray="3 3" opacity="0.4"></line>']
+        for c in classes:
+            col = PALETTE.get(c["id"], "#0F3261")
+            for ep in ("48", "98"):
+                hov.append(f'              <line id="hh{ep}_{c["id"]}" x1="52" y1="0" x2="0" y2="0" '
+                           f'stroke="{col}" stroke-width="1" stroke-dasharray="3 3" opacity="0.32" '
+                           'style="display:none;"></line>')
+                hov.append(f'              <circle id="hd{ep}_{c["id"]}" r="0" fill="{col}"></circle>')
+                hov.append(f'              <text id="ht{ep}_{c["id"]}" text-anchor="start" {TXT} fill="{col}"></text>')
+        hov.append('              <text id="hvel" x="0" y="244" text-anchor="middle" paint-order="stroke" '
+                   'stroke="#fff" stroke-width="3.5" stroke-linejoin="round" '
+                   'font-family="\'IBM Plex Mono\',monospace" font-size="10.5" font-weight="700" '
+                   'fill="#0F3261"></text>')
+        hov.append('            </g>')
+        m = re.search(r'<g id="hoverG" style="display:none;">.*?</g>', section, flags=re.DOTALL)
+        if not m:
+            raise RuntimeError("courbe_cases : groupe hoverG introuvable.")
+        section = section.replace(m.group(0), "\n".join(hov), 1)
+
+    if d.get("calc_p2"):
+        # Compaction de la page 2 (courbe + calculateur multi sur UNE A4) : le calculateur
+        # multi porte deux sélecteurs de plus que le standard (~26 mm) — on les absorbe en
+        # densifiant le calculateur, ce qui laisse la courbe presque pleine largeur (77 %).
+        # Ancres vérifiées : une ancre introuvable = erreur franche, jamais un no-op muet.
+        for avant, apres in [
+            ('style="width:80%; height:auto; display:block; margin:0 auto;"',
+             'style="width:85%; height:auto; display:block; margin:0 auto;"'),
+            ('<div style="margin-top:3mm; border:1px solid #E1E7EF;',
+             '<div style="margin-top:2mm; border:1px solid #E1E7EF;'),
+            ('gap:10px; margin-top:7mm;">', 'gap:10px; margin-top:4mm;">'),
+            ('gap:7mm; margin-top:5mm; align-items:stretch;">',
+             'gap:7mm; margin-top:3mm; align-items:stretch;">'),
+            ('<div style="margin-top:6mm; background:#F2F6FB; border-left:3px solid #0897A5;',
+             '<div style="margin-top:3mm; background:#F2F6FB; border-left:3px solid #0897A5;'),
+            ('flex-direction:column; gap:11px; padding-top:1px; min-width:0;',
+             'flex-direction:column; gap:6px; padding-top:1px; min-width:0;'),
+            ('<div style="display:flex; flex-direction:column; gap:11px;">',
+             '<div style="display:flex; flex-direction:column; gap:6px;">'),
+            ("color:#9aa6b4; margin-bottom:7px;\">Classe d'efficacité",
+             "color:#9aa6b4; margin-bottom:4px;\">Classe d'efficacité"),
+            ('color:#9aa6b4; margin-bottom:7px;">Épaisseur',
+             'color:#9aa6b4; margin-bottom:4px;">Épaisseur'),
+            ('color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale',
+             'color:#9aa6b4; margin-top:4px; line-height:1.4;">ΔP finale'),
+        ]:
+            if avant not in section:
+                raise RuntimeError(f"calc_p2 : ancre introuvable « {avant[:50]}… »")
+            section = section.replace(avant, apres, 1)
+        # remplacements multiples (tuiles ΔP ×3, champs L/H ×2, boutons de classe ×5)
+        for avant, apres, n in [
+            ('padding:8px 6px; text-align:center;', 'padding:6px 6px; text-align:center;', 3),
+            ('border-radius:6px; padding:7px 9px; outline:none;',
+             'border-radius:6px; padding:5px 9px; outline:none;', 2),
+            ('flex:1; padding:7px 2px; border:none;', 'flex:1; padding:6px 2px; border:none;', 5),
+            ('align-items:baseline; margin-bottom:2px;', 'align-items:baseline; margin-bottom:0;', 5),
+        ]:
+            if section.count(avant) != n:
+                raise RuntimeError(
+                    f"calc_p2 : {section.count(avant)} occurrence(s) de « {avant[:40]}… », {n} attendues")
+            section = section.replace(avant, apres)
+    return section
 
 
 def build_multi_js(d):
@@ -1161,7 +1803,7 @@ def build_multi_js(d):
     iso = ", ".join(f"{c['id']}: '{c['iso']}'" for c in classes)
     ids = ", ".join(f"'{c['id']}'" for c in classes)
 
-    return f'''<script>
+    js = f'''<script>
 (function () {{
   "use strict";
   var POLY = {{
@@ -1318,6 +1960,86 @@ def build_multi_js(d):
 }})();
 </script>'''
 
+    if d.get("courbe_cases"):
+        # Mode cases à cocher : mêmes calculs, mais l'état « courbe » devient un ensemble de
+        # classes cochées. Marqueurs nominaux et survol ne s'affichent que pour UNE classe
+        # cochée (sinon illisible). Chaque remplacement est vérifié — erreur franche sinon.
+        show_init = ", ".join(
+            f"{c['id']}: {'true' if c['id'] == eff0 else 'false'}" for c in classes)
+        remplacements = [
+            (f"var state = {{ eff: '{eff0}', calcEff:",
+             f"var state = {{ show: {{ {show_init} }}, calcEff:"),
+            ("    var eff = state.eff;          // courbe\n", ""),
+            ("    var co48 = POLY[eff][48], co98 = POLY[eff][98];\n", ""),
+            ("    $('p48').setAttribute('d', curve(co48));\n"
+             "    $('p98').setAttribute('d', curve(co98));",
+             "    IDS.forEach(function (id) {\n"
+             "      $('p48_' + id).style.display = state.show[id] ? '' : 'none';\n"
+             "      $('p98_' + id).style.display = state.show[id] ? '' : 'none';\n"
+             "    });"),
+            ("    pt('c48', 't48', pdc(co48, Vnom), -9, -8);\n"
+             "    pt('c98', 't98', pdc(co98, Vnom), 9, 14);",
+             "    IDS.forEach(function (id) {\n"
+             "      var on = state.show[id];\n"
+             "      ['48', '98'].forEach(function (ep) {\n"
+             "        var cEl = $('c' + ep + '_' + id), tEl = $('t' + ep + '_' + id);\n"
+             "        if (!on) { cEl.setAttribute('r', 0); tEl.textContent = ''; return; }\n"
+             "        var yPa = pdc(POLY[id][ep], Vnom), y = mapY(yPa);\n"
+             "        cEl.setAttribute('cx', mx.toFixed(1)); cEl.setAttribute('cy', y.toFixed(1)); cEl.setAttribute('r', 3.2);\n"
+             "        tEl.setAttribute('x', (mx + (ep === '48' ? -9 : 9)).toFixed(1));\n"
+             "        tEl.setAttribute('y', (y + (ep === '48' ? -8 : 14)).toFixed(1));\n"
+             "        tEl.textContent = fr(yPa) + ' Pa';\n"
+             "      });\n"
+             "    });"),
+            ("      var b = $('cls_' + id);\n"
+             "      if (b) b.setAttribute('style', SEL + (id === eff ? ON : OFF));\n", ""),
+            ("    $('clsIso').textContent = LAB[eff] + ' · ' + ISO[eff];\n"
+             "    $('leg48t').textContent = LAB[eff] + ' · ' + ISO[eff] + ' — 48 mm';\n"
+             "    $('leg98t').textContent = LAB[eff] + ' · ' + ISO[eff] + ' — 98 mm';\n", ""),
+            ("    if (b) b.addEventListener('click', function () { state.eff = id; render(); });",
+             "    var k = $('ck_' + id);\n"
+             "    if (k) k.addEventListener('change', function () { state.show[id] = k.checked; render(); });"),
+            ("    var eff = state.eff;\n"
+             "    fixedMarks.style.display = 'none';\n"
+             "    hoverG.style.display = '';\n"
+             "    $('hvV').setAttribute('x1', x.toFixed(1)); $('hvV').setAttribute('x2', x.toFixed(1));\n"
+             "    function lane(n, yPa, dy) {\n"
+             "      var hd = $('hd' + n), hh = $('hh' + n), ht = $('ht' + n), y = mapY(yPa);\n"
+             "      hd.setAttribute('cx', x.toFixed(1)); hd.setAttribute('cy', y.toFixed(1)); hd.setAttribute('r', 3);\n"
+             "      hh.style.display = ''; hh.setAttribute('x2', x.toFixed(1)); hh.setAttribute('y1', y.toFixed(1)); hh.setAttribute('y2', y.toFixed(1));\n"
+             "      ht.setAttribute('x', (x + 7).toFixed(1)); ht.setAttribute('y', (y + dy).toFixed(1)); ht.textContent = fr(yPa) + ' Pa';\n"
+             "    }\n"
+             "    lane(1, pdcD(POLY[eff][48], v), -5);\n"
+             "    lane(2, pdcD(POLY[eff][98], v), 13);",
+             "    fixedMarks.style.display = 'none';\n"
+             "    hoverG.style.display = '';\n"
+             "    $('hvV').setAttribute('x1', x.toFixed(1)); $('hvV').setAttribute('x2', x.toFixed(1));\n"
+             "    function lane(key, on, yPa, dy) {\n"
+             "      var hd = $('hd' + key), hh = $('hh' + key), ht = $('ht' + key);\n"
+             "      if (!on) { hd.setAttribute('r', 0); hh.style.display = 'none'; ht.textContent = ''; return; }\n"
+             "      var y = mapY(yPa);\n"
+             "      hd.setAttribute('cx', x.toFixed(1)); hd.setAttribute('cy', y.toFixed(1)); hd.setAttribute('r', 3);\n"
+             "      hh.style.display = ''; hh.setAttribute('x2', x.toFixed(1)); hh.setAttribute('y1', y.toFixed(1)); hh.setAttribute('y2', y.toFixed(1));\n"
+             "      ht.setAttribute('x', (x + 7).toFixed(1)); ht.setAttribute('y', (y + dy).toFixed(1)); ht.textContent = fr(yPa) + ' Pa';\n"
+             "    }\n"
+             "    IDS.forEach(function (id) {\n"
+             "      var on = state.show[id];\n"
+             "      lane('48_' + id, on, pdcD(POLY[id][48], v), -5);\n"
+             "      lane('98_' + id, on, pdcD(POLY[id][98], v), 13);\n"
+             "    });"),
+            ("  render();\n})();",
+             "  IDS.forEach(function (id) {\n"
+             "    $('p48_' + id).setAttribute('d', curve(POLY[id][48]));\n"
+             "    $('p98_' + id).setAttribute('d', curve(POLY[id][98]));\n"
+             "  });\n"
+             "  render();\n})();"),
+        ]
+        for avant, apres in remplacements:
+            if avant not in js:
+                raise RuntimeError(f"courbe_cases (JS) : ancre introuvable « {avant[:60]}… »")
+            js = js.replace(avant, apres, 1)
+    return js
+
 
 def _jsf(x):
     """Nombre pour le JS : 3.17 -> '3.17', 2 -> '2'."""
@@ -1338,6 +2060,7 @@ def generer_multi(d, html):
     html = html.replace('letter-spacing:-.6px; text-align:center;">NETPLY</div>',
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
     html = html.replace('letter-spacing:-.3px;">NETPLY</div>', f'letter-spacing:-.3px;">{nom}</div>')
+    html = appliquer_titre_fs(d, html, nom)
 
     # #2 sous-titre
     html = html.replace(">Filtre plissé — Préfiltre synthétique</div>", f">{d['soustitre']}</div>")
@@ -1355,7 +2078,7 @@ def generer_multi(d, html):
     # #4 photo + slug
     html = html.replace('src="assets/netply-photo.jpg" alt="Filtre NETPLY"',
                         f'src="assets/{d["photo"]}" alt="{d["photo_alt"]}"')
-    for tok in ("netply-photo", "netply-img", "netply-ph", "netply-file"):
+    for tok in ("netply-photo", "netply-img"):
         html = re.sub(r"\b" + tok + r"\b", f"{slug}-" + tok.split("-", 1)[1], html)
 
     # #5 description
@@ -1370,17 +2093,26 @@ def generer_multi(d, html):
     html = sub1(html, r"(<!-- Caractéristiques techniques -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
                 lambda m: m.group(1) + build_specs(d["specs"]) + m.group(3), flags=re.DOTALL)
 
-    # #8 dimensions : retirées de la page 1 (relocalisées en page 2 par build_multi_section)
+    # #8 dimensions : retirées de la page 1 (relocalisées en page 2 par build_multi_section) ;
+    # dims_p1 (opt-in, déc. PA 23/07/2026 — passe CILIA) : le tableau reste en page 1, sous les specs.
+    remplacement_dims = ("\n" + build_dimensions_block_multi(d)) if d.get("dims_p1") else ""
     html = sub1(
         html,
         r"\n        <!-- Dimensions -->\n        <div style=\"margin-top:8mm;\">.*?\n        </div>",
-        lambda m: "", flags=re.DOTALL)
+        lambda m: remplacement_dims, flags=re.DOTALL)
 
-    # #9 pied de page (fiche 3 pages : P1 = 1/3, le footer du gabarit P2 devient 3/3)
+    # #9 pied de page (fiche 3 pages : P1 = 1/3, le footer du gabarit P2 devient 3/3 ;
+    # avec calc_p2 la fiche reste en 2 pages → numérotation 1/2 et 2/2 du gabarit conservée)
     html = html.replace("Fiche n° FT-NETPLY-001", f"Fiche n° {d['fiche']['num']}")
     vd = f"{d['fiche']['version']} — {d['fiche']['date']}"
-    html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/3")
-    html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 3/3")
+    if d.get("calc_p2"):
+        html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/2")
+        html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 2/2")
+        # filet d'en-tête de la page 2 resserré (même réglage que compact_p2)
+        html = html.replace("margin:7mm 0 7mm 0;", "margin:4mm 0 4mm 0;")
+    else:
+        html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/3")
+        html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 3/3")
 
     # remplacer toute la section courbe + calculateur (page 2)
     html = sub1(html,
@@ -1398,11 +2130,26 @@ def generer_multi(d, html):
         html = html.replace('<div style="margin-top:9mm;">', '<div style="margin-top:6mm;">')
         html = html.replace('<div style="margin-top:8mm;">', '<div style="margin-top:6mm;">')
 
+    html = apply_compact_p2(d, html)
     return html
 
 
 # ----------------------------------------------------------------- moteur ----
+def bouton_retour(d, html):
+    """Cible du bouton « Retour au produit » du gabarit (flottant, hors A4, masqué à
+    l'impression par .no-print). Appliqué AVANT le routage vers les 3 moteurs, donc aux
+    18 fiches par le même code : le balisage des fiches est ailleurs dupliqué entre le
+    gabarit et generer.py, et une correction n'avait touché que 17 fiches sur 18.
+    Le gabarit porte le slug de l'ancre (netply) → test d'identité préservé."""
+    avant = 'href="/produits/netply"'
+    if avant not in html:
+        raise RuntimeError(
+            "bouton_retour : ancre 'href=\"/produits/netply\"' introuvable dans le gabarit.")
+    return html.replace(avant, f'href="/produits/{d["slug"]}"')
+
+
 def generer(d, html):
+    html = bouton_retour(d, html)
     if d.get("series"):
         return generer_series(d, html)
     if d.get("multi_classe"):
@@ -1420,6 +2167,7 @@ def generer(d, html):
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
     html = html.replace('letter-spacing:-.3px;">NETPLY</div>',
                         f'letter-spacing:-.3px;">{nom}</div>')
+    html = appliquer_titre_fs(d, html, nom)
 
     # --- #2 sous-titre
     html = html.replace(">Filtre plissé — Préfiltre synthétique</div>",
@@ -1440,7 +2188,7 @@ def generer(d, html):
     # --- #4 photo (src + alt) puis identifiants d'éléments (slug)
     html = html.replace('src="assets/netply-photo.jpg" alt="Filtre NETPLY"',
                         f'src="assets/{d["photo"]}" alt="{d["photo_alt"]}"')
-    for tok in ("netply-photo", "netply-img", "netply-ph", "netply-file"):
+    for tok in ("netply-photo", "netply-img"):
         html = re.sub(r"\b" + tok + r"\b", f"{slug}-" + tok.split("-", 1)[1], html)
 
     # --- #5 description
@@ -1482,17 +2230,23 @@ def generer(d, html):
     html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 2/2")
 
     # --- #10a libellés courbe/calculateur (cases, légende, boutons)
-    lab_low = f'{low["label"]} · {low["iso"]}'
-    lab_high = f'{high["label"]} · {high["iso"]}'
+    # legende_courte (portage du moteur série sur le mono-classe, NETCEL V LAM 02/08/2026) :
+    # « H14 · 68 mm » au lieu de « H14 · ≥ 99,995 % MPPS — 68 mm ». L'efficacité reste lisible
+    # dans les badges et le tableau technique (déc. PA sur NETCEL V AZUR). Défaut = legacy.
+    courte = d.get("legende_courte", False)
+    lab_low = low["label"] if courte else f'{low["label"]} · {low["iso"]}'
+    lab_high = high["label"] if courte else f'{high["label"]} · {high["iso"]}'
+    sep_ep = " · " if courte else " — "
     html = sub1(html, r'(id="cbG4"[^>]*>\s*).*?(\s*</label>)',
                 lambda m: m.group(1) + lab_low + m.group(2), flags=re.DOTALL)
     html = sub1(html, r'(id="cbM5"[^>]*>\s*).*?(\s*</label>)',
                 lambda m: m.group(1) + lab_high + m.group(2), flags=re.DOTALL)
     mono = d.get("mono_classe", False)
     ep = low.get("epaisseur")
-    leg_low_a = f"{lab_low} — {_frnum(ep)} mm" if mono else f"{lab_low} — 48 mm"
-    for eid, txt in (("legG4a", leg_low_a), ("legG4b", f"{lab_low} — 98 mm"),
-                     ("legM5a", f"{lab_high} — 48 mm"), ("legM5b", f"{lab_high} — 98 mm")):
+    leg_low_a = (f"{lab_low}{sep_ep}{_frnum(ep)} mm" if mono
+                 else f"{lab_low}{sep_ep}48 mm")
+    for eid, txt in (("legG4a", leg_low_a), ("legG4b", f"{lab_low}{sep_ep}98 mm"),
+                     ("legM5a", f"{lab_high}{sep_ep}48 mm"), ("legM5b", f"{lab_high}{sep_ep}98 mm")):
         html = sub1(html, r'(id="' + eid + r'"[^>]*>.*?</span>)(.*?)(</div>)',
                     lambda m, t=txt: m.group(1) + t + m.group(3), flags=re.DOTALL)
     html = sub1(html, r'(id="btnEffG4"[^>]*>)([^<]*)(</button>)',
@@ -1626,6 +2380,39 @@ def generer(d, html):
     if d.get("ref_simple"):
         html = html.replace(">Efficacité ISO 16890<", ">Filtration<")
 
+    # --- en-têtes du tableau dimensions (mono-classe) : retirés/renommés en même temps que
+    #     leurs colonnes dans build_dimensions. Portage des clés du moteur série (NETCEL V LAM,
+    #     02/08/2026). Ancres vérifiées : une ancre absente lève, jamais de retrait silencieux.
+    _th = '                <th style="padding:6px 7px; text-align:left; font-weight:600;">%s</th>\n'
+    for _cle, _lib in (("dims_sans_surface", "S. filtrante (m²)"),
+                       ("dims_sans_ref", "Référence complète")):
+        if d.get(_cle):
+            _anc = _th % _lib
+            if _anc not in html:
+                raise RuntimeError(f"{_cle} : en-tête « {_lib} » introuvable dans le tableau dimensions.")
+            html = html.replace(_anc, "", 1)
+    if d.get("dims_entete_eff"):
+        _anc = _th % "Efficacité ISO 16890"
+        if _anc not in html:
+            raise RuntimeError("dims_entete_eff : en-tête « Efficacité ISO 16890 » introuvable.")
+        html = html.replace(_anc, _th % d["dims_entete_eff"], 1)
+
+    # Sans le réglage, l'en-tête du gabarit reste intact : c'est ce qui laisse l'ancre du
+    # test d'identité (_gabarit_ref.json) inchangée.
+    if d.get("dims_fusionnees"):
+        th = '<th style="padding:6px 7px; text-align:left; font-weight:600;">'
+        ancien = (f'                {th}ΔP (Pa)</th>\n'
+                  f'                {th}Efficacité ISO 16890</th>\n'
+                  f'                {th}Référence complète</th>\n')
+        nouveau = "".join(f'                {th}ΔP {cls["iso"]} ({cls["label"]})</th>\n'
+                          for cls in classes_fusion(d))
+        if ancien not in html:
+            raise RuntimeError(
+                "dims_fusionnees : en-tête du tableau dimensions introuvable. Cause probable : "
+                "un réglage antérieur a déjà réécrit ces <th> (vérifier l'ordre des blocs dans "
+                "generer()), ou le gabarit a changé.")
+        html = html.replace(ancien, nouveau)
+
     # --- page 1 compacte (par produit) : réduit les marges verticales pour
     #     faire tenir un contenu plus dense sur l'A4, sans toucher les autres fiches.
     if d.get("compact_p1"):
@@ -1636,20 +2423,43 @@ def generer(d, html):
     # --- page 2 compacte (par produit) : courbe + calculateur sur une seule page A4.
     #     Réduit les marges de la page 2 et la taille du graphe, sans toucher le gabarit
     #     par défaut (NETPLY) ni le test d'identité.
-    if d.get("compact_p2"):
-        html = html.replace("margin:7mm 0 7mm 0;", "margin:4mm 0 4mm 0;")                       # filet en-tête P2
-        html = html.replace('<div style="margin-top:6mm; border:1px solid #E1E7EF;',
-                            '<div style="margin-top:3mm; border:1px solid #E1E7EF;')             # cadre courbe
-        html = html.replace('display:flex; align-items:center; gap:18px; margin-top:7px;">',
-                            'display:flex; align-items:center; gap:18px; margin-top:4px;">')     # ligne « Afficher : »
-        html = html.replace('gap:10px; margin-top:9mm;">',
-                            'gap:10px; margin-top:5mm;">')                                       # titre Calculateur
-        html = html.replace('gap:7mm; margin-top:6mm; align-items:stretch;">',
-                            'gap:7mm; margin-top:4mm; align-items:stretch;">')                   # grille calculateur
-        html = html.replace('margin-top:7mm; background:#F2F6FB;',
-                            'margin-top:4mm; background:#F2F6FB;')                               # note méthode
-        html = html.replace('<svg id="curveSvg" viewBox="0 0 600 300" style="width:100%; height:auto; display:block;">',
-                            '<svg id="curveSvg" viewBox="0 0 600 300" style="width:84%; height:auto; display:block; margin:0 auto;">')
+    #     (la taille de la courbe n'est plus réglée ici : 80 % est le STANDARD du gabarit
+    #      depuis le 17/07/2026. compact_p2 ne s'occupe plus que des marges de la page 2.)
+    html = apply_compact_p2(d, html)
+
+    # (courbe_large a existé le 17/07/2026 pour rendre à la courbe la place du calculateur sur
+    #  NETMETAL. SUPPRIMÉ le jour même : ses réglages sont devenus le STANDARD du gabarit — courbe
+    #  80 % + calculateur 11 px + suppression des interlignes fantômes — donc appliqués aux 18 fiches
+    #  sans drapeau. Si un .json porte encore "courbe_large", generer.py le refuse : cf. main().)
+
+    # --- compact_fort : tenir une fiche MULTI-CLASSES en 2 pages A4. Ses sélecteurs de classe
+    #     et d'épaisseur, que les fiches mono-classe n'affichent pas, coûtent ~26 mm en page 2.
+    #     Doit passer APRÈS compact_p1/compact_p2 : il resserre les valeurs qu'ils ont posées.
+    #     ⚠️ VIDÉ de ses réglages de PAGE 2 le 17/07/2026 : la courbe (80 %), le calculateur (11 px),
+    #     les curseurs en display:block, les étiquettes, la note et la légende sont désormais le
+    #     STANDARD du gabarit, commun aux 18 fiches (décision PA). compact_fort ne garde que ce qui
+    #     lui est PROPRE : la page 1 (colonne photo, marges) et les légendes multi-classes.
+    if d.get("compact_fort"):
+        if not (d.get("compact_p1") and d.get("compact_p2")):
+            raise RuntimeError(
+                "compact_fort exige compact_p1 ET compact_p2 : il resserre les valeurs qu'ils posent.")
+        low, high = d["classes"]["low"], d["classes"]["high"]
+        remplacements = [
+            ("grid-template-columns:70mm 1fr", "grid-template-columns:52mm 1fr"),
+            ('<div style="margin-top:6mm;">', '<div style="margin-top:4mm;">'),
+            ("margin:6mm 0 5mm 0;", "margin:4mm 0 4mm 0;"),
+            ("Média propre — air à 20 °C", "Média propre · air à 20 °C"),
+        ]
+        for cls in (low, high):
+            lab = f'{cls["label"]} · {cls["iso"]}'
+            for ep in ("48", "98"):
+                remplacements.append((f'{lab} — {ep} mm', f'{cls["label"]} · {ep} mm'))
+        for avant, apres in remplacements:
+            if avant not in html:
+                raise RuntimeError(
+                    f"compact_fort : ancre introuvable « {avant[:46]}… ». Le gabarit a changé, "
+                    "ou compact_fort s'exécute avant compact_p1/compact_p2.")
+            html = html.replace(avant, apres)
 
     return html
 
@@ -1667,6 +2477,13 @@ def main():
 
     with open(json_path, encoding="utf-8") as f:
         d = json.load(f)
+
+    # Clés retirées du moteur : mieux vaut refuser que les ignorer en silence.
+    if d.get("courbe_large"):
+        sys.exit(
+            "❌ « courbe_large » n'existe plus (supprimé le 17/07/2026) : la courbe à 80 % et le "
+            "calculateur à 11 px sont le STANDARD du gabarit, appliqué aux 18 fiches. "
+            f"Retirer cette clé de {json_path}.")
     smooth_curves_origin(d)   # courbes lisses partant de 0 (sauf ancre du test d'identité)
     with open(BASE, encoding="utf-8") as f:
         html = f.read()

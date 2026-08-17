@@ -1,47 +1,90 @@
 {
-  "_commentaire": "NETPAK S CILIA — filtre COMPACT à mini-plis prismatiques (équiv. Titanair TITAPAK S PRISME A). Nom validé par PA (22/06/2026) via skill netair-naming : CILIA = cils vibratiles (filtration biologique de l'air), univers 'qualité d'air intérieur', pas de chevauchement avec PRISME (Titanair nomme par la forme). FICHE MULTI-CLASSES (extension moteur 'multi_classe' : sélecteur 5 classes, 2 courbes à la fois 48/98 ; calculateur à sélecteur d'efficacité + épaisseur INDÉPENDANT de la courbe). SOURCES = PRISME A HPE 2018 (fiches techniques 2018, prioritaires) : M5/M6/F7/F8/F9 en ep48 ET ep98, caches Excel xl/charts/chart1.xml. Toutes courbes distinctes et physiquement cohérentes (ep98<ep48, ΔP croissante avec la classe). PIÈGES : (1) en PRISME P, F8=F9 (copier-collé) — écarté, on prend PRISME A où F8≠F9. (2) En PRISME A ep48, F9 = F8 + 10 Pa EXACTEMENT sur tous les points (offset suspect) — conservé (fiche 2018) mais À VALIDER. (3) F8 ep98 : 6 points mesurés (jusqu'à 2,78 m/s), le 7e (3,17 m/s ≈ 137 Pa) est extrapolé du polynôme. Specs réelles fiche PRISME A F7 (FT 2018-013) : parois cellule ACIER, média pack POLYPROPYLENE, lut/bond OUI, séparateur INT, M1, T° continue 60°C / acc. 65°C 1h, humidité 100%, surface média 11,68 m² (ep48) / 23,87 m² (ep98) pour une cellule 592×592. VARIANTES CADRE (PA) : acier galvanisé OU plastique (même courbe ΔP, seul le matériau change) → suffixe référence -A (acier) / -P (plastique) après les dimensions. SURFACE en m²/m² (PA) : la courbe étant exprimée en VITESSE (valable toutes dimensions), la surface développée est donnée par m² de section frontale (dimension-indépendante) : ep48 ≈ 33 m²/m² (11,68/0,3505), ep98 ≈ 68 m²/m² (23,87/0,3505). ΔP finale = règle PROCESS (+100 Pa toutes classes ePM, jamais les 450/300 Pa absolus Titanair). Polynômes ΔP=a·v²+b·v+c ajustés moindres carrés sur 6-7 points réels, R²≈0,9999-1,0000. PHOTO = TITAPAK PRISME A HD (© Photo A. Périer) détourée sur blanc pur (enveloppe convexe des zones à fort gradient ; cadre acier + plissage préservés) ; à reshooter sous marque Netair à terme.",
-
+  "_commentaire": "NETPAK S CILIA — filtre compact miniplis (équiv. Titanair TITAPAK S PRISME A). v1.1 (23/07/2026) : contenu retravaillé et validé PA — voir _arbitrages_pad. FICHE 2 PAGES (calc_p2) : p.1 = description/points clés/specs/dimensions (dims_p1), p.2 = courbe à CASES À COCHER (courbe_cases, palette série, F7 seule cochée) + calculateur compacté (courbe 85%). Tableau « ΔP par classe » supprimé (sans_dp_table) ; tableau dimensions refondu (dims_pdc : 592×592×48 @3000 et 287×592×48 @1500, ΔP init M5/F7/F9). Moteur multi_classe, sélecteurs du calculateur indépendants de la courbe. SOURCES = PRISME A HPE 2018 (M5/M6/F8/F9, caches Excel) + GR PRISME A pour F7 (ePM1 50%, média spécial — PAS 55%). ⚠️ SURFACES CORRIGÉES v1.1 : les valeurs des fiches 2018 (11,68/23,87 HPE ; 12,55/25,65 F7) sont des m²/m² DE SECTION (preuve pitch 7,5 mm : 2×48/7,5 ≈ 12,8), PAS des m² par cellule — l'ancien affichage ≈33/68 m²/m² était une DOUBLE DIVISION erronée. Affiché : 12,55 · 25,65 m²/m² (média F7, déc. PA). PIÈGES COURBES (réserves R&D) : F9 ep48 = F8+10 Pa exact (suspect) ; F8 ep98 7e pt extrapolé ; croisement F7 48/98 à haute vitesse ; F7 < M5/M6 (média basse résistance). Specs : papier PP, cadre acier galvanisé (-A)/plastique (-P)/cellulose pelliculée (-C), M1, 60°C acc.65/1h, HR 100% s.c., EN13053 +100. Configurateur (code 7, calcul) : étiquette F7 = ePM1 50% via etiquettesIso, 3 cadres au même prix (neutre jusqu'à l'Excel), suffixe -C acté. Polynômes R²≈1. PHOTO = TITAPAK PRISME A détourée = placeholder.",
   "slug": "netpak-s-cilia",
   "nom": "NETPAK S CILIA",
-  "soustitre": "Filtre compact à mini-plis — gamme M5 → F9",
+  "soustitre": "Filtre compact miniplis",
   "multi_classe": true,
+  "titre_fs": 33,
   "compact_p1": true,
-
   "vmax": 3.17,
   "pmax": 200,
   "debit_nom": 3400,
   "eff_default": "f7",
-  "velocities": [0.79, 1.19, 1.59, 1.98, 2.38, 2.78, 3.17],
-
-  "fiche": { "num": "FT-NETPAK-CILIA-001", "version": "v1.0", "date": "22/06/2026" },
-
+  "velocities": [
+    0.79,
+    1.19,
+    1.59,
+    1.98,
+    2.38,
+    2.78,
+    3.17
+  ],
+  "fiche": {
+    "num": "FT-NETPAK-CILIA-001",
+    "version": "v1.1",
+    "date": "23/07/2026"
+  },
   "photo": "netpak-s-cilia-photo.jpg",
-  "photo_alt": "Filtre compact à mini-plis NETPAK S CILIA (épaisseurs 48 et 98 mm)",
-
-  "description": "Le NETPAK S CILIA est un filtre compact à mini-plis prismatiques offrant une très grande surface filtrante développée sous un faible encombrement. Cette densité de média (≈ 33 m²/m² de section en 48 mm, ≈ 68 m²/m² en 98 mm) garantit une faible perte de charge et une longue durée de vie, pour une filtration fine et économe des centrales de traitement d'air. Disponible de M5 à F9 (EN 779 / EN ISO 16890), en épaisseurs 48 et 98 mm, avec cadre acier galvanisé ou plastique selon l'application.",
-
+  "photo_alt": "Filtre compact à miniplis NETPAK S CILIA (épaisseurs 48 et 98 mm)",
+  "description": "Le filtre compact miniplis CILIA est destiné à la filtration fine de l'air dans les centrales de traitement d'air. Son média en papier polypropylène est associé à une technologie miniplis dont l'espace interplis optimisé permet une utilisation sans préfiltre. Cette conception favorise une faible perte de charge et contribue à réduire la consommation énergétique des installations.",
   "points_cles": [
-    "Très grande surface développée",
-    "Gamme complète M5 → F9",
     "Faible perte de charge",
-    "Cadre acier galvanisé ou plastique",
-    "Épaisseurs 48 et 98 mm"
+    "Économies d'énergie",
+    "Utilisable sans préfiltre",
+    "Média en papier polypropylène",
+    "Sans fibre de verre",
+    "Dimensions sur mesure"
   ],
-
   "specs": [
-    ["Type", "Filtre compact à mini-plis prismatiques"],
-    ["Média filtrant", "Polypropylène (mini-plis)"],
-    ["Cadre", "Acier galvanisé (-A) ou plastique (-P)"],
-    ["Séparateur", "Intercalaire (INT)"],
-    ["Classement au feu", "M1"],
-    ["Surface média développée", "≈ 33 m²/m² (48 mm) · ≈ 68 m²/m² (98 mm) de section frontale"],
-    ["Efficacité EN 779", "M5 · M6 · F7 · F8 · F9"],
-    ["Efficacité ISO 16890", "ePM10 50% → ePM1 80%"],
-    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
-    ["Humidité relative max.", "100 %"],
-    ["ΔP finale recommandée", "min(ΔP initiale + 100 Pa ; 3 × ΔP initiale) — EN 13053"]
+    [
+      "Média filtrant",
+      "Papier polypropylène"
+    ],
+    [
+      "Type",
+      "Compact miniplis"
+    ],
+    [
+      "Cadre",
+      "Acier galvanisé (-A), plastique (-P) ou cellulose pelliculée (-C)"
+    ],
+    [
+      "Efficacités ISO 16890",
+      "ePM10 50 %  ·  ePM2,5 50 %  ·  ePM1 50 %  ·  70 %  ·  80 %"
+    ],
+    [
+      "Efficacités EN 779",
+      "M5  ·  M6  ·  F7  ·  F8  ·  F9"
+    ],
+    [
+      "Épaisseurs",
+      "48 · 98 mm"
+    ],
+    [
+      "Dimensions cadre",
+      "Standard et sur mesure"
+    ],
+    [
+      "Surface média développée",
+      "12,55 m²/m² (48 mm) · 25,65 m²/m² (98 mm)"
+    ],
+    [
+      "Classement au feu",
+      "M1"
+    ],
+    [
+      "Température de service",
+      "60 °C (accidentelle 65 °C / 1 h)"
+    ],
+    [
+      "Humidité relative max.",
+      "100 % (sans condensation)"
+    ],
+    [
+      "ΔP finale recommandée",
+      "min(ΔP initiale + 100 Pa ; 3 × ΔP initiale) — EN 13053"
+    ]
   ],
-
   "badges_p1": [
     "ISO 16890 : ePM10 50% → ePM1 80%",
     "EN 779 : M5 → F9",
@@ -52,35 +95,251 @@
     "EN 779 : M5 → F9",
     "EN 13053"
   ],
-
   "classes_list": [
-    { "id": "m5", "label": "M5", "iso": "ePM10 50%", "add": 100, "rule": "classe ePM10",
-      "poly": { "48": { "a": 6.206, "b": 11.495, "c": 1.183 }, "98": { "a": 6.431, "b": 9.793, "c": -0.754 } },
-      "points": { "48": [14, 24, 35, 48, 64, 81, 100], "98": [11, 20, 31, 44, 59, 76, 95] } },
-    { "id": "m6", "label": "M6", "iso": "ePM2,5 50%", "add": 100, "rule": "classe ePM2,5",
-      "poly": { "48": { "a": 4.414, "b": 24.876, "c": -3.46 }, "98": { "a": 5.8, "b": 12.3, "c": 1.642 } },
-      "points": { "48": [19, 32, 47, 63, 81, 100, 120], "98": [15, 24, 36, 49, 64, 81, 99] } },
-    { "id": "f7", "label": "F7", "iso": "ePM1 50%", "add": 100, "rule": "classe ePM1",
-      "poly": { "48": { "a": 2.858, "b": 15.584, "c": -2.224 }, "98": { "a": 5.883, "b": 7.916, "c": 0.756 } },
-      "points": { "48": [12, 20, 30, 40, 51, 63, 76], "98": [10, 19, 29, 40, 52, 67, 86] } },
-    { "id": "f8", "label": "F8", "iso": "ePM1 70%", "add": 100, "rule": "classe ePM1",
-      "poly": { "48": { "a": 6.567, "b": 36.887, "c": -10.099 }, "98": { "a": 7.595, "b": 18.438, "c": 2.391 } },
-      "points": { "48": [23, 43, 66, 88, 115, 143, 173], "98": [22, 35, 51, 68, 89, 113, 137] } },
-    { "id": "f9", "label": "F9", "iso": "ePM1 80%", "add": 100, "rule": "classe ePM1",
-      "poly": { "48": { "a": 6.567, "b": 36.887, "c": -0.099 }, "98": { "a": 8.289, "b": 20.972, "c": 2.319 } },
-      "points": { "48": [33, 53, 76, 98, 125, 153, 183], "98": [24, 39, 57, 76, 99, 125, 152] } }
+    {
+      "id": "m5",
+      "label": "M5",
+      "iso": "ePM10 50%",
+      "add": 100,
+      "rule": "classe ePM10",
+      "poly": {
+        "48": {
+          "a": 6.206,
+          "b": 11.495,
+          "c": 1.183
+        },
+        "98": {
+          "a": 6.431,
+          "b": 9.793,
+          "c": -0.754
+        }
+      },
+      "points": {
+        "48": [
+          14,
+          24,
+          35,
+          48,
+          64,
+          81,
+          100
+        ],
+        "98": [
+          11,
+          20,
+          31,
+          44,
+          59,
+          76,
+          95
+        ]
+      }
+    },
+    {
+      "id": "m6",
+      "label": "M6",
+      "iso": "ePM2,5 50%",
+      "add": 100,
+      "rule": "classe ePM2,5",
+      "poly": {
+        "48": {
+          "a": 4.414,
+          "b": 24.876,
+          "c": -3.46
+        },
+        "98": {
+          "a": 5.8,
+          "b": 12.3,
+          "c": 1.642
+        }
+      },
+      "points": {
+        "48": [
+          19,
+          32,
+          47,
+          63,
+          81,
+          100,
+          120
+        ],
+        "98": [
+          15,
+          24,
+          36,
+          49,
+          64,
+          81,
+          99
+        ]
+      }
+    },
+    {
+      "id": "f7",
+      "label": "F7",
+      "iso": "ePM1 50%",
+      "add": 100,
+      "rule": "classe ePM1",
+      "poly": {
+        "48": {
+          "a": 2.858,
+          "b": 15.584,
+          "c": -2.224
+        },
+        "98": {
+          "a": 5.883,
+          "b": 7.916,
+          "c": 0.756
+        }
+      },
+      "points": {
+        "48": [
+          12,
+          20,
+          30,
+          40,
+          51,
+          63,
+          76
+        ],
+        "98": [
+          10,
+          19,
+          29,
+          40,
+          52,
+          67,
+          86
+        ]
+      }
+    },
+    {
+      "id": "f8",
+      "label": "F8",
+      "iso": "ePM1 70%",
+      "add": 100,
+      "rule": "classe ePM1",
+      "poly": {
+        "48": {
+          "a": 6.567,
+          "b": 36.887,
+          "c": -10.099
+        },
+        "98": {
+          "a": 7.595,
+          "b": 18.438,
+          "c": 2.391
+        }
+      },
+      "points": {
+        "48": [
+          23,
+          43,
+          66,
+          88,
+          115,
+          143,
+          173
+        ],
+        "98": [
+          22,
+          35,
+          51,
+          68,
+          89,
+          113,
+          137
+        ]
+      }
+    },
+    {
+      "id": "f9",
+      "label": "F9",
+      "iso": "ePM1 80%",
+      "add": 100,
+      "rule": "classe ePM1",
+      "poly": {
+        "48": {
+          "a": 6.567,
+          "b": 36.887,
+          "c": -0.099
+        },
+        "98": {
+          "a": 8.289,
+          "b": 20.972,
+          "c": 2.319
+        }
+      },
+      "points": {
+        "48": [
+          33,
+          53,
+          76,
+          98,
+          125,
+          153,
+          183
+        ],
+        "98": [
+          24,
+          39,
+          57,
+          76,
+          99,
+          125,
+          152
+        ]
+      }
+    }
   ],
-
   "_points_note": "Points ΔP réels (Pa) Titanair aux vitesses velocities[]. M5/M6/F8/F9 = TITAPAK S HPE PRISME A 2018. F7 = TITAPAK S GR PRISME A (technologie GREENTEX, ePM1 50%, média basse résistance → ΔP plus faible que HPE, passe sous M5/M6 ; surface 12,55 m² ep48 / 25,65 m² ep98 ; ΔP nom 61/65 Pa, léger croisement ep48/ep98 à haute vitesse dans la fiche source). F8 ep98 7e point (137 Pa @3,17 m/s) extrapolé du polynôme (6 pts mesurés). F9 ep48 = F8 ep48 +10 Pa exact (offset suspect, à valider).",
-
   "dimensions_multi": [
-    { "L": 592, "H": 592, "P": 48, "surface": "11,68", "debit": 3400 },
-    { "L": 592, "H": 592, "P": 98, "surface": "23,87", "debit": 3400 },
-    { "L": 287, "H": 592, "P": 48, "surface": "5,84",  "debit": 1650 },
-    { "L": 287, "H": 592, "P": 98, "surface": "11,93", "debit": 1650 }
+    {
+      "L": 592,
+      "H": 592,
+      "P": 48,
+      "debit": 3000,
+      "dp": {
+        "M5": 64,
+        "F7": 51,
+        "F9": 125
+      }
+    },
+    {
+      "L": 287,
+      "H": 592,
+      "P": 48,
+      "debit": 1500,
+      "dp": {
+        "M5": 67,
+        "F7": 53,
+        "F9": 130
+      }
+    }
   ],
-
-  "cadre_codes": [ ["A", "acier galvanisé"], ["P", "plastique"] ],
-
-  "dim_note": "Surface = surface média développée (mini-plis) pour la cellule. La courbe perte de charge étant exprimée en vitesse d'air, elle s'applique à toute dimension hors standard. Référence : NETPAK S CILIA · classe · L×H×P · -A (cadre acier galvanisé) ou -P (cadre plastique). ΔP de référence : voir le tableau perte de charge par classe."
+  "dim_note": "ΔP initiales données au débit nominal indiqué — même vitesse d'air (≈ 2,4 m/s) pour les deux formats ; média propre. La courbe perte de charge étant exprimée en vitesse d'air, elle s'applique à toute dimension hors standard. Référence : NETPAK S CILIA · classe · L×H×P · -A (acier galvanisé), -P (plastique) ou -C (cellulose pelliculée).",
+  "dims_pdc": [
+    "M5",
+    "F7",
+    "F9"
+  ],
+  "dims_p1": true,
+  "sans_dp_table": true,
+  "calc_p2": true,
+  "courbe_cases": true,
+  "_arbitrages_pad": [
+    "PASSE DE CONTENU v1.1 — 23/07/2026. Arbitrages de Pierre-Alain, à NE PAS rouvrir sans le consulter.",
+    "(1) SOUS-TITRE « Filtre compact miniplis » (formulation PA, sans « à ») ; « — gamme M5 → F9 » retiré (doublon badges). Titre P1 sur UNE ligne exigé par PA → titre_fs 33 porté au moteur multi (3 moteurs couverts désormais).",
+    "(2) DESCRIPTIF FOURNI PAR PA : espace interplis optimisé → sans préfiltre ; « papier polypropylène » (libellé de gamme, la source 2013/2014 dit « microfibre de polypropylène ») ; économies d'énergie (sourcé). ⚠️ L'ARGUMENT « TRÈS GRANDE SURFACE » EST FAUX pour ce produit (PA : l'interplis élargi = MOINS de plis) — retiré du descriptif ET des points clés. Pitch sourcé doc PRISME A : 7,5 mm (vs 4,5 fibre de verre).",
+    "(3) POINTS CLÉS = LISTE PA : Faible perte de charge · Économies d'énergie · Utilisable sans préfiltre · Média en papier polypropylène · Sans fibre de verre · Dimensions sur mesure (6e ajouté sur proposition). « Cadre… » et « Épaisseurs… » sortis des bullets (restent en specs/configurateur).",
+    "(4) SPECS ordre canonique, ISO AVANT EN 779, listée par classe (F7 = ePM1 50 %). Type « Compact miniplis » (« prismatique » retiré, déc. PA). SÉPARATEUR RETIRÉ (déc. PA — la ligne était sourcée « INT »). Épaisseurs 48·98 en ligne dédiée ; pas de ligne interplis (déc. PA « épaisseurs seulement »). Dimensions cadre « Standard et sur mesure ».",
+    "(5) CADRE : 3 options — Acier galvanisé (-A), plastique (-P), CELLULOSE PELLICULÉE (-C). Le suffixe -C est TRANCHÉ par PA (23/07) — il était en attente côté codification.",
+    "(6) SURFACE MÉDIA — CORRECTION MAJEURE (PA a détecté l'erreur) : les « m² » des fiches 2018 sont des m²/m² DE SECTION (géométrie : 2×48/7,5 = 12,8 ≈ 12,55). L'affichage créé le 22/06 (≈33/68 m²/m² = valeur÷0,3505) était une DOUBLE DIVISION FAUSSE. Retenu : « 12,55 m²/m² (48 mm) · 25,65 m²/m² (98 mm) » = média F7 (l'HPE M5/M6/F8/F9 vaut 11,68/23,87), SANS mention « de section frontale » (déc. PA).",
+    "(7) TABLEAU DIMENSIONS refondu (clé dims_pdc) et REMONTÉ EN PAGE 1 (clé dims_p1) : 592×592×48 @ 3000 m³/h (ΔP init 64/51/125 Pa M5/F7/F9, points mesurés 2018) + 287×592×48 @ 1500 m³/h (67/53/130, polynômes à v nominale — REFUS d'afficher 3000 m³/h sur le demi-module : 4,9 m/s hors plage mesurée). Colonnes Surface et Référence SUPPRIMÉES ; lignes ×98 SORTIES ; « Sur mesure » conservé.",
+    "(8) TABLEAU « PERTE DE CHARGE INITIALE PAR CLASSE » SUPPRIMÉ (clé sans_dp_table, déc. PA) — la courbe à sélection reste la référence complète.",
+    "(9) FICHE PASSÉE EN 2 PAGES (clé calc_p2) : calculateur remonté p.2, saut de page supprimé, pieds 1/2-2/2, compaction gatée à ancres vérifiées (erreur franche si le balisage bouge). Courbe agrandie à 85 % (2 demandes successives PA), calculateur densifié.",
+    "(10) COURBE À CASES À COCHER (clé courbe_cases, déc. PA « comme AZUR ») : axe VITESSE conservé (déc. PA), 5 cases colorées (palette série NETBAG), F7 SEULE COCHÉE à l'ouverture, classes superposables (2 courbes 48 plein/98 pointillé par classe). Marqueurs nominaux (3400 m³/h) et survol PAR CLASSE COCHÉE — correctif après retour PA (v. initiale : masqués dès 2 classes, vécu comme un bug).",
+    "(11) CONFIGURATEUR (code 7, mode calcul) : étiquette F7 → « ePM1 50 % (F7) » via etiquettesIso (la table ISO globale Excel dit 55 %) ; cadres = Acier galvanisé / PLASTIQUE (ex-« Polypropylène », aligné fiche+AZUR) / Cellulose pelliculée AU MÊME PRIX (cadre neutre jusqu'à structuration Excel). RELEVÉ DE PRIX avant/après IDENTIQUE au centime : F7/48 66,77 € · F9/48 102,80 € · F9/98 138,40 €. Panier testé : réf -C et détail corrects.",
+    "(12) RÉSERVES MAINTENUES (cf. CHECKLIST § CILIA) : F9 ép.48 = F8+10 Pa exact (suspect, R&D) ; F8 ép.98 7e point extrapolé ; croisement F7 48/98 haute vitesse ; F7 < M5/M6 ; photo placeholder Titanair ; cellulose à TARIFER dans l'Excel (ligne cadre) ; étiquette ISO F7 à porter dans l'Excel à la resynchro."
+  ]
 }

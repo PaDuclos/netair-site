@@ -58,20 +58,29 @@ puis `maj_fiches.py`. Ici, **on ne touche qu'au TEXTE** (nom, descriptif, points
 Double-cliquez **`Apercu_site.command`**.
 → Une fenêtre noire s'ouvre, prépare le site quelques secondes, puis le navigateur
 s'ouvre tout seul sur **http://localhost:4321**.
-(Pas de bouton « Modifier le texte » ici, contrairement aux fiches : sur le site, on
-édite directement les fichiers ci-dessous.)
+
+**Astuce :** double-cliquez **`Modifier_textes_site.command`** — il ouvre tout seul,
+dans l'éditeur de texte, les principaux textes du site (accueil, à propos, contact,
+descriptions des gammes). Sinon, ouvrez les fichiers ci-dessous à la main.
 
 ### Étape B — changer le texte
-Les textes des pages sont dans `site/src/pages/` :
+La plupart des textes sont dans `site/src/` :
 
-| Fichier | Page |
+| Fichier | Page / contenu |
 |---|---|
-| `index.astro` | Page d'accueil |
-| `a-propos.astro` | À propos |
-| `contact.astro` | Contact |
-| `mentions-legales.astro` | Mentions légales |
-| `confidentialite.astro` | Confidentialité |
-| `gammes/` et `produits/` | Pages des gammes et produits |
+| `src/lib/familles.ts` | **Descriptions des familles de gammes** (le plus simple) |
+| `src/pages/index.astro` | Page d'accueil |
+| `src/pages/a-propos.astro` | À propos |
+| `src/pages/contact.astro` | Contact |
+| `src/pages/mentions-legales.astro` | Mentions légales |
+| `src/pages/confidentialite.astro` | Confidentialité |
+| `src/pages/gammes/` | Mise en page des pages de gammes (le TEXTE des familles, lui, est dans `familles.ts` ci-dessus) |
+
+> ⚠️ Les **descriptifs des produits** ne se changent pas ici : ils viennent des fiches
+> (voir la partie « Modifier une fiche technique » plus haut).
+>
+> 💶 Les **prix** ne s'écrivent pas ici non plus : ils viennent du calculateur et se
+> mettent à jour avec le bouton **« 🔄 Synchroniser les prix du site »** (dans le dossier du calculateur).
 
 Ouvrez le fichier, repérez le texte (il est écrit entre des balises, par ex.
 `<h1>Mon titre</h1>` → vous changez `Mon titre`). Gardez les balises `< >`, changez ce qu'il y a entre.

@@ -1,8 +1,19 @@
 {
-  "_commentaire": "NETFIBRE — média synthétique à densité croissante (équiv. Titanair TITAFIBRE), commercialisé par Netair en PANNEAU DÉCOUPÉ sur mesure (média aussi disponible en rouleau 20 m × 2 m). Fiche MONO-CLASSE G4 (choix PA 22/06/2026 : seule classe avec une courbe ΔP réelle mesurée). SOURCES : fiche 2018 'TITAFIBRE G4' (FT 2018-030, EP 20, surface frontale, G4/Grossier 65%, M1, T° continue 80 °C / acc. 85 °C 1h, ΔP finale 250 Pa EN779 / 200 Pa ISO16890). TEMPÉRATURE : harmonisée à 60 °C (acc. 65 °C/1h) comme NETPLY/NETPLAN — même média fibres synthétiques. Les sources Titanair étaient incohérentes entre elles (fiche 2018 = 80 °C, doc 2013 = 100 °C) ; la gamme Netair tient le média synthétique à 60 °C. + cache graphe Excel : ΔP=[12;25;41;68] à v=[0,5;1;1,5;2]. Descriptif reformulé depuis Documentation 2015 'Titafibre S 2013' (média densité croissante, lavable 2-3× à l'eau tiède pour les séries G, série M imprégnée non lavable). CONTRÔLE QUALITÉ : la courbe G4 est IDENTIQUE au point près à celle du TITAPLAN/NETPLAN G4 (probable réutilisation du même graphe Excel chez Titanair) MAIS recoupée par le doc 2013 (ΔP init G4 = 38 Pa @1,5 m/s ; modèle = 42 Pa) → valeur plausible pour un G4 synthétique, RETENUE en la signalant. Polynôme ajusté ΔP=a·v²+b·v+c = {14;1,8;8} (fit 4 pts fiche 2018, R²≈0,998) = même poly que NETPLAN. Vmax=2 (limite mesurée), nominal 1,5 m/s = vitesse de réf. Titanair (5400 m³/h/m²) ≈ 1900 m³/h sur 592×592 → ΔP nom ≈ 42 Pa, dans la plage mesurée. surface_facteur=1 (média plan = surface frontale). no_dimensions=true : produit 100% découpé sur mesure (pas de tableau dimensions, choix PA), mention découpe/rouleau dans le descriptif. La gamme complète G2→M5 (ISO Coarse→ePM10) reste annoncée dans le sous-titre et les specs ; seules les courbes G2/G3/M5 restent À MESURER (un seul point initial connu doc 2013 : G2 10 / G3 24 / M5 125 Pa @1,5 m/s). PHOTO = Titanair détourée sur blanc pur (croissance de région depuis les bords) — rouleau + panneaux découpés ; à remplacer par photo réelle Netair à terme.",
+  "_commentaire": "NETFIBRE — média synthétique à densité progressive (équiv. Titanair TITAFIBRE), commercialisé par Netair en PANNEAU DÉCOUPÉ sur mesure (média aussi disponible en rouleau 20 m × 2 m). Fiche MONO-CLASSE G4 (choix PA 22/06/2026 : seule classe avec une courbe ΔP réelle mesurée). SOURCES : fiche 2018 'TITAFIBRE G4' (FT 2018-030, EP 20, surface frontale, G4/Grossier 65%, M1, T° continue 80 °C / acc. 85 °C 1h, ΔP finale 250 Pa EN779 / 200 Pa ISO16890). TEMPÉRATURE : harmonisée à 60 °C (acc. 65 °C/1h) comme NETPLY/NETPLAN — même média fibres synthétiques. Les sources Titanair étaient incohérentes entre elles (fiche 2018 = 80 °C, doc 2013 = 100 °C) ; la gamme Netair tient le média synthétique à 60 °C. + cache graphe Excel : ΔP=[12;25;41;68] à v=[0,5;1;1,5;2]. Descriptif reformulé depuis Documentation 2015 'Titafibre S 2013' (média densité progressive, lavable 2-3× à l'eau tiède pour les séries G, série M imprégnée non lavable). CONTRÔLE QUALITÉ : la courbe G4 est IDENTIQUE au point près à celle du TITAPLAN/NETPLAN G4 (probable réutilisation du même graphe Excel chez Titanair) MAIS recoupée par le doc 2013 (ΔP init G4 = 38 Pa @1,5 m/s ; modèle = 42 Pa) → valeur plausible pour un G4 synthétique, RETENUE en la signalant. Polynôme ajusté ΔP=a·v²+b·v+c = {14;1,8;8} (fit 4 pts fiche 2018, R²≈0,998) = même poly que NETPLAN. Vmax=2 (limite mesurée), nominal 1,5 m/s = vitesse de réf. Titanair (5400 m³/h/m²) ≈ 1900 m³/h sur 592×592 → ΔP nom ≈ 42 Pa, dans la plage mesurée. surface_facteur=1 (média plan = surface frontale). no_dimensions=true : produit 100% découpé sur mesure (pas de tableau dimensions, choix PA), mention découpe/rouleau dans le descriptif. ⚠️ MAJ 17/07/2026 (passe v1.1) : la gamme est RÉDUITE À G4 SEUL (déc. PA) — G2/G3/M5 ne sont plus annoncées nulle part (sous-titre et specs nettoyés), leurs courbes n'ont donc plus à être mesurées. Points initiaux connus si la gamme est un jour rouverte (doc 2013) : G2 10 / G3 24 / M5 125 Pa @1,5 m/s ; épaisseurs par série : G2 10 / G3 15 / G4 20 / M5 22 mm. VOIR `_arbitrages_pad` AVANT TOUTE RETOUCHE. ⚠️ MAJ 26/07/2026 (v1.2) : vocabulaire « densité PROGRESSIVE » (harmonisé avec NETBAG S, déc. PA) et sous-titre simplifié en « Média filtrant synthétique » — cf. _arbitrages_pad (8). PHOTO = Titanair détourée sur blanc pur (croissance de région depuis les bords) — rouleau + panneaux découpés ; à remplacer par photo réelle Netair à terme.",
+  "_arbitrages_pad": [
+    "PASSE DE CONTENU v1.1 — 17/07/2026. Arbitrages de Pierre-Alain, à NE PAS rouvrir sans le consulter.",
+    "(1) GAMME RÉDUITE À G4 SEUL. La fiche annonçait « gamme G2 → M5 » (sous-titre + specs) alors que seule la courbe G4 est mesurée. PA : « l'efficacité est G4 uniquement ». Conséquences : sous-titre et specs nettoyés ; les courbes G2/G3/M5 n'ont plus à être mesurées (réserve CHECKLIST levée) ; le G3 de l'Excel n'a plus lieu d'exister (la rustine classesExclues devient définitive).",
+    "(2) REPOSITIONNEMENT DE L'USAGE — NON SOURCÉ. Le descriptif dit « Utilisé pour la fabrication et le rechargement de filtres à air ». La doc Titanair 2015 dit l'inverse comme positionnement : « s'utilisent sur diverses applications de préfiltration ou en filtration finale pour le traitement de l'air dans la ventilation et le conditionnement ». C'est une décision PA en tant que fabricant, cohérente avec le fait que NETFIBRE se vend au mètre (matière première, pas filtre fini). Réserve exposée, assumée.",
+    "(3) LAVABLE — réserve levée par (1). La source donne « Lavable : Oui | Oui | Oui | Non » pour G2 | G3 | G4 | M5. Tant que la fiche annonçait le M5, « Lavable 2 à 3 fois à l'eau tiède » sans réserve était faux pour cette classe (réserve exposée 2× ; PA avait tranché pour la formulation sans réserve). La gamme étant réduite au G4 SEUL, la mention est désormais exacte ET sourcée. La mention « (séries G) » a été retirée à la demande de PA : elle ne distingue plus rien.",
+    "(4) HUMIDITÉ RELATIVE 100 % (sans condensation) — AJOUTÉE, NON SOURCÉE. Aucune source Titanair ne donne d'humidité pour TITAFIBRE. Valeur confirmée par PA en tant que fabricant, pour aligner NETFIBRE sur les 4 autres préfiltres (même statut que sur NETFIL et NETMETAL).",
+    "(5) ÉPAISSEUR — « Épaisseur (G4) » → « Épaisseur ». Le « (G4) » levait une ambiguïté quand la fiche annonçait 4 classes d'épaisseurs différentes (G2 10 · G3 15 · G4 20 · M5 22 mm, source Titanair). Avec une classe unique, il ne distingue plus rien. Les 3 autres épaisseurs restent sourcées si la gamme est un jour rouverte.",
+    "(6) TEMPÉRATURE 60 °C (acc. 65 °C / 1 h) — CONTRE la source (100 °C pour G2/G3/G4). Alignement délibéré sur la règle de gamme CLAUDE.md : même média synthétique = même température que NETPLY/NETPLAN. Décision antérieure (22/06), non rouverte.",
+    "(7) CONDITIONNEMENT « rouleau 20 m × 2 m » — CONSERVÉ TEL QUEL (déc. PA 17/07) alors que l'Excel tarife 5 formats. Cohérent depuis que la boutique ne vend plus que le 20 m × 2 m (rustine, cf. CHECKLIST : incohérence de tarif au m² sur les 4 autres).",
+    "(8) HARMONISATION DU VOCABULAIRE (26/07/2026, déc. PA pendant la passe NETBAG S) : « densité croissante » → « densité PROGRESSIVE » partout (descriptif, point clé, specs, badges p1/p2) — « progressive » est le terme courant du métier et devient le mot unique de la gamme (NETBAG S l'emploie aussi). SOUS-TITRE SIMPLIFIÉ : « Média filtrant synthétique à densité croissante » → « Média filtrant synthétique » (déc. PA : la mention de densité y est superflue, elle reste en badge et en specs). Version portée à v1.2 : le JSON était resté v1.0 alors que le registre déclarait v1.1 depuis le 17/07 (décalage corrigé au passage). Effet de bord traité : la 2e phrase du descriptif disait « rétention progressive » → « rétention » (déc. PA, répétition créée par l'harmonisation ; la progressivité est déjà portée par « densité progressive »). Aucune donnée technique modifiée."
+  ],
   "slug": "netfibre",
   "nom": "NETFIBRE",
-  "soustitre": "Média synthétique — Préfiltre à densité croissante (gamme G2 → M5)",
+  "soustitre": "Média filtrant synthétique",
   "mono_classe": true,
   "no_dimensions": true,
   "surface_facteur": 1,
@@ -11,69 +22,73 @@
   "debit_nom": 1900,
   "fiche": {
     "num": "FT-NETFIBRE-001",
-    "version": "v1.0",
-    "date": "22/06/2026"
+    "version": "v1.2",
+    "date": "26/07/2026"
   },
   "photo": "netfibre-photo.jpg",
   "photo_alt": "Média synthétique NETFIBRE — rouleau et panneaux découpés",
-  "description": "Le NETFIBRE est un média filtrant en fibres synthétiques à densité croissante, livré en panneau découpé aux dimensions exactes de votre installation. Sa structure à porosité dégressive retient progressivement les poussières dans l'épaisseur du média, pour une grande capacité de rétention en préfiltration comme en filtration finale sur les centrales de traitement d'air. Les séries G se lavent 2 à 3 fois à l'eau tiède, qui leur restitue leurs performances d'origine. Le média est également disponible en rouleau (20 m × 2 m) pour une découpe sur site.",
+  "description": "Le média filtrant NETFIBRE est constitué de fibres synthétiques à densité progressive. Cette structure favorise la rétention des particules dans l'épaisseur du média. Utilisé pour la fabrication et le rechargement de filtres à air, il est disponible en panneau découpé sur mesure ou en rouleau.",
   "points_cles": [
-    "Découpe sur mesure",
-    "Média à densité croissante",
-    "Lavable 2 à 3 fois (séries G)",
-    "Aussi disponible en rouleau"
+    "Fibres synthétiques à densité progressive",
+    "Disponible en panneau ou en rouleau",
+    "Lavable 2 à 3 fois",
+    "Fabrication et rechargement de filtres"
   ],
   "specs": [
     [
       "Média filtrant",
-      "Fibres synthétiques à densité croissante"
+      "Fibres synthétiques à densité progressive"
     ],
     [
       "Conditionnement",
       "Panneau découpé sur mesure · rouleau 20 m × 2 m"
     ],
     [
-      "Efficacité EN 779",
-      "G4 (réf.) — gamme G2 → M5"
-    ],
-    [
       "Efficacité ISO 16890",
-      "Coarse 65% (réf.) — gamme Coarse → ePM10"
+      "Coarse 65%"
     ],
     [
-      "Épaisseur (G4)",
-      "20 mm"
-    ],
-    [
-      "Surface média",
-      "Surface frontale"
-    ],
-    [
-      "Régénérable",
-      "Lavable 2 à 3 fois à l'eau tiède (séries G)"
+      "Efficacité EN 779",
+      "G4"
     ],
     [
       "Classement au feu",
       "M1"
     ],
     [
+      "Épaisseur",
+      "20 mm"
+    ],
+    [
+      "Surface filtrante",
+      "Surface frontale"
+    ],
+    [
       "Température de service",
       "60 °C (accidentelle 65 °C / 1 h)"
     ],
     [
+      "Humidité relative max.",
+      "100 % (sans condensation)"
+    ],
+    [
       "ΔP finale recommandée",
       "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"
+    ],
+    [
+      "Lavable",
+      "2 à 3 fois à l'eau tiède"
     ]
   ],
   "badges_p1": [
     "ISO 16890 : Coarse 65%",
     "EN 779 : G4",
-    "Densité croissante"
+    "Densité progressive"
   ],
   "badges_p2": [
     "ISO 16890 : Coarse 65%",
     "EN 779 : G4",
-    "Densité croissante"
+    "Densité progressive"
   ],
   "classes": {
     "low": {
@@ -116,6 +131,5 @@
       "dp": 42,
       "epaisseur": 20
     }
-  },
-  "compact_p2": true
+  }
 }

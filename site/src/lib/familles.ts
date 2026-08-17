@@ -18,6 +18,9 @@ export interface Famille {
   /** Badge — 2e encadré : classe EN 779 (ancienne norme), si applicable. */
   tagEn?: string;
   desc: string;
+  /** Texte détaillé (2-3 phrases) affiché sur la page famille /gammes/<slug>.
+   *  Absent = on retombe sur `desc` (phrase courte de la bulle). */
+  descLong?: string;
   /** Photo détourée (PNG transparent) représentative de la famille. */
   photo?: string;
 }
@@ -30,7 +33,8 @@ export const FAMILLES: Famille[] = [
     norme: 'ISO 16890',
     tagEn: 'G3 → M5',
     photo: '/produits/detour/netply-v6-photo.png',
-    desc: "Première barrière contre les grosses poussières, en protection des étages fins. Filtres plissés et plans, cellules métalliques, médias synthétiques en panneau ou en rouleau.",
+    desc: "Premier niveau de filtration, les préfiltres captent les particules grossières pour protéger les installations et prolonger la durée de vie des étages suivants.",
+    descLong: "Les préfiltres assurent le premier niveau de filtration en captant les particules grossières. Disponibles dans différentes technologies et classes d'efficacité, ils répondent aux besoins de chaque installation, en préfiltration ou en filtration principale.",
   },
   {
     slug: 'compacts-miniplis',
@@ -39,7 +43,8 @@ export const FAMILLES: Famille[] = [
     norme: 'ISO 16890',
     tagEn: 'M5 → F9',
     photo: '/produits/detour/netpak-s-cilia-photo.png',
-    desc: "Filtration fine à très fine sous faible encombrement : média finement plissé en cadre rigide, grande surface filtrante pour une longue durée de service.",
+    desc: "Conçus pour offrir une faible perte de charge, les filtres miniplis associent haute efficacité et performance énergétique.",
+    descLong: "Grâce à leur faible perte de charge, les filtres miniplis associent haute efficacité et économies d'énergie. Selon les applications, leur conception permet de s'affranchir d'un étage de préfiltration et de réduire le coût global d'exploitation.",
   },
   {
     slug: 'poches-souples-rigides',
@@ -48,28 +53,32 @@ export const FAMILLES: Famille[] = [
     norme: 'ISO 16890',
     tagEn: 'G4 → F9',
     photo: '/produits/detour/netbag-s-photo.png',
-    desc: "Grande surface filtrante développée sur plusieurs poches — souples ou rigides (polydièdres) — pour une longue durée de service à perte de charge maîtrisée.",
+    desc: "Grâce à leur grande capacité de rétention des poussières, les filtres à poches offrent une longue durée de vie et des performances constantes.",
+    descLong: "Déclinés en versions souples et rigides, les filtres à poches équipent les installations de ventilation et de traitement d'air. Netair propose un large choix de technologies et de classes d'efficacité pour chaque application.",
   },
   {
     slug: 'hepa',
-    titre: 'Filtres absolus (HEPA / T.H.E)',
+    titre: 'Filtres absolus',
     tag: 'E10 → H14',
     norme: 'EN 1822',
     photo: '/produits/detour/netcel-v-nival-photo.png',
-    desc: "Filtration absolue pour les environnements maîtrisés : salles propres, santé, process sensibles. Gamme NETCEL et caisson laminaire.",
+    desc: "Les filtres absolus HEPA assurent une très haute efficacité de filtration pour répondre aux exigences des salles propres, hôpitaux et industries sensibles.",
+    descLong: "Les filtres absolus sont conçus pour les applications exigeant une très haute qualité d'air. Ils répondent aux besoins des environnements les plus sensibles, où la maîtrise de la qualité de l'air est essentielle.",
   },
   {
     slug: 'charbon-actif',
     titre: 'Charbons actifs',
     tag: 'Gaz · odeurs',
-    desc: "Traitement des gaz et des odeurs par adsorption sur charbon actif. Cellules compactes, dièdres ou poches imprégnées. Gamme NETCARB.",
+    desc: "Les filtres à charbon actif sont spécialement conçus pour capter les odeurs, les gaz et les composés organiques volatils (COV).",
+    descLong: "Les filtres à charbon actif sont conçus pour le traitement des odeurs et de certains composés gazeux. Leur diversité de conception répond aux besoins de chaque application.",
   },
   {
     slug: 'combines',
     titre: 'Combinés',
     tag: 'Particules + gaz',
     photo: '/produits/detour/netpak-s-duo-photo.png',
-    desc: "Un étage particulaire associé au charbon actif, pour traiter l'air en une seule passe lorsque la place manque.",
+    desc: "Les filtres combinés associent deux efficacités de filtration dans un seul filtre.",
+    descLong: "Les filtres combinés associent plusieurs niveaux ou technologies de filtration au sein d'un même filtre. Ils répondent aux exigences de chaque application.",
   },
 ];
 

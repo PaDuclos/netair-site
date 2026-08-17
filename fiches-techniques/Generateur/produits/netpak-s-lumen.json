@@ -1,56 +1,79 @@
 {
-  "_commentaire": "NETPAK S LUMEN — compact polydièdre RECHARGEABLE (équiv. Titanair TITAPAK S QUARTZ). Fiche MULTI-CLASSES (moteur série). Données ΔP RÉELLES extraites des courbes vectorielles des PDF QUARTZ 2018 (FT 2019-041) : F7=[7.8,13.8,24.7,39.7,55.7,75.7,95.6] · F8=[10.7,18.8,31.9,47.8,66.8,88.9,114.8] · F9=[11.6,20.6,33.6,49.6,69.6,92.6,119.6] @1000-4000 m³/h. Cohérent F7<F8<F9 (PAS de piège). Polynômes R²≈1. Specs fiches 2018 : parois POLYESTER, média PP, SANS colle, SANS séparateur (HPE mini-plis), M1, 60°C (acc.65/1h), HR 100%, EN13053 init+100. Argument différenciant = cadre polydièdre rechargeable (cassettes remplacées, carcasse conservée → déchets ÷4, RSE). ⚠️ Variantes fournisseurs récentes (MFILTER 2024/FILTECH 2024-25 dans FORMULE_PDC) divergent → priorité fiches 2018. % ePM1 : livret annonce 60/90, fiches 2018 = 55/80 (retenu). Surface média n.c. Photo Quartz.jpg (concept recharge) = placeholder, marque Titanair visible.",
+  "_commentaire": "NETPAK S LUMEN — compact polydièdre RECHARGEABLE (équiv. Titanair TITAPAK S QUARTZ). Fiche MULTI-CLASSES (moteur série). ✅ CONTENU RETRAVAILLÉ v1.1, VALIDÉ PA le 26/07/2026 — arbitrages dans _arbitrages_pad, NE PAS retoucher sans son accord. Données ΔP RÉELLES extraites des courbes vectorielles des PDF QUARTZ 2018 (FT 2019-041) : F7=[7.8,13.8,24.7,39.7,55.7,75.7,95.6] · F8=[10.7,18.8,31.9,47.8,66.8,88.9,114.8] · F9=[11.6,20.6,33.6,49.6,69.6,92.6,119.6] @1000-4000 m³/h. Cohérent F7<F8<F9 (PAS de piège). Polynômes R²≈1 ; courbes affichées jusqu'à 4500 m³/h (extrapolation > 4000, cf. arbitrage 8) ; lissage origine → ΔP nominales affichées 70/85/88 Pa. Specs fiches 2018 : parois POLYESTER (fiche v1.1 : « Plastique », convention gamme), média PP, SANS colle, SANS séparateur, M1, 60°C (acc.65/1h), HR 100%, EN13053 init+100. Argument différenciant = polydièdre rechargeable (cassettes remplacées, support conservé — ÷4 déchets et ÷2 énergie de la doc 2015 ADOUCIS en qualitatif, déc. PA). ⚠️ Variantes fournisseurs récentes (MFILTER 2024/FILTECH 2024-25 dans FORMULE_PDC) divergent → priorité fiches 2018. % ePM1 : livret annonce 60/90, fiches 2018 = 55/80 (retenu). Surface média n.c. Photo Quartz.jpg (concept recharge) = placeholder, marque Titanair visible.",
+
+  "_arbitrages_pad": [
+    "PASSE DE CONTENU v1.1 — 26/07/2026. Arbitrages de Pierre-Alain, à NE PAS rouvrir sans le consulter.",
+    "(1) SOUS-TITRE « Filtre polydièdre rechargeable » (formulation PA) ; suffixe « — Éco-conception » RETIRÉ (marketing, hors convention gamme « forme physique seule »). Titre P1 sur 1 ligne : titre_fs 31 (33 déborde avec le badge ISO long ePM10 50% → ePM1 80%).",
+    "(2) DESCRIPTIF FOURNI PAR PA, 2 harmonisations validées : ouverture reprend le sous-titre (comme AZUR/BORA/CILIA) et « cassettes filtrantes » remplace « cellules » (un objet = un mot). « Utilisable sans préfiltre » et la réduction déchets/énergie sourcés doc Titanair 2015 ; « espace interplis optimisé » = formulation déjà validée sur CILIA. Chiffres ÷4 déchets / ÷2 énergie (doc 2015) ADOUCIS en qualitatif (déc. PA).",
+    "(3) POINTS CLÉS = liste validée PA : Polydièdre rechargeable · Réduction des déchets · Économies d'énergie · Utilisable sans préfiltre · Sans fibre de verre · Faible perte de charge. « Éco-conception / RSE » (étiquette marketing) et « déchets ÷ 4 » retirés.",
+    "(4) PLAGE M5 → F9 PARTOUT (déc. PA — le descriptif/badges v1.0 disaient F7→F9, les specs M5→F9 : incohérence purgée, badges alignés AZUR). M5/M6 restent SANS courbe tracée et SANS ligne de stock ; ils sont tarifés au prix F7 dans l'Excel (constaté au relevé).",
+    "(5) SPECS ordre canonique, ISO AVANT EN 779 (corrigé — LUMEN les inversait, seule fiche de la gamme). Média « Papier polypropylène » (convention gamme, déc. PA — fiches 2018 : microfibres PP). Type « Filtre à poches rigides rechargeable » (formulation PA, pluriel normalisé). Parois cellule « Plastique » (fiches 2018 : polyester). Ligne Recharge « Cassettes filtrantes remplaçables · support du filtre conservé ». Ligne « Colle / séparateur » SUPPRIMÉE (alignement AZUR — l'info sans colle/séparateur reste sourcée 2018). Humidité 100 % AJOUTÉE (ligne unifiée gamme). Dimensions espacées autour du point médian (insécables, demande PA).",
+    "(6) DIMENSIONS CADRE : les 2 formats sourcés SEULS — 592×592 · 287×592 (déc. PA 26/07, CONTRE l'ajout du 490×592 acté au tarif le 30/06) → la consigne CHECKLIST « ajouter 490×592 à l'Excel » est CADUQUE ; fiche et boutique affichent les 2 mêmes formats.",
+    "(7) TABLEAU DIMENSIONS & RÉFÉRENCES refondu : 2 tailles × classes F7/F9 SEULES (stock, déc. PA — le F8 garde courbe et tarif), via nouvelle clé moteur dims_classes (erreur franche si classe inconnue). Colonnes sans référence ni surface + colonne EN 779, tri par classe, SANS ligne sur-mesure (flags AZUR). Débits par section : 3400 (592) / 1700 (287). Note sous tableau = formule AZUR + phrase recharge.",
+    "(8) COURBE étendue à 4500 m³/h (débit max doc 2015) — tronçon 4000→4500 EXTRAPOLÉ du polynôme (mesures 2018 ≤ 4000, même approche qu'AZUR). pmax 125→160 : paliers RONDS 40/80/120/160 (PA a refusé les graduations à virgule du 125). vmax 3.5667 = AZUR. Le lissage origine recale les ΔP nominales affichées à 70/85/88 Pa (mesures brutes 71/84/88, écart ≤ 1,5 Pa, comportement identique AZUR ; dp_fixe dispo si épinglage voulu un jour).",
+    "(9) COURBE F7 SEULE COCHÉE à l'ouverture (déc. PA) — nouvelle clé moteur courbes_affichees [f7], F8/F9 activables d'un clic (légende grisée). Calculateur aligné AZUR (5 clés) : calc_formats_fixes (« Longueur de poche » remplacé par 2 boutons de format qui règlent le débit), annot_vitesse, legende_sans_longueur, points_nominaux, compact_p2 → page 2 = A4 exact (1122,52 px).",
+    "(10) CONFIGURATEUR (code 9, mode calcul) : AUCUN CHANGEMENT DE PRIX — relevé 52 lignes avant/après identique au centime (287 F7 141,60 · 592 F7 171,49 · F8/F9 152,26/222,23 ; 490→hors fabrication ; G4→classe indisponible ; palier unique 0+ fidèle Excel). Seule retouche : intro conditionnelle « Choisissez votre format standard » pour les produits 100 % formats (LUMEN/AZUR/LAM) via formatsSeuls dans [ref].astro. Étiquette F7 ePM1 55 % conforme fiche, pas de rustine etiquettesIso.",
+    "(11) RÉSERVES MAINTENUES (cf. CHECKLIST § LUMEN) : variantes fournisseurs MFILTER/FILTECH 2024-25 ≠ fiches 2018 ; % ePM1 livret 60/90 vs 55/80 retenu ; surface média développée n.c. ; largeur 287 extrapolée du 592 ; PHOTO Quartz.jpg marque Titanair visible sur la cassette → remplacement PRIORITAIRE."
+  ],
 
   "slug": "netpak-s-lumen",
   "nom": "NETPAK S LUMEN",
-  "soustitre": "Filtre compact polydièdre rechargeable — Éco-conception",
+  "soustitre": "Filtre polydièdre rechargeable",
+  "titre_fs": 31,
   "series": true,
   "compact_p1": true,
+  "compact_p2": true,
   "axe_debit": true,
-  "vmax": 3.17,
-  "pmax": 125,
+  "calc_formats_fixes": true,
+  "annot_vitesse": true,
+  "legende_sans_longueur": true,
+  "points_nominaux": true,
+  "courbes_affichees": ["f7"],
+  "vmax": 3.5667,
+  "pmax": 160,
   "debit_nom": 3400,
   "eff0": "f7",
   "len0": 292,
 
-  "fiche": { "num": "FT-NETPAK-S-LUMEN-001", "version": "v1.0", "date": "22/06/2026" },
+  "fiche": { "num": "FT-NETPAK-S-LUMEN-001", "version": "v1.1", "date": "26/07/2026" },
 
   "photo": "netpak-s-lumen-photo.jpg",
   "photo_alt": "Filtre compact polydièdre rechargeable NETPAK S LUMEN",
 
-  "description": "Le NETPAK S LUMEN est un filtre compact à polydièdres rigides rechargeable, conçu pour la filtration fine des centrales de traitement d'air dans une démarche d'éco-conception. Sa carcasse polydièdre est conservée d'un cycle à l'autre : seules les cassettes de média en microfibres de polypropylène sont remplacées, ce qui divise les déchets par quatre et réduit le stockage comme la manutention. Le média haute performance, sans couture ni colle ni séparateur, conjugue une très faible perte de charge et une longue durée de vie, sans microfibre de verre. Disponible de F7 à F9 (ePM1 55 % → 80 %) selon EN 779 / EN ISO 16890, en profondeur 292 mm, sur cadre 592×592 (et 287×592).",
+  "description": "Le filtre polydièdre rechargeable LUMEN est destiné à la filtration fine dans les centrales de traitement d'air. Son architecture permet de conserver durablement le support du filtre et de remplacer uniquement les cassettes filtrantes lors de la maintenance. Son média en papier polypropylène, associé à un espace interplis optimisé, autorise une utilisation sans préfiltre tout en maintenant une faible perte de charge. Cette conception contribue à réduire la consommation d'énergie, les déchets et le coût global d'exploitation.",
 
   "points_cles": [
-    "Polydièdre rechargeable — déchets ÷ 4",
-    "Cassettes de média remplaçables",
-    "Très faible perte de charge",
-    "Sans fibre de verre ni séparateur",
-    "Éco-conception / RSE"
+    "Polydièdre rechargeable",
+    "Réduction des déchets",
+    "Économies d'énergie",
+    "Utilisable sans préfiltre",
+    "Sans fibre de verre",
+    "Faible perte de charge"
   ],
 
   "specs": [
-    ["Média filtrant", "Microfibres de polypropylène (cassettes)"],
-    ["Type", "Compact polydièdre rechargeable"],
-    ["Cadre / parois", "Polydièdre plastique réutilisable"],
-    ["Recharge", "Cassettes de média remplaçables — carcasse conservée"],
-    ["Colle / séparateur", "Sans colle · sans séparateur"],
-    ["Efficacités EN 779", "M5 · M6 · F7 · F8 · F9"],
-    ["Efficacités ISO 16890", "ePM10 50 % · ePM2,5 50 % · ePM1 55 % · 70 % · 80 %"],
+    ["Média filtrant", "Papier polypropylène"],
+    ["Type", "Filtre à poches rigides rechargeable"],
+    ["Parois cellule", "Plastique"],
+    ["Recharge", "Cassettes filtrantes remplaçables · support du filtre conservé"],
+    ["Efficacités ISO 16890", "ePM10 50 %  ·  ePM2,5 50 %  ·  ePM1 55 %  ·  70 %  ·  80 %"],
+    ["Efficacités EN 779", "M5  ·  M6  ·  F7  ·  F8  ·  F9"],
     ["Profondeur", "292 mm"],
-    ["Dimensions cadre", "592×592 · 287×592 mm"],
+    ["Dimensions cadre", "592×592  ·  287×592 mm"],
     ["Classement au feu", "M1"],
     ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
+    ["Humidité relative max.", "100 % (sans condensation)"],
     ["ΔP finale recommandée", "min(ΔP initiale + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"]
   ],
 
   "badges_p1": [
-    "ISO 16890 : ePM1 55% → 80%",
-    "EN 779 : F7 → F9",
+    "ISO 16890 : ePM10 50% → ePM1 80%",
+    "EN 779 : M5 → F9",
     "Rechargeable · RSE"
   ],
   "badges_p2": [
-    "ISO 16890 : ePM1 55% → 80%",
-    "EN 779 : F7 → F9",
+    "ISO 16890 : ePM10 50% → ePM1 80%",
+    "EN 779 : M5 → F9",
     "Rechargeable · RSE"
   ],
 
@@ -61,11 +84,22 @@
   },
   "classes_order": ["f7", "f8", "f9"],
 
+  "tailles": [
+    { "L": 592, "H": 592, "debit": 3400 },
+    { "L": 287, "H": 592, "debit": 1700 }
+  ],
+  "dims_classes": ["f7", "f9"],
+  "dims_sans_ref": true,
+  "dims_sans_surface": true,
+  "dims_tri_classe": true,
+  "dims_en779_col": true,
+  "dims_sans_surmesure": true,
+
   "courbes": [
     { "cls": "f7", "len": 292, "a": 8.87,  "b": 2.54, "c": -0.71, "dp": 71, "color": "#0F3261" },
     { "cls": "f8", "len": 292, "a": 10.63, "b": 1.81, "c": 2.26,  "dp": 84, "color": "#6A4C93" },
     { "cls": "f9", "len": 292, "a": 11.22, "b": 0.96, "c": 3.74,  "dp": 88, "color": "#C0392B" }
   ],
 
-  "note_dimensions": "Profondeur 292 mm. Aussi disponible en 287×592×292 mm. Cadre polydièdre rechargeable : seules les cassettes de média sont remplacées. Surface média développée non communiquée (n.c.)."
+  "note_dimensions": "Le débit indiqué est le débit nominal de chaque section ; la ΔP initiale est donnée à ce débit, média propre. Cadre polydièdre rechargeable : seules les cassettes filtrantes sont remplacées."
 }

@@ -7,8 +7,8 @@ import {
   SLUG_FAMILLE,
   type Produit,
 } from '../../lib/familles';
-import { gammeDuProduit } from '../../lib/pricing/produits-gammes';
-import { optionsDuCode, formatsDuCode, libelleClasse } from '../../lib/pricing/options';
+import { gammeDuProduit, produitsSansCadresDeclares, formatsAuxCadresInconnus } from '../../lib/pricing/produits-gammes';
+import { optionsDuCode, formatsDuCode, libelleClasse, efficaciteFigee, comparerClasses } from '../../lib/pricing/options';
 import { trouverGamme } from '../../lib/pricing/lookups';
 import { MIN_COMMANDE_HT } from '../../lib/boutique';
 
@@ -36,6 +36,38 @@ const points: string[] = d.points_cles ?? [];
 // (ex. « NETPAK S CILIA » → « NETPAK_S_CILIA », pas « NETPAKSCILIA »).
 const codeBase = d.nom.replace(/\s+/g, '_');
 
+// Fil d'Ariane (source unique : sert à l'affichage ET aux données structurées SEO).
+const filAriane = [
+  { href: '/', label: 'Accueil' },
+  { href: '/gammes', label: 'Gammes' },
+  ...(famille ? [{ href: `/gammes/${famille.slug}`, label: famille.titre }] : []),
+  { label: d.nom },
+];
+
+// Données structurées (schema.org) pour les moteurs de recherche : fiche produit
+// (SANS prix — tarifs dynamiques / sur-mesure, on n'affiche pas de prix figé) + fil d'Ariane.
+const siteBase = Astro.site ?? new URL('https://netair.fr');
+const absUrl = (path: string) => new URL(path, siteBase).href;
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: d.nom,
+  ...(d.description ? { description: d.description.slice(0, 300) } : {}),
+  ...(img ? { image: absUrl(img) } : {}),
+  ...(famille ? { category: famille.titre } : {}),
+  brand: { '@type': 'Brand', name: 'Netair' },
+};
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: filAriane.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.label,
+    ...(c.href ? { item: absUrl(c.href) } : {}),
+  })),
+};
+
 // --- Pont vers le moteur de prix (Bloc B2) ---
 // On relie le produit du site à sa gamme tarifaire. `mode` = "calcul" (prix instantané)
 // ou "devis" (gamme hors calculateur → demande de devis seule). Produit non répertorié
@@ -50,36 +82,74 @@ const codeGamme = gamme?.code ?? '';
 // produit sur devis n'affiche un champ que si le calculateur a l'info (sinon rien).
 // Dimensions ouvertes par défaut (592×592 sauf produits à formats standard, ex. laminaire 610×610).
 const dimDefaut = gamme?.dimensionDefaut ?? { largeur: 592, hauteur: 592 };
-// Produit sans cadre (média fibreux seul, ex. NETFIBRE) → on masque le choix « Cadre ».
-const sansCadre = gamme?.sansCadre ?? false;
-// Cadres proposés (par défaut : acier + PP). Surchargés par produit (ex. NETPLY = acier seul).
-const CADRES_DEFAUT = [
-  { valeur: 'galva', libelle: 'Acier galvanisé' },
-  { valeur: 'pp', libelle: 'Polypropylène' },
-];
-const cadres = gamme?.cadres ?? CADRES_DEFAUT;
+// Cadres proposés : lus dans la fiche du produit, JAMAIS devinés. Pas de repli par défaut —
+// un défaut « acier + polypropylène » proposait en silence des cadres inexistants (cf.
+// `produits-gammes.ts`). Un produit calculable mal déclaré casse le build (tous les fautifs
+// signalés d'un coup) plutôt que d'afficher un cadre faux au client.
+const cadres = gamme?.cadres ?? [];
+// Cadre imposé (ex. NETPLY = acier galvanisé) : affiché en information, jamais en menu.
+const cadreFixe = gamme?.cadreFixe ?? null;
+// « Cadre » par défaut ; NETMETAL vend un couple cadre + tricot → « Matière ».
+const labelCadre = gamme?.labelCadre ?? 'Cadre';
+const fautifs = produitsSansCadresDeclares();
+if (fautifs.length > 0) {
+  throw new Error(
+    `Cadres non déclarés pour : ${fautifs.join(', ')}. Renseigner « cadres » dans produits-gammes.ts ` +
+      `d'après la ligne « Cadre » de la fiche technique, ou « sansCadre: true » si le cadre est unique.`,
+  );
+}
+// Un format ne peut restreindre le cadre qu'à des matières que le produit propose déjà : sinon
+// le filtre du configurateur ne rendrait rien et retomberait sur le menu complet, en silence.
+const cadresFormatsFautifs = formatsAuxCadresInconnus();
+if (cadresFormatsFautifs.length > 0) {
+  throw new Error(
+    `Cadres de format inconnus : ${cadresFormatsFautifs.join(' ; ')}. Le « cadres » d'un format doit ` +
+      `être un sous-ensemble du « cadres » du produit, dans produits-gammes.ts.`,
+  );
+}
 // Filtrage des efficacités proposées : liste blanche (`classesIncluses`, ex. laminaire = H14)
 // puis liste noire (`classesExclues`, ex. NETFIBRE G3 douteux). Sinon, toutes les tarifées.
 const classesIncluses = gamme?.classesIncluses ?? null;
 const classesExclues = gamme?.classesExclues ?? [];
+// Étiquettes ISO propres au produit (`etiquettesIso`) : priment sur la table globale de
+// l'Excel — la fiche technique fait foi (ex. BORA F7 = ePM1 50 %, média spécial).
+const etiquetteIso = gamme?.etiquettesIso ?? {};
 const filtreClasses = (classes: { valeur: string; libelle: string }[]) =>
   classes
     .filter((c) => !classesIncluses || classesIncluses.includes(c.valeur))
-    .filter((c) => !classesExclues.includes(c.valeur));
+    .filter((c) => !classesExclues.includes(c.valeur))
+    .map((c) => ({ ...c, libelle: etiquetteIso[c.valeur] ?? c.libelle }));
 
 // Options lues dans le calculateur, pour les produits calculables ET sur devis.
 const optsReelles = codeGamme ? optionsDuCode(codeGamme) : null;
 const classesCalc = filtreClasses(optsReelles?.classes ?? []);
 // Stopgap : efficacités d'un produit sur devis non encore saisi au calculateur (ex. BORA G4→F9),
 // pour que le client précise son besoin de filtration. À retirer quand l'Excel les couvre.
-const classesStopgap = (gamme?.efficacitesDevis ?? []).map((v) => ({ valeur: v, libelle: libelleClasse(v) }));
+const classesStopgap = (gamme?.efficacitesDevis ?? []).map((v) => ({ valeur: v, libelle: etiquetteIso[v] ?? libelleClasse(v) }));
+// Classes annoncées par la fiche mais non tarifées (ex. NETBAG S G4/M5) : ajoutées au menu d'un
+// produit calculable, à leur rang EN 779, pour partir en devis faute de prix.
+const classesHorsTarif = (gamme?.classesSurDevis ?? [])
+  .filter((v) => !classesCalc.some((c) => c.valeur === v))
+  .map((v) => ({ valeur: v, libelle: etiquetteIso[v] ?? libelleClasse(v) }));
 const menus = {
-  classes: classesCalc.length > 0 ? classesCalc : classesStopgap,
+  classes:
+    classesCalc.length > 0
+      ? [...classesCalc, ...classesHorsTarif].sort((a, b) => comparerClasses(a.valeur, b.valeur))
+      : classesStopgap,
   epaisseurs: optsReelles?.epaisseurs ?? [],
 };
 // Épaisseurs : celles du calculateur ; à défaut, stopgap `epaisseursDevis` (ex. BORA 100 mm,
 // en attendant que l'épaisseur soit ajoutée au calculateur — cf. CHECKLIST).
-const epaisseursAffichees = menus.epaisseurs.length > 0 ? menus.epaisseurs : (gamme?.epaisseursDevis ?? []);
+// Épaisseurs de la variante par défaut si elle en déclare (ex. NETBAG S standard = 380/550,
+// sous-ensemble mesuré ET tarifé) ; sinon celles du calculateur, sinon le stopgap devis.
+const epaisseursVarDefaut = gamme?.variantes?.[0]?.epaisseurs;
+const epaisseursAffichees =
+  epaisseursVarDefaut ?? (menus.epaisseurs.length > 0 ? menus.epaisseurs : (gamme?.epaisseursDevis ?? []));
+// Épaisseur pré-sélectionnée : celle déclarée si elle est bien proposée, sinon la première
+// du menu. L'ordre étant croissant, s'en remettre au premier reviendrait à pousser la plus fine.
+const epDefaut = epaisseursAffichees.includes(gamme?.epaisseurDefaut as number)
+  ? gamme!.epaisseurDefaut
+  : epaisseursAffichees[0];
 
 // Efficacité pré-sélectionnée : la « par défaut » de la gamme (colonne Excel `eff_defaut`)
 // si elle est proposée, sinon la première du menu — plutôt que toujours la classe la plus basse.
@@ -93,17 +163,65 @@ const effSelection = choisirEff(menus.classes, codeGamme);
 // (ex. laminaire). Pour chaque variante on calcule ici (côté serveur) les efficacités
 // tarifées et, en mode "formats" sans liste explicite, les dimensions standard depuis
 // la grille. Transmis au script via un attribut de données.
+// Un produit SUR DEVIS peut aussi n'exister qu'en formats standard (ex. NETBAG S) : ses formats
+// sont alors déclarés en dur dans `produits-gammes.ts`, faute de grille tarifaire où les lire.
 const variantesConfig =
-  modeProduit === 'calcul' && gamme?.variantes
+  gamme?.variantes
     ? gamme.variantes.map((v) => {
-        const classes = filtreClasses(optionsDuCode(v.code).classes);
-        const formats =
+        // Sur devis, `optionsDuCode` ne rend rien (pas de code tarifaire) → on retombe sur les
+        // efficacités déclarées, sinon le script client viderait le menu « Efficacité ».
+        const classesCode = filtreClasses(optionsDuCode(v.code).classes);
+        const classesBase = classesCode.length > 0 ? classesCode : classesStopgap;
+        // Classes non tarifées annoncées par la fiche : mêmes règles que le menu principal.
+        const classes =
+          classesCode.length > 0 && classesHorsTarif.length > 0
+            ? [...classesBase, ...classesHorsTarif].sort((a, b) => comparerClasses(a.valeur, b.valeur))
+            : classesBase;
+        const formatsBase =
           v.saisie === 'formats'
             ? v.formats ?? formatsDuCode(v.code, classes[0]?.valeur)
             : null;
-        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
+        // formatsGrandDabord : premier = sélection par défaut → plein format en tête.
+        const formatsOrdonnes =
+          formatsBase && v.formatsGrandDabord ? [...formatsBase].reverse() : formatsBase;
+        // formatDefaut : désigne le format d'ouverture par ses dimensions (les formats issus
+        // de la grille ne peuvent pas porter `defaut` eux-mêmes). Ordre des côtés indifférent.
+        let formats = formatsOrdonnes;
+        if (formatsOrdonnes && v.formatDefaut) {
+          const { largeur: fl, hauteur: fh } = v.formatDefaut;
+          const i = formatsOrdonnes.findIndex(
+            (f) => (f.largeur === fl && f.hauteur === fh) || (f.largeur === fh && f.hauteur === fl),
+          );
+          if (i < 0) {
+            throw new Error(
+              `formatDefaut ${fl}×${fh} absent de la grille du code ${v.code} (${produit.id}).`,
+            );
+          }
+          formats = formatsOrdonnes.map((f, j) => (j === i ? { ...f, defaut: true } : f));
+        }
+        return { id: v.id, label: v.label, code: v.code, saisie: v.saisie, formats, classes, epaisseurs: v.epaisseurs ?? null, refBase: v.refBase ?? null, sansCadre: v.sansCadre ?? false, labelChamp: v.labelChamp ?? 'Dimensions', effSelection: choisirEff(classes, v.code) };
       })
     : null;
+
+// Efficacité unique → champ figé (libellé affiché + valeur transmise au moteur), jamais un menu
+// à une seule ligne : ce serait un faux choix. Règle et cas limites dans `efficaciteFigee`.
+const effFixe = efficaciteFigee(menus.classes, variantesConfig?.map((v) => v.classes) ?? []);
+
+// Produit vendu uniquement en formats standard (ex. polydièdre, laminaire) : l'intro
+// « dimensions exactes / sur mesure » serait fausse — on annonce le choix d'un format.
+const formatsSeuls =
+  variantesConfig != null && variantesConfig.every((v) => v.saisie === 'formats');
+
+// Intro du configurateur. Un produit sur devis n'a pas de prix : lui promettre d'« acheter au
+// tarif catalogue » est faux (son bouton panier est désactivé). Trois cas distincts.
+const introConfig =
+  modeProduit === 'devis'
+    ? (formatsSeuls
+        ? 'Choisissez votre format standard et ajoutez ce filtre à votre demande de devis. Les autres dimensions sont étudiées sur demande.'
+        : 'Précisez votre besoin et ajoutez ce filtre à votre demande de devis.')
+    : (formatsSeuls
+        ? 'Choisissez votre format standard : achetez au tarif catalogue, ou ajoutez à une demande de devis.'
+        : 'Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.');
 ---
 
 <BaseLayout
@@ -111,6 +229,9 @@ const variantesConfig =
   description={(d.description ?? `${d.nom}, filtre pour centrale de traitement d'air.`).slice(0, 300)}
   ogImage={img ?? '/brand/logo.png'}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} is:inline></script>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline></script>
+
   <!-- Bandeau maquette -->
   <div class="bg-marine text-blanc">
     <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
@@ -119,14 +240,7 @@ const variantesConfig =
   </div>
 
   <section class="mx-auto max-w-[1140px] px-7 pt-10">
-    <Breadcrumb
-      items={[
-        { href: '/', label: 'Accueil' },
-        { href: '/gammes', label: 'Gammes' },
-        ...(famille ? [{ href: `/gammes/${famille.slug}`, label: famille.titre }] : []),
-        { label: d.nom },
-      ]}
-    />
+    <Breadcrumb items={filAriane} />
   </section>
 
   <!-- En-tête produit -->
@@ -209,15 +323,15 @@ const variantesConfig =
         </table>
       </div>
       <p class="mt-3 text-xs text-muted">
-        Valeurs issues de la fiche technique du produit. Perte de charge et classement énergétique détaillés sur la fiche.
+        Valeurs issues de la fiche technique du produit. Courbe de perte de charge et calculateur énergétique détaillés sur la fiche.
       </p>
     </section>
   )}
 
   <!-- Configurateur + Panier + Demande de devis -->
-  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined}>
+  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined} data-cadrefixe={cadreFixe?.valeur} data-cadrefixelabel={cadreFixe?.libelle} data-labelep={gamme?.labelEpaisseur}>
     <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
-    <p class="mt-1 text-sm text-muted">Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.</p>
+    <p class="mt-1 text-sm text-muted">{introConfig}</p>
 
     <div class="mt-4 grid gap-7 lg:grid-cols-[1.3fr_1fr]">
 
@@ -240,6 +354,9 @@ const variantesConfig =
               <span id="formatLabel" class="eyebrow text-[11px] text-muted">Dimensions</span>
               <select id="inFormat"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise"></select>
+              {/* Format unique : on affiche le libellé ici et on masque le menu ci-dessus —
+                  qui reste dans la page, car c'est lui qui porte la dimension lue par le moteur. */}
+              <p id="formatFixe" class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine hidden"></p>
             </label>
           )}
           <label id="wrapL" class="block">
@@ -256,11 +373,11 @@ const variantesConfig =
               déclare une (ex. BORA 100 mm, à capturer dans la demande de devis). */}
           {(epaisseursAffichees.length > 1 || (modeProduit === 'devis' && epaisseursAffichees.length === 1)) && (
             <label class="block">
-              <span class="eyebrow text-[11px] text-muted">Épaisseur</span>
+              <span class="eyebrow text-[11px] text-muted">{gamme?.labelEpaisseur ?? 'Épaisseur'}</span>
               <select id="inEp"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
-                {epaisseursAffichees.map((ep, i) => (
-                  <option value={ep} selected={i === 0}>{ep} mm</option>
+                {epaisseursAffichees.map((ep) => (
+                  <option value={ep} selected={ep === epDefaut}>{ep} mm</option>
                 ))}
               </select>
             </label>
@@ -271,7 +388,7 @@ const variantesConfig =
           )}
           {/* Efficacité — affichée dès que le calculateur a des classes pour ce produit
               (calculable OU sur devis). Pas de classe dans le calculateur → pas de champ. */}
-          {menus.classes.length > 0 && (
+          {menus.classes.length > 0 && !effFixe && (
             <label class="block">
               <span class="eyebrow text-[11px] text-muted">Efficacité</span>
               <select id="inEff"
@@ -282,9 +399,17 @@ const variantesConfig =
               </select>
             </label>
           )}
-          {modeProduit === 'calcul' && !sansCadre && (
+          {effFixe && (
+            <div class="block">
+              <span class="eyebrow text-[11px] text-muted">Efficacité</span>
+              <p id="effFixeLabel" class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine">{effFixe.libelle}</p>
+              {/* La classe reste une entrée du moteur de prix : on la transmet, figée. */}
+              <input id="inEff" type="hidden" value={effFixe.valeur} data-libelle={effFixe.libelle} />
+            </div>
+          )}
+          {cadres.length > 0 && (
             <label id="wrapCadre" class="block">
-              <span class="eyebrow text-[11px] text-muted">Cadre</span>
+              <span class="eyebrow text-[11px] text-muted">{labelCadre}</span>
               <select id="inCadre"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
                 {cadres.map((c, i) => (
@@ -292,6 +417,12 @@ const variantesConfig =
                 ))}
               </select>
             </label>
+          )}
+          {cadreFixe && (
+            <div id="wrapCadre" class="block">
+              <span class="eyebrow text-[11px] text-muted">{labelCadre}</span>
+              <p class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine">{cadreFixe.libelle}</p>
+            </div>
           )}
           <label class="block">
             <span class="eyebrow text-[11px] text-muted">Quantité</span>
@@ -388,14 +519,14 @@ const variantesConfig =
     <div class="rounded-3xl border border-soft bg-mist px-8 py-12 text-center">
       <h2 class="display text-2xl font-normal text-marine">Un projet plus large autour de {d.nom} ?</h2>
       <p class="mx-auto mt-2 max-w-xl text-muted">
-        Pour les gros volumes, appels d'offres ou conditions négociées, constituez votre demande de devis ci-dessus.
+        Pour les gros volumes, appels d'offres ou conditions négociées, expliquez-nous votre besoin : nous revenons vers vous avec une proposition adaptée.
       </p>
       <a
-        href="#configurateur"
+        href="/contact"
         class="mt-6 inline-flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
         style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
       >
-        Configurer ma demande de devis →
+        Nous expliquer votre besoin →
       </a>
     </div>
   </section>
@@ -405,6 +536,7 @@ const variantesConfig =
     // Ce <script> est groupé/empaqueté par Astro (pas `is:inline`) afin de pouvoir
     // importer le moteur — qui embarque les tables tarifaires pour un calcul instantané.
     import { calculerPrix } from '../../lib/pricing';
+    import { CADRE_SUFFIXE } from '../../lib/pricing/produits-gammes';
     import { addItem, getCart, removeItem, onCartChange } from '../../lib/cart';
     import { addDevisItem, getDevis, removeDevisItem, onDevisChange } from '../../lib/devis';
 
@@ -426,14 +558,39 @@ const variantesConfig =
       function setEffOptions(classes, selected) {
         const el = $('inEff');
         if (!el) return;
+        // Efficacité figée (champ caché, cf. `effFixe`) : rien à reconstruire, on remet à jour
+        // la valeur et le libellé au cas où le conditionnement changerait la classe.
+        if (el.tagName !== 'SELECT') {
+          const c = (classes || [])[0];
+          if (!c) return;
+          el.value = c.valeur;
+          el.dataset.libelle = c.libelle;
+          const p = $('effFixeLabel');
+          if (p) p.textContent = c.libelle;
+          return;
+        }
         el.innerHTML = (classes || []).map((c) =>
           '<option value="' + c.valeur + '"' + (c.valeur === selected ? ' selected' : '') + '>' + c.libelle + '</option>'
         ).join('');
       }
       function setFormatOptions(formats) {
-        $('inFormat').innerHTML = (formats || []).map((f, i) =>
-          '<option value="' + i + '"' + (i === 0 ? ' selected' : '') + '>' + f.label + '</option>'
+        const liste = formats || [];
+        // Format pré-sélectionné : celui marqué `defaut` (ex. rouleau 20 m × 2 m), sinon le
+        // premier — l'ordre de la liste sert la lecture, il ne dit pas le format courant.
+        const iDefaut = Math.max(0, liste.findIndex((f) => f.defaut));
+        const sel = $('inFormat');
+        sel.innerHTML = liste.map((f, i) =>
+          '<option value="' + i + '"' + (i === iDefaut ? ' selected' : '') + '>' + f.label + '</option>'
         ).join('');
+        // Un seul format = pas un choix : on masque le menu et on affiche le libellé. Le menu
+        // reste rempli et sélectionné — `readCfg` y lit la dimension envoyée au moteur.
+        const unSeul = liste.length === 1;
+        sel.classList.toggle('hidden', unSeul);
+        const fixe = $('formatFixe');
+        if (fixe) {
+          fixe.classList.toggle('hidden', !unSeul);
+          fixe.textContent = unSeul ? liste[0].label : '';
+        }
       }
       // Bascule un conditionnement : montre/masque dimensions ↔ format, recharge les
       // efficacités tarifées de la variante, puis recalcule le prix.
@@ -448,15 +605,31 @@ const variantesConfig =
           setFormatOptions(v.formats || []);
         }
         setEffOptions(v.classes || [], v.effSelection);
+        // Variante sans cadre (ex. recharge LUMEN : cassettes seules, le support est conservé) :
+        // le champ « Cadre » du produit ne la concerne pas.
+        $('wrapCadre') && $('wrapCadre').classList.toggle('hidden', !!v.sansCadre);
+        // Épaisseurs propres à la variante (ex. NETBAG S : 380/550 en standard — tarifés —
+        // contre les 4 longueurs de la fiche en sur-mesure, qui part en devis).
+        if (v.epaisseurs && $('inEp')) {
+          const garde = $('inEp').value;
+          $('inEp').innerHTML = v.epaisseurs.map((ep) =>
+            '<option value="' + ep + '"' + (String(ep) === garde ? ' selected' : '') + '>' + ep + ' mm</option>'
+          ).join('');
+        }
         refresh();
       }
 
       // Message lisible pour un statut non vendable renvoyé par le moteur.
       function messageStatut(r) {
+        // `classe_indisponible` ne veut PAS dire indisponible : la combinaison est bien proposée
+        // au menu, elle n'a simplement pas de prix catalogue en ligne, et le bouton de devis
+        // reste actif juste en dessous. Annoncer une indisponibilité serait faux (déc. PA
+        // 15/08/2026). Traité AVANT le passe-plat : le message du moteur, factuel, sert au
+        // diagnostic mais ne s'adresse pas au client.
+        if (r.statut === 'classe_indisponible') return 'Prix sur devis dans ce format — ajoutez-le à votre demande.';
         if (r.message) return r.message;
         switch (r.statut) {
           case 'sur_devis': return 'Produit proposé sur devis — ajoutez-le à votre demande.';
-          case 'classe_indisponible': return "Cette efficacité n'est pas disponible dans ce format.";
           case 'hors_fabrication': return 'Dimensions hors des limites de fabrication.';
           case 'quantite_insuffisante': return r.quantiteMini ? ('Quantité minimale : ' + r.quantiteMini + '.') : 'Quantité insuffisante.';
           case 'gamme_inconnue': return 'Produit non disponible à la commande en ligne.';
@@ -503,28 +676,87 @@ const variantesConfig =
         // Le menu Efficacité peut être absent (produits sur devis : pas de prix).
         const effEl = $('inEff');
         const eff = effEl ? effEl.value : '';
-        const effOpt = effEl ? effEl.selectedOptions[0] : null;
-        const effLabel = effOpt ? effOpt.text : '';
-        // Le champ Cadre peut être absent (produits sans cadre, ex. NETFIBRE).
+        // Menu → libellé de l'option choisie ; efficacité figée (champ caché) → `data-libelle`.
+        const effOpt = effEl && effEl.selectedOptions ? effEl.selectedOptions[0] : null;
+        const effLabel = effOpt ? effOpt.text : (effEl?.dataset.libelle ?? '');
+        // Trois cas : menu (cadre au choix), cadre imposé lu sur le conteneur (affiché en
+        // lecture seule, il compte quand même dans la référence), ou rien (ex. NETFIBRE).
         const cadreEl = $('inCadre');
-        const cadreVal = cadreEl ? cadreEl.value : null;
-        const cadre = cadreVal === 'pp' ? 'P' : cadreVal === 'galva' ? 'A' : null;
-        const cadreLabel = cadreVal === 'pp' ? 'Polypropylène' : cadreVal === 'galva' ? 'Acier galvanisé' : null;
+        // Variante sans cadre (ex. recharge LUMEN : cassettes seules) : ni suffixe de
+        // référence, ni « · Plastique » sur la ligne de panier.
+        const varSansCadre = !!(activeVar && activeVar.sansCadre);
+        const cadreVal = varSansCadre ? null : (cadreEl ? cadreEl.value : (root.dataset.cadrefixe || null));
+        // Suffixe lu dans la table partagée (jamais recopié ici) : un cadre sans suffixe
+        // tranché est refusé en amont par les tests.
+        const cadre = cadreVal ? CADRE_SUFFIXE[cadreVal] ?? null : null;
+        // Libellé lu dans le menu (et non déduit de la valeur) : un même cadre `pp` s'affiche
+        // « Polypropylène » ou « Plastique » selon la fiche du produit.
+        const cadreLabel = varSansCadre ? null : (cadreEl?.selectedOptions[0]?.text ?? root.dataset.cadrefixelabel ?? null);
         const qty = Math.max(1, +$('inQ').value || 1);
         const codeUsed = activeVar ? activeVar.code : codeGamme;
-        return { L, H, ep, eff, effLabel, cadre, cadreLabel, qty, codeUsed, formatLabel };
+        // Le cadre est-il un CHOIX du client (menu) ou une donnée imposée ? Seul un choix doit
+        // apparaître dans la référence d'un produit à formats standard — cf. refRef().
+        const cadreAuChoix = !!cadreEl && !varSansCadre;
+        return { L, H, ep, eff, effLabel, cadre, cadreLabel, cadreAuChoix, qty, codeUsed, formatLabel };
       }
 
       function refRef(c) {
+        // Base de référence propre à la variante (ex. « Recharge pour NETPAK S LUMEN ») :
+        // sans elle, filtre complet et recharge partageraient la même référence au panier.
+        const base0 = (activeVar && activeVar.refBase) || code;
         const effPart = c.eff ? ('-' + c.eff) : '';
-        if (c.formatLabel) return `${code}${effPart}-${c.formatLabel.replace(/\s+/g, '')}`;
-        const epPart = c.ep != null ? ('x' + c.ep) : '';
         const cadrePart = c.cadre ? ('-' + c.cadre) : '';
-        return `${code}${effPart}-${c.L}x${c.H}${epPart}${cadrePart}`;
+        // Branche « formats standard » : le suffixe de cadre n'y était pas ajouté du tout. Sans
+        // lui, NETCEL V NIVAL plastique et acier galvanisé — deux filtres différents au MÊME prix
+        // — portaient la même référence, et rien ne disait à l'atelier lequel monter.
+        // Restreint au cadre AU CHOIX : l'ajouter aussi pour un cadre imposé changerait les
+        // références de NETPAK S AZUR et NETPAK S LUMEN, deux produits figés (écart de convention
+        // avec la branche « dimensions libres », qui l'ajoute toujours — consigné à la CHECKLIST).
+        if (c.formatLabel) {
+          const cadreFmt = c.cadreAuChoix ? cadrePart : '';
+          // L'épaisseur n'entre dans la référence que lorsqu'elle est un CHOIX indépendant du
+          // format (variante à `epaisseurs` propres, ex. NETBAG S : longueur de poche 380 ou
+          // 550 mm, prix différents). Ailleurs le libellé la porte déjà (« 287 × 592 × 292 mm »)
+          // ou elle n'a pas de sens (rouleau NETFIBRE) — l'ajouter ferait une référence fausse.
+          const base = c.formatLabel.replace(/\s+/g, '');
+          const epIndep = activeVar && activeVar.epaisseurs && c.ep != null;
+          return epIndep
+            ? `${base0}${effPart}-${base.replace(/mm$/, '')}×${c.ep}mm${cadreFmt}`
+            : `${base0}${effPart}-${base}${cadreFmt}`;
+        }
+        const epPart = c.ep != null ? ('x' + c.ep) : '';
+        return `${base0}${effPart}-${c.L}x${c.H}${epPart}${cadrePart}`;
+      }
+
+      // Cadres du produit, capturés à l'ouverture : le menu est ensuite FILTRÉ selon le format
+      // choisi, certains cadres n'existant pas dans tous les formats (ex. NETCEL V NIVAL, dont
+      // les cadres 592 ne sont fabriqués qu'en acier galvanisé).
+      const CADRES_TOUS = [...(($('inCadre') || {}).options || [])]
+        .map((o) => ({ valeur: o.value, libelle: o.text }));
+
+      function majCadresSelonFormat() {
+        const sel = $('inCadre');
+        if (!sel || !CADRES_TOUS.length) return;
+        const f = activeVar && activeVar.saisie === 'formats'
+          ? (activeVar.formats || [])[+(($('inFormat') || {}).value) || 0]
+          : null;
+        const permis = f && f.cadres && f.cadres.length ? f.cadres : null;
+        const liste = permis ? CADRES_TOUS.filter((c) => permis.indexOf(c.valeur) >= 0) : CADRES_TOUS;
+        // Rien d'autorisé (donnée incohérente) : on laisse le menu complet plutôt que vide,
+        // un menu vide enverrait un cadre `null` au panier sans que personne ne le voie.
+        if (!liste.length) return;
+        const memes = liste.length === sel.options.length
+          && liste.every((c, i) => sel.options[i].value === c.valeur);
+        if (memes) return;
+        const avant = sel.value;
+        sel.innerHTML = liste
+          .map((c) => '<option value="' + c.valeur + '">' + c.libelle + '</option>').join('');
+        sel.value = liste.some((c) => c.valeur === avant) ? avant : liste[0].valeur;
       }
 
       // Calcule et affiche le prix réel via le moteur. Renvoie { c, unit, ok }.
       function refresh() {
+        majCadresSelonFormat();
         const c = readCfg();
         $('pQty').textContent = c.qty;
         $('genRef').textContent = refRef(c);
@@ -532,6 +764,14 @@ const variantesConfig =
         // Produit « sur devis » : aucun prix public, on oriente vers la demande de devis.
         if (mode !== 'calcul') {
           afficherPrix(null, null, 'Ce produit est proposé sur devis. Ajoutez-le à votre demande de devis.');
+          return { c, unit: null, ok: false };
+        }
+
+        // Variante à épaisseurs déclarées (ex. NETBAG S : la longueur de poche fait le prix) :
+        // une épaisseur absente ne doit jamais partir au moteur avec le « 48 neutre » ci-dessous —
+        // refus explicite plutôt qu'un statut hors_fabrication trompeur (revue 27/07).
+        if (activeVar && activeVar.epaisseurs && c.ep == null) {
+          afficherPrix(null, null, 'Sélectionnez une ' + (root.dataset.labelep || 'épaisseur').toLowerCase() + '.');
           return { c, unit: null, ok: false };
         }
 

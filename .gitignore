@@ -5,6 +5,13 @@
 *.zip
 *.bak
 
+# Dépendances installées et sorties de build (jamais versionnées).
+# Sans barre oblique finale : dans les worktrees, site/node_modules est un LIEN SYMBOLIQUE
+# vers celui du dossier principal, et « node_modules/ » ne matche que les vrais dossiers.
+node_modules
+site/dist
+
 # Sources lourdes / références non versionnées
 fiches-techniques/Titanair/
 *-orig.jpg
+__pycache__/
