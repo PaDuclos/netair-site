@@ -9,7 +9,7 @@ la page normes et la 4ᵉ de couverture sont écrits à la main.**
 
 | Source | Ce qu'elle apporte | Qui la modifie |
 |---|---|---|
-| `../Generateur/produits/*.json` | nom, sous-titre, descriptif, points clés, caractéristiques, photo, badges de normes, n° et version de fiche | la passe de contenu produit — **les mêmes fichiers que les 18 fiches techniques** |
+| `../Generateur/produits/*.json` | nom, sous-titre, descriptif, points clés, caractéristiques, photo, badges de normes, n° et version de fiche, **coefficients de perte de charge** | la passe de contenu produit — **les mêmes fichiers que les 18 fiches techniques** |
 | `../../site/src/lib/familles.ts` | noms des familles, textes de présentation, rattachement des produits, ordre | le site vitrine |
 | `contenu_catalogue.md` | couverture, édito, page « Lire une classe d'efficacité », 4ᵉ de couverture | **toi — c'est le seul fichier manuel** |
 
@@ -97,6 +97,39 @@ descriptif de plus de 760 caractères, plus de 6 points clés, plus de
 14 caractéristiques. Limites mesurées sur le gabarit ; le plus long descriptif
 actuel, NETCARB AZUR, tient à 752 caractères — la marge est mince.
 
+## Les courbes de perte de charge
+
+Chaque page produit porte sa courbe **débit / perte de charge**, tracée à partir
+des mêmes polynômes que la fiche technique. `lecture_courbes.py` importe
+`force_origin` et `AREF` du générateur de fiches : il n'y a pas deux physiques,
+donc les deux documents ne peuvent pas diverger. Vérifié le 17/08/2026 en
+comparant la perte de charge nominale calculée à celle inscrite dans chaque
+fiche — **écart maximal 1,23 Pa sur 20 courbes**, soit l'arrondi des valeurs
+entières stockées.
+
+Les fiches rangent leurs courbes de trois façons différentes selon les produits
+(`classes`, `courbes`+`series`, `classes_list`+`multi_classe`) ; le module les
+ramène à une forme unique. Règle d'affichage : **le catalogue trace ce que la
+fiche affiche par défaut**, dans la limite de 3 courbes (au-delà, la légende ne
+tient plus dans le cadre).
+
+⚠️ **Piège à connaître.** Les clés « 48 » et « 98 » des polynômes sont une
+convention interne du gabarit des fiches, pas toujours des millimètres réels :
+NETPLAN se décline de 8 à 25 mm, NETFIL fait 4,5 mm, NETCEL V LAM 68 mm.
+L'épaisseur affichée vient du champ `epaisseur` de la classe quand il existe, et
+seulement à défaut de la clé. De même, NETCEL V LAM a une surface frontale à lui
+(`aref` 0,3721 m² au lieu de 0,3505) : la conversion vitesse → débit la respecte.
+
+## Liens cliquables
+
+Le sommaire, les pages de gamme et le tableau de synthèse renvoient directement à
+la page du produit. Ce sont de vrais liens internes au PDF, invisibles à
+l'impression. Pour vérifier qu'ils ont bien survécu à l'export :
+
+```bash
+python3 -c "d=open('Catalogue_Netair.pdf','rb').read(); print(d.count(b'/Link'), 'liens')"
+```
+
 ## Compteurs automatiques
 
 Dans les textes de `contenu_catalogue.md`, `{nb_produits}`, `{nb_familles}` et
@@ -111,8 +144,6 @@ toutes lettres : le jour où un 19ᵉ filtre arrive, la phrase se corrige toute 
   `NETPAK S AZUR`, `NETBAG S` = `NETCARB BAG`. À remplacer avant diffusion.
   Aucune modification de code ne sera nécessaire : le catalogue lit le champ
   `photo` du JSON.
-- **`www.netair.fr`** figure en 4ᵉ de couverture : à retirer de
-  `contenu_catalogue.md` tant que le site n'est pas en ligne.
 - **Numéro de TVA** volontairement absent : il est calculé et non confirmé, et
   n'est pas obligatoire sur un catalogue.
 - **Téléphone** volontairement absent (décision du 15/07/2026).

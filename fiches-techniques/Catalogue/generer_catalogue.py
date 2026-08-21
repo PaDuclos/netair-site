@@ -21,6 +21,7 @@ présentation commerciale de Pierre-Alain ; couleurs et typographie de la charte
 
 import base64
 import html
+import math
 import os
 import re
 import shutil
@@ -28,6 +29,7 @@ import subprocess
 import sys
 from datetime import date
 
+import lecture_courbes
 import lecture_familles
 import lecture_produits
 
@@ -117,6 +119,96 @@ def image_data_uri(chemin, largeur_max=1400):
     return f"data:image/{fmt};base64,{b64}"
 
 
+# ------------------------------------------------- courbe perte de charge -----
+def _pas_joli(etendue, cibles=4):
+    """Un pas de graduation lisible (1, 2, 2,5 ou 5 × puissance de dix)."""
+    if etendue <= 0:
+        return 1
+    base = etendue / cibles
+    mag = 10 ** math.floor(math.log10(base))
+    for m in (1, 2, 2.5, 5, 10):
+        if base <= m * mag:
+            return m * mag
+    return 10 * mag
+
+
+def svg_courbe(c):
+    """Courbe débit / perte de charge, en SVG (aucune dépendance, imprimable)."""
+    if not c:
+        return ""
+    X0, X1, Y0, Y1 = 46, 286, 14, 200        # cadre de tracé, en unités viewBox
+    qmax, pmax = c["debit_max"], c["pmax"]
+
+    def px(q):
+        return X0 + (q / qmax) * (X1 - X0)
+
+    def py(p):
+        return Y1 - (p / pmax) * (Y1 - Y0)
+
+    pas_q, pas_p = _pas_joli(qmax), _pas_joli(pmax)
+    grille, graduations = [], []
+    k = pas_q
+    while k <= qmax + 1e-6:
+        grille.append(f'<line x1="{px(k):.1f}" y1="{Y0}" x2="{px(k):.1f}" y2="{Y1}"/>')
+        graduations.append(f'<text x="{px(k):.1f}" y="{Y1 + 14}" text-anchor="middle" '
+                           f'class="g">{k:,.0f}</text>'.replace(",", " "))
+        k += pas_q
+    k = pas_p
+    while k <= pmax + 1e-6:
+        grille.append(f'<line x1="{X0}" y1="{py(k):.1f}" x2="{X1}" y2="{py(k):.1f}"/>')
+        graduations.append(f'<text x="{X0 - 6}" y="{py(k) + 3.5:.1f}" text-anchor="end" '
+                           f'class="g">{k:,.0f}</text>'.replace(",", " "))
+        k += pas_p
+
+    traces, legende = [], []
+    for i, courbe in enumerate(c["courbes"]):
+        pts = " ".join(f"{px(q):.1f},{py(p):.1f}" for q, p in courbe["points"])
+        traces.append(f'<polyline points="{pts}" fill="none" '
+                      f'stroke="{courbe["couleur"]}" stroke-width="2.2" '
+                      f'stroke-linejoin="round" stroke-linecap="round"/>')
+        y = 240 + i * 12
+        legende.append(
+            f'<line x1="{X0}" y1="{y}" x2="{X0 + 16}" y2="{y}" '
+            f'stroke="{courbe["couleur"]}" stroke-width="2.2"/>'
+            f'<text x="{X0 + 22}" y="{y + 3.5}" class="l">{e(courbe["label"])}'
+            f'  —  {courbe["dp_nom"]:.0f} Pa</text>')
+
+    nominal = ""
+    if c["debit_nom"]:
+        x = px(c["debit_nom"])
+        # Quand le debit nominal est proche du bord, on retient l'etiquette a
+        # l'interieur du cadre : centree telle quelle, elle sortait du dessin.
+        xl = min(max(x, X0 + 34), X1 - 34)
+        nominal = (f'<line x1="{x:.1f}" y1="{Y0}" x2="{x:.1f}" y2="{Y1}" '
+                   f'stroke="{TEAL}" stroke-width="1" stroke-dasharray="3 3" opacity=".75"/>'
+                   f'<text x="{xl:.1f}" y="{Y0 - 3}" text-anchor="middle" class="n">'
+                   f'{c["debit_nom"]:,.0f} m³/h nominal</text>'.replace(",", " "))
+        for courbe in c["courbes"]:
+            nominal += (f'<circle cx="{x:.1f}" cy="{py(courbe["dp_nom"]):.1f}" r="3" '
+                        f'fill="{courbe["couleur"]}"/>')
+
+    # Hauteur FIGÉE quel que soit le nombre de courbes : le tableau des
+    # caractéristiques est à une position fixe plus bas, un graphique élastique
+    # viendrait le heurter (constaté sur NETBAG S et ses trois courbes).
+    return f"""<svg class="pr-svg" viewBox="0 0 296 274" role="img"
+     aria-label="Courbe débit / perte de charge">
+  <style>
+    .g{{font:9px Helvetica,Arial,sans-serif;fill:#4A5E7A}}
+    .l{{font:9.5px Helvetica,Arial,sans-serif;fill:#0F3261;font-weight:600}}
+    .n{{font:8.5px Helvetica,Arial,sans-serif;fill:{TEAL};font-weight:600}}
+    .t{{font:9px Helvetica,Arial,sans-serif;fill:#4A5E7A}}
+  </style>
+  <g stroke="#E2E8F0" stroke-width="1">{''.join(grille)}</g>
+  <line x1="{X0}" y1="{Y1}" x2="{X1}" y2="{Y1}" stroke="#94A3B8" stroke-width="1.2"/>
+  <line x1="{X0}" y1="{Y0}" x2="{X0}" y2="{Y1}" stroke="#94A3B8" stroke-width="1.2"/>
+  {''.join(graduations)}
+  <text x="{X1}" y="{Y1 + 28}" text-anchor="end" class="t">Débit (m³/h)</text>
+  <text x="{X0 - 34}" y="{(Y0 + Y1) / 2}" class="t"
+        transform="rotate(-90 {X0 - 34} {(Y0 + Y1) / 2})" text-anchor="middle">ΔP (Pa)</text>
+  {nominal}{''.join(traces)}{''.join(legende)}
+</svg>"""
+
+
 # ------------------------------------------------------------------ styles ----
 def feuille_de_style():
     return f"""
@@ -148,6 +240,9 @@ body {{
   text-transform: uppercase; letter-spacing: .12em; font-weight: 700;
   font-size: 7.5pt; color: var(--teal);
 }}
+/* Les renvois du sommaire, des pages de gamme et de la synthèse sont des liens
+   internes : cliquables dans le PDF, mais rigoureusement invisibles à l'impression. */
+a {{ color: inherit; text-decoration: none; }}
 .lame {{ border-left: 4px solid var(--teal); padding-left: 6mm; }}
 
 /* --- couverture ---------------------------------------------------------- */
@@ -262,23 +357,25 @@ table.normes td:last-child {{ color: var(--sub); width: 30%; }}
              display: flex; gap: 2.5mm; flex-wrap: wrap; }}
 .pr-badge {{ background: var(--muted); color: var(--navy); font-size: 7.5pt;
             font-weight: 600; padding: 1.8mm 3.5mm; border-left: 2px solid var(--teal); }}
-.pr-photo-zone {{ position: absolute; top: 58mm; left: 20mm; width: 74mm; height: 66mm;
+.pr-photo-zone {{ position: absolute; top: 58mm; left: 20mm; width: 74mm; height: 46mm;
                  background: var(--muted); display: flex;
                  align-items: center; justify-content: center; overflow: hidden; }}
-.pr-photo-zone img {{ max-width: 88%; max-height: 88%; object-fit: contain; }}
-.pr-desc {{ position: absolute; top: 58mm; left: 100mm; right: 20mm;
-           font-size: 9.5pt; line-height: 1.6; color: #26364d; }}
-.pr-pts {{ position: absolute; top: 130mm; left: 20mm; right: 20mm; }}
-.pr-pts-liste {{ display: flex; flex-wrap: wrap; gap: 2mm 4mm; margin-top: 3mm; }}
+.pr-photo-zone img {{ max-width: 86%; max-height: 86%; object-fit: contain; }}
+.pr-courbe {{ position: absolute; top: 110mm; left: 20mm; width: 74mm; }}
+.pr-svg {{ width: 74mm; display: block; margin-top: 2mm; }}
+.pr-desc {{ position: absolute; top: 58mm; left: 104mm; right: 20mm;
+           font-size: 9pt; line-height: 1.55; color: #26364d; }}
+.pr-pts {{ position: absolute; top: 136mm; left: 104mm; right: 20mm; }}
+.pr-pts-liste {{ margin-top: 3mm; }}
 .pr-pt {{ font-size: 8.5pt; color: #26364d; padding-left: 4.5mm; position: relative;
-         width: calc(50% - 2mm); }}
+         padding-bottom: 1.6mm; }}
 .pr-pt::before {{ content: ""; position: absolute; left: 0; top: 1.4mm;
                  width: 2.4mm; height: 2.7mm; background: var(--teal);
                  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); }}
-.pr-specs {{ position: absolute; top: 158mm; left: 20mm; right: 20mm; }}
-table.specs {{ width: 100%; border-collapse: collapse; margin-top: 3mm; }}
-table.specs td {{ padding: 1.9mm 3mm; font-size: 8pt; vertical-align: top;
-                 border-bottom: 1px solid var(--border); }}
+.pr-specs {{ position: absolute; top: 187mm; left: 20mm; right: 20mm; }}
+table.specs {{ width: 100%; border-collapse: collapse; margin-top: 2.5mm; }}
+table.specs td {{ padding: 1.25mm 3mm; font-size: 7.5pt; vertical-align: top;
+                 border-bottom: 1px solid var(--border); line-height: 1.3; }}
 table.specs td:first-child {{ width: 38%; font-weight: 600; color: var(--navy); }}
 table.specs td:last-child {{ color: #26364d; }}
 table.specs tr:nth-child(even) td {{ background: #E6F5F7; }}
@@ -327,7 +424,7 @@ table.synth tr:nth-child(even) td {{ background: #E6F5F7; }}
 
 # --------------------------------------------------------------- fabriques ----
 def page_couverture(c, img):
-    return f"""<section class="page">
+    return f"""<section class="page" id="p1">
   <div class="cv-bande"></div><div class="cv-bande2"></div>
   <img class="cv-photo hex-v" src="{img['couverture']}" alt="">
   <img class="cv-logo" src="{img['logo']}" alt="Netair">
@@ -340,7 +437,7 @@ def page_couverture(c, img):
 
 
 def page_edito(c, img):
-    return f"""<section class="page">
+    return f"""<section class="page" id="p2">
   <img class="ed-photo" src="{img['foret']}" alt="">
   <div class="ed-voile"></div>
   <div class="ed-hex hex-v"></div>
@@ -358,15 +455,17 @@ def page_sommaire(sections, pages_fam, pages_prod, produits, num):
     blocs = []
     for i, s in enumerate(sections, 1):
         items = "".join(
-            f'<div class="so-item"><span>{e(produits[sl]["nom"])} — '
-            f'{e(produits[sl]["soustitre"])}</span><span>{pages_prod[sl]}</span></div>'
+            f'<a class="so-item" href="#p{pages_prod[sl]}">'
+            f'<span>{e(produits[sl]["nom"])} — '
+            f'{e(produits[sl]["soustitre"])}</span><span>{pages_prod[sl]}</span></a>'
             for sl in s["produits"])
+        pf = pages_fam[s["slug"]]
         blocs.append(f"""<div class="so-fam">
-      <div class="so-tete"><div class="so-hex hex">{i}</div>
+      <a class="so-tete" href="#p{pf}"><div class="so-hex hex">{i}</div>
         <div class="so-nom">{e(s['titre'])}</div>
-        <div class="so-page">p. {pages_fam[s['slug']]}</div></div>
+        <div class="so-page">p. {pf}</div></a>
       <div class="so-liste">{items}</div></div>""")
-    return f"""<section class="page">
+    return f"""<section class="page" id="p{num}">
   <div class="tete"></div><div class="tete-txt">Sommaire</div>
   <div class="tete-num">Catalogue produits</div>
   <div class="so-corps">{''.join(blocs)}</div>
@@ -381,7 +480,7 @@ def page_normes(c, num):
             continue
         cols = [x.strip() for x in ligne.split("|")]
         lignes += "<tr>" + "".join(f"<td>{e(x)}</td>" for x in cols) + "</tr>"
-    return f"""<section class="page">
+    return f"""<section class="page" id="p{num}">
   <div class="tete"></div><div class="tete-txt">{e(c['titre'])}</div>
   <div class="tete-num">Repères</div>
   <div class="no-corps">
@@ -398,13 +497,14 @@ def page_normes(c, num):
 
 def page_section(s, i, produits, pages_prod, num):
     items = "".join(
-        f'<div class="se-item"><div class="se-ref">{e(produits[sl]["nom"])}</div>'
+        f'<a class="se-item" href="#p{pages_prod[sl]}">'
+        f'<div class="se-ref">{e(produits[sl]["nom"])}</div>'
         f'<div class="se-desc">{e(produits[sl]["soustitre"])}</div>'
-        f'<div class="se-pg">p. {pages_prod[sl]}</div></div>'
+        f'<div class="se-pg">p. {pages_prod[sl]}</div></a>'
         for sl in s["produits"])
     tag = f'<div class="se-tag">{e((s["norme"] + " · " if s["norme"] else "") + s["tag"])}</div>' \
         if s["tag"] else ""
-    return f"""<section class="page">
+    return f"""<section class="page" id="p{num}">
   <div class="se-fond"></div>
   <div class="se-motif hex-v" style="top:-14mm;right:18mm;"></div>
   <div class="se-motif hex-v" style="top:14mm;right:52mm;"></div>
@@ -420,11 +520,13 @@ def page_section(s, i, produits, pages_prod, num):
 </section>"""
 
 
-def page_produit(p, famille, img, num):
+def page_produit(p, famille, img, num, courbe):
     badges = "".join(f'<div class="pr-badge">{e(b)}</div>' for b in p["badges"])
     points = "".join(f'<div class="pr-pt">{e(pt)}</div>' for pt in p["points_cles"])
     specs = "".join(f"<tr><td>{e(a)}</td><td>{e(b)}</td></tr>" for a, b in p["specs"])
-    return f"""<section class="page">
+    bloc_courbe = (f'<div class="pr-courbe"><div class="label">Perte de charge</div>'
+                   f'{svg_courbe(courbe)}</div>') if courbe else ""
+    return f"""<section class="page" id="p{num}">
   <div class="pr-tete">
     <div class="pr-ref">{e(p['fiche_num'])}<br>{e(p['version'])} · {e(p['date'])}</div>
     <div class="label">{e(famille['titre'])}</div>
@@ -433,6 +535,7 @@ def page_produit(p, famille, img, num):
   </div>
   <div class="pr-badges">{badges}</div>
   <div class="pr-photo-zone"><img src="{img}" alt="{e(p['photo_alt'])}"></div>
+  {bloc_courbe}
   <div class="pr-desc">{e(p['description'])}</div>
   <div class="pr-pts"><div class="label">Points clés</div>
     <div class="pr-pts-liste">{points}</div></div>
@@ -448,11 +551,12 @@ def page_synthese(sections, produits, pages_prod, num):
         lignes += f'<tr class="sy-fam"><td colspan="4">{e(s["titre"])}</td></tr>'
         for sl in s["produits"]:
             p = produits[sl]
-            lignes += (f'<tr><td class="sy-ref">{e(p["nom"])}</td>'
+            lignes += (f'<tr><td class="sy-ref">'
+                       f'<a href="#p{pages_prod[sl]}">{e(p["nom"])}</a></td>'
                        f'<td>{e(p["soustitre"])}</td>'
                        f'<td>{e(p["efficacite"])}</td>'
-                       f'<td>{pages_prod[sl]}</td></tr>')
-    return f"""<section class="page">
+                       f'<td><a href="#p{pages_prod[sl]}">{pages_prod[sl]}</a></td></tr>')
+    return f"""<section class="page" id="p{num}">
   <div class="tete"></div><div class="tete-txt">Synthèse de la gamme</div>
   <div class="tete-num">{len(produits)} références</div>
   <div class="sy-corps">
@@ -465,7 +569,7 @@ def page_synthese(sections, produits, pages_prod, num):
 </section>"""
 
 
-def page_dos(c, img, sections):
+def page_dos(c, img, sections, num):
     coord = ""
     for cle, libelle in (("adresse", "Adresse"), ("email", "Email"), ("site", "Web")):
         if c.get(cle):
@@ -475,7 +579,7 @@ def page_dos(c, img, sections):
     gammes = "".join(
         f'<div class="do-gamme">{e(s["titre"])}'
         f'<span>{len(s["produits"])} réf.</span></div>' for s in sections)
-    return f"""<section class="page">
+    return f"""<section class="page" id="p{num}">
   <div class="do-fond"></div><div class="do-diag"></div>
   <div class="do-hex hex-v"></div>
   <img class="do-logo" src="{img['logo_blanc']}" alt="Netair">
@@ -561,9 +665,9 @@ def construire():
         for sl in s["produits"]:
             corps.append(page_produit(produits[sl], s,
                                       image_data_uri(produits[sl]["photo"], 1100),
-                                      pages_prod[sl]))
+                                      pages_prod[sl], lecture_courbes.lire_courbes(sl)))
     corps.append(page_synthese(sections, produits, pages_prod, page_synth))
-    corps.append(page_dos(contenu["DOS"], img, sections))
+    corps.append(page_dos(contenu["DOS"], img, sections, page_dos_num))
 
     html_doc = f"""<!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8">
