@@ -23,6 +23,11 @@ import os
 ICI = os.path.dirname(os.path.abspath(__file__))
 PRODUITS = os.path.abspath(os.path.join(ICI, "..", "Generateur", "produits"))
 PHOTOS = os.path.abspath(os.path.join(ICI, "..", "Generateur", "assets"))
+# Le site publie des versions DÉTOURÉES (PNG à fond transparent) des mêmes photos.
+# On les préfère : posée sur un fond de carte, une photo à fond blanc dessine un
+# rectangle blanc qui se voit (remarque de PA du 17/08/2026).
+DETOUREES = os.path.abspath(
+    os.path.join(ICI, "..", "..", "site", "public", "produits", "detour"))
 
 # Ancre du test d'identité du générateur de fiches : ce n'est pas un produit.
 EXCLUS = {"_gabarit_ref.json"}
@@ -51,6 +56,17 @@ def _exiger(d, fichier):
         raise DonneeManquante(f"{fichier} : photo introuvable → {d['photo']}")
 
 
+def _detouree(nom_fichier):
+    """Le PNG détouré correspondant, s'il existe (14 produits sur 18 en ont un)."""
+    png = os.path.join(DETOUREES, os.path.splitext(nom_fichier)[0] + ".png")
+    return png if os.path.exists(png) else None
+
+
+def _meilleure_photo(nom_fichier):
+    """Le détouré si disponible, sinon la photo d'origine."""
+    return _detouree(nom_fichier) or os.path.join(PHOTOS, nom_fichier)
+
+
 def lire(slug):
     """Un produit, normalisé. `slug` = nom de fichier sans .json."""
     chemin = os.path.join(PRODUITS, f"{slug}.json")
@@ -68,7 +84,8 @@ def lire(slug):
         "points_cles": list(d["points_cles"]),
         "specs": [(str(a), str(b)) for a, b in d["specs"]],
         "badges": list(d["badges_p1"]),
-        "photo": os.path.join(PHOTOS, d["photo"]),
+        "photo": _meilleure_photo(d["photo"]),
+        "photo_detouree": _detouree(d["photo"]) is not None,
         "photo_alt": d.get("photo_alt", d["nom"]),
         "fiche_num": d["fiche"]["num"],
         "version": d["fiche"]["version"],

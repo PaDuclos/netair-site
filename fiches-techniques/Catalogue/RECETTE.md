@@ -93,25 +93,36 @@ Il s'arrête avec une erreur claire plutôt que de sortir un document faux :
 - `familles.ts` devenu illisible (changement de forme du fichier).
 
 Il **prévient** sans s'arrêter quand un produit risque de déborder de sa page :
-descriptif de plus de 760 caractères, plus de 6 points clés, plus de
-14 caractéristiques. Limites mesurées sur le gabarit ; le plus long descriptif
-actuel, NETCARB AZUR, tient à 752 caractères — la marge est mince.
+descriptif de plus de 760 caractères, plus de 9 points clés, plus de
+18 caractéristiques. Limites mesurées sur le gabarit ; le plus long descriptif
+actuel, NETCARB AZUR, tient à 752 caractères — la marge est mince. Il signale
+aussi deux courbes qui porteraient la même étiquette.
 
 ## Les courbes de perte de charge
 
-Chaque page produit porte sa courbe **débit / perte de charge**, tracée à partir
-des mêmes polynômes que la fiche technique. `lecture_courbes.py` importe
-`force_origin` et `AREF` du générateur de fiches : il n'y a pas deux physiques,
-donc les deux documents ne peuvent pas diverger. Vérifié le 17/08/2026 en
-comparant la perte de charge nominale calculée à celle inscrite dans chaque
-fiche — **écart maximal 1,23 Pa sur 20 courbes**, soit l'arrondi des valeurs
-entières stockées.
+Chaque page produit porte sa courbe **débit / perte de charge**, **toutes classes
+confondues**, tracée à partir des mêmes polynômes que la fiche technique.
+`lecture_courbes.py` importe `force_origin` et `AREF` du générateur de fiches : il
+n'y a pas deux physiques, donc les deux documents ne peuvent pas diverger. Vérifié
+en comparant la perte de charge nominale calculée à celle inscrite dans chaque
+fiche — **écart maximal 1,23 Pa sur 20 courbes**, soit l'arrondi des entiers
+stockés.
 
 Les fiches rangent leurs courbes de trois façons différentes selon les produits
 (`classes`, `courbes`+`series`, `classes_list`+`multi_classe`) ; le module les
-ramène à une forme unique. Règle d'affichage : **le catalogue trace ce que la
-fiche affiche par défaut**, dans la limite de 3 courbes (au-delà, la légende ne
-tient plus dans le cadre).
+ramène à une forme unique. De 1 courbe (NETPLAN) à 10 (NETBAG S, NETPAK S CILIA).
+
+**Fusion des doublons.** Sur la plupart des produits, les deux « épaisseurs » du
+gabarit portent le même polynôme : les tracés identiques sont réunis en un seul,
+dont l'étiquette rassemble les classes et épaisseurs concernées (« G2 / G3 ·
+48 mm »). Deux traits superposés n'apprendraient rien.
+
+**Couleurs.** Reprises des JSON quand ils en portent (NETBAG S en définit dix) ;
+sinon une palette de repli tirée de ces mêmes teintes. Aucune couleur inventée.
+
+**Légende.** Deux lignes par entrée jusqu'à 4 courbes, une seule ligne au corps
+ajusté au-delà — une étiquette comme « F9 + charbon actif · 520 mm » ne tient pas
+sur une ligne à côté de sa valeur.
 
 ⚠️ **Piège à connaître.** Les clés « 48 » et « 98 » des polynômes sont une
 convention interne du gabarit des fiches, pas toujours des millimètres réels :
@@ -119,6 +130,12 @@ NETPLAN se décline de 8 à 25 mm, NETFIL fait 4,5 mm, NETCEL V LAM 68 mm.
 L'épaisseur affichée vient du champ `epaisseur` de la classe quand il existe, et
 seulement à défaut de la clé. De même, NETCEL V LAM a une surface frontale à lui
 (`aref` 0,3721 m² au lieu de 0,3505) : la conversion vitesse → débit la respecte.
+
+**Contrôle d'étiquettes.** Deux courbes différentes ne doivent jamais porter le
+même nom, sinon le lecteur ne sait pas laquelle est laquelle. Quand ça arrive, le
+générateur les départage par la clé brute du JSON **et le signale**. Un cas
+aujourd'hui : NETCARB CILIA déclare une épaisseur unique de 48 mm mais porte deux
+polynômes distincts — à trancher lors de sa passe de contenu.
 
 ## Liens cliquables
 
@@ -138,12 +155,15 @@ toutes lettres : le jour où un 19ᵉ filtre arrive, la phrase se corrige toute 
 
 ## Points ouverts
 
-- **Photos** : ce sont encore les images de travail des fiches techniques. Trois
-  d'entre elles servent à plusieurs produits (vérifié par empreinte) —
-  `NETCEL V LAM` = `NETPAK S CILIA` = `NETPAK S DUO`, `NETCEL V AZUR` =
-  `NETPAK S AZUR`, `NETBAG S` = `NETCARB BAG`. À remplacer avant diffusion.
-  Aucune modification de code ne sera nécessaire : le catalogue lit le champ
-  `photo` du JSON.
+- **Photos** : le catalogue prend en priorité la version **détourée** publiée par
+  le site (`site/public/produits/detour/`, fond transparent), et retombe sur la
+  photo d'origine sinon — les 4 NETCARB n'ont pas encore de détourage. Le cadre
+  photo est **blanc et non gris** : la moitié des images ont elles-mêmes un fond
+  blanc, qui dessinait un rectangle visible sur un fond de carte gris.
+  Ce sont toujours des images de travail, et trois servent à plusieurs produits
+  (vérifié par empreinte) — `NETCEL V LAM` = `NETPAK S CILIA` = `NETPAK S DUO`,
+  `NETCEL V AZUR` = `NETPAK S AZUR`, `NETBAG S` = `NETCARB BAG`. À remplacer avant
+  diffusion, sans aucune modification de code.
 - **Numéro de TVA** volontairement absent : il est calculé et non confirmé, et
   n'est pas obligatoire sur un catalogue.
 - **Téléphone** volontairement absent (décision du 15/07/2026).
