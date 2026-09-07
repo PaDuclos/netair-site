@@ -177,6 +177,7 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
 
 ## Transverse (toute la gamme)
 
+- [ ] **🔴 Cadres : 3 fiches en retard sur le fichier de gamme** (contrôle croisé du 07/09/2026, `Gamme_References_Netair.xlsx` ↔ fiche ↔ configurateur). **NETCEL V NIVAL** : la gamme dit « cadre plastique incinérable **ou acier galvanisé** » et la codification (règle 9, 15/08) prévoit les suffixes `-A`/`-P`, mais la fiche n'affiche que « Parois cellule : Plastique » et le configurateur impose le plastique. **NETBAG S** : gamme « acier ou PP », fiche correcte (« acier galvanisé ou plastique »), mais le configurateur est en `sansCadre` → le choix n'est pas proposé. **NETCARB BAG** : gamme « acier ou PP », fiche « Cadre : Acier » seul. → passe cadre à faire sur ces 3 produits, **avec** la ligne tarifaire par cadre (cf. point ci-dessus, sinon l'acier se vend au prix du plastique).
 - [ ] **« (papier HEPA) » retiré du média sur NETCEL V LAM et NETCEL V AZUR (déc. PA 04/08/2026)** —
       **NETCEL V NIVAL le porte encore** (« Fibre de verre microfine (papier HEPA) »). Fiche en v1.0,
       passe de contenu non faite → à traiter **à sa passe**, pas avant. À noter : AZUR a été modifiée
@@ -571,6 +572,7 @@ Courbe **H13** réelle (cache Excel) : `DONNEES_PDC` l.56. Fit 9,44·v²+75,31·
 - [ ] **E10 / E11 / E12 tarifés sur 2 formats seulement** (610×305 et 610×610) ; H13 et H14 le sont sur les 7. Si le configurateur ouvre ces classes sans restriction de format, une combinaison E10 + 592×592 renverra `classe_indisponible`. À cadrer à la passe.
 - [ ] **E10 — courbe à ajouter** : Excel sans cache, extraction PDF échouée → mentionné en specs/gamme mais sans courbe.
 - [ ] **🟠 H14 — courbe à ajouter** : la courbe H14 source (TITAPAK V CU H14) est une **copie exacte du H13** `[39,85,137,189,250,316]` (impossible : H14 doit être plus résistant) → non utilisée. Vraie courbe H14 **à mesurer**.
+- [ ] **🔴 Cote 595 : non tarifée, donc invendable en l'état** (07/09/2026). Le tarif des filtres vendus par format ne connaît **aucune tolérance** (bandes `gd_min = gd_max`), et le code 15 n'a **aucune ligne « prix à la surface »** de repli (vérifié : 0 ligne) — un 595×595 fait 35,4 dm², donc même la route hors-format (> 50 dm²) ne s'applique pas. Résultat moteur : **`hors_fabrication`**, c'est-à-dire « Netair ne fabrique pas ce filtre » affiché au client. Ouvrir le 595 = **saisir ses prix dans le calculateur d'abord**. Cf. `CODIFICATION_PRODUITS.md` règle 11.
 - [ ] **610×610 sur moteur série calibré 592×592** : axe vitesse + annotation « 592×592 » cosmétiquement décalés (le couple débit↔ΔP reste juste). À corriger si on généralise le moteur aux cadres 610.
 - [ ] **Photo** : TITACEL V.png réelle nettoyée = placeholder → photo produit Netair.
 
