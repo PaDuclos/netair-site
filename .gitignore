@@ -12,3 +12,6 @@ __pycache__/
 
 # Cache d'images du catalogue (régénérable)
 fiches-techniques/Catalogue/.cache_images/
+
+# Photos préparées (régénérables via Outils/photos/preparer_photos.py)
+fiches-techniques/Outils/photos/_sortie/
