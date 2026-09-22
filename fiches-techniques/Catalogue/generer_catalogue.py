@@ -308,8 +308,6 @@ a {{ color: inherit; text-decoration: none; }}
 .ed-voile {{ position: absolute; top: 0; left: 0; width: 92mm; height: 297mm;
             background: linear-gradient(180deg, rgba(15,50,97,.55), rgba(15,50,97,.78));
             clip-path: polygon(0 0, 100% 0, 74% 100%, 0 100%); }}
-.ed-hex {{ position: absolute; top: 122mm; left: 22mm; width: 30mm; height: 34mm;
-          background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.4); }}
 .ed-logo {{ position: absolute; top: 22mm; left: 18mm; width: 44mm; }}
 .ed-corps {{ position: absolute; top: 62mm; left: 104mm; width: 86mm; }}
 .ed-titre {{ font-size: 21pt; font-weight: 700; line-height: 1.15; margin: 3mm 0 7mm; }}
@@ -482,7 +480,6 @@ def page_edito(c, img):
     return f"""<section class="page" id="p2">
   <img class="ed-photo" src="{img['foret']}" alt="">
   <div class="ed-voile"></div>
-  <div class="ed-hex hex-v"></div>
   <img class="ed-logo" src="{img['logo_blanc']}" alt="Netair">
   <div class="ed-corps">
     <div class="label">Présentation</div>
