@@ -28,7 +28,7 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 | NETPAK S BORA | 🟡 | **contenu retravaillé v1.1 (18/07) — voir `_arbitrages_pad` de netpak-s-bora.json AVANT toute retouche** · plage **G4 → F9** affichée (déc. PA — doc 2013 : M5/F7 seulement), courbe F7 seule · **F7 = ePM1 50 % partout** (média spécial ; étiquette configurateur corrigée via `etiquettesIso` — AZUR/CILIA à trancher à la resynchro) · variante haute efficacité 55% non tracée · courbe lue sur image · surface n.c. · photo |
 | NETPAK S DUO | 🟡 | ✅ créée (F7 GREENTEX + CA, ep48) · capacité charbon (grammage) à préciser R&D · A4 p2 OK · photo |
 | NETCEL V LAM | 🟡 | **contenu retravaillé v1.1 (04/08) — voir `_arbitrages_pad` de netcel-v-lam.json AVANT toute retouche** · **épaisseur 68 mm corrigée À LA SOURCE dans l'Excel tarifaire** (disait 69 → 0 prix à 68 ; prix inchangés au centime) · **boutique ouverte à E11/E12/H13/U15** (déc. PA) alors qu'**aucune n'a de courbe ΔP** et que **U15 = ULPA** · 6 formats sur les 17 tarifés · surface média retirée (ne valait que pour le 610×610) · **axe courbe en VITESSE** (écart assumé à la convention « axe débit ») · T° 80 °C vs 60 °C sur AZUR (cadre alu — T° d'AZUR à rouvrir) · hot melt à 80 °C et humidité 100 % non sourcés · ΔP 125 Pa mieux-disante que Camfil (140 Pa à 66 mm) · capacité/colmatage à confirmer · photo HEPA |
-| NETCEL V NIVAL | 🟡 | E10 & H14 sans courbe (H14 = copie H13) · 610×610 sur moteur 592 · photo |
+| NETCEL V NIVAL | 🟡 | **contenu retravaillé v1.1 (15/08) — voir `_arbitrages_pad` de netcel-v-nival.json AVANT toute retouche** · **courbe E10 AJOUTÉE** (elle existait : la réserve « Excel sans cache » était fausse) · **surface frontale corrigée à 610×610 dans le moteur** (le calculateur annonçait 0,35 m²/2,7 m/s pour un filtre 610) · 4 formats à la vente, les 305×305/381×381/450×450 écartés (déc. PA) · **cadre acier galvanisé = décision fabricant NON SOURCÉE** · surface 40 m² conservée (vaut pour le seul 610×610) · **H14 vendu sans courbe** (source = copie du H13) · E11/E12 vendues sans courbe · 3 anomalies tarifaires désormais visibles du client · humidité 100 % non sourcée · photo |
 | NETCEL V AZUR | 🟡 | **contenu retravaillé v1.1 (02/08) — voir `_arbitrages_pad` de netcel-v-azur.json AVANT toute retouche** · **courbe H13 corrigée (axe débit +20 %, erreur détectée PA — DONNEES_PDC réaligné)** · plage E10 → H14 (H14 sur devis, à tarifer — action PA) · ~~curseur init 3400~~ ✅ corrigé moteur · boutique formats standard + classes EPA/HEPA seules (F8 à 12 € neutralisé) · surface retirée (à mesurer) · H13 extrapolé 3000-3500 sur courbe · photo = idem NETPAK AZUR · nom à valider |
 | NETCARB CILIA | 🟡 | ✅ créée (charbon actif, ISO 10121, 2 épaisseurs) · classe LD/MD/HD à déterminer par essai · capacité/durée de vie gaz R&D · photo (grains) |
 | NETCARB AZUR | 🟡 | ✅ créée (charbon dièdre, mono-classe 292) · courbe 2020 QL-CARB (piège 2023 F7=F8 écarté) · classe LD/MD/HD & capacité R&D · photo blend placeholder |
@@ -93,6 +93,15 @@ et n'a jamais été reporté dans le classeur de référence `.xltm`.
       figée → bump v1.2 avec accord PA ; (c) suffixe `-CAS` de la codification NON utilisé dans la
       référence boutique (déc. PA : format `Recharge_…`) → à réconcilier avec CODIFICATION_PRODUITS.md
       au moment du catalogue Incwo. ⚠️ Vérifier ce point à chaque futur produit rechargeable.
+- [ ] **⏳ NETCEL V NIVAL — VÉRIFIER 2 PRIX DU CODE 15 (action PA, annoncée le 15/08 pour le lendemain)** :
+      onglet `Prix_L_et_l`, **colonne W = H13, colonne X = H14**, NIVAL aux lignes **327-354** (4 lignes
+      par format, même valeur → corriger un prix = 4 cellules). **(a)** `X327:X330` — 592×287 en H14 à
+      **108,00 €**, soit +42,75 € (+66 %) sur son H13, quand l'écart vaut +1,80 à +9,50 € ailleurs ; le
+      **450×450, au même H13 de 65,25 €, est à 67,50 €** en H14. **(b)** `W351:W354` — 610×610 en H13 à
+      **103,00 €**, moins cher que le 592×592 (105,75 €) plus petit, et **égal à sa propre case E12**
+      (les deux formats sont pourtant au même prix en H14). Ni l'un ni l'autre n'est une erreur prouvée :
+      PA vérifie. **Rien n'a été modifié.** Détail complet et prix de vente correspondants : § NETCEL V
+      NIVAL plus bas.
 - [ ] **NETCEL V AZUR — AJOUTER LE H14 AU TARIF (action PA, demandé le 02/08)** : plage fiche E10 → H14 (déc. fabricant) mais ni prix ni courbe aujourd'hui → part en devis via `classesSurDevis`. À faire : ajouter la colonne/valeurs H14 au code 13 dans `Calculateur_Netair.xlsx`, ré-exporter (il apparaîtra tout seul au menu avec prix, la rustine `classesSurDevis` sera alors à retirer). Courbe H14 à mesurer par ailleurs (réserve déjà ouverte sur NIVAL : la source H14 était une copie du H13).
 - [x] ~~**NETPAK S LUMEN** : ajouter la 3ᵉ dimension **490×592**~~ → **CADUC (déc. PA 26/07/2026, passe v1.1) : LUMEN reste aux 2 formats sourcés (287×592 / 592×592), la fiche les affiche seuls — l'Excel est déjà correct tel quel.**
 - [ ] **NETFIBRE — G3 panneau** : ~~corriger le tarif~~ → **SUPPRIMER la classe G3** de l'Excel : la gamme est G4 SEUL (déc. PA 17/07). La rustine `classesExclues:["G3"]` reste en place et devient définitive.
@@ -177,11 +186,69 @@ l'Excel. **Session dédiée — ce n'est pas un chantier de rédaction.**
 
 ## Transverse (toute la gamme)
 
-- [ ] **« (papier HEPA) » retiré du média sur NETCEL V LAM et NETCEL V AZUR (déc. PA 04/08/2026)** —
-      **NETCEL V NIVAL le porte encore** (« Fibre de verre microfine (papier HEPA) »). Fiche en v1.0,
-      passe de contenu non faite → à traiter **à sa passe**, pas avant. À noter : AZUR a été modifiée
-      **sans bump de version** (déc. PA : retouche de trois mots deux jours après sa v1.1, écart consigné
-      au registre — précédent BORA/CILIA/DUO).
+- [ ] **Espacement des lignes « Classes » et « Efficacité » : AZUR met DEUX espaces autour des « · »,
+      NIVAL et LAM un seul.** Aucun n'utilise d'insécable (vérifié : 0 NBSP sur ces lignes des trois
+      fiches). Purement cosmétique, mais visible quand on compare deux fiches côte à côte. Relevé le
+      15/08 ; non corrigé, AZUR venant d'être bumpée pour une autre raison.
+
+- [ ] **Le cadre de mesure manque sur 2 fiches** : l'annotation du point nominal porte le format sur
+      **15 fiches sur 18** (« 2,7 m/s ≈ 3400 m³/h · 592×592 » — NETPLY, NETPAK S CILIA, NETBAG S,
+      NETCEL V AZUR, NETCEL V LAM…). **NETCEL V NIVAL** l'a reçue le 15/08 ; **NETCARB AZUR** et
+      **NETCARB NIVAL** affichent encore « Débit nominal … m³/h » sans format → à ajouter à leur passe
+      (clé `annot_vitesse`).
+- [x] ~~**Cadre écrit en dur à « 592×592 » dans l'annotation nominale**~~ → **CORRIGÉ le 15/08/2026**
+      sur les chemins **série** et **multi-classes** : le format est lu dans `dim_ref`. Sans ce
+      correctif, activer `annot_vitesse` sur NETCEL V NIVAL (cellule 610×610) aurait affiché
+      « · 592×592 » — une donnée fausse, bien lisible sur le graphe. Même nature que le défaut de
+      surface de référence corrigé le matin même. Les 17 autres fiches restent byte-identiques.
+
+- [ ] **🟠 Aucun contrôle que l'échelle Y couvre le maximum des courbes.** Sur NETCEL V NIVAL, l'axe
+      était à 320 Pa alors que le H13 monte à **332,6 Pa** à 4 000 m³/h : le moteur écrête
+      (`Math.min(p, Pmax)`), donc le sommet de la courbe était **rabattu à plat** contre le plafond du
+      graphe — défaut repéré par PA le 15/08, corrigé sur NIVAL (axe porté à 360). **Rien ne garantit
+      que les 17 autres fiches soient indemnes** : `pmax` est saisi à la main dans chaque `.json`, sans
+      vérification. → contrôler les 18, puis ajouter un garde-fou au générateur (lever si
+      max(courbe) > pmax). ⚠️ Rappel : `pmax` doit garder des **graduations entières** (multiples de 4).
+
+- [ ] **🟠 Les références générées par le site ne suivent pas `CODIFICATION_PRODUITS.md`.** Le site
+      produit `NETCEL_V_NIVAL-H13-610×610×292mm-P` (nom complet, tirets bas, « × » typographique,
+      suffixe « mm ») là où la codification impose `NETCEL-NIVAL-H13-610x610x292-A` (signature courte,
+      « x » simple, sans « mm ») — c'est la forme retenue au catalogue INCWO. L'écart est **antérieur à
+      la passe NIVAL** et vaut pour **tous** les produits (ex. `NETPAK_S_AZUR-F7-592×592×292mm`). Deux
+      codes différents pour le même article entre la boutique et l'ERP. → trancher, puis aligner d'un
+      côté ou de l'autre. Chantier à part : il touche toutes les pages produit.
+
+- [ ] **🟠 Suffixe de cadre dans la référence : deux conventions coexistent.** La branche
+      « dimensions libres » ajoute TOUJOURS le suffixe (NETPLY `-A`, NETPAK S CILIA `-A`/`-P`/`-C`,
+      même quand le cadre est imposé) ; la branche « formats standard » ne l'ajoutait **jamais**.
+      Corrigé le 15/08 **au cas du cadre AU CHOIX seulement** (`cadreAuChoix`), parce que l'ajouter
+      pour un cadre imposé aurait changé les références de **NETPAK S AZUR** et **NETPAK S LUMEN**,
+      deux produits figés — vérifié, elles sont inchangées. → **trancher la convention de gamme** :
+      le cadre imposé doit-il figurer dans la référence d'un produit à formats standard ?
+- [ ] **🟠 Ordre des côtés : la fiche et la boutique se contredisent.** La boutique écrit toujours
+      « petit × grand » (convention de la grille : `largeur` = petit côté) — ex. `305 × 610 × 292 mm`,
+      ordre qui se propage dans la référence. Les fiches, elles, sont incohérentes entre elles :
+      **NETCEL V AZUR** est en petit d'abord (287×592, conforme), **NETCEL V LAM** (1220×610, 610×305)
+      et **NETCEL V NIVAL** (610×305, 592×287) sont en grand d'abord. Un client qui compare la fiche
+      et la boutique lit donc deux nombres différents pour le même filtre. → convention à trancher ;
+      alignement des fiches concernées = accord PA + bump de version (fiches figées).
+
+- [ ] **🔴 Surface frontale de référence écrite en dur sur le chemin MULTI-CLASSES du générateur**
+      (`build_multi_section`, `vnom = (dnom / 3600) / AREF`). C'est **exactement le défaut corrigé le
+      15/08 sur le chemin série** pour NETCEL V NIVAL, resté sur le troisième chemin. Sans effet
+      aujourd'hui — NETPAK S CILIA est bien un 592×592 — mais **toute future fiche multi-classes sur un
+      autre cadre afficherait une vitesse et une surface fausses**. À corriger de la même façon
+      (`d.get("aref", AREF)` + garde d'ancre + contrôle `aref` ↔ `dim_ref`).
+- [x] ~~**🟠 Lien mort dans le pied de page de TOUT le site**~~ → **CORRIGÉ le 15/08/2026**
+      (demande PA) : `Footer.astro` pointait vers `/gammes/poches-souples` alors que la famille
+      s'appelle `poches-souples-rigides`. Les 7 liens de gamme du pied de page répondent 200, et le
+      balayage de tous les liens internes d'une page produit ne trouve plus aucun 404.
+
+- [x] ~~**« (papier HEPA) » retiré du média sur NETCEL V LAM et NETCEL V AZUR (déc. PA 04/08/2026)**~~
+      → **SOLDÉ le 15/08/2026** : NETCEL V NIVAL, dernière fiche à le porter, est passée à
+      « Microfibres de verre » à sa passe v1.1. Les 18 fiches sont alignées. À noter : AZUR avait été
+      modifiée **sans bump de version** (déc. PA : retouche de trois mots deux jours après sa v1.1,
+      écart consigné au registre — précédent BORA/CILIA/DUO).
 - [ ] **Titre « DIMENSIONS & RÉFÉRENCES STANDARD » devenu inexact** : la colonne « Référence complète »
       est retirée de NETCEL V AZUR et NETCEL V LAM (déc. PA du 16/07, appliquée au passage de chaque fiche),
       mais le titre du bloc — qui vit dans `gabarit_base.html`, donc **commun aux 18 fiches** — annonce
@@ -562,17 +629,135 @@ Données ΔP **réelles** lues sur l'image `GR DSK F7.png`, recoupées FORMULE_P
 - [ ] **Surface média n.c.** · **Photo** : TITAPAK S DSK réelle nettoyée = placeholder → photo produit Netair.
 
 ### NETCEL V NIVAL 🟡
-Filtre absolu HEPA polydièdre (équiv. TITACEL V), 610×610×292, surface 40 m². **Mode HEPA** (ΔP finale = 2×init, EN 1822 ; pas d'étiquette Eurovent).
-Courbe **H13** réelle (cache Excel) : `DONNEES_PDC` l.56. Fit 9,44·v²+75,31·v−1,20 (R²≈1).
+Filtre absolu polydièdre (équiv. **TITACEL V**, vendu aussi sous **TITAPAK V CU** — mêmes specs, même courbe).
+**Contenu retravaillé v1.1 (15/08/2026) — voir `_arbitrages_pad` de netcel-v-nival.json AVANT toute retouche.**
+**Mode HEPA** (ΔP finale = 2×init, EN 1822 ; pas d'étiquette Eurovent). Courbes **E10 + H13** réelles
+(caches Excel 2018 **recoupés point par point au graphe du PDF** — aucune compression d'axe, contrairement
+à AZUR). Fits sur **aref = 0,3721** (610×610) : H13 10,6394·v²+79,9550·v−1,20 (R²=0,9999) ;
+E10 23,7547·v²−19,9658·v+44,1429 (R²=0,9965). ΔP@3400 : H13 270 Pa, E10 148 Pa.
 
-- [ ] **Ligne « Humidité relative max. » ABSENTE** : avec NETCARB BAG, NIVAL est l'une des **2 dernières** fiches sans cette ligne (les 16 autres portent « 100 % (sans condensation) »). À ajouter à sa passe de contenu.
-- [ ] **Aucun tableau « Dimensions & références standard »** (vérifié : 0 occurrence dans le HTML) alors que la grille tarifie **7 formats** — 305×305, 381×381, 450×450, 592×287, 592×592, 610×305, 610×610. Aucun n'est documenté sur la fiche.
-- [ ] **🔴 Anomalies tarifaires du code 15 à vérifier dans l'Excel** (relevé du 04/08, prix catalogue q=1) : (a) **592×287 : H13 = 65,25 € mais H14 = 108 €**, soit +65 % alors que l'écart H13→H14 est de +3 à +9 % sur tous les autres formats — et 108 € est presque le prix du 592×592 (112,50 €) pour un filtre deux fois plus petit ; (b) **610×610 H13 = 103 € < 592×592 H13 = 105,75 €** : le plus grand format coûte moins cher. Même nature que le F8 490×592 à 3,50 € trouvé sur AZUR. À confirmer avant d'ouvrir ces formats à la vente.
-- [ ] **E10 / E11 / E12 tarifés sur 2 formats seulement** (610×305 et 610×610) ; H13 et H14 le sont sur les 7. Si le configurateur ouvre ces classes sans restriction de format, une combinaison E10 + 592×592 renverra `classe_indisponible`. À cadrer à la passe.
-- [ ] **E10 — courbe à ajouter** : Excel sans cache, extraction PDF échouée → mentionné en specs/gamme mais sans courbe.
-- [ ] **🟠 H14 — courbe à ajouter** : la courbe H14 source (TITAPAK V CU H14) est une **copie exacte du H13** `[39,85,137,189,250,316]` (impossible : H14 doit être plus résistant) → non utilisée. Vraie courbe H14 **à mesurer**.
-- [ ] **610×610 sur moteur série calibré 592×592** : axe vitesse + annotation « 592×592 » cosmétiquement décalés (le couple débit↔ΔP reste juste). À corriger si on généralise le moteur aux cadres 610.
-- [ ] **Photo** : TITACEL V.png réelle nettoyée = placeholder → photo produit Netair.
+- [x] ~~**E10 — courbe à ajouter** : « Excel sans cache, extraction PDF échouée »~~ → **RÉSERVE FAUSSE,
+      LEVÉE le 15/08/2026**. Le cache du graphe de `TITACEL V E10.xlsx` contient bien les 7 couples
+      (débit 1000→4000 → ΔP 40/53/71/91/115/150/200) et le graphe du PDF les confirme un à un.
+      **Courbe ajoutée** (déc. PA). ⚠️ **La mesure E10 est incompatible avec un passage par
+      l'origine** : la pente 0→1000 (0,040 Pa par m³/h) est **plus forte** que la pente mesurée
+      1000→1500 (0,026), or une courbe convexe partant de 0 ne peut pas ralentir. **Le graphe Titanair
+      démarre d'ailleurs son axe à 1000 m³/h** — ils n'ont jamais prétendu passer par 0. Toute courbe
+      fidèle aux 7 points fait donc une bosse. **3 tentatives, tranchées par PA le 15/08** : parabole
+      ajustée sur l'ensemble (lisse mais s'arrête à 190 au lieu de 200 → **aplatie en haut, refusée**) ;
+      cubique (fidèle à 1,6 Pa mais inflexion à 1380 m³/h → **vague visible, refusée**) ; polynôme brut
+      + fondu du terme constant (**épaulement pire encore, refusé**). **RETENU** : parabole par
+      l'origine **ancrée exactement sur (4000 ; 200)**, `13,8943·v² + 25,4889·v` — lisse, convexe,
+      concavité nulle au pixel (vérifié au navigateur). **Prix payé : surestimation d'environ 12 Pa au
+      milieu de plage** (127 affichés contre 115 mesurés à 3000) — sens prudent — et 27 contre 40 à
+      1000, dans la zone que Titanair ne montre pas. ΔP nominale E10 = 154 Pa.
+      ⚠️ **Leçon de méthode** : un contrôle numérique de la concavité avait conclu « 0,017 pixel,
+      invisible » alors que l'épaulement crevait les yeux à l'écran — la courbure était mesurée sur un
+      pas de 10 m³/h avant conversion en pixels. **Sur une question d'allure de courbe, le rendu tranche,
+      pas le calcul.**
+- [x] ~~**610×610 sur moteur série calibré 592×592**~~ → **CORRIGÉ le 15/08/2026** (clés `aref` +
+      `dim_ref` portées sur le chemin série). Ce n'était pas cosmétique : le **calculateur affichait
+      « 0,35 m² · 2,7 m/s » et un cadre 592×592** sur la même page qu'un tableau disant 610×610.
+      Coefficients des 2 courbes réajustés → débit↔ΔP inchangé (270 Pa à 3400 avant comme après),
+      vitesse juste (2,5 m/s). 17 fiches régénérées byte-identiques.
+- [x] ~~**Ligne « Humidité relative max. » absente**~~ → **AJOUTÉE** (« 100 % (sans condensation) »,
+      **non sourcée** — Camfil dit 100 %, AFPRO 90 %, comme sur toute la gamme).
+      ⚠️ **NETCARB BAG est désormais la DERNIÈRE des 18 fiches sans cette ligne.**
+- [x] ~~**Aucun tableau « Dimensions & références standard »**~~ → **CONSTAT ERRONÉ, corrigé** : le
+      tableau existait, avec **UNE ligne annonçant un 592×592** — en contradiction avec la ligne
+      « Dimensions cadre » et la note de la même page, qui disaient 610×610 (le moteur le remplissait
+      avec son cadre par défaut). Remplacé par **4 formats** à vitesse frontale constante (2,538 m/s) :
+      610×610 / 3400 · 592×592 / 3200 · 610×305 / 1700 · 592×287 / 1550 m³/h, ΔP 270 Pa partout.
+      La colonne « Référence complète » fabriquait un code illisible
+      (`NETCEL V NIVAL-≥ 99,95% MPPS-H13-592x592x292`) → retirée, comme sur AZUR et LAM.
+- [ ] **🟠 H14 — courbe à mesurer** : la source (TITAPAK V CU H14) **recopie exactement** les 6 valeurs
+      du H13 `[39,85,137,189,250,316]` — impossible, un H14 est plus résistant. **Vérifié à nouveau le
+      15/08** (le cache porte même un 7ᵉ point d'abscisse sans ordonnée, signature du copier-coller).
+      Le H14 est **vendu** sans courbe. Idem **E11 et E12**, vendues sans courbe : trois classes
+      affichent aujourd'hui la perte de charge du H13 ou de l'E10. À mesurer R&D.
+- [ ] **🟠 Trois lignes de specs ne valent que pour le cadre PLASTIQUE** depuis l'ouverture du cadre
+      acier : **Température 60 °C**, **Classement au feu M1**, **ΔP finale 750 Pa**. Ces trois-là
+      dépendent de l'enveloppe, pas du média — c'est démontré par le relevé du 15/08 sur 20 fiches
+      Titanair : les **11** absolus en fibre de verre à cadre plastique sont à **60 °C**, les seuls à
+      **80 °C** sont les laminaires à cadre **aluminium**. Un cadre acier ne serait pas bridé à 60 °C.
+      **Aucune source** : pas un seul absolu fibre de verre à cadre acier dans le dossier Titanair.
+      **Décision PA du 15/08 : garder 60 °C pour les deux versions** (valeur la plus basse, jamais de
+      sur-promesse). → à reprendre si la version acier est caractérisée en R&D.
+- [x] ~~**Le configurateur laissait commander un 592×592 en plastique**~~ → **CORRIGÉ le 15/08/2026**
+      (info PA) : les cadres **592** (592×592 et 287×592) n'existent **qu'en acier galvanisé** ; seuls
+      les **610** (610×610 et 305×610) sont proposés dans les deux matières. Le menu des cadres est
+      désormais filtré selon le format choisi, et un contrôle au build casse la génération si un format
+      demande un cadre absent du menu du produit. Prix inchangés au centime (175 combinaisons).
+- [ ] **🔴 « Cadre plastique ou acier galvanisé » — NON SOURCÉ** (déc. fabricant PA du 15/08, prise en
+      connaissance de cause). Les **4 fiches Titanair** du produit disent PLASTIQUE (H13, TITAPAK V CU
+      H13/H14) ou POLYSTYRÈNE (E10) ; le mot « galva » n'apparaît dans **aucun** document Titanair du
+      dossier. **La grille tarifaire n'a qu'un prix par format et par classe, sans variante de cadre** :
+      la version acier est proposée au **même prix** que le plastique (cadre neutre côté prix, comme
+      NETBAG S). → **à trancher : l'acier coûte-t-il plus cher ?** Si oui, structurer le cadre dans l'Excel.
+- [ ] **Surface média 40 m² CONSERVÉE à l'affichage** (déc. PA, contre le précédent d'AZUR et de LAM) :
+      sourcée sur les DEUX fiches 2018, mais **pour le seul cadre 610×610** — d'où la mention du cadre
+      dans la ligne. La colonne « S. filtrante » du tableau reste retirée (les 3 autres formats auraient
+      des surfaces calculées par nous, donc non sourcées). À mesurer sur le média réel Netair.
+- [x] ~~**Divergence suspectée entre l'Excel et le site**~~ → **AUCUNE ERREUR, vérifié le 15/08/2026**
+      à la demande de PA. Les **4 exemplaires** du calculateur (BLOC1 + DEVIS AUTO, en local et sur
+      OneDrive) portent des valeurs **identiques entre eux et identiques à `tables.json`**. La chaîne de
+      formules de l'Excel a été remontée cellule par cellule : colonne `PU 15` = (100 % + `Frais de
+      livraison` 15 %) × prix de grille → `PRU HT` = ROUND(…, 2) → `PTU HT` = PRU × `Ratio prix tarif`
+      2,857. **C'est exactement la formule du moteur du site**, arrondi intermédiaire compris. L'écart
+      d'impression vient de ce que la grille stocke le **prix d'achat** (65,25 €) là où le devis affiche
+      le **prix de vente** (214,40 €).
+- [ ] **⏳ ACTION PA — VÉRIFIER 2 PRIX DU CODE 15 DANS L'EXCEL** (annoncé le 15/08 pour le lendemain).
+      Fichier `BLOC1_Gamme_Produits/Grille_Couts_Internes/Calculateur_Netair.xltm`, onglet
+      **`Prix_L_et_l`** — colonne **W = H13**, colonne **X = H14**. Chaque format occupe **4 lignes**
+      (un palier de quantité chacune) portant la **même** valeur : corriger un prix = corriger 4 cellules.
+      NETCEL V NIVAL occupe les lignes **327 à 354**.
+
+      **(a) 592×287 en H14 → cellules `X327:X330` = 108,00 €.** L'écart H13→H14 y vaut **+42,75 € (+66 %)**
+      quand il vaut +1,80 € à +9,50 € sur les six autres formats. Argument le plus net : le **450×450 a
+      exactement le même H13 (65,25 €)** et son H14 est à **67,50 €** — 40 € d'écart entre deux formats
+      au même prix la classe d'avant. De plus le 592×287 est un DEMI-filtre : à 108 € il approche le
+      592×592 entier (112,50 €). Prix de vente correspondants : 214,40 € en H13, **354,86 € en H14**.
+
+      **(b) 610×610 en H13 → cellules `W351:W354` = 103,00 €.** Le **grand format coûte moins cher que le
+      petit** : le 592×592 est à 105,75 € pour 6 % de surface en moins. Deux indices d'une recopie de
+      colonne plutôt que d'un choix : en **H14 les deux formats sont au même prix** (112,50 €), donc
+      l'inversion n'existe qu'en H13 ; et **103 € est exactement la valeur de la case E12 voisine**
+      (610×610 : E10 99 · E11 101,25 · E12 **103** · H13 **103** · H14 112,50).
+
+      ⚠️ **Ce ne sont pas des erreurs prouvées** — une raison métier (média moins cher, série plus
+      longue) les justifierait. PA vérifie. **Rien n'a été modifié** : décision du 15/08 de garder les
+      valeurs du calculateur. Les deux sont désormais **visibles du client**, les formats concernés
+      étant à la vente. Si PA donne les valeurs corrigées : patch des 4 cellules par format, sauvegarde
+      préalable, et preuve qu'aucun autre prix ne bouge (méthode du 04/08, correction d'épaisseur LAM).
+- [x] ~~**E12 et H13 au même prix**~~ → **RETIRÉ DE LA LISTE DES ANOMALIES (correction du 15/08)** :
+      je l'avais signalé comme une erreur, à tort. Le motif est **identique sur les deux formats** qui
+      portent les deux classes (610×305 et 610×610), ce qui ressemble à une décision tarifaire et non
+      à une faute de saisie.
+- [x] ~~**E10/E11/E12 non tarifées sur 592×592 et 287×592 : 6 combinaisons en cul-de-sac**~~ →
+      **AFFIRMATION ERRONÉE DE MA PART, corrigée le 15/08** après vérification demandée par PA. Ce
+      n'est **pas** un cul-de-sac : le bouton **« Ajouter à ma demande de devis » reste ACTIF** et crée
+      une vraie ligne (testé : `NETCEL_V_NIVAL-E10-592×592×292mm-A · 6 u. · E10 · 592 × 592 × 292 mm ·
+      Acier galvanisé`). Seul « Ajouter au panier » se désactive, faute de prix. C'est exactement la
+      règle voulue : ce qui n'est pas vendable en ligne part en demande de prix.
+- [x] ~~**Libellé « Efficacité … non disponible dans ce format »**~~ → **CORRIGÉ le 15/08/2026**
+      (déc. PA : « dire que c'est pas disponible c'est faux, sinon on le proposerait pas »). Le client
+      lit désormais **« Prix sur devis dans ce format — ajoutez-le à votre demande »**, formulation
+      alignée sur celle du statut `sur_devis`. Corrigé **côté page produit uniquement** : le message du
+      moteur reste factuel pour le diagnostic, et les tests ne portent que sur le statut, jamais sur le
+      texte. Vaut pour **tous** les produits, pas seulement NIVAL.
+- [x] ~~**Séparateur hot melt absent des specs**~~ → **AJOUTÉ le 15/08/2026 sur NIVAL ET SUR AZUR**
+      (accord exprès de PA : « c'est une information vraie »). Sourcé : les **4** fiches de NIVAL
+      (TITACEL V H13/E10 + TITAPAK V CU H13/H14) et les **2** fiches H13 d'AZUR portent « HOT MELT » ;
+      la fiche E10 d'AZUR n'a pas le champ — absence, pas contradiction. Les **3 fiches absolues**
+      affichent désormais la ligne. ⚠️ **AZUR était FIGÉE en v1.1 → bumpée en v1.2** (15/08), registre
+      aligné, 18/18. Contrairement au précédent du 04/08 (retrait de « (papier HEPA) » sans bump),
+      l'ajout d'une ligne de specs entière justifiait le bump.
+- [ ] **Tableau : classe en tête sur NIVAL et LAM, ISO en tête sur AZUR.** La convention « la classe
+      prime quand l'en-tête annonce l'EN 1822 » (déc. PA 04/08) est portée ici sur le chemin série ;
+      **AZUR reste en `≥ 99,95% MPPS (H13)`** et écrit encore « 99,95% » sans espace avant le %.
+      → aligner AZUR avec accord PA + bump de version (fiche figée).
+- [ ] **Photo** : TITACEL V.png nettoyée = placeholder → photo produit Netair.
+- [ ] **Nom « NIVAL »** partagé avec NETCARB NIVAL (familles différentes, OK par convention) → confirmer.
 
 ### NETCEL V AZUR 🟡
 Filtre absolu multidièdre (équiv. TITAPAK V-GD), 592×592×292. **Contenu retravaillé v1.1 (02/08/2026) — voir

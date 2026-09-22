@@ -11,7 +11,8 @@
     "(7) COURBE : axe 0→3500 m³/h (déc. PA, révisée après rendu — le nominal 3000 revient DANS le graphe) : E10 mesuré jusqu'au bout, H13 EXTRAPOLÉ sur 3000→3500 (écart assumé à la règle « fin des mesures » de NETBAG, dit dans la note). Échelle 480 Pa (paliers ronds 120/240/360/480). COURBE 90 % (courbe_pct prime désormais sur calc_formats_fixes) — la plus grande de la gamme. Points nominaux à 3000 (175/328 Pa — 328 = lissage origine, mesuré brut 331, écart 3 Pa cohérent tableau/courbe). Cases, légende et boutons calculateur en CLASSE SEULE (nouvelle clé classes_sans_iso + legende_courte, déc. PA : les MPPS restent au tableau technique). Pages 1 ET 2 = A4 exact (1122,52 px).",
     "(8) CALCULATEUR : curseur borné à 3000 (fin des mesures H13 — aucune ΔP extrapolée lisible, même si la courbe va à 3500) et INITIALISÉ AU NOMINAL — le bug répertorié au CHECKLIST (curseur figé à 3400 par le gabarit) est CORRIGÉ DANS LE MOTEUR série pour toutes les fiches (no-op quand nominal = 3400). « Longueur de poche » remplacé par les 3 boutons de format (calc_formats_fixes).",
     "(9) CONFIGURATEUR (code 13, mode calcul, sansCadre — polyester sans suffixe) : offre RESTREINTE aux classes EPA/HEPA (classesIncluses E10-E12/H13) — l'onglet Excel 13 tarife aussi M6→F9 que la fiche ne documente pas, dont un F8 490×592 à 3,50 € ERRONÉ qui vendait un filtre 12 € au lieu de ~108 € (neutralisé ; cellule Excel à corriger, CHECKLIST). H14 au menu sans prix → devis. DIMENSIONS STANDARD UNIQUEMENT (déc. PA « comme NETPAK S AZUR ») : menu des 3 formats de la grille, plein format en tête, saisie libre supprimée, intro « format standard » automatique. Relevés au centime : 12 combinaisons identiques avant/après chacune des 2 retouches (restriction classes, puis formats).",
-    "(10) RÉSERVES MAINTENUES (cf. CHECKLIST § NETCEL V AZUR) : surface média à mesurer (réaffichage + nominal plus flatteur possibles si le média réel Netair ≥ données 2018) ; H13 extrapolé 3000→3500 sur la courbe ; 287×592 sourcé tarif seul ; humidité et étanchéité non sourcées ; H14 à tarifer + courbe H14 à mesurer (source NIVAL = copie du H13, inutilisable) ; classes particulaires de l'onglet 13 à statuer ; photo = même polydièdre que NETPAK S AZUR à distinguer ; nom « AZUR » partagé entre familles (convention nommage, à confirmer)."
+    "(10) RÉSERVES MAINTENUES (cf. CHECKLIST § NETCEL V AZUR) : surface média à mesurer (réaffichage + nominal plus flatteur possibles si le média réel Netair ≥ données 2018) ; H13 extrapolé 3000→3500 sur la courbe ; 287×592 sourcé tarif seul ; humidité et étanchéité non sourcées ; H14 à tarifer + courbe H14 à mesurer (source NIVAL = copie du H13, inutilisable) ; classes particulaires de l'onglet 13 à statuer ; photo = même polydièdre que NETPAK S AZUR à distinguer ; nom « AZUR » partagé entre familles (convention nommage, à confirmer).",
+    "(11) RETOUCHE POST-v1.1 → v1.2, 15/08/2026, ACCORD EXPRÈS DE PA. Ajout de la ligne « Séparateur : Hot melt » après « Parois cellule », à l'ordre canonique retenu sur NETCEL V LAM. SOURCÉ : les 2 fiches H13 du produit (TITAPAK V-GD 592 et 490) portent « HOTMELT » ; la fiche E10 n'a pas le champ — absence, pas contradiction. Motif : les 3 fiches absolues divergeaient, LAM affichait le séparateur, AZUR et NIVAL non, alors que la donnée est vraie et sourcée pour les trois. Écart de gamme résorbé. Aucune autre ligne touchée."
   ],
   "slug": "netcel-v-azur",
   "nom": "NETCEL V AZUR",
@@ -38,8 +39,8 @@
   "len0": 292,
   "fiche": {
     "num": "FT-NETCEL-V-AZUR-001",
-    "version": "v1.1",
-    "date": "02/08/2026"
+    "version": "v1.2",
+    "date": "15/08/2026"
   },
   "photo": "netcel-v-azur-photo.jpg",
   "photo_alt": "Filtre absolu HEPA multidièdre NETCEL V AZUR",
@@ -64,6 +65,10 @@
     [
       "Parois cellule",
       "Plastique"
+    ],
+    [
+      "Séparateur",
+      "Hot melt"
     ],
     [
       "Classes EN 1822",
