@@ -17,8 +17,8 @@
   /* Emplacement photo produit — remplacer le contenu / l'image par la photo réelle */
   .photo-slot { width: 100%; height: 60mm; display: flex; align-items: center; justify-content: center; border-radius: 6px; overflow: hidden; }
   .photo-slot img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; }
-  .photo-slot .photo-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center; color: #9DB8D6; font-size: 12px; border: 1.5px dashed #C9D7E8; border-radius: 6px; }
   @media print {
+    .no-print { display: none !important; }
     .cmp-wrap { padding: 0; background: #fff; display: block; }
     .cmp-col { display: block; gap: 0; }
     .a4 { box-shadow: none; margin: 0; page-break-after: always; }
@@ -59,7 +59,7 @@
           <div style="width:1px; align-self:stretch; background:#DCE6F2; margin:2px 0;"></div>
           <div style="flex:1; min-width:0;">
             <div style="font-size:40px; font-weight:700; color:#0F3261; line-height:.98; letter-spacing:-.6px; text-align:center;">NETBAG S</div>
-            <div style="font-size:13.5px; color:#5A6573; margin-top:5px; font-weight:500; text-align:center;">Filtre à poches souples — Préfiltration à filtration fine</div>
+            <div style="font-size:13.5px; color:#5A6573; margin-top:5px; font-weight:500; text-align:center;">Filtre à poches souples</div>
           </div>
           <div style="display:flex; flex-direction:column; align-items:flex-end; gap:7px; flex:none;">
             <div style="display:inline-block; background:#0F3261; color:#fff; font-size:10px; font-weight:600; padding:5px 11px; border-radius:20px; letter-spacing:.2px; white-space:nowrap;">ISO 16890 : Coarse 65% → ePM1 80%</div>
@@ -74,22 +74,20 @@
 
         <!-- Photo + description -->
         <div style="display:grid; grid-template-columns:70mm 1fr; gap:8mm; align-items:center;">
-          <div class="photo-slot" id="netbag-s-photo" title="Cliquer pour importer une photo" style="cursor:pointer;">
-            <!-- Cliquer sur la zone pour importer une photo (enregistrée localement) ; ou remplacer par : <img src="photo-produit.jpg" alt="Filtre NETPLY"> -->
+          <div class="photo-slot" id="netbag-s-photo">
+            <!-- Photo : clé "photo" du JSON produit → fichier dans assets/. Pas d'import depuis la fiche. -->
             <img id="netbag-s-img" src="assets/netbag-s-photo.jpg" alt="Filtre à poches souples NETBAG S" style="display:block;">
-            <div class="photo-ph" id="netbag-s-ph" style="display:none;">Photo produit<br><span style="font-size:10px; color:#b6c4d6;">cliquer pour importer</span></div>
-            <input type="file" id="netbag-s-file" accept="image/*" style="display:none;">
           </div>
           <div>
             <div style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase;">Description</div>
             <div style="width:34px; height:2px; background:#0897A5; margin:5px 0 8px 0;"></div>
-            <p style="margin:0; font-size:13px; line-height:1.55; color:#3a4654; text-wrap:pretty;">Le NETBAG S est un filtre à poches souples conçu pour la filtration moyenne à fine des centrales de traitement d'air. Son média synthétique à densité croissante développe une grande surface filtrante répartie sur plusieurs poches, gage d'une forte capacité de rétention et d'une longue durée de vie à faible perte de charge. Les coutures sont tenues par des écarteurs thermosoudés, sans colle, pour une résistance mécanique renforcée et un encrassement régulier. Disponible de G4 (préfiltration) à F9 (haute efficacité) selon EN 779 / EN ISO 16890, en plusieurs profondeurs de poche (380 à 650 mm), sur cadre acier galvanisé ou polypropylène, en 592×592 ou 287×592 mm. La classe G4 (Coarse, poche 380 mm) est proposée en préfiltration ; sa courbe de perte de charge est fournie sur demande.</p>
+            <p style="margin:0; font-size:13px; line-height:1.55; color:#3a4654; text-wrap:pretty;">Le filtre à poches souples NETBAG S est destiné à la filtration de l'air dans les centrales de traitement d'air, de la préfiltration à la filtration fine. Son média en fibres synthétiques à densité progressive est réparti sur plusieurs poches, développant une grande surface filtrante et une forte capacité de rétention des poussières.</p>
             <div style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase; margin-top:11px;">Points clés</div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px 14px; margin-top:8px; font-size:12.5px; color:#27313e;">
-              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Grande surface filtrante (multi-poches)</div>
-              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Faible perte de charge</div>
+              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Surface filtrante développée</div>
+              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Fibres synthétiques à densité progressive</div>
               <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Forte capacité de rétention</div>
-              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Écarteurs thermosoudés — sans colle</div>
+              <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Dimensions standard et sur mesure</div>
               <div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; background:#0897A5; display:inline-block; flex:none;"></span>Sans fibre de verre</div>
             </div>
           </div>
@@ -103,17 +101,18 @@
           </div>
           <table style="width:100%; border-collapse:collapse; font-size:12.5px; margin-top:7px;">
             <tbody>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261; width:40%;">Média filtrant</td><td style="padding:6px 12px; color:#3a4654;">Fibres synthétiques</td></tr>
-              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Type</td><td style="padding:6px 12px; color:#3a4654;">Poches souples (multi-poches)</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Cadre</td><td style="padding:6px 12px; color:#3a4654;">Acier galvanisé (option polypropylène) — ép. 25 mm</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261; width:40%;">Média filtrant</td><td style="padding:6px 12px; color:#3a4654;">Fibres synthétiques à densité progressive</td></tr>
+              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Type</td><td style="padding:6px 12px; color:#3a4654;">Poches souples</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Cadre</td><td style="padding:6px 12px; color:#3a4654;">Acier galvanisé ou plastique — ép. 25 mm</td></tr>
               <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Écarteurs / séparateurs</td><td style="padding:6px 12px; color:#3a4654;">Thermosoudés (sans colle)</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités EN 779</td><td style="padding:6px 12px; color:#3a4654;">G4 · M5 · M6 · F7 · F8 · F9</td></tr>
-              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités ISO 16890</td><td style="padding:6px 12px; color:#3a4654;">Coarse 65% (G4) · ePM10 50% · ePM2,5 50% · ePM1 55% → 80%</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Profondeurs de poche</td><td style="padding:6px 12px; color:#3a4654;">380 (G4) · 500 · 550 · 650 mm</td></tr>
-              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Dimensions cadre</td><td style="padding:6px 12px; color:#3a4654;">592×592 · 287×592 mm</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités ISO 16890</td><td style="padding:6px 12px; color:#3a4654;">Coarse 65 %  ·  ePM10 50 %  ·  ePM2,5 50 %  ·  ePM1 55 % → 80 %</td></tr>
+              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Efficacités EN 779</td><td style="padding:6px 12px; color:#3a4654;">G4  ·  M5  ·  M6  ·  F7  ·  F8  ·  F9</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Profondeurs de poche</td><td style="padding:6px 12px; color:#3a4654;">380  ·  500  ·  550  ·  650 mm</td></tr>
+              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Dimensions cadre</td><td style="padding:6px 12px; color:#3a4654;">Standard et sur mesure</td></tr>
               <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Classement au feu</td><td style="padding:6px 12px; color:#3a4654;">M1</td></tr>
               <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Température de service</td><td style="padding:6px 12px; color:#3a4654;">60 °C (accidentelle 65 °C / 1 h)</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">ΔP finale recommandée</td><td style="padding:6px 12px; color:#3a4654;">min(ΔP initiale + 50 Pa [Coarse G4] / + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:6px 12px; font-weight:700; color:#0F3261;">Humidité relative max.</td><td style="padding:6px 12px; color:#3a4654;">100 % (sans condensation)</td></tr>
+              <tr><td style="padding:6px 12px; font-weight:700; color:#0F3261;">ΔP finale recommandée</td><td style="padding:6px 12px; color:#3a4654;">min(ΔP initiale + 50 Pa [Coarse] / + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053</td></tr>
             </tbody>
           </table>
         </div>
@@ -134,24 +133,23 @@
                 <th style="padding:6px 7px; text-align:left; font-weight:600;">Débit (m³/h)</th>
                 <th style="padding:6px 7px; text-align:left; font-weight:600;">ΔP (Pa)</th>
                 <th style="padding:6px 7px; text-align:left; font-weight:600;">Efficacité ISO 16890</th>
-                <th style="padding:6px 7px; text-align:left; font-weight:600;">Référence complète</th>
+                <th style="padding:6px 7px; text-align:left; font-weight:600;">EN 779</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">380</td><td style="padding:4px 7px;">3,46</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">82</td><td style="padding:4px 7px;">ePM10 50% (M5)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM10 50%-M5-592x592x380</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">550</td><td style="padding:4px 7px;">5,11</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">49*</td><td style="padding:4px 7px;">ePM10 50% (M5)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM10 50%-M5-592x592x550</td></tr>
-              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">650</td><td style="padding:4px 7px;">6,10</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">65</td><td style="padding:4px 7px;">ePM10 50% (M5)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM10 50%-M5-592x592x650</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">380</td><td style="padding:4px 7px;">3,46</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">156</td><td style="padding:4px 7px;">ePM2,5 50% (M6)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM2,5 50%-M6-592x592x380</td></tr>
-              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">380</td><td style="padding:4px 7px;">3,46</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">174</td><td style="padding:4px 7px;">ePM1 55% (F7)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM1 55%-F7-592x592x380</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">550</td><td style="padding:4px 7px;">5,11</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">105</td><td style="padding:4px 7px;">ePM1 55% (F7)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM1 55%-F7-592x592x550</td></tr>
-              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">650</td><td style="padding:4px 7px;">6,10</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">102</td><td style="padding:4px 7px;">ePM1 55% (F7)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM1 55%-F7-592x592x650</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">380</td><td style="padding:4px 7px;">3,46</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">191</td><td style="padding:4px 7px;">ePM1 70% (F8)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM1 70%-F8-592x592x380</td></tr>
-              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">500</td><td style="padding:4px 7px;">5,11</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">128</td><td style="padding:4px 7px;">ePM1 70% (F8)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM1 70%-F8-592x592x500</td></tr>
-              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">500</td><td style="padding:4px 7px;">5,11</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">159</td><td style="padding:4px 7px;">ePM1 80% (F9)</td><td style="padding:4px 7px; font-family:'IBM Plex Mono',monospace; color:#0F3261;">NETBAG S-ePM1 80%-F9-592x592x500</td></tr>
-              <tr style="background:#E6F5F7;"><td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="7">Sur mesure</td><td style="padding:4px 7px; color:#5A6573; font-style:italic;">sur demande — délai à confirmer</td></tr>
+              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">380</td><td style="padding:4px 7px;">3,46</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">82</td><td style="padding:4px 7px;">ePM10 50%</td><td style="padding:4px 7px;">M5</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">550</td><td style="padding:4px 7px;">5,11</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">49*</td><td style="padding:4px 7px;">ePM10 50%</td><td style="padding:4px 7px;">M5</td></tr>
+              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">650</td><td style="padding:4px 7px;">6,10</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">65</td><td style="padding:4px 7px;">ePM10 50%</td><td style="padding:4px 7px;">M5</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">380</td><td style="padding:4px 7px;">3,46</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">156</td><td style="padding:4px 7px;">ePM2,5 50%</td><td style="padding:4px 7px;">M6</td></tr>
+              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">380</td><td style="padding:4px 7px;">3,46</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">174</td><td style="padding:4px 7px;">ePM1 55%</td><td style="padding:4px 7px;">F7</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">550</td><td style="padding:4px 7px;">5,11</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">105</td><td style="padding:4px 7px;">ePM1 55%</td><td style="padding:4px 7px;">F7</td></tr>
+              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">650</td><td style="padding:4px 7px;">6,10</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">102</td><td style="padding:4px 7px;">ePM1 55%</td><td style="padding:4px 7px;">F7</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">380</td><td style="padding:4px 7px;">3,46</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">191</td><td style="padding:4px 7px;">ePM1 70%</td><td style="padding:4px 7px;">F8</td></tr>
+              <tr><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">500</td><td style="padding:4px 7px;">5,11</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">128</td><td style="padding:4px 7px;">ePM1 70%</td><td style="padding:4px 7px;">F8</td></tr>
+              <tr style="background:#F2F6FB;"><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">592</td><td style="padding:4px 7px;">500</td><td style="padding:4px 7px;">5,11</td><td style="padding:4px 7px;">3&nbsp;400</td><td style="padding:4px 7px;">159</td><td style="padding:4px 7px;">ePM1 80%</td><td style="padding:4px 7px;">F9</td></tr>
             </tbody>
           </table>
-          <div style="font-size:10px; color:#8b97a6; margin-top:6px; line-height:1.45;">Surface filtrante = 2 × la surface frontale (L × H). ΔP initiale de référence (valeur fixe mesurée à 3400 m³/h sur 592×592, média propre) ; le débit indiqué est le débit nominal correspondant à cette ΔP pour chaque dimension.</div>
+          <div style="font-size:10px; color:#8b97a6; margin-top:6px; line-height:1.45;">Surface filtrante développée (média sur l'ensemble des poches), pour un cadre 592×592 ; le cadre 287×592 et le sur-mesure sont disponibles sur demande. ΔP initiale mesurée à 3 400 m³/h, média propre. (*) valeur à confirmer.</div>
         </div>
 
       </div>
@@ -159,7 +157,7 @@
       <div style="margin:0; background:#0F3261; color:#cdd9e8; height:10mm; display:flex; align-items:center; justify-content:space-between; padding:0 12mm; font-size:11px;">
         <span style="font-weight:600; color:#fff;">Netair SAS</span>
         <span style="font-family:'IBM Plex Mono',monospace; color:#9DB8D6; letter-spacing:.3px;">Fiche n° FT-NETBAG-S-001</span>
-        <span>v1.0 — 22/06/2026 — Page 1/2</span>
+        <span>v1.1 — 26/07/2026 — Page 1/2</span>
       </div>
     </div>
 
@@ -180,36 +178,37 @@
             </div>
           </div>
         </div>
-        <div style="height:2px; background:#0F3261; margin:7mm 0 7mm 0;"></div>
+        <div style="height:2px; background:#0F3261; margin:4mm 0 4mm 0;"></div>
 
         <!-- Section courbe -->
         <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase; white-space:nowrap;">Courbe vitesse / perte de charge</span>
+          <span style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase; white-space:nowrap;">Courbe débit / perte de charge</span>
           <span style="flex:1; height:1px; background:#0F3261;"></span>
         </div>
                 <div style="display:flex; align-items:center; gap:14px; margin-top:7px; flex-wrap:wrap;">
           <span style="font-size:11px; font-weight:600; color:#5A6573; white-space:nowrap;">Afficher :</span>
-          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;"><input type="checkbox" id="cb_m5" checked style="width:14px; height:14px; accent-color:#0897A5; cursor:pointer;">M5 · ePM10 50%</label>
-          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;"><input type="checkbox" id="cb_m6" checked style="width:14px; height:14px; accent-color:#1B9E5A; cursor:pointer;">M6 · ePM2,5 50%</label>
+          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;"><input type="checkbox" id="cb_m5" style="width:14px; height:14px; accent-color:#0897A5; cursor:pointer;">M5 · ePM10 50%</label>
+          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;"><input type="checkbox" id="cb_m6" style="width:14px; height:14px; accent-color:#1B9E5A; cursor:pointer;">M6 · ePM2,5 50%</label>
           <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;"><input type="checkbox" id="cb_f7" checked style="width:14px; height:14px; accent-color:#0F3261; cursor:pointer;">F7 · ePM1 55%</label>
-          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;"><input type="checkbox" id="cb_f8" checked style="width:14px; height:14px; accent-color:#6A4C93; cursor:pointer;">F8 · ePM1 70%</label>
-          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;"><input type="checkbox" id="cb_f9" checked style="width:14px; height:14px; accent-color:#C0392B; cursor:pointer;">F9 · ePM1 80%</label>
+          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;"><input type="checkbox" id="cb_f8" style="width:14px; height:14px; accent-color:#6A4C93; cursor:pointer;">F8 · ePM1 70%</label>
+          <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer; font-size:11.5px; color:#3a4654; white-space:nowrap;"><input type="checkbox" id="cb_f9" style="width:14px; height:14px; accent-color:#C0392B; cursor:pointer;">F9 · ePM1 80%</label>
         </div>
 
-        <div style="margin-top:6mm; border:1px solid #E1E7EF; border-radius:8px; padding:5mm 6mm 4mm 4mm; background:#FCFDFE;">
-          <svg id="curveSvg" viewBox="0 0 600 300" style="width:100%; height:auto; display:block;">
+        <div style="margin-top:3mm; border:1px solid #E1E7EF; border-radius:8px; padding:2mm 3mm 2mm 3mm; background:#FCFDFE;">
+          <svg id="curveSvg" viewBox="0 0 600 300" style="width:85%; height:auto; display:block; margin:0 auto;">
             <!-- horizontal gridlines -->
             <line x1="52" y1="16" x2="580" y2="16" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="74.5" x2="580" y2="74.5" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="133" x2="580" y2="133" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="52" y1="191.5" x2="580" y2="191.5" stroke="#EDF1F6" stroke-width="1"></line>
             <!-- vertical gridlines -->
-            <line x1="135.3" y1="16" x2="135.3" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
-            <line x1="218.6" y1="16" x2="218.6" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
-            <line x1="301.8" y1="16" x2="301.8" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
-            <line x1="385.1" y1="16" x2="385.1" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
-            <line x1="468.4" y1="16" x2="468.4" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
-            <line x1="551.7" y1="16" x2="551.7" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
+            <line x1="118.0" y1="16" x2="118.0" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
+            <line x1="184.0" y1="16" x2="184.0" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
+            <line x1="250.0" y1="16" x2="250.0" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
+            <line x1="316.0" y1="16" x2="316.0" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
+            <line x1="382.0" y1="16" x2="382.0" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
+            <line x1="448.0" y1="16" x2="448.0" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
+            <line x1="514.0" y1="16" x2="514.0" y2="250" stroke="#EDF1F6" stroke-width="1"></line>
             <line x1="500.8" y1="16" x2="500.8" y2="250" stroke="#0F3261" stroke-width="1" stroke-dasharray="2 3" opacity="0.4"></line>
             <!-- courbes multi-classes (générées) -->
             <path id="p_m5_380" d="" fill="none" stroke="#0897A5" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -233,6 +232,16 @@
             <circle id="m_f8_380" cx="0" cy="0" r="0" fill="#6A4C93"></circle>
             <circle id="m_f8_500" cx="0" cy="0" r="0" fill="#A98FD0"></circle>
             <circle id="m_f9_500" cx="0" cy="0" r="0" fill="#C0392B"></circle>
+            <text id="tlab_m5_380" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#0897A5"></text>
+            <text id="tlab_m5_550" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#6FCBD2"></text>
+            <text id="tlab_m5_650" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#036C77"></text>
+            <text id="tlab_m6_380" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#1B9E5A"></text>
+            <text id="tlab_f7_380" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#0F3261"></text>
+            <text id="tlab_f7_550" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#3E66A6"></text>
+            <text id="tlab_f7_650" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#7CA0D6"></text>
+            <text id="tlab_f8_380" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#6A4C93"></text>
+            <text id="tlab_f8_500" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#A98FD0"></text>
+            <text id="tlab_f9_500" x="0" y="0" text-anchor="start" paint-order="stroke" stroke="#fff" stroke-width="3.5" stroke-linejoin="round" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" fill="#C0392B"></text>
             </g>
             <!-- axes -->
             <line x1="52" y1="16" x2="52" y2="250" stroke="#0F3261" stroke-width="1.4"></line>
@@ -245,14 +254,16 @@
             <text x="46" y="20" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">240</text>
             <!-- x tick labels -->
             <text x="52" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">0</text>
-            <text x="135.3" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">0,5</text>
-            <text x="218.6" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">1</text>
-            <text x="301.8" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">1,5</text>
-            <text x="385.1" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">2</text>
-            <text x="468.4" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">2,5</text>
-            <text x="580" y="265" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">3,17</text>
+            <text x="118.0" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">500</text>
+            <text x="184.0" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">1000</text>
+            <text x="250.0" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">1500</text>
+            <text x="316.0" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">2000</text>
+            <text x="382.0" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">2500</text>
+            <text x="448.0" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">3000</text>
+            <text x="514.0" y="265" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">3500</text>
+            <text x="580" y="265" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5A6573">4000</text>
             <!-- axis titles -->
-            <text x="316" y="285" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="11.5" font-weight="600" fill="#0F3261">Vitesse d'air (m/s)</text>
+            <text x="316" y="285" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="11.5" font-weight="600" fill="#0F3261">Débit d'air (m³/h)</text>
             <text x="500.8" y="11" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="9.5" font-weight="600" fill="#0F3261">2,7 m/s ≈ 3400 m³/h · 592×592</text>
             <text transform="rotate(-90 16 133)" x="16" y="133" text-anchor="middle" font-family="'Instrument Sans',sans-serif" font-size="11.5" font-weight="600" fill="#0F3261">Perte de charge (Pa)</text>
             <g id="hoverG" style="display:none;">
@@ -261,31 +272,31 @@
             </g>
             <rect id="hoverHit" x="52" y="16" width="528" height="234" fill="transparent" style="cursor:crosshair;"></rect>
           </svg>
-          <div style="display:flex; gap:14px 18px; align-items:center; margin-top:3mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
-            <div id="lg_m5_380" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0897A5; display:inline-block; border-radius:2px;"></span>M5 · ePM10 50% — 380 mm</div>
-            <div id="lg_m5_550" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#6FCBD2; display:inline-block; border-radius:2px;"></span>M5 · ePM10 50% — 550 mm (à valider)</div>
-            <div id="lg_m5_650" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#036C77; display:inline-block; border-radius:2px;"></span>M5 · ePM10 50% — 650 mm</div>
-            <div id="lg_m6_380" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#1B9E5A; display:inline-block; border-radius:2px;"></span>M6 · ePM2,5 50% — 380 mm</div>
-            <div id="lg_f7_380" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0F3261; display:inline-block; border-radius:2px;"></span>F7 · ePM1 55% — 380 mm</div>
-            <div id="lg_f7_550" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#3E66A6; display:inline-block; border-radius:2px;"></span>F7 · ePM1 55% — 550 mm</div>
-            <div id="lg_f7_650" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#7CA0D6; display:inline-block; border-radius:2px;"></span>F7 · ePM1 55% — 650 mm</div>
-            <div id="lg_f8_380" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#6A4C93; display:inline-block; border-radius:2px;"></span>F8 · ePM1 70% — 380 mm</div>
-            <div id="lg_f8_500" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#A98FD0; display:inline-block; border-radius:2px;"></span>F8 · ePM1 70% — 500 mm</div>
-            <div id="lg_f9_500" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#C0392B; display:inline-block; border-radius:2px;"></span>F9 · ePM1 80% — 500 mm</div>
+          <div style="display:flex; gap:6px 14px; align-items:center; margin-top:2mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
+            <div id="lg_m5_380" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0897A5; display:inline-block; border-radius:2px;"></span>M5 · 380 mm</div>
+            <div id="lg_m5_550" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#6FCBD2; display:inline-block; border-radius:2px;"></span>M5 · 550 mm (à valider)</div>
+            <div id="lg_m5_650" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#036C77; display:inline-block; border-radius:2px;"></span>M5 · 650 mm</div>
+            <div id="lg_m6_380" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#1B9E5A; display:inline-block; border-radius:2px;"></span>M6 · 380 mm</div>
+            <div id="lg_f7_380" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#0F3261; display:inline-block; border-radius:2px;"></span>F7 · 380 mm</div>
+            <div id="lg_f7_550" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#3E66A6; display:inline-block; border-radius:2px;"></span>F7 · 550 mm</div>
+            <div id="lg_f7_650" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#7CA0D6; display:inline-block; border-radius:2px;"></span>F7 · 650 mm</div>
+            <div id="lg_f8_380" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#6A4C93; display:inline-block; border-radius:2px;"></span>F8 · 380 mm</div>
+            <div id="lg_f8_500" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#A98FD0; display:inline-block; border-radius:2px;"></span>F8 · 500 mm</div>
+            <div id="lg_f9_500" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:#C0392B; display:inline-block; border-radius:2px;"></span>F9 · 500 mm</div>
             <div style="margin-left:auto; font-style:italic; color:#5A6573;">Média propre — air à 20 °C</div>
           </div>
         </div>
 
         <!-- Section calculateur -->
-        <div style="display:flex; align-items:center; gap:10px; margin-top:9mm;">
+        <div style="display:flex; align-items:center; gap:10px; margin-top:5mm;">
           <span style="font-size:11px; font-weight:700; color:#0F3261; letter-spacing:1.2px; text-transform:uppercase; white-space:nowrap;">Calculateur énergétique</span>
           <span style="flex:1; height:1px; background:#0F3261;"></span>
         </div>
         <div style="font-size:12px; color:#5A6573; margin-top:5px; line-height:1.5;">Estimez la consommation du ventilateur liée à la perte de charge du filtre sur une année de fonctionnement. Ajustez les paramètres ci-dessous.</div>
 
-        <div style="display:grid; grid-template-columns:1fr 80mm; gap:7mm; margin-top:6mm; align-items:stretch;">
+        <div style="display:grid; grid-template-columns:1fr 80mm; gap:7mm; margin-top:4mm; align-items:stretch;">
           <!-- PARAMÈTRES -->
-          <div style="display:flex; flex-direction:column; gap:13px; padding-top:1px;">
+          <div style="display:flex; flex-direction:column; gap:11px; padding-top:1px;">
             <div style="display:grid; grid-template-columns:1fr; gap:10px;">
               <div>
                 <div style="font-size:10px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:#9aa6b4; margin-bottom:7px;">Classe d'efficacité</div>
@@ -298,9 +309,9 @@
             </div>
             <div>
               <div style="display:flex; gap:7px;">
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP initiale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpInit"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
                 <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP finale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpFinal"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
-                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#0897A5;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0897A5; font-weight:500; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
+                <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
               </div>
               <div style="font-size:9.5px; color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span></div>
             </div>
@@ -322,39 +333,39 @@
               </div>
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Débit d'air</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="debitVal"></span> m³/h</span>
               </div>
-              <input type="range" id="inDebit" min="500" max="6000" step="50" value="3400" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDebit" min="500" max="4000" step="50" value="3400" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Durée de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="dureeVal"></span> h/jour</span>
               </div>
-              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inDuree" min="0" max="24" step="0.5" value="24" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Jours de fonctionnement</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="joursVal"></span> j/an · <span id="heuresVal"></span> h/an</span>
               </div>
-              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inJours" min="0" max="365" step="5" value="250" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Rendement moto-ventilateur</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="etaVal"></span> %</span>
               </div>
-              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inEta" min="30" max="85" step="1" value="55" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px;">
                 <span style="font-size:12.5px; font-weight:600; color:#0F3261;">Prix de l'électricité</span>
                 <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#0897A5; font-weight:500;"><span id="prixVal"></span> €/kWh</span>
               </div>
-              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5;">
+              <input type="range" id="inPrix" min="0.05" max="0.40" step="0.01" value="0.18" style="width:100%; accent-color:#0897A5; display:block; margin:0;">
             </div>
           </div>
 
@@ -373,8 +384,8 @@
             <!-- Consommation énergétique -->
             <div style="text-align:center;">
               <div style="font-size:9.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#8b97a6;">Consommation énergétique</div>
-              <div style="margin-top:6px; white-space:nowrap;"><span style="font-size:30px; font-weight:700; color:#0F3261; font-variant-numeric:tabular-nums;" id="kwh"></span> <span style="font-size:12px; color:#9aa6b4;">kWh/an</span></div>
-              <div style="font-size:9.5px; color:#9aa6b4; margin-top:4px;">sur <span id="heures2"></span> h/an</div>
+              <div style="margin-top:6px; white-space:nowrap;"><span style="font-size:30px; font-weight:700; color:#0F3261; font-variant-numeric:tabular-nums;" id="kwh"></span> <span style="font-size:12px; color:#9aa6b4;">kWh</span></div>
+              <div style="font-size:9.5px; color:#9aa6b4; margin-top:4px;">sur <span id="heures2"></span> h</div>
             </div>
 
             <div style="height:1px; background:#E1EAF3;"></div>
@@ -382,12 +393,12 @@
             <!-- Impact carbone (secondaire) -->
             <div style="text-align:center;">
               <div style="font-size:11.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#8b97a6;">Impact carbone</div>
-              <div style="margin-top:6px; white-space:nowrap;"><span style="font-size:25px; font-weight:700; color:#0F3261; font-variant-numeric:tabular-nums;" id="co2"></span> <span style="font-size:13px; color:#9aa6b4;">kg CO₂/an</span></div>
+              <div style="margin-top:6px; white-space:nowrap;"><span style="font-size:25px; font-weight:700; color:#0F3261; font-variant-numeric:tabular-nums;" id="co2"></span> <span style="font-size:13px; color:#9aa6b4;">kg CO₂</span></div>
             </div>
           </div>
         </div>
 
-        <div style="margin-top:7mm; background:#F2F6FB; border-left:3px solid #0897A5; padding:9px 14px; font-size:10.5px; color:#5A6573; line-height:1.55;">
+        <div style="margin-top:4mm; background:#F2F6FB; border-left:3px solid #0897A5; padding:9px 14px; font-size:10.5px; color:#5A6573; line-height:1.55;">
           <strong style="color:#0F3261;">Méthode :</strong> P = (Q ⁄ 3600) × ΔP ⁄ η &nbsp;·&nbsp; Énergie = P × heures de fonctionnement. Valeurs indicatives à but de comparaison — base CO₂ 0,079 kgCO₂/kWh — 79 g (mix électrique France). η = rendement global du moto-ventilateur.
         </div>
 
@@ -396,7 +407,7 @@
       <div style="margin:0; background:#0F3261; color:#cdd9e8; height:10mm; display:flex; align-items:center; justify-content:space-between; padding:0 12mm; font-size:11px;">
         <span style="font-weight:600; color:#fff;">Netair SAS</span>
         <span style="font-family:'IBM Plex Mono',monospace; color:#9DB8D6; letter-spacing:.3px;">Fiche n° FT-NETBAG-S-001</span>
-        <span>v1.0 — 22/06/2026 — Page 2/2</span>
+        <span>v1.1 — 26/07/2026 — Page 2/2</span>
       </div>
     </div>
 
@@ -406,7 +417,7 @@
 <script>
 (function () {
   "use strict";
-  var SERIES = [{"k": "m5_380", "cls": "m5", "len": 380, "co": {"a": 4.7467, "b": 17.7835, "c": 0.0}, "color": "#0897A5"}, {"k": "m5_550", "cls": "m5", "len": 550, "co": {"a": 1.3382, "b": 14.4076, "c": 0.0}, "color": "#6FCBD2"}, {"k": "m5_650", "cls": "m5", "len": 650, "co": {"a": 2.2515, "b": 17.9586, "c": 0.0}, "color": "#036C77"}, {"k": "m6_380", "cls": "m6", "len": 380, "co": {"a": 12.989, "b": 22.8824, "c": 0.0}, "color": "#1B9E5A"}, {"k": "f7_380", "cls": "f7", "len": 380, "co": {"a": 11.583, "b": 33.5357, "c": 0.0}, "color": "#0F3261"}, {"k": "f7_550", "cls": "f7", "len": 550, "co": {"a": 4.8742, "b": 25.9765, "c": 0.0}, "color": "#3E66A6"}, {"k": "f7_650", "cls": "f7", "len": 650, "co": {"a": 5.2626, "b": 23.4926, "c": 0.0}, "color": "#7CA0D6"}, {"k": "f8_380", "cls": "f8", "len": 380, "co": {"a": 8.1898, "b": 48.9711, "c": 0.0}, "color": "#6A4C93"}, {"k": "f8_500", "cls": "f8", "len": 500, "co": {"a": 4.8898, "b": 34.3408, "c": 0.0}, "color": "#A98FD0"}, {"k": "f9_500", "cls": "f9", "len": 500, "co": {"a": 7.3525, "b": 39.0564, "c": 0.0}, "color": "#C0392B"}];
+  var SERIES = [{"k": "m5_380", "cls": "m5", "len": 380, "co": {"a": 4.7467, "b": 17.7835, "c": 0.0}, "color": "#0897A5", "dp": 82}, {"k": "m5_550", "cls": "m5", "len": 550, "co": {"a": 1.3382, "b": 14.4076, "c": 0.0}, "color": "#6FCBD2", "dp": 49}, {"k": "m5_650", "cls": "m5", "len": 650, "co": {"a": 2.2515, "b": 17.9586, "c": 0.0}, "color": "#036C77", "dp": 65}, {"k": "m6_380", "cls": "m6", "len": 380, "co": {"a": 12.989, "b": 22.8824, "c": 0.0}, "color": "#1B9E5A", "dp": 156}, {"k": "f7_380", "cls": "f7", "len": 380, "co": {"a": 11.583, "b": 33.5357, "c": 0.0}, "color": "#0F3261", "dp": 174}, {"k": "f7_550", "cls": "f7", "len": 550, "co": {"a": 4.8742, "b": 25.9765, "c": 0.0}, "color": "#3E66A6", "dp": 105}, {"k": "f7_650", "cls": "f7", "len": 650, "co": {"a": 5.2626, "b": 23.4926, "c": 0.0}, "color": "#7CA0D6", "dp": 102}, {"k": "f8_380", "cls": "f8", "len": 380, "co": {"a": 8.1898, "b": 48.9711, "c": 0.0}, "color": "#6A4C93", "dp": 191}, {"k": "f8_500", "cls": "f8", "len": 500, "co": {"a": 4.8898, "b": 34.3408, "c": 0.0}, "color": "#A98FD0", "dp": 128}, {"k": "f9_500", "cls": "f9", "len": 500, "co": {"a": 7.3525, "b": 39.0564, "c": 0.0}, "color": "#C0392B", "dp": 159}];
   var CLS    = {"m5": {"label": "M5", "iso": "ePM10 50%", "add": 100, "rule": "classe ePM10"}, "m6": {"label": "M6", "iso": "ePM2,5 50%", "add": 100, "rule": "classe ePM2,5"}, "f7": {"label": "F7", "iso": "ePM1 55%", "add": 100, "rule": "classe ePM1"}, "f8": {"label": "F8", "iso": "ePM1 70%", "add": 100, "rule": "classe ePM1"}, "f9": {"label": "F9", "iso": "ePM1 80%", "add": 100, "rule": "classe ePM1"}};
   var ORDER  = ["m5", "m6", "f7", "f8", "f9"];
   var Vmax = 3.17, Pmax = 240, Dnom = 3400;
@@ -415,11 +426,11 @@
   var Vnom = (Dnom / 3600) / Aref;
 
   var state = { debit: Dnom, duree: 24, jours: 250, eta: 55, prix: 0.18,
-                eff: "f7", len: 650, disp: {"m5": true, "m6": true, "f7": true, "f8": true, "f9": true}, flen: 592, fwid: 592 };
+                eff: "f7", len: 380, disp: {"m5": false, "m6": false, "f7": true, "f8": false, "f9": false}, flen: 592, fwid: 592 };
 
   var fr = function (n) { return Math.round(n).toLocaleString('fr-FR'); };
   var $  = function (id) { return document.getElementById(id); };
-  var mapX = function (v) { return 52 + (v / Vmax) * 528; };
+  var Dmax = 4000; var mapX = function (v) { return 52 + ((v * Aref * 3600) / Dmax) * 528; };
   var mapY = function (p) { return 250 - (Math.min(p, Pmax) / Pmax) * 234; };
   function pdc(co, v) { return Math.max(0, co.a * v * v + co.b * v + co.c); }
   // Rendu lissé : la courbe part de (0,0) et rejoint le polynôme réel dès le 1er
@@ -491,6 +502,23 @@
       mc.setAttribute('cx', mapX(Vnom).toFixed(1)); mc.setAttribute('cy', yy.toFixed(1)); mc.setAttribute('r', show ? 2.6 : 0);
       $('lg_' + s.k).style.opacity = show ? '1' : '0.25';
     }
+    (function () {
+      var arr = [];
+      for (var j = 0; j < SERIES.length; j++) {
+        var sj = SERIES[j], tl = $('tlab_' + sj.k);
+        if (!tl) continue;
+        if (state.disp[sj.cls] === false) { tl.textContent = ''; continue; }
+        arr.push({ t: tl, y: mapY(pdc(sj.co, Vnom)), v: (sj.dp != null ? sj.dp : pdc(sj.co, Vnom)) });
+      }
+      arr.sort(function (a, b) { return a.y - b.y; });
+      for (var j = 1; j < arr.length; j++) { if (arr[j].y < arr[j - 1].y + 11) arr[j].y = arr[j - 1].y + 11; }
+      var mx = mapX(Vnom);
+      for (var j = 0; j < arr.length; j++) {
+        arr[j].t.setAttribute('x', (mx + 8).toFixed(1));
+        arr[j].t.setAttribute('y', (arr[j].y + 3).toFixed(1));
+        arr[j].t.textContent = fr(arr[j].v) + ' Pa';
+      }
+    })();
     for (i = 0; i < ORDER.length; i++) {
       var cb = $('cb_' + ORDER[i]); if (cb) cb.checked = state.disp[ORDER[i]] !== false;
       var be = $('be_' + ORDER[i]); if (be) be.setAttribute('style', BEB + (state.eff === ORDER[i] ? ON : OFF));
@@ -541,7 +569,7 @@
   function moveHover(evt) {
     var r = curveSvg.getBoundingClientRect();
     var x = (evt.clientX - r.left) / r.width * 600; x = Math.max(52, Math.min(580, x));
-    var v = (x - 52) / 528 * Vmax;
+    var v = (x - 52) / 528 * Dmax / (Aref * 3600);
     fixedMarks.style.display = 'none'; hoverG.style.display = '';
     $('hvV').setAttribute('x1', x.toFixed(1)); $('hvV').setAttribute('x2', x.toFixed(1));
     for (var i = 0; i < SERIES.length; i++) {
@@ -553,7 +581,7 @@
       L.ht.setAttribute('x', (x + 6).toFixed(1)); L.ht.setAttribute('y', (y + 3).toFixed(1)); L.ht.textContent = fr(pdcD(s.co, v)) + ' Pa';
     }
     var hv = $('hvel'); hv.setAttribute('x', x.toFixed(1));
-    hv.textContent = v.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' m/s - ' + fr(v / Vnom * Dnom) + ' m³/h';
+    hv.textContent = fr(v / Vnom * Dnom) + ' m³/h - ' + v.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' m/s';
   }
   var hit = $('hoverHit'); hit.addEventListener('mousemove', moveHover);
   hit.addEventListener('mouseleave', function () { hoverG.style.display = 'none'; fixedMarks.style.display = ''; });
@@ -561,26 +589,6 @@
   render();
 })();
 </script>
-<script>
-(function () {
-  var slot = document.getElementById('netbag-s-photo');
-  if (!slot) return;
-  var img = document.getElementById('netbag-s-img');
-  var ph = document.getElementById('netbag-s-ph');
-  var file = document.getElementById('netbag-s-file');
-  function show(src) { img.src = src; img.style.display = 'block'; ph.style.display = 'none'; }
-  // Default = bundled original photo (assets/netbag-s-photo.jpg, set in markup).
-  // Only an explicit user re-import overrides it.
-  slot.addEventListener('click', function () { file.click(); });
-  file.addEventListener('change', function (e) {
-    var f = e.target.files[0]; if (!f) return;
-    var r = new FileReader();
-    r.onload = function () {
-      show(r.result);
-    };
-    r.readAsDataURL(f);
-  });
-})();
-</script>
+<a class="no-print" href="/produits/netbag-s" style="position:fixed; left:18px; top:18px; z-index:99999; display:inline-flex; align-items:center; gap:8px; background:#fff; color:#0F3261; border:1px solid #E2E8F0; border-radius:9px; padding:11px 16px; font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:13.5px; font-weight:600; text-decoration:none; box-shadow:0 3px 10px rgba(15,50,97,.18);"><span style="color:#0897A5; font-size:15px; line-height:1;">&#8592;</span> Retour au produit</a>
 </body>
 </html>

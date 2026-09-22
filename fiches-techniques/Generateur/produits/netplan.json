@@ -1,5 +1,6 @@
 {
   "_commentaire": "NETPLAN — fiche MONO-CLASSE G4 (Coarse 65%, 25 mm). Données réelles Titanair fiche 2018 'TITAPLAN G4-COARSE 65%' + cache graphe Excel (ΔP 12/25/41/68 à v 0,5/1/1,5/2). Descriptif reformulé depuis Documentation/Titaplan.pdf. G3 écarté (graphe source erroné = copie du G4). Modèle polynomial a·v²+b·v+c ≈ {14, 1.8, 8} (DONNEES_PDC ligne 14). Vitesse max 2 m/s, point nominal 1,5 m/s (1900 m³/h) → ΔP nom ≈ 42 Pa, mesurée (plus d'extrapolation).",
+  "_arbitrages_pad": "Descriptif retravaillé et validé par Pierre-Alain le 16/07/2026. (1) SUR MESURE : confirmé par PA en tant que fabricant le 16/07 — aucune source écrite ne le mentionne (ni netplan.json, ni Gamme_References_Netair.xlsx, ni les fiches Titanair 2018). Ne pas le retirer en constatant l'absence de source. (2) Descriptif précédent RETIRÉ car il portait « garantit une excellente tenue mécanique et une longue durée de service » (« garantit » est un mot banni ; le reste est invérifiable) et « robuste et économique » (jugements). (3) « particules grossières » = rendu français de la classe ISO Coarse 65% du produit (les fiches Titanair 2018 titrent « GROSSIER 65% ») : c'est volontaire, ne pas remplacer par « filtration primaire », notion vague. (4) Règle éditoriale appliquée : le fait suffit, le bénéfice se déduit — ne pas rajouter de fin du type « afin de répondre aux contraintes de chaque installation » (cf. skill netair-com-fr). (5) CARACTÉRISTIQUES, arbitrages PA du 16/07 : « INCINÉRABLE » est confirmé par PA en tant que fabricant, NON SOURCÉ dans les fiches Titanair 2018 — ne pas le retirer faute de source écrite. Il repose sur le fait que le média n'est ni collé ni cousu, donc séparable du cadre acier — fait lui aussi confirmé par PA (les 4 fiches Titanair 2018 portent pourtant « LUT / BOND : OUI »). ⚠️ Sur décision PA du 16/07, « (sans couture ni colle) » a été RETIRÉ de la ligne « Structure » : il n'apparaît donc PLUS NULLE PART sur la fiche NETPLAN (contrairement à NETPLY, où le descriptif et les points clés le portent). « Incinérable » y est donc affirmé sans que la fiche explique ce qui le rend possible. Volontaire — ne pas « corriger » sans PA. (5 bis) GRILLES : « 2 grilles métalliques » (décision PA du 16/07, après un aller-retour par « acier galvanisé »). Gamme_References_Netair.xlsx dit pourtant « 2 grilles galvanisées » : la fiche est donc MOINS précise que sa source, volontairement — formulation alignée sur NETPLY, dont aucune source ne donne le matériau des grilles. Ne pas « corriger » depuis le xlsx. (6) « Parois cellule : Acier galvanisé » RETIRÉE (sourcée fiche Titanair 2018, mais redondante avec Structure + Cadre ; NETPLY n'en a pas). (7) G2/G3 VOLONTAIREMENT ANNONCÉS SANS COURBE : seul le G4 est tracé, le graphe G3 de Titanair étant une copie du G4 (écarté). Décision PA du 16/07, contraire à celle prise sur NETPLY (G3 retiré, « pas de marché ») : ici le G2/G3 se vend. Courbes G2/G3 à mesurer en R&D → CHECKLIST.",
   "slug": "netplan",
   "nom": "NETPLAN",
   "soustitre": "Filtre plan — Préfiltre synthétique",
@@ -10,53 +11,53 @@
   "debit_nom": 1900,
   "fiche": {
     "num": "FT-NETPLAN-001",
-    "version": "v1.0",
-    "date": "21/06/2026"
+    "version": "v1.2",
+    "date": "17/07/2026"
   },
   "photo": "netplan-photo.jpg",
   "photo_alt": "Filtre plan NETPLAN",
-  "description": "Robuste et économique, le NETPLAN assure une préfiltration plane fiable des centrales de traitement d'air. Son média en fibres synthétiques, maintenu entre deux grilles galvanisées dans un cadre en acier galvanisé épaisseur 8/10, garantit une excellente tenue mécanique et une longue durée de service. Polyvalent, il s'emploie aussi bien en filtration finale qu'en préfiltration en amont de filtres à haute efficacité (poches souples, poches rigides, charbon actif) ou sur grilles de reprise, en montage frontal ou sur glissières.",
+  "description": "Le filtre plan NETPLAN est destiné à la filtration de l'air dans les installations de ventilation et de traitement d'air. Il peut être utilisé comme unique étage de filtration sur les équipements ne nécessitant qu'une filtration des particules grossières, ou comme préfiltre en amont de filtres à efficacité supérieure. Disponible en dimensions standard ou sur mesure, il peut être installé en montage frontal ou sur glissières.",
   "points_cles": [
+    "Média filtrant en fibres synthétiques",
+    "Cadre en acier galvanisé",
     "Montage frontal ou sur glissières",
-    "Cadre acier galvanisé ép. 8/10",
-    "Filtre final ou préfiltre",
-    "Média fibres synthétiques"
+    "Dimensions standard et sur mesure"
   ],
   "specs": [
     [
       "Média filtrant",
-      "Fibre synthétique"
+      "Fibres synthétiques (polyester)"
     ],
     [
-      "Parois cellule",
-      "Acier galvanisé"
+      "Structure",
+      "2 grilles métalliques"
     ],
     [
       "Cadre",
-      "Acier galvanisé ép. 8/10"
+      "Acier galvanisé"
     ],
     [
       "Séparateur",
       "Sans"
     ],
     [
-      "Efficacités EN 779",
-      "G2 · G3 · G4 (réf. : G4)"
-    ],
-    [
       "Efficacités ISO 16890",
       "Coarse 40% · 50% · 65%"
     ],
     [
-      "Épaisseurs disponibles",
-      "8 · 10 · 15 · 20 · 23 · 25 mm"
+      "Efficacités EN 779",
+      "G2 · G3 · G4"
     ],
     [
       "Classement au feu",
       "M1"
     ],
     [
-      "Surface média",
+      "Épaisseurs disponibles",
+      "8 · 10 · 15 · 20 · 23 · 25 mm"
+    ],
+    [
+      "Surface filtrante",
       "Surface frontale"
     ],
     [
@@ -65,11 +66,15 @@
     ],
     [
       "Humidité relative max.",
-      "100 %"
+      "100 % (sans condensation)"
     ],
     [
       "ΔP finale recommandée",
       "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"
+    ],
+    [
+      "Incinérable",
+      "Média : oui · Cadre acier : non"
     ]
   ],
   "badges_p1": [
@@ -124,7 +129,9 @@
       "epaisseur": 25
     }
   },
-  "note_dimensions": "Surface filtrante = surface frontale (L × H). ΔP de référence ≈ 42 Pa à 1900 m³/h sur 592×592 (vitesse nominale 1,5 m/s, dans la plage mesurée) ; le débit indiqué est le débit nominal correspondant.",
+  "dims_fusionnees": true,
+  "_note_dp": "note_dimensions ne doit contenir AUCUN chiffre. La ΔP affichée par le tableau est recalculée par generer.py depuis le polynôme (smooth_curves_origin) : le « dp » du JSON n'est qu'un cache. Une valeur figée dans la note divergerait en silence — c'est ce qui s'est produit avant le 16/07 : la colonne affichait 43 Pa et la note « ≈ 42 Pa ». Ne pas non plus laisser note_dimensions absente : le gabarit retomberait sur sa note par défaut, écrite pour NETPLY (« 2 × la surface frontale », « 3400 m³/h ») donc fausse ici. Références RETIRÉES du tableau (dims_fusionnees, décision PA 16/07) : le client commande au nom du filtre, les codes servent à Incwo. Fiche MONO-CLASSE → une seule colonne ΔP.",
+  "note_dimensions": "Surface filtrante = surface frontale (L × H). Le débit indiqué est le débit nominal ; la ΔP initiale est donnée à ce débit, média propre.",
   "dimensions": [
     {
       "L": 592,
@@ -136,8 +143,7 @@
       "L": 287,
       "H": 592,
       "P": 25,
-      "debit": 900
+      "debit": 920
     }
-  ],
-  "compact_p2": true
+  ]
 }

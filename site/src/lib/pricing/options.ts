@@ -74,6 +74,20 @@ const ORDRE_CLASSES = [
   "E10", "E11", "E12", "H13", "H14", "U15",
 ];
 
+/**
+ * Comparateur d'affichage des classes, exporté pour que l'appelant qui COMPLÈTE la liste
+ * tarifée (classes annoncées par la fiche mais non tarifées) les insère au bon rang plutôt
+ * que de les coller en fin de menu.
+ */
+export function comparerClasses(a: string, b: string): number {
+  const ia = ORDRE_CLASSES.indexOf(a);
+  const ib = ORDRE_CLASSES.indexOf(b);
+  if (ia === -1 && ib === -1) return a.localeCompare(b);
+  if (ia === -1) return 1;
+  if (ib === -1) return -1;
+  return ia - ib;
+}
+
 /** Table de correspondance EN 779 ↔ ISO 16890 (libellés bruts de l'Excel). */
 const ISO = tables.iso16890;
 
@@ -122,17 +136,35 @@ export function optionsDuCode(code: string): OptionsProduit {
   collecter(tables.prix_surface);
   collecter(tables.prix_surface_hf);
 
-  const classesTriees = [...classes].sort((a, b) => {
-    const ia = ORDRE_CLASSES.indexOf(a);
-    const ib = ORDRE_CLASSES.indexOf(b);
-    if (ia === -1 && ib === -1) return a.localeCompare(b);
-    if (ia === -1) return 1;
-    if (ib === -1) return -1;
-    return ia - ib;
-  });
+  const classesTriees = [...classes].sort(comparerClasses);
 
   return {
     classes: classesTriees.map((valeur) => ({ valeur, libelle: libelleClasse(valeur) })),
     epaisseurs: [...epaisseurs].sort((a, b) => a - b),
   };
+}
+
+/**
+ * Efficacité à figer, ou `null` s'il faut garder un vrai menu.
+ *
+ * Règle : pas de choix quand il n'y en a qu'un (décision PA du 17/07/2026, même règle que le
+ * cadre). Un menu à une seule ligne fait croire à une option qui n'existe pas — ex. NETFIL,
+ * qui n'est tarifé qu'en Coarse 50 % (G3).
+ *
+ * On exige que le produit ET chacun de ses conditionnements ne proposent que cette même classe :
+ * deux conditionnements à classe unique mais DIFFÉRENTE (ex. panneau G4 / rouleau F7) restent un
+ * choix, puisque changer de conditionnement changerait la filtration.
+ *
+ * La classe figée reste une entrée du moteur de prix : l'appelant doit continuer à la transmettre.
+ */
+export function efficaciteFigee(
+  classes: OptionClasse[],
+  classesParVariante: OptionClasse[][] = [],
+): OptionClasse | null {
+  if (classes.length !== 1) return null;
+  const distinctes = new Set([
+    ...classes.map((c) => c.valeur),
+    ...classesParVariante.flat().map((c) => c.valeur),
+  ]);
+  return distinctes.size === 1 ? classes[0] : null;
 }

@@ -8,3 +8,4 @@
 # Sources lourdes / références non versionnées
 fiches-techniques/Titanair/
 *-orig.jpg
+__pycache__/

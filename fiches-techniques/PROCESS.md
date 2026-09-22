@@ -23,6 +23,22 @@ l'octet près (test d'identité — à relancer après toute modif du moteur ou 
 5. **Vérifier au navigateur** (preview) chaque fiche : 0 erreur JS, valeurs ΔP/courbe/
    calculateur, photo, tient sur l'A4. Fournir une preuve (capture).
 6. **Commit + push** sur la branche `feature/generateur-fiches` après validation.
+7. 🔴 **NE JAMAIS MODIFIER UNE FICHE VALIDÉE SANS L'ACCORD EXPLICITE DE PA** (règle du 17/07/2026).
+   Une fiche « Validée PA » au registre est un livrable **figé**, même pour un changement trivial,
+   même dans une reprise de gamme légitime. Motif : PA pilote 18 fiches sur plusieurs semaines ;
+   si des fiches figées bougent en arrière-plan, il perd la trace de ce qu'il a validé et quand
+   (« sinon on va se perdre »).
+   - Une **reprise transverse** (unifier un libellé sur toute la gamme) **n'est PAS un détail
+     mécanique** : c'est une modification de livrables figés → faire valider **fiche par fiche**,
+     ou reporter à la passe de contenu de chacune.
+   - Si PA autorise : **bumper la version + la date** et mettre à jour le registre. Sans bump, la
+     fiche affiche un numéro qui **ment** sur son contenu. **Erreur commise le 17/07** : la reprise
+     humidité a modifié NETPLY et NETPLAN (validées v1.1 du 16/07) sans bump → réparé en **v1.2**.
+   - **Ne pas bumper une fiche encore en v1.0** (« créée », passe de contenu non faite) pour une
+     retouche mineure : ça consommerait le numéro de sa vraie passe. Le noter au **registre** à la
+     place — décision PA du 17/07 pour **NETPAK S BORA / CILIA / DUO**, qui affichent « v1.0 — 22/06 »
+     alors que leur ligne humidité date du 17/07 (écart connu et assumé).
+   - **Ambiguïté sur la portée d'une autorisation → demander**, ne pas trancher seul.
 
 ## Étapes pour une nouvelle fiche
 
@@ -57,7 +73,7 @@ l'octet près (test d'identité — à relancer après toute modif du moteur ou 
 **Workflow R&D :** quand une mesure de perte de charge évolue, on **ne touche qu'à l'Excel** :
 1. Ouvrir `DONNEES_PDC_Netair.xlsx`, trouver la ligne du produit (n° fiche / classe / longueur),
    mettre à jour les **ΔP mesurées** dans les cases par débit (1000→4000). Enregistrer.
-2. **Double-cliquer `Mettre à jour les fiches.command`** (ou `cd Generateur && python3 maj_fiches.py`
+2. **Double-cliquer `Mettre à jour Pa courbe et calculateur fiches.command`** (ou `cd Generateur && python3 maj_fiches.py`
    pour l'aperçu, puis `--apply`).
 3. Tout se met à jour en cascade, automatiquement :
    coefficients du polynôme (recalculés par le script, **indépendamment du recalcul Excel**) →
@@ -133,8 +149,14 @@ Constantes énergétiques conservées du gabarit (CO₂ 0,079 kg/kWh, prix 0,18 
 C'est **exactement** la logique du calculateur énergétique (constante `ADD = { Coarse: 50, ePM: 100 }` dans le moteur).
 Le **texte de la ligne specs doit refléter la (les) classe(s) réelle(s) de la fiche** :
 
-- Fiche **mono-Coarse** (NETFIBRE, NETPLAN, NETMETAL, NETFIL) :
+- Fiche **mono-Coarse** (NETFIBRE, NETPLAN, NETFIL) :
   `"min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"`
+- ⚠️ **EXCEPTION NETMETAL (décision PA du 17/07/2026)** : la ligne specs « ΔP finale recommandée » a été
+  **retirée volontairement** de la fiche, après signalement explicite du caractère « impératif » de cette règle.
+  NETMETAL est la **seule des 18 fiches** à y déroger. **Ne pas la remettre** en croyant réparer un oubli :
+  lire `_arbitrages_pad` de `produits/netmetal.json` (point 12) avant toute retouche. La règle reste
+  impérative **pour les 17 autres**. À noter : le calculateur de la page 2 applique **toujours** `+50 Pa`
+  (il lit `classes.*.add`, pas la ligne specs) — seul l'affichage de la page 1 change, aucun calcul n'est modifié.
 - Fiche **multi-classes Coarse + ePM** (NETPLY v6 : G4 Coarse + M5 ePM10) :
   `"min(ΔP initiale + 50 Pa [Coarse] / + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"`
 - Fiche **ePM seule** (à venir : NETBAG S, NETPAK…) : `+ 100 Pa`.
@@ -156,11 +178,94 @@ du débit et contredisent le calculateur.
 | `classes.*.epaisseur` | épaisseur réelle (légende, libellés) |
 | `note_dimensions` | note sous le tableau dimensions |
 | `compact_p1` | réduit les marges verticales de la page 1 (contenu dense qui doit tenir sur l'A4), par produit |
+| `compact_p2` | page 2 sur un seul A4 : **marges de la page 2 uniquement** (ne règle plus la courbe : 80 % est le STANDARD du gabarit depuis le 17/07). ⚠️ **À ne mettre QUE si la fiche déborde sans lui** (17/07) : il comprime les marges, donc **creuse un blanc en bas de page** sur une fiche qui a déjà de la place — c'est ce qui faisait diverger NETPLAN (1014 px, 109 px de blanc) de NETPLY (1103, 20). Retiré de 10 fiches : toutes tombent alors sur **1082 px / 41 px de blanc**. Ne reste justifié que sur **NETPLY** (contenu multi-classes) et **NETCARB CILIA** (sélecteur d'épaisseur) — sans lui : 1146 px, débordement de 23. **Gagne ~33 mm à lui seul** — le réflexe n°1 quand une page 2 déborde. Manque encore sur 5 fiches (cf. CHECKLIST) |
+| `compact_fort` | *(16/07/2026)* fiche **multi-classes** tenue en 2 pages A4 : colonne photo 70→52 mm, marges de blocs 6→4 mm, interligne du calculateur 13→5 px, curseurs en `display:block`, légende raccourcie (« G4 · 48 mm » au lieu de « G4 · Coarse 65% — 48 mm »), graphe à 90 %. **Exige `compact_p1` + `compact_p2`** (il resserre leurs valeurs) → lève une erreur sinon. Utilisé par NETPLY |
+| `dims_fusionnees` | *(16/07/2026)* tableau dimensions **une ligne par section** au lieu d'une par section × classe (la géométrie est identique, seule la ΔP change) : 11 → 6 lignes sur NETPLY, **−31 mm**. **Colonnes ΔP titrées par classe** (une seule si `mono_classe`, deux sinon) ; les colonnes « ΔP », « Efficacité ISO 16890 » et **« Référence complète » disparaissent** — décision PA : le client commande au nom du filtre, les codes servent à Incwo, et l'efficacité est déjà dans les badges. **C'est le format cible de toutes les fiches** (NETPLY, NETPLAN faits). `check_dims_fusionnees()` **refuse** : `deux_epaisseurs` (colonnes ΔP identiques), `ref_simple` (code sans classe + conflit d'en-tête), `series`/`tailles` (autre constructeur), classe sans `dp`, et **tout débit s'écartant de plus de 1 % du débit nominal de sa section** — le garde-fou qui a rattrapé les 1700 m³/h de NETPLY et les 900 de NETPLAN |
 | `series` (+ `courbes`, `classes_def`, `classes_order`, `eff0`, `len0`) | **mode multi-classes opt-in** (N courbes classe × longueur ; calculateur à sélecteur classe × longueur ; cases par classe). Chemin **legacy 2×2 inchangé** sans cette clé → test d'identité NETPLY préservé. Utilisé par NETBAG S. |
 | `multi_classe` (+ `classes_list`, `dimensions_multi`, `velocities`, `eff_default`) | **mode multi-classes « compact » opt-in** → `generer_multi`. **Sélecteur 5 classes**, 2 courbes (classe choisie en 48/98) à la fois, fiche **3 pages** (P1 desc/specs · P2 dimensions + tableau ΔP complet + courbe · P3 calculateur). **Calculateur à sélecteur d'efficacité + épaisseur INDÉPENDANT de la courbe** (`state.calcEff` ≠ `state.eff`) — afficher une classe et calculer l'énergie d'une autre. Surface m²/m², réfs cadre `-A`/`-P`. Chemin 2×2 inchangé. Utilisé par NETPAK S CILIA. ⚠️ proche de `series` — à fusionner un jour. |
 
+## STANDARD de la page 2 — courbe 80 % + calculateur 11 px (charte — 17/07/2026)
+
+> **Décision PA.** Avant cette date, les 18 fiches avaient **cinq** rendus de page 2 différents,
+> apparus au fil des besoins : 84 %/aéré (10 fiches), 100 %/aéré (5), 90 %/serré (NETPLY),
+> 100 %/serré (NETMETAL), + NETPAK S CILIA. **Le standard vit dans `gabarit_base.html`, PAS dans
+> des drapeaux par produit** — c'est la dispersion en drapeaux qui avait produit les 5 rendus.
+
+**Ce que le gabarit impose désormais aux 18 fiches :**
+
+| Élément | Valeur | Pourquoi |
+|---|---|---|
+| Courbe (SVG `#curveSvg`) | **80 %**, centrée (271 px) | limite fixée par **NETPLY**, la fiche la plus contrainte (ses sélecteurs de classe + épaisseur coûtent ~85 px irréductibles) : au-delà de 80 %, elle déborde |
+| Calculateur (colonne des champs) | **`gap:11px`** | compromis validé PA : la valeur d'origine (13 px) ne laissait que 7 px de marge à NETPLY |
+| Curseurs `input[type=range]` | **`display:block; margin:0`** | ⚠️ **LE gain principal**, contre-intuitif : en `inline`, ils traînent l'**interligne fantôme** de leur ligne de texte. Rien ne rétrécit, du vide invisible disparaît. C'est ce qui permet une courbe correcte SANS écraser le calculateur |
+| Étiquettes des champs | `margin-bottom:2px` | idem, espacement seulement |
+| Note de méthode | `padding:2mm 3mm 2mm 3mm` | idem |
+| Légende de la courbe | `gap:6px 14px; margin-top:2mm` | idem |
+
+**Résultat mesuré :** NETPLAN p2 1101 → **1014** px (marge 22 → 109) · NETPLY p2 1095 → **1103**
+(marge 20) · NETMETAL p2 1051 → **1014** (marge 109). **18/18 fiches en 80 % + 11 px.**
+
+⚠️ **Le balisage est TRIPLIQUÉ.** `generer_series` (l. ~842, ancre de légende) et surtout
+`generer_multi` (l. ~1068-1197 : **son propre SVG en viewBox 292, ses propres curseurs et
+étiquettes**) réécrivent leur page 2. Toucher au standard du gabarit **casse `series`**
+(erreur d'ancre, vu le 17/07 : les 5 fiches ont planté) et **fait ignorer le standard par
+`multi_classe` EN SILENCE**. → après toute modif du standard : régénérer les 18 **et**
+vérifier la largeur du SVG dans chacune, pas seulement que la génération passe.
+
+- `courbe_large` : **SUPPRIMÉ** le 17/07 (créé le matin même, rendu inutile par le standard).
+  Un `.json` qui le porte encore fait **échouer** la génération — pas d'oubli silencieux.
+- `compact_p2` : ne règle **plus** la courbe, seulement les marges de la page 2.
+- `compact_fort` : **vidé** de ses réglages de page 2 ; ne garde que la page 1 (colonne photo
+  70→52 mm, marges) et les légendes multi-classes.
+
+## Bouton « Retour au produit » (charte — 17/07/2026)
+
+Les fiches s'ouvrent depuis la page produit **dans le même onglet** (le lien « Fiche technique »
+de `[ref].astro` n'a pas de `target="_blank"`) : sans bouton, le lecteur y est **coincé**, la fiche
+n'ayant aucune navigation. D'où un bouton flottant, présent sur les **18 fiches** :
+
+- **Dans le gabarit**, juste avant `</body>` — donc **hors des blocs `.a4`** : il flotte au-dessus
+  de la page, il n'est pas *dans* la feuille (`position:fixed`, en **bas à gauche**).
+- **Masqué à l'impression et dans le PDF** par `.no-print { display:none !important; }`
+  (règle ajoutée au `@media print` du gabarit). Le papier ne porte jamais de bouton.
+- **Bas à GAUCHE volontairement** : le bouton « Modifier le texte » injecté par `apercu.py`
+  occupe le bas à droite (cf. ci-dessous). Les deux ne se chevauchent pas.
+- **Cible = `/produits/<slug>`**, pas `history.back()` : une fiche ouverte directement (lien
+  partagé, favori) n'a pas de page précédente, et le bouton ne ferait rien.
+- **`bouton_retour()` s'exécute dans `generer()` AVANT le routage** vers `generer_series` /
+  `generer_multi` / le chemin classique → **un seul code pour les 18 fiches**, précisément pour
+  éviter le piège du balisage dupliqué (ci-dessous) qui n'avait touché que 17 fiches sur 18.
+  Le gabarit porte `href="/produits/netply"` (le slug de l'ancre) → **test d'identité préservé**.
+
+> ⚠️ Ne pas confondre avec le bouton **« Modifier le texte »** : celui-là vit dans `apercu.py`
+> (serveur d'aperçu local, port 8765), est **injecté à la volée**, n'est **jamais écrit dans les
+> fichiers** et reste **invisible pour les clients** comme sur le site (port 4321).
+
 ## Pièges identifiés (à surveiller partout)
 
+- **⚠️ La page affiche « 297 mm » même quand elle déborde.** `.a4` a `min-height:297mm` : mesurer sa
+  hauteur ne dit PAS si le contenu tient. Neutraliser le plancher pour avoir la vraie hauteur :
+  `p.style.minHeight='0'` avant de mesurer. Sans ça on croit avoir réussi alors qu'on imprime 4 pages.
+- **⚠️ `_gabarit_ref.json` porte le slug `netply`** : le générer **écrase** `Fiche technique NETPLY.html`.
+  Utiliser `--out /tmp/id.html`, ou régénérer NETPLY juste après.
+- **⚠️ Balisage dupliqué entre `gabarit_base.html` et `generer.py`** (cartes ΔP du calculateur, ~l. 1136,
+  chemin multi-classes). Corriger l'un ne corrige pas l'autre : le 16/07, une correction de charte n'avait
+  touché que 17 fiches sur 18. **Toujours contrôler les 18 après une modif du gabarit.**
+- **⚠️ La clé `series` est un BOOLÉEN**, pas une liste. Les classes traçables sont dans `courbes[].cls`.
+  Compter les classes depuis `series` donne un résultat faux (le 16/07 : 2 fiches multi-classes trouvées
+  au lieu de 6).
+- **⚠️ `dp` des classes est un CACHE** : `generer.py` le recalcule depuis le polynôme à chaque génération
+  (`smooth_curves_origin`, ~l. 410). Modifier `dp` dans le JSON n'a **aucun effet** — la source est `poly`.
+- **⚠️ Ne JAMAIS écrire de chiffre à la main dans un texte de fiche** (note, descriptif). `maj_fiches.py`
+  réécrit les données depuis `DONNEES_PDC_Netair.xlsx` mais **jamais la prose** → divergence silencieuse.
+  Tout chiffre affiché doit être généré depuis les données.
+- **⚠️ Débits nominaux arrondis « à la louche »** : à média, épaisseur et vitesse identiques, la ΔP est
+  identique. Une ΔP qui varie d'une ligne à l'autre trahit un débit approximatif, pas une propriété du
+  filtre. Sur NETPLY, `3400/2 = 1700` pour la section 287×592 était faux (287 ≠ 296) → 67 Pa au lieu de 63.
+  Le débit doit suivre la surface frontale : `débit = v_nom × L × H × 3600`.
+- **⚠️ Un serveur d'aperçu qui tourne depuis des jours ment** : il ne surveille pas `Generateur/produits/`
+  (hors du dossier du site). Le 16/07, celui du port 4321 servait des textes figés depuis 15 jours.
+  En cas de doute, **le redémarrer** — recharger la page ne suffit pas.
 - **Graphes Excel copiés-collés** : la courbe G3 de TITAPLAN était une copie du G4
   (vérifié via le cache). Toujours contrôler la cohérence avant d'utiliser.
 - **Sources contradictoires** (plaquette 2013 vs fiche 2018 vs FORMULE_PDC) →
@@ -190,10 +295,37 @@ du débit et contredisent le calculateur.
   7,34·v²+2,44·v+5,57 (fit 5 pts 0,79–2,38 m/s), Vmax 2,4 · nominal 1,5 m/s (1900 m³/h) ✅
   — doc 2015 disait G1-G2 → priorité fiche 2018 ; photo placeholder Titanair à remplacer ;
   ΔP au-delà de 2,38 m/s non mesurée.
+  **v1.1 (17/07/2026) — contenu retravaillé et REPOSITIONNÉ, validé PA.** Le produit est présenté
+  comme **pare-gouttelettes** (aval batteries froides) puis **pare-étincelles** (aval batteries
+  électriques), la filtration des particules grossières devenant un usage **second** — ce qui
+  **contredit la doc 2015** (filtration en usage premier) : décision de fabricant, pas une erreur.
+  Sous-titre **« Filtre métallique »** : seule fiche dont le sous-titre n'annonce pas le rôle.
+  Corrigés : ISO avant EN 779 ; **Coarse 40% ajouté** (il manquait en face du G2 annoncé, sourcé
+  KMX/CA + WZA) ; badge ISO aligné sur le tableau ; « Structure : 2 grilles métalliques » comme
+  NETPLY/NETPLAN ; cadre « inox 304 ». **Courbe agrandie de 21 %** (drapeau `courbe_large`,
+  279 → 339 px : la plus grande de la gamme). ⚠️ **2 dérogations à NE PAS « réparer »** : la ligne
+  « ΔP finale recommandée » est **retirée de la p1** (seule des 18 fiches, cf. exception ci-dessus)
+  et la **T° reste à 150 °C** alors que l'inox 304 tient 200 °C (variante sous-vendue volontairement).
+  Épaisseurs 10/15/20 mm et HR 100 % = confirmées PA, **non sourcées**. **Tension ouverte** : le
+  calculateur p2 modélise un colmatage de filtre à particules quand la p1 vend un pare-gouttelettes.
+  → **Lire `_arbitrages_pad` de `produits/netmetal.json` avant toute retouche.**
 - **NETFIL** — mono-classe G3 / Coarse 50% (équiv. TITAFIL, filtre cousu), polynôme
   3,99·v²+7,24·v+0,97 (fit 6 pts 0,16–1,5 m/s, fiche v2_2020), Vmax 1,5 · nominal 1,0 m/s (1260 m³/h) ✅
-  — 3 révisions Titanair (G3 2020 / G4 2023) → G3 retenu (cohérent gamme) ; épaisseur 20 mm et
-  photo placeholder à valider ; domaine basse vitesse hors grille débits de DONNEES_PDC.
+  — **contenu retravaillé v1.1 (17/07)**. **4 révisions Titanair, pas 3** : la 4e (`TITAFIL.pdf`, non datée,
+  SAS/APE 2825Z) porte « ISO 16890 : COARSE 50% » **en face du G3** → le Coarse 50% est **sourcé**, pas une
+  équivalence déduite. Une **4e courbe** (cache `TITAFIL 2013.xlsx` : 6/12/20/38 Pa à 0,5/1/1,5/2 m/s)
+  **corrobore** la courbe v2_2020 retenue → G3 confirmé, ne repose plus sur une seule fiche.
+  ⚠️ **La consigne « épaisseur 20 mm à valider » qui figurait ici était PÉRIMÉE** : le commit `2454fec`
+  (22/06) l'a corrigée en **4,5 mm** dans le JSON et le registre, PROCESS n'avait jamais suivi. Le 4,5 mm
+  reste une **déduction** (Ø du fil du cadre), non sourcée et probablement sous-évaluée, **affichée 3×**
+  (légende + calculateur) → à mesurer en R&D. Sous-titre « Filtre cousu sur fil » (pas de rôle annoncé,
+  comme NETMETAL) ; **VC uniquement, jamais CTA** (déc. PA, contredit la doc 2015) ; T° alignée sur la gamme
+  (60 °C / acc. 65 °C) **contre** les 4 fiches Titanair (acc. 80 °C). Photo placeholder à remplacer ;
+  domaine basse vitesse hors grille débits de DONNEES_PDC.
+  → **Lire `_arbitrages_pad` de `produits/netfil.json` avant toute retouche** (dont 2 réserves de Claude
+  écartées par PA : 3 des 4 points clés recopient la rubrique « AVANTAGES » de la plaquette Titanair, et
+  « Faible encombrement » / « Construction renforcée » sont des jugements orphelins depuis la réécriture
+  du descriptif).
 - **NETFIBRE** — mono-classe G4 / Coarse 65% (réf. TITAFIBRE, fiche 2018 FT 2018-030, ép. 20 mm), polynôme
   14·v²+1,8·v+8 (fit 4 pts courbe fiche 2018, R²≈0,998), Vmax 2 · nominal 1,5 m/s (1900 m³/h, ΔP≈42 Pa) ✅
   — média synthétique densité croissante vendu en **panneau découpé sur mesure** (média aussi en rouleau 20×2 m) →
@@ -208,7 +340,7 @@ du débit et contredisent le calculateur.
   → ADD +100 Pa. Vmax 3,17 · nominal 3400 m³/h · axe Y 240 Pa. Descriptif reformulé du `livret_2023` p.9.
   **Anomalie** M5 550 mm (ΔP < 650 mm, incohérent) → marquée « à valider » (courbe pointillée). G4 annoncé
   (gamme) mais non mesuré. Manques suivis dans **`CHECKLIST.md`** (tracker global, section NETBAG S). Photo Titabag détourée = placeholder.
-- **NETPAK S CILIA** — filtre **compact à mini-plis** (équiv. TITAPAK S PRISME A), **MULTI-CLASSES** (moteur `multi_classe`) ✅
+- **NETPAK S CILIA** — filtre **compact à miniplis** (équiv. TITAPAK S PRISME A), **MULTI-CLASSES** (moteur `multi_classe`) ✅
   Fiche **3 pages** : P1 desc/specs · P2 dimensions + **tableau ΔP complet** + courbe · P3 calculateur. **Sélecteur 5 classes**
   M5·M6·F7·F8·F9 ; classe choisie tracée en **48 mm (navy) + 98 mm (teal pointillé)** ; calculateur piloté par la classe + toggle
   épaisseur. Source = **PRISME A HPE 2018** (M5/M6/F8/F9) + **GR PRISME A GREENTEX** pour le **F7 (ePM1 50%, média basse résistance)** — fiches 2018, ep48+ep98, caches Excel.

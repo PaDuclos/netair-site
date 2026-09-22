@@ -1,12 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
-const maj = '23 juin 2026';
+const maj = '2 juillet 2026';
 ---
 
 <BaseLayout
   title="Politique de confidentialité — Netair"
-  description="Politique de confidentialité du site netair.fr : données collectées via le formulaire de devis, finalités, durées de conservation et droits RGPD."
+  description="Politique de confidentialité du site netair.fr : données collectées via les formulaires du site (devis, contact, rendez-vous), finalités, durées de conservation et droits RGPD."
 >
   <section class="mx-auto max-w-3xl px-7 pt-10 pb-16">
     <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'Politique de confidentialité' }]} />
@@ -26,25 +26,42 @@ const maj = '23 juin 2026';
       <div>
         <h2 class="display text-xl text-marine">Données collectées et finalité</h2>
         <p class="mt-2 text-muted">
-          Ce site est un site vitrine. La seule collecte de données intervient via le
-          formulaire de demande de devis, dans le but de <strong class="text-marine">traiter votre
-          demande et d'y répondre</strong>. Les données saisies (nom / société, email
-          professionnel, téléphone facultatif, description du besoin) servent
-          uniquement à établir une proposition commerciale et à vous recontacter.
+          Ce site est un site vitrine. Des données personnelles sont collectées uniquement
+          lorsque vous remplissez l'un de nos formulaires :
+        </p>
+        <ul class="mt-2 list-disc space-y-1.5 pl-5 text-muted">
+          <li><strong class="text-marine">Demande de devis</strong> : nom / société, email, téléphone (facultatif), description du besoin.</li>
+          <li><strong class="text-marine">Contact</strong> : nom / société, email, téléphone (facultatif), objet et message.</li>
+          <li><strong class="text-marine">Demande de rendez-vous</strong> : nom / société, téléphone, email (facultatif), format souhaité (téléphone ou visioconférence), créneau et sujet de l'échange.</li>
+        </ul>
+        <p class="mt-2 text-muted">
+          Ces données servent uniquement à <strong class="text-marine">traiter votre demande
+          et à vous recontacter</strong> (établir une proposition, répondre à une question,
+          organiser un rendez-vous). Les champs facultatifs peuvent être laissés vides.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="display text-xl text-marine">Comment vos données nous parviennent</h2>
+        <p class="mt-2 text-muted">
+          Actuellement, l'envoi d'un formulaire ouvre votre logiciel de messagerie avec un
+          message pré-rempli que vous envoyez vous-même : aucune donnée n'est enregistrée
+          sur ce site, elle nous parvient par email.
         </p>
         <p class="mt-2 text-muted">
-          Le formulaire ouvre votre logiciel de messagerie avec un message pré-rempli
-          que vous envoyez vous-même : aucune donnée n'est enregistrée sur ce site. Les
-          données nous parviennent alors par email.
+          [⚠️ À METTRE À JOUR à l'activation d'un envoi automatique : préciser le prestataire
+          d'emailing utilisé (sous-traitant), la base de traitement et tout transfert hors
+          Union européenne — ou choisir un prestataire établi dans l'Union européenne.]
         </p>
       </div>
 
       <div>
         <h2 class="display text-xl text-marine">Base légale</h2>
         <p class="mt-2 text-muted">
-          Le traitement repose sur l'exécution de mesures précontractuelles prises à
-          votre demande et sur votre consentement (case à cocher du formulaire),
-          conformément au Règlement général sur la protection des données (RGPD).
+          Le traitement repose sur l'exécution de mesures précontractuelles prises à votre
+          demande, sur votre consentement (case à cocher des formulaires) et sur l'intérêt
+          légitime de Netair à répondre aux sollicitations reçues, conformément au Règlement
+          général sur la protection des données (RGPD).
         </p>
       </div>
 
@@ -52,8 +69,23 @@ const maj = '23 juin 2026';
         <h2 class="display text-xl text-marine">Destinataires</h2>
         <p class="mt-2 text-muted">
           Vos données sont destinées aux seules personnes habilitées de Netair chargées
-          du traitement des demandes commerciales. Elles ne sont ni vendues, ni cédées
-          à des tiers. Aucun transfert hors Union européenne n'est réalisé.
+          du traitement des demandes. Elles ne sont ni vendues ni cédées à des tiers à des
+          fins commerciales.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="display text-xl text-marine">Services tiers et ressources externes</h2>
+        <p class="mt-2 text-muted">
+          Pour l'affichage, ce site charge actuellement certaines ressources depuis des
+          services externes : les polices de caractères (Google Fonts) et, sur la page
+          d'accueil, un outil de mise en forme (CDN). Ces appels peuvent transmettre votre
+          adresse IP à ces prestataires, susceptibles d'être situés hors Union européenne.
+        </p>
+        <p class="mt-2 text-muted">
+          [⚠️ À VALIDER : avant la mise en ligne, il est recommandé d'auto-héberger ces
+          ressources afin de supprimer tout transfert vers des tiers ; cette section sera
+          alors retirée.]
         </p>
       </div>
 
