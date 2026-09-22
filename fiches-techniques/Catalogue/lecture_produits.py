@@ -23,9 +23,10 @@ import os
 ICI = os.path.dirname(os.path.abspath(__file__))
 PRODUITS = os.path.abspath(os.path.join(ICI, "..", "Generateur", "produits"))
 PHOTOS = os.path.abspath(os.path.join(ICI, "..", "Generateur", "assets"))
-# Le site publie des versions DÉTOURÉES (PNG à fond transparent) des mêmes photos.
-# On les préfère : posée sur un fond de carte, une photo à fond blanc dessine un
-# rectangle blanc qui se voit (remarque de PA du 17/08/2026).
+# Photos Netair préparées (22/09/2026) : détourées à fond transparent, produites
+# par Outils/photos/preparer_photos.py. 14 produits sur 18 en ont une.
+NETAIR = os.path.abspath(os.path.join(ICI, "..", "Photos_Netair", "detour"))
+# À défaut, les détourages publiés par le site, qui portent les anciennes photos.
 DETOUREES = os.path.abspath(
     os.path.join(ICI, "..", "..", "site", "public", "produits", "detour"))
 
@@ -57,9 +58,18 @@ def _exiger(d, fichier):
 
 
 def _detouree(nom_fichier):
-    """Le PNG détouré correspondant, s'il existe (14 produits sur 18 en ont un)."""
-    png = os.path.join(DETOUREES, os.path.splitext(nom_fichier)[0] + ".png")
-    return png if os.path.exists(png) else None
+    """Le PNG détouré à utiliser, par ordre de préférence.
+
+    Une photo à fond blanc posée sur un fond de carte dessine un rectangle blanc
+    qui se voit (remarque de PA du 17/08/2026) : on prend toujours une version
+    détourée quand il en existe une.
+    """
+    base = os.path.splitext(nom_fichier)[0] + ".png"
+    for dossier in (NETAIR, DETOUREES):
+        png = os.path.join(dossier, base)
+        if os.path.exists(png):
+            return png
+    return None
 
 
 def _meilleure_photo(nom_fichier):
@@ -86,6 +96,7 @@ def lire(slug):
         "badges": list(d["badges_p1"]),
         "photo": _meilleure_photo(d["photo"]),
         "photo_detouree": _detouree(d["photo"]) is not None,
+        "photo_netair": (_detouree(d["photo"]) or "").startswith(NETAIR),
         "photo_alt": d.get("photo_alt", d["nom"]),
         "fiche_num": d["fiche"]["num"],
         "version": d["fiche"]["version"],

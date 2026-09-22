@@ -677,6 +677,10 @@ def controler_tenue(produits, courbes=None):
         if len(p["specs"]) > LIMITES["specs"]:
             alertes.append(f"{p['nom']} : {len(p['specs'])} caractéristiques "
                            f"(max {LIMITES['specs']}) — le bloc peut déborder")
+    anciennes = sorted(p["nom"] for p in produits.values() if not p.get("photo_netair"))
+    if anciennes:
+        alertes.append("photo Netair manquante, image de travail conservée : "
+                       + ", ".join(anciennes))
     for slug, c in (courbes or {}).items():
         for etiquette in (c or {}).get("conflits", []):
             alertes.append(

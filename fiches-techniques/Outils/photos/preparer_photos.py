@@ -35,7 +35,10 @@ import zlib
 
 ICI = os.path.dirname(os.path.abspath(__file__))
 CORRESPONDANCE = os.path.join(ICI, "correspondance.json")
-SORTIE = os.path.join(ICI, "_sortie")
+# Les photos préparées sont VERSIONNÉES : le catalogue et les fiches les lisent, et
+# une régénération sur une autre machine doit retrouver exactement les mêmes. Un
+# dossier ignoré par Git ferait retomber en silence sur les anciennes photos.
+SORTIE = os.path.abspath(os.path.join(ICI, "..", "..", "Photos_Netair"))
 
 
 def sips(*args):
