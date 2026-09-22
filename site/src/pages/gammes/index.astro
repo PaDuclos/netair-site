@@ -32,9 +32,9 @@ const familles = FAMILLES.map((f, i) => ({ ...f, count: counts[i] }));
           class="group flex flex-col overflow-hidden rounded-2xl border border-soft bg-white transition-all hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgba(8,151,165,0.4)]"
         >
           <!-- Style A : photo détourée fondue dans un halo coloré -->
-          <div class="relative h-44 overflow-hidden" style="background:radial-gradient(95% 90% at 50% 35%, rgba(8,151,165,0.18), rgba(0,112,200,0.12) 55%, rgba(255,255,255,0) 100%);">
+          <div class="relative h-44 overflow-hidden" style="background:#fff;">
             {f.photo ? (
-              <img src={f.photo} alt={`Filtre ${f.titre}`} class="absolute inset-0 m-auto h-[80%] w-[80%] object-contain drop-shadow-[0_12px_18px_rgba(15,50,97,0.18)] transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+              <img src={f.photo} alt={`Filtre ${f.titre}`} class="absolute inset-0 m-auto h-[80%] w-[80%] object-contain transition-transform duration-300 group-hover:scale-105" loading="lazy" />
             ) : (
               <svg class="absolute inset-0 m-auto h-12 w-12 text-turquoise/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9l6 3"/></svg>
             )}
