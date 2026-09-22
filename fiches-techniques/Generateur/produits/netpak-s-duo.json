@@ -2,7 +2,7 @@
   "_commentaire": "NETPAK S DUO — compact miniplis COMBINÉ particules + charbon actif (équiv. Titanair TITAPAK S PRISME DUO). Nom validé PA (22/06/2026). Fiche MONO-CLASSE 'F7 GREENTEX + charbon actif' (ePM1 50%), ep48. Source = TITAPAK S PRISME A DUO F7 GR-CA ep48 (fiche 2018, GREENTEX cohérent avec CILIA F7). Courbe ΔP réelle (cache Excel, combinée particulaire + couche charbon) : v=[0,79..3,17] → ΔP=[36,58,88,121,157,198,247] Pa. Polynôme ajusté 15,013·v²+28,882·v+3,537 (R²=0,9998). ΔP finale Titanair = 'PDC initiale + 100 Pa' = exactement notre règle ePM (+100). Specs fiche 2018 : parois ACIER GALVANISÉ, média POLYPROPYLENE + CA, lut OUI, séparateur intérieur, T° continue 60°C (acc.65/1h), CLASSEMENT FEU = NA (le charbon actif n'est pas classé au feu). Surface média développée du média F7 GREENTEX ≈ 12,55 m² @592×592 ep48 (la couche charbon s'ajoute au pack). Vmax 3,17 · nominal 3400 m³/h (≈2,7 m/s) → ΔP nom ≈ 190 Pa. La fonction charbon actif assure l'adsorption des gaz/odeurs/COV (capacité dépend du grammage CA, non communiquée par Titanair → à préciser R&D). PHOTO = placeholder (PRISME A, à remplacer par visuel DUO Netair).",
   "slug": "netpak-s-duo",
   "nom": "NETPAK S DUO",
-  "soustitre": "Compact miniplis combiné — particules + charbon actif",
+  "soustitre": "Compact miniplis combiné, particules + charbon actif",
   "mono_classe": true,
   "surface_facteur": 35.81,
   "vmax": 3.17,
@@ -15,10 +15,10 @@
   },
   "photo": "netpak-s-duo-photo.jpg",
   "photo_alt": "Filtre compact combiné NETPAK S DUO (F7 + charbon actif)",
-  "description": "Le NETPAK S DUO combine en une seule cellule la filtration fine des particules et le traitement des gaz. Son média miniplis F7 basse résistance retient les poussières fines (ePM1 50 %), tandis qu'une couche de charbon actif adsorbe les odeurs et composés organiques volatils (COV). Cette double action en fait la solution idéale pour les ambiances chargées en gaz et odeurs — cuisines, laboratoires, ateliers, air urbain — sans multiplier les étages de filtration. Cadre acier galvanisé, profondeur 48 mm, sur cadre 592×592 (et 287×592).",
+  "description": "Le NETPAK S DUO combine en une seule cellule la filtration fine des particules et le traitement des gaz. Son média miniplis F7 basse résistance retient les poussières fines (ePM1 50 %), tandis qu'une couche de charbon actif adsorbe les odeurs et composés organiques volatils (COV). Cette double action en fait la solution idéale pour les ambiances chargées en gaz et odeurs - cuisines, laboratoires, ateliers, air urbain - sans multiplier les étages de filtration. Cadre acier galvanisé, profondeur 48 mm, sur cadre 592×592 (et 287×592).",
   "points_cles": [
     "Double filtration : particules + gaz",
-    "Charbon actif — odeurs & COV",
+    "Charbon actif, odeurs & COV",
     "Média F7 basse résistance",
     "Une seule cellule (gain d'encombrement)",
     "Cadre acier galvanisé"
@@ -58,7 +58,7 @@
     ],
     [
       "Classement au feu",
-      "NA — non classé (charbon actif)"
+      "NA, non classé (charbon actif)"
     ],
     [
       "Température de service",
@@ -70,7 +70,7 @@
     ],
     [
       "ΔP finale recommandée",
-      "min(ΔP initiale + 100 Pa ; 3 × ΔP initiale) — EN 13053"
+      "min(ΔP initiale + 100 Pa ; 3 × ΔP initiale), EN 13053"
     ]
   ],
   "badges_p1": [

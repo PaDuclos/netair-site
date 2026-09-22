@@ -26,7 +26,7 @@
     "date": "26/07/2026"
   },
   "photo": "netfibre-photo.jpg",
-  "photo_alt": "Média synthétique NETFIBRE — rouleau et panneaux découpés",
+  "photo_alt": "Média synthétique NETFIBRE, rouleau et panneaux découpés",
   "description": "Le média filtrant NETFIBRE est constitué de fibres synthétiques à densité progressive. Cette structure favorise la rétention des particules dans l'épaisseur du média. Utilisé pour la fabrication et le rechargement de filtres à air, il est disponible en panneau découpé sur mesure ou en rouleau.",
   "points_cles": [
     "Fibres synthétiques à densité progressive",
@@ -73,7 +73,7 @@
     ],
     [
       "ΔP finale recommandée",
-      "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale) — EN 13053"
+      "min(ΔP initiale + 50 Pa ; 3 × ΔP initiale), EN 13053"
     ],
     [
       "Lavable",

@@ -175,7 +175,7 @@ def build_dimensions_fusion(d):
         '<tr style="background:#E6F5F7;">'
         '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="5">Sur mesure</td>'
         f'<td style="padding:4px 7px; color:#5A6573; font-style:italic;" colspan="{len(classes)}">'
-        'sur demande — délai à confirmer</td></tr>'
+        'sur demande, délai à confirmer</td></tr>'
     )
     return "\n".join("              " + r for r in rows)
 
@@ -247,7 +247,7 @@ def build_dimensions(d):
             '<td style="padding:4px 7px; font-weight:700; color:#0F3261;" '
             f'colspan="{ncols - 1}">Sur mesure</td>'
             '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
-            'sur demande — délai à confirmer</td></tr>'
+            'sur demande, délai à confirmer</td></tr>'
         )
     return "\n".join("              " + r for r in rows)
 
@@ -604,7 +604,7 @@ def build_series_legend(d):
             lab = f'{cdef[s["cls"]]["label"]}' + ('' if sans_len else f' · {s["len"]} mm')
         else:
             lab = f'{cdef[s["cls"]]["label"]} · {cdef[s["cls"]]["iso"]}' + (
-                '' if sans_len else f' — {s["len"]} mm')
+                '' if sans_len else f', {s["len"]} mm')
         if s.get("avalider"):
             lab += " (à valider)"
         out.append(
@@ -716,7 +716,7 @@ def build_dimensions_series(d):
             '<tr style="background:#E6F5F7;">'
             f'<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="{ncols - 1}">Sur mesure</td>'
             '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">'
-            'sur demande — délai à confirmer</td></tr>')
+            'sur demande, délai à confirmer</td></tr>')
     return "\n".join("              " + r for r in rows)
 
 
@@ -1019,8 +1019,8 @@ def generer_series(d, html):
     nom = d["nom"]; slug = d["slug"]
 
     # #1 nom produit
-    html = html.replace("<title>Fiche technique NETPLY — Netair</title>",
-                        f"<title>Fiche technique {nom} — Netair</title>")
+    html = html.replace("<title>Fiche technique NETPLY · Netair</title>",
+                        f"<title>Fiche technique {nom} · Netair</title>")
     html = html.replace('letter-spacing="2">NETPLY</text>', f'letter-spacing="2">{nom}</text>')
     html = html.replace('letter-spacing:-.6px; text-align:center;">NETPLY</div>',
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
@@ -1028,7 +1028,7 @@ def generer_series(d, html):
     html = appliquer_titre_fs(d, html, nom)
 
     # #2 sous-titre
-    html = html.replace(">Filtre plissé — Préfiltre synthétique</div>", f">{d['soustitre']}</div>")
+    html = html.replace(">Filtre plissé, préfiltre synthétique</div>", f">{d['soustitre']}</div>")
 
     # #3 badges
     b1 = d["badges_p1"]; b2 = d["badges_p2"]
@@ -1100,9 +1100,9 @@ def generer_series(d, html):
 
     # #9 pied de page
     html = html.replace("Fiche n° FT-NETPLY-001", f"Fiche n° {d['fiche']['num']}")
-    vd = f"{d['fiche']['version']} — {d['fiche']['date']}"
-    html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/2")
-    html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 2/2")
+    vd = f"{d['fiche']['version']} · {d['fiche']['date']}"
+    html = html.replace("v1.0 · 20/06/2026 · Page 1/2", f"{vd} · Page 1/2")
+    html = html.replace("v1.0 · 20/06/2026 · Page 2/2", f"{vd} · Page 2/2")
 
     # --- échelle Y (pmax) : étiquettes de graduation (le script série gère mapY)
     pmax = d.get("pmax", 120)
@@ -1257,9 +1257,9 @@ def generer_series(d, html):
     if d.get("hepa"):
         html = html.replace(
             'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) '
-            '<span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span>',
+            '<span style="color:#b9c2cd;">, EN 13053 · <span id="effRule"></span></span>',
             'ΔP finale = 2 × ΔP initiale<span id="effAdd" style="display:none"></span> '
-            '<span style="color:#b9c2cd;">— EN 1822 · <span id="effRule"></span></span>')
+            '<span style="color:#b9c2cd;">, EN 1822 · <span id="effRule"></span></span>')
 
     # --- page 1 compacte
     if d.get("compact_p1"):
@@ -1333,7 +1333,7 @@ def build_dp_table(d):
         f'{body}\n'
         '            </tbody>\n'
         '          </table>\n'
-        '          <div style="font-size:10px; color:#8b97a6; margin-top:3px; line-height:1.4;">Valeurs ΔP initiales mesurées (média propre, air 20 °C) ; le média F7 est à basse résistance. F8 (98 mm) : dernier point extrapolé. ΔP finale recommandée = min(ΔP&nbsp;initiale&nbsp;+&nbsp;100&nbsp;Pa ; 3&nbsp;×&nbsp;ΔP&nbsp;initiale) — EN&nbsp;13053.</div>\n'
+        '          <div style="font-size:10px; color:#8b97a6; margin-top:3px; line-height:1.4;">Valeurs ΔP initiales mesurées (média propre, air 20 °C) ; le média F7 est à basse résistance. F8 (98 mm) : dernier point extrapolé. ΔP finale recommandée = min(ΔP&nbsp;initiale&nbsp;+&nbsp;100&nbsp;Pa ; 3&nbsp;×&nbsp;ΔP&nbsp;initiale), EN&nbsp;13053.</div>\n'
         '        </div>')
 
 
@@ -1373,7 +1373,7 @@ def build_dimensions_multi(d):
     rows.append(
         '<tr style="background:#E6F5F7;">'
         f'<td style="padding:4px 7px; font-weight:700; color:#0F3261;" colspan="{colspan}">Sur mesure</td>'
-        '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">sur demande — toute dimension</td></tr>')
+        '<td style="padding:4px 7px; color:#5A6573; font-style:italic;">sur demande, toute dimension</td></tr>')
     return "\n".join("              " + r for r in rows)
 
 
@@ -1381,14 +1381,14 @@ def build_multi_pagebreak(d, num):
     """Ferme la page courante (avec son pied de page n°), ouvre une nouvelle page A4
     avec un en-tête léger. Utilisé pour répartir la fiche multi-classes sur 3 pages."""
     f = d["fiche"]
-    vd = f'{f["version"]} — {f["date"]}'
+    vd = f'{f["version"]} · {f["date"]}'
     b2 = d["badges_p2"]
     return f'''        </div>
       <!-- Footer P2 -->
       <div style="margin:0; background:#0F3261; color:#cdd9e8; height:10mm; display:flex; align-items:center; justify-content:space-between; padding:0 12mm; font-size:11px;">
         <span style="font-weight:600; color:#fff;">Netair SAS</span>
         <span style="font-family:'IBM Plex Mono',monospace; color:#9DB8D6; letter-spacing:.3px;">Fiche n° {f["num"]}</span>
-        <span>{vd} — Page {num}/3</span>
+        <span>{vd} · Page {num}/3</span>
       </div>
     </div>
 
@@ -1536,7 +1536,7 @@ def build_multi_section(d):
           <div style="display:flex; gap:14px 18px; align-items:center; margin-top:1mm; font-size:11px; color:#3a4654; flex-wrap:wrap;">
             <div id="leg48" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; background:{C48}; display:inline-block; border-radius:2px;"></span><span id="leg48t"></span></div>
             <div id="leg98" style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:0; border-top:3px dashed {C98}; display:inline-block;"></span><span id="leg98t"></span></div>
-            <div style="margin-left:auto; font-style:italic; color:#5A6573;">Média propre — air à 20 °C</div>
+            <div style="margin-left:auto; font-style:italic; color:#5A6573;">Média propre, air à 20 °C</div>
           </div>
         </div>
 {pagebreak}
@@ -1570,7 +1570,7 @@ def build_multi_section(d):
                 <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP finale</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpFinal"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
                 <div style="flex:1; background:#F7F9FC; border:1px solid #E4EBF3; border-radius:8px; padding:8px 6px; text-align:center;"><div style="font-size:8.5px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#9aa6b4;">ΔP moyenne</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#0F3261; margin-top:3px;"><span id="dpAvg"></span><span style="font-size:9px; color:#9aa6b4;"> Pa</span></div></div>
               </div>
-              <div style="font-size:9.5px; color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span></div>
+              <div style="font-size:9.5px; color:#9aa6b4; margin-top:7px; line-height:1.4;">ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3),<span style="color:#b9c2cd;"> EN 13053 · <span id="effRule"></span></span></div>
             </div>
             <div>
               <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
@@ -1647,7 +1647,7 @@ def build_multi_section(d):
         </div>
 
         <div style="margin-top:6mm; background:#F2F6FB; border-left:3px solid #0897A5; padding:9px 14px; font-size:10.5px; color:#5A6573; line-height:1.55;">
-          <strong style="color:#0F3261;">Méthode :</strong> P = (Q ⁄ 3600) × ΔP ⁄ η &nbsp;·&nbsp; Énergie = P × heures de fonctionnement. Valeurs indicatives à but de comparaison — base CO₂ 0,079 kgCO₂/kWh — 79 g (mix électrique France). η = rendement global du moto-ventilateur.
+          <strong style="color:#0F3261;">Méthode :</strong> P = (Q ⁄ 3600) × ΔP ⁄ η &nbsp;·&nbsp; Énergie = P × heures de fonctionnement. Valeurs indicatives à but de comparaison, base CO₂ 0,079 kgCO₂/kWh, 79 g (mix électrique France). η = rendement global du moto-ventilateur.
         </div>'''
 
     if d.get("courbe_cases"):
@@ -1695,9 +1695,9 @@ def build_multi_section(d):
 
         legende = (
             '<div style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:3px; '
-            'background:#5A6573; display:inline-block; border-radius:2px;"></span><span>48 mm — trait plein</span></div>\n'
+            'background:#5A6573; display:inline-block; border-radius:2px;"></span><span>48 mm, trait plein</span></div>\n'
             '            <div style="display:flex; align-items:center; gap:7px;"><span style="width:22px; height:0; '
-            'border-top:3px dashed #5A6573; display:inline-block;"></span><span>98 mm — pointillé</span></div>')
+            'border-top:3px dashed #5A6573; display:inline-block;"></span><span>98 mm, pointillé</span></div>')
         m = re.search(r'<div id="leg48" .*?</div>\n            <div id="leg98" .*?</div>', section, flags=re.DOTALL)
         if not m:
             raise RuntimeError("courbe_cases : légende leg48/leg98 introuvable.")
@@ -2054,8 +2054,8 @@ def generer_multi(d, html):
     slug = d["slug"]
 
     # #1 nom produit
-    html = html.replace("<title>Fiche technique NETPLY — Netair</title>",
-                        f"<title>Fiche technique {nom} — Netair</title>")
+    html = html.replace("<title>Fiche technique NETPLY · Netair</title>",
+                        f"<title>Fiche technique {nom} · Netair</title>")
     html = html.replace('letter-spacing="2">NETPLY</text>', f'letter-spacing="2">{nom}</text>')
     html = html.replace('letter-spacing:-.6px; text-align:center;">NETPLY</div>',
                         f'letter-spacing:-.6px; text-align:center;">{nom}</div>')
@@ -2063,7 +2063,7 @@ def generer_multi(d, html):
     html = appliquer_titre_fs(d, html, nom)
 
     # #2 sous-titre
-    html = html.replace(">Filtre plissé — Préfiltre synthétique</div>", f">{d['soustitre']}</div>")
+    html = html.replace(">Filtre plissé, préfiltre synthétique</div>", f">{d['soustitre']}</div>")
 
     # #3 badges
     b1 = d["badges_p1"]; b2 = d["badges_p2"]
@@ -2104,15 +2104,15 @@ def generer_multi(d, html):
     # #9 pied de page (fiche 3 pages : P1 = 1/3, le footer du gabarit P2 devient 3/3 ;
     # avec calc_p2 la fiche reste en 2 pages → numérotation 1/2 et 2/2 du gabarit conservée)
     html = html.replace("Fiche n° FT-NETPLY-001", f"Fiche n° {d['fiche']['num']}")
-    vd = f"{d['fiche']['version']} — {d['fiche']['date']}"
+    vd = f"{d['fiche']['version']} · {d['fiche']['date']}"
     if d.get("calc_p2"):
-        html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/2")
-        html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 2/2")
+        html = html.replace("v1.0 · 20/06/2026 · Page 1/2", f"{vd} · Page 1/2")
+        html = html.replace("v1.0 · 20/06/2026 · Page 2/2", f"{vd} · Page 2/2")
         # filet d'en-tête de la page 2 resserré (même réglage que compact_p2)
         html = html.replace("margin:7mm 0 7mm 0;", "margin:4mm 0 4mm 0;")
     else:
-        html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/3")
-        html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 3/3")
+        html = html.replace("v1.0 · 20/06/2026 · Page 1/2", f"{vd} · Page 1/3")
+        html = html.replace("v1.0 · 20/06/2026 · Page 2/2", f"{vd} · Page 3/3")
 
     # remplacer toute la section courbe + calculateur (page 2)
     html = sub1(html,
@@ -2159,8 +2159,8 @@ def generer(d, html):
     low, high = d["classes"]["low"], d["classes"]["high"]
 
     # --- #1 nom produit : title, thumbnail, en-tête P1 (40px), en-tête P2 (22px)
-    html = html.replace("<title>Fiche technique NETPLY — Netair</title>",
-                        f"<title>Fiche technique {nom} — Netair</title>")
+    html = html.replace("<title>Fiche technique NETPLY · Netair</title>",
+                        f"<title>Fiche technique {nom} · Netair</title>")
     html = html.replace('letter-spacing="2">NETPLY</text>',
                         f'letter-spacing="2">{nom}</text>')
     html = html.replace('letter-spacing:-.6px; text-align:center;">NETPLY</div>',
@@ -2170,7 +2170,7 @@ def generer(d, html):
     html = appliquer_titre_fs(d, html, nom)
 
     # --- #2 sous-titre
-    html = html.replace(">Filtre plissé — Préfiltre synthétique</div>",
+    html = html.replace(">Filtre plissé, préfiltre synthétique</div>",
                         f">{d['soustitre']}</div>")
 
     # --- #3 badges normes (P1 ×3 puis P2 ×3)
@@ -2225,18 +2225,18 @@ def generer(d, html):
 
     # --- #9 pied de page (n°, version, date — P1 et P2)
     html = html.replace("Fiche n° FT-NETPLY-001", f"Fiche n° {d['fiche']['num']}")
-    vd = f"{d['fiche']['version']} — {d['fiche']['date']}"
-    html = html.replace("v1.0 — 20/06/2026 — Page 1/2", f"{vd} — Page 1/2")
-    html = html.replace("v1.0 — 20/06/2026 — Page 2/2", f"{vd} — Page 2/2")
+    vd = f"{d['fiche']['version']} · {d['fiche']['date']}"
+    html = html.replace("v1.0 · 20/06/2026 · Page 1/2", f"{vd} · Page 1/2")
+    html = html.replace("v1.0 · 20/06/2026 · Page 2/2", f"{vd} · Page 2/2")
 
     # --- #10a libellés courbe/calculateur (cases, légende, boutons)
     # legende_courte (portage du moteur série sur le mono-classe, NETCEL V LAM 02/08/2026) :
-    # « H14 · 68 mm » au lieu de « H14 · ≥ 99,995 % MPPS — 68 mm ». L'efficacité reste lisible
+    # « H14 · 68 mm » au lieu de « H14 · ≥ 99,995 % MPPS, 68 mm ». L'efficacité reste lisible
     # dans les badges et le tableau technique (déc. PA sur NETCEL V AZUR). Défaut = legacy.
     courte = d.get("legende_courte", False)
     lab_low = low["label"] if courte else f'{low["label"]} · {low["iso"]}'
     lab_high = high["label"] if courte else f'{high["label"]} · {high["iso"]}'
-    sep_ep = " · " if courte else " — "
+    sep_ep = " · " if courte else ", "
     html = sub1(html, r'(id="cbG4"[^>]*>\s*).*?(\s*</label>)',
                 lambda m: m.group(1) + lab_low + m.group(2), flags=re.DOTALL)
     html = sub1(html, r'(id="cbM5"[^>]*>\s*).*?(\s*</label>)',
@@ -2305,8 +2305,8 @@ def generer(d, html):
         html = html.replace("var dpFinalNum = Math.min(dpInitNum + ADD[eff], dpInitNum * 3);",
                             "var dpFinalNum = dpInitNum * 2;")
         html = html.replace(
-            'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span>',
-            'ΔP finale = 2 × ΔP initiale<span id="effAdd" style="display:none;"></span> <span style="color:#b9c2cd;">— EN 1822 · <span id="effRule"></span></span>')
+            'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3),<span style="color:#b9c2cd;"> EN 13053 · <span id="effRule"></span></span>',
+            'ΔP finale = 2 × ΔP initiale<span id="effAdd" style="display:none;"></span>,<span style="color:#b9c2cd;"> EN 1822 · <span id="effRule"></span></span>')
     elif d.get("dp_final_mode") == "const":
         # filtre moléculaire (charbon actif) : pas de colmatage poussière → ΔP ≈ constante
         # (remplacement à saturation d'adsorption). ΔP finale = moyenne = initiale.
@@ -2315,8 +2315,8 @@ def generer(d, html):
         html = html.replace("var dpAvgNum = ((dpInitNum + dpFinalNum) / 2) * 0.85;",
                             "var dpAvgNum = dpInitNum;")
         html = html.replace(
-            'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) <span style="color:#b9c2cd;">— EN 13053 · <span id="effRule"></span></span>',
-            'ΔP finale ≈ ΔP initiale<span id="effAdd" style="display:none;"></span> <span style="color:#b9c2cd;">— filtre non colmatant · remplacement à saturation<span id="effRule" style="display:none;"></span></span>')
+            'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3),<span style="color:#b9c2cd;"> EN 13053 · <span id="effRule"></span></span>',
+            'ΔP finale ≈ ΔP initiale<span id="effAdd" style="display:none;"></span>,<span style="color:#b9c2cd;"> filtre non colmatant · remplacement à saturation<span id="effRule" style="display:none;"></span></span>')
 
     # --- échelle de l'axe Y / perte de charge (optionnel ; NETPLY garde 120 Pa)
     if "pmax" in d:
@@ -2448,12 +2448,12 @@ def generer(d, html):
             ("grid-template-columns:70mm 1fr", "grid-template-columns:52mm 1fr"),
             ('<div style="margin-top:6mm;">', '<div style="margin-top:4mm;">'),
             ("margin:6mm 0 5mm 0;", "margin:4mm 0 4mm 0;"),
-            ("Média propre — air à 20 °C", "Média propre · air à 20 °C"),
+            ("Média propre, air à 20 °C", "Média propre · air à 20 °C"),
         ]
         for cls in (low, high):
             lab = f'{cls["label"]} · {cls["iso"]}'
             for ep in ("48", "98"):
-                remplacements.append((f'{lab} — {ep} mm', f'{cls["label"]} · {ep} mm'))
+                remplacements.append((f'{lab}, {ep} mm', f'{cls["label"]} · {ep} mm'))
         for avant, apres in remplacements:
             if avant not in html:
                 raise RuntimeError(

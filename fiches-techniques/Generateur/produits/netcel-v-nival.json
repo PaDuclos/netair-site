@@ -130,7 +130,7 @@
       "color": "#0F3261"
     }
   ],
-  "note_dimensions": "Le débit indiqué est le débit nominal de chaque cadre à vitesse frontale constante (≈ 2,5 m/s) ; la ΔP initiale est donnée à ce débit, média propre, pour la classe H13. Ces deux cadres sont les seuls disponibles dans les cinq classes E10 à H14, et les seuls proposés au choix en plastique ou en acier galvanisé. Autres formats standard : 592×592 et 592×287, en H13 et H14, cadre acier galvanisé uniquement — nous consulter. Courbes mesurées : H13 jusqu'à 3 840 m³/h, E10 jusqu'à 4 000 m³/h.",
+  "note_dimensions": "Le débit indiqué est le débit nominal de chaque cadre à vitesse frontale constante (≈ 2,5 m/s) ; la ΔP initiale est donnée à ce débit, média propre, pour la classe H13. Ces deux cadres sont les seuls disponibles dans les cinq classes E10 à H14, et les seuls proposés au choix en plastique ou en acier galvanisé. Autres formats standard : 592×592 et 592×287, en H13 et H14, cadre acier galvanisé uniquement, nous consulter. Courbes mesurées : H13 jusqu'à 3 840 m³/h, E10 jusqu'à 4 000 m³/h.",
   "aref": 0.3721,
   "dim_ref": "610×610×292",
   "axe_debit_max": 4000,
