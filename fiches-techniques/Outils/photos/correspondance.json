@@ -1,0 +1,84 @@
+{
+  "_commentaire": "Correspondance photo Netair → produit, validée par Pierre-Alain le 22/09/2026. Le champ 'cible' reprend EXACTEMENT le nom de fichier déjà déclaré dans le JSON du produit : on remplace le contenu des images, jamais leur nom, donc aucun code n'est à modifier. Arbitrages de PA : Azur.png sert aux deux produits AZUR (NETPAK S et NETCEL V), qui partagent la même forme ; pour NETPAK S CILIA c'est 'Cilia A.png' qui est retenue.",
+  "dossier_source": "/Users/pierre-alainduclos/Desktop/Netair/Offres_de_Prix/Photos filtres Netair",
+  "sans_photo": [
+    "NETPAK S DUO",
+    "NETCARB AZUR",
+    "NETCARB BAG",
+    "NETCARB CILIA"
+  ],
+  "produits": [
+    {
+      "produit": "NETPLY",
+      "photo": "Netply.png",
+      "cible": "netply-v6-photo.jpg"
+    },
+    {
+      "produit": "NETPLAN",
+      "photo": "Netplan.jpg",
+      "cible": "netplan-photo.jpg"
+    },
+    {
+      "produit": "NETMETAL",
+      "photo": "Netmetal.png",
+      "cible": "netmetal-photo.jpg"
+    },
+    {
+      "produit": "NETFIL",
+      "photo": "Netfil.png",
+      "cible": "netfil-photo.jpg"
+    },
+    {
+      "produit": "NETFIBRE",
+      "photo": "Netfibre.png",
+      "cible": "netfibre-photo.jpg",
+      "seuil": 248
+    },
+    {
+      "produit": "NETBAG S",
+      "photo": "Netbag.png",
+      "cible": "netbag-s-photo.jpg"
+    },
+    {
+      "produit": "NETPAK S BORA",
+      "photo": "Bora.png",
+      "cible": "netpak-s-bora-photo.jpg"
+    },
+    {
+      "produit": "NETPAK S CILIA",
+      "photo": "Cilia A.png",
+      "cible": "netpak-s-cilia-photo.jpg"
+    },
+    {
+      "produit": "NETPAK S AZUR",
+      "photo": "Azur.png",
+      "cible": "netpak-s-azur-photo.jpg"
+    },
+    {
+      "produit": "NETPAK S LUMEN",
+      "photo": "Lumen.png",
+      "cible": "netpak-s-lumen-photo.jpg"
+    },
+    {
+      "produit": "NETCEL V AZUR",
+      "photo": "Azur.png",
+      "cible": "netcel-v-azur-photo.jpg"
+    },
+    {
+      "produit": "NETCEL V LAM",
+      "photo": "Netlam.png",
+      "cible": "netcel-v-lam-photo.jpg"
+    },
+    {
+      "produit": "NETCEL V NIVAL",
+      "photo": "Nival.png",
+      "cible": "netcel-v-nival-photo.jpg"
+    },
+    {
+      "produit": "NETCARB NIVAL",
+      "photo": "Nival Carb.png",
+      "cible": "netcarb-nival-photo.jpg"
+    }
+  ],
+  "_seuil": "Seuil de détourage : à partir de quelle clarté un pixel compte comme du fond. 232 par défaut. NETFIBRE monte à 248 : son média fibreux est presque aussi blanc que le fond, et à 232 le détourage mordait dans le rouleau (bord rongé, vérifié à l'écran). Ne pas monter le seuil partout : à 248, NETBAG S garde au contraire un résidu blanchâtre sur son bord."
+}
