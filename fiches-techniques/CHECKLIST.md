@@ -864,3 +864,50 @@ _(NIVAL et AZUR créées — voir ci-dessus)_
 
 ## Réglé ✅
 _(déplacer ici les lignes traitées, avec date)_
+
+---
+
+## 📓 SÉANCE DU 22/09/2026 — plaquette, photos Netair, consolidation
+
+### Ce qui est acquis
+
+| Sujet | État |
+|---|---|
+| **Catalogue produits** (`Catalogue/`) | ✅ 30 pages A4, HTML **et** PDF, reconstruits depuis les données. Mode d'emploi et recette dans `Catalogue/RECETTE.md` |
+| Courbes ΔP dans le catalogue | ✅ les 18 pages produit, **toutes classes**, mêmes polynômes que les fiches (écart max relevé : 1,23 Pa sur 20 courbes) |
+| Sommaire cliquable | ✅ 156 liens internes au PDF |
+| **Photos Netair** | ✅ 14 produits sur 18, sur les **trois** supports (catalogue, fiches, site). Outil de préparation et de détourage : `Outils/photos/` |
+| Images cassées du site | ✅ les 4 NETCARB n'avaient **aucune image publiée** : réparé |
+| **Traits cadratins** | ✅ 0 dans la plaquette, 0 visible sur les 18 fiches. Charte modifiée (gabarit + générateur + ancre), test d'identité vert |
+| Adresse de la plaquette | ✅ Parc d'activités des Chênes, Route de Tramoyes, 01700 Miribel |
+| Branches Git | ✅ `main` consolidé : 4 branches, 3 mois de travail. Seule `feature/b3-paiement` reste dehors (travail en cours) |
+
+### 🔴 Points ouverts relevés pendant la séance
+
+- [ ] **Des mentions de travail s'impriment sur 5 fiches diffusées.** Le plus grave, `NETCARB NIVAL`, champ
+      `note_dimensions` : *« Courbe ΔP = pack charbon 292 mm PARTAGÉ avec NETCARB AZUR (SV-GD/QL-CARB), la
+      courbe propre au V-CARB reste à mesurer (R&D) […] le doc 2015 arrondissait à 85 »*. Un client y lit que
+      la courbe annoncée n'est pas celle du produit, plus des **codes fournisseur**. Également visibles :
+      `NETCARB AZUR` (classe 10121-3 à déterminer · capacité non communiquée), `NETCARB CILIA` et
+      `NETCARB BAG` (classe à déterminer), `NETBAG S` (note de surface, légitime).
+      → à traiter pendant la passe de contenu NETCARB.
+- [ ] **NETCARB CILIA : deux courbes différentes portent la même étiquette.** Le JSON déclare une épaisseur
+      unique de 48 mm mais contient **deux polynômes distincts** (clés `48` et `98`). Le générateur du
+      catalogue les départage par la clé brute **et le signale à chaque génération**. À trancher : une seule
+      épaisseur, ou deux variantes correctement nommées.
+- [ ] **4 produits sans photo Netair** : NETPAK S DUO, NETCARB AZUR, NETCARB BAG, NETCARB CILIA. Les trois
+      NETCARB affichent encore une image de travail détourée pour l'occasion. À photographier **pendant** la
+      passe de contenu, pas après.
+
+### Pièges confirmés cette séance
+
+- **Le balisage est dupliqué entre `gabarit_base.html` et `generer.py`**, et plus largement que ne le disait
+  le PROCESS : le générateur le reconstruit pour les chemins multi-classes et séries. « Page » y apparaissait
+  **9 fois contre 2** dans le gabarit. Quatre passes successives ont été nécessaires pour éliminer les traits
+  cadratins — chaque régénération révélant un chemin de code oublié. **Toujours régénérer et recompter, ne
+  jamais se fier à une seule passe.**
+- **Les clés `48` / `98` des polynômes ne sont pas des millimètres.** C'est une convention interne du gabarit.
+  L'épaisseur réelle est dans le champ `epaisseur` de la classe : NETPLAN 8→25 mm, NETFIL 4,5 mm,
+  NETCEL V LAM 68 mm. Les prendre pour des mm affiche des cotes fausses.
+- **NETCEL V LAM a sa propre surface frontale** (`aref` 0,3721 m² au lieu de 0,3505). Toute conversion
+  vitesse → débit doit la respecter, sinon sa courbe est fausse.
