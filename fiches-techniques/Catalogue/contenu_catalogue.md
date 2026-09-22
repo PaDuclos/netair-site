@@ -51,7 +51,7 @@ calculateur de consommation énergétique.
 Les devis sont établis au cas par cas, sur dimensions et classes réelles.
 Livraison par transporteur.
 
-signature: Pierre-Alain Duclos — Président
+signature: Pierre-Alain Duclos, Président
 
 ---
 
@@ -70,10 +70,10 @@ troisième norme, l'EN 1822, et se désignent par leur classe seule (E10, H13, H
 
 tableau:
 ISO Coarse | Poussières grossières (> 10 µm) | G1 · G2 · G3 · G4
-ISO ePM10 | Particules ≤ 10 µm — pollens, spores | M5
-ISO ePM2,5 | Particules ≤ 2,5 µm — bactéries, fumées | M6
-ISO ePM1 | Particules ≤ 1 µm — suies, particules de combustion | F7 · F8 · F9
-EN 1822 | Filtres absolus — essai au MPPS | E10 · H13 · H14
+ISO ePM10 | Particules ≤ 10 µm · pollens, spores | M5
+ISO ePM2,5 | Particules ≤ 2,5 µm · bactéries, fumées | M6
+ISO ePM1 | Particules ≤ 1 µm · suies, particules de combustion | F7 · F8 · F9
+EN 1822 | Filtres absolus · essai au MPPS | E10 · H13 · H14
 
 note_tableau:
 Équivalences EN 779 données à titre indicatif (Eurovent · AICVF · VDI). Pour un
@@ -94,7 +94,7 @@ texte:
 Filtres pour centrales de traitement d'air.
 Standard et sur mesure, sur devis.
 
-adresse: 142 Route du Tilleul — 69270 Cailloux-sur-Fontaines
+adresse: Parc d'activités des Chênes, Route de Tramoyes, 01700 Miribel
 email: contact@netair.fr
 site: www.netair.fr
 mentions: SASU au capital de 1 000 € · SIREN 107 397 648 R.C.S. Lyon · APE 28.25Z

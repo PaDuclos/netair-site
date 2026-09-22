@@ -1,6 +1,5 @@
 {
   "_commentaire": "NETBAG S — filtre à poches souples (équiv. Titanair TITABAG S). Fiche MULTI-CLASSES (moteur série opt-in via la clé 'series'). ✅ CONTENU RETRAVAILLÉ v1.1, VALIDÉ PA le 26/07/2026 — arbitrages dans _arbitrages_pad, NE PAS retoucher sans son accord. Données ΔP RÉELLES extraites des courbes vectorielles des PDF Titanair 'Fiches techniques 2018/TITABAG' et recalées sur les axes (méthode validée : F9 p500 reproduit 38/58/81/105/134/166/199 Pa). Polynômes ΔP=a·v²+b·v+c ajustés (R²≈1) sur v=débit/3600/0,3505 (frontale 592×592), débit testé 1000→4000 m³/h — courbe ET curseur du calculateur bornés à 4000 (aucune extrapolation affichée). Specs = fiches 2018 (T° 60°C, feu M1, écarteurs thermosoudés sans colle, cadre acier galva/plastique ép.25) + densité progressive et HR 100 % NON SOURCÉES (données fabricant PA). Toutes les classes ePM → ADD=+100 Pa. ANOMALIE: M5 550mm (48 Pa, 5,11 m²) < M5 650mm (65 Pa, 6,10 m²) physiquement incohérent → M5 550 marquée À VALIDER (dash + astérisque expliqué dans la note du tableau). BOUTIQUE : code 17 branché en mode calcul (déc. PA 26/07) — standard 380/550 seuls, G4/M5 sur devis, variante sur-mesure. Photo Titabag.jpg détourée = PLACEHOLDER. Détails/manques : CHECKLIST.md.",
-
   "_arbitrages_pad": [
     "PASSE DE CONTENU v1.1 — 26/07/2026. Arbitrages de Pierre-Alain, à NE PAS rouvrir sans le consulter.",
     "(1) SOUS-TITRE « Filtre à poches souples » — suffixe « — Préfiltration à filtration fine » RETIRÉ (convention gamme « forme physique seule » ; la plage reste dans les badges).",
@@ -14,7 +13,6 @@
     "(9) RÉFÉRENCE GÉNÉRÉE — BUG CORRIGÉ : l'épaisseur était ignorée dès qu'un format était choisi → 380 et 550 mm auraient partagé la même référence à des prix différents. Correction ciblée : l'épaisseur n'entre dans la référence QUE si la variante déclare ses propres épaisseurs (NETBAG_S-F7-592×592×380mm) ; NETFIBRE/LUMEN/AZUR/LAM inchangés (vérifié).",
     "(10) RÉSERVES MAINTENUES (cf. CHECKLIST § NETBAG S) : anomalie M5 550/650 (hypothèse étiquettes interverties, mesure banc R&D à faire — donnée brute conservée, déc. 22/06) ; courbe G4 à mesurer (« sur demande ») ; longueurs 300/600 du livret vs 380/550/650 des fiches 2018 ; longueur 360 mm tarifée non proposée (ni fiche ni courbe) ; surface média du 287×592 non fournie ; humidité et densité progressive non sourcées ; nombre de poches non documenté ; photo Titanair détourée = placeholder."
   ],
-
   "slug": "netbag-s",
   "nom": "NETBAG S",
   "soustitre": "Filtre à poches souples",
@@ -27,21 +25,23 @@
   "axe_debit_max": 4000,
   "annot_vitesse": true,
   "points_nominaux": true,
-  "courbes_affichees": ["f7"],
+  "courbes_affichees": [
+    "f7"
+  ],
   "vmax": 3.17,
   "pmax": 240,
   "debit_nom": 3400,
   "eff0": "f7",
   "len0": 380,
   "debit_curseur_max": 4000,
-
-  "fiche": { "num": "FT-NETBAG-S-001", "version": "v1.1", "date": "26/07/2026" },
-
+  "fiche": {
+    "num": "FT-NETBAG-S-001",
+    "version": "v1.1",
+    "date": "26/07/2026"
+  },
   "photo": "netbag-s-photo.jpg",
   "photo_alt": "Filtre à poches souples NETBAG S",
-
   "description": "Le filtre à poches souples NETBAG S est destiné à la filtration de l'air dans les centrales de traitement d'air, de la préfiltration à la filtration fine. Son média en fibres synthétiques à densité progressive est réparti sur plusieurs poches, développant une grande surface filtrante et une forte capacité de rétention des poussières.",
-
   "points_cles": [
     "Surface filtrante développée",
     "Fibres synthétiques à densité progressive",
@@ -49,22 +49,56 @@
     "Dimensions standard et sur mesure",
     "Sans fibre de verre"
   ],
-
   "specs": [
-    ["Média filtrant", "Fibres synthétiques à densité progressive"],
-    ["Type", "Poches souples"],
-    ["Cadre", "Acier galvanisé ou plastique — ép. 25 mm"],
-    ["Écarteurs / séparateurs", "Thermosoudés (sans colle)"],
-    ["Efficacités ISO 16890", "Coarse 65 %  ·  ePM10 50 %  ·  ePM2,5 50 %  ·  ePM1 55 % → 80 %"],
-    ["Efficacités EN 779", "G4  ·  M5  ·  M6  ·  F7  ·  F8  ·  F9"],
-    ["Profondeurs de poche", "380  ·  500  ·  550  ·  650 mm"],
-    ["Dimensions cadre", "Standard et sur mesure"],
-    ["Classement au feu", "M1"],
-    ["Température de service", "60 °C (accidentelle 65 °C / 1 h)"],
-    ["Humidité relative max.", "100 % (sans condensation)"],
-    ["ΔP finale recommandée", "min(ΔP initiale + 50 Pa [Coarse] / + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"]
+    [
+      "Média filtrant",
+      "Fibres synthétiques à densité progressive"
+    ],
+    [
+      "Type",
+      "Poches souples"
+    ],
+    [
+      "Cadre",
+      "Acier galvanisé ou plastique, ép. 25 mm"
+    ],
+    [
+      "Écarteurs / séparateurs",
+      "Thermosoudés (sans colle)"
+    ],
+    [
+      "Efficacités ISO 16890",
+      "Coarse 65 %  ·  ePM10 50 %  ·  ePM2,5 50 %  ·  ePM1 55 % → 80 %"
+    ],
+    [
+      "Efficacités EN 779",
+      "G4  ·  M5  ·  M6  ·  F7  ·  F8  ·  F9"
+    ],
+    [
+      "Profondeurs de poche",
+      "380  ·  500  ·  550  ·  650 mm"
+    ],
+    [
+      "Dimensions cadre",
+      "Standard et sur mesure"
+    ],
+    [
+      "Classement au feu",
+      "M1"
+    ],
+    [
+      "Température de service",
+      "60 °C (accidentelle 65 °C / 1 h)"
+    ],
+    [
+      "Humidité relative max.",
+      "100 % (sans condensation)"
+    ],
+    [
+      "ΔP finale recommandée",
+      "min(ΔP initiale + 50 Pa [Coarse] / + 100 Pa [ePM] ; 3 × ΔP initiale), EN 13053"
+    ]
   ],
-
   "badges_p1": [
     "ISO 16890 : Coarse 65% → ePM1 80%",
     "EN 779 : G4 → F9",
@@ -75,31 +109,151 @@
     "EN 779 : G4 → F9",
     "EN 13053"
   ],
-
   "classes_def": {
-    "m5": { "label": "M5", "iso": "ePM10 50%",  "add": 100, "rule": "classe ePM10" },
-    "m6": { "label": "M6", "iso": "ePM2,5 50%", "add": 100, "rule": "classe ePM2,5" },
-    "f7": { "label": "F7", "iso": "ePM1 55%",   "add": 100, "rule": "classe ePM1" },
-    "f8": { "label": "F8", "iso": "ePM1 70%",   "add": 100, "rule": "classe ePM1" },
-    "f9": { "label": "F9", "iso": "ePM1 80%",   "add": 100, "rule": "classe ePM1" }
+    "m5": {
+      "label": "M5",
+      "iso": "ePM10 50%",
+      "add": 100,
+      "rule": "classe ePM10"
+    },
+    "m6": {
+      "label": "M6",
+      "iso": "ePM2,5 50%",
+      "add": 100,
+      "rule": "classe ePM2,5"
+    },
+    "f7": {
+      "label": "F7",
+      "iso": "ePM1 55%",
+      "add": 100,
+      "rule": "classe ePM1"
+    },
+    "f8": {
+      "label": "F8",
+      "iso": "ePM1 70%",
+      "add": 100,
+      "rule": "classe ePM1"
+    },
+    "f9": {
+      "label": "F9",
+      "iso": "ePM1 80%",
+      "add": 100,
+      "rule": "classe ePM1"
+    }
   },
-  "classes_order": ["m5", "m6", "f7", "f8", "f9"],
-
+  "classes_order": [
+    "m5",
+    "m6",
+    "f7",
+    "f8",
+    "f9"
+  ],
   "dims_sans_ref": true,
   "dims_en779_col": true,
   "dims_sans_surmesure": true,
   "note_dimensions": "Surface filtrante développée (média sur l'ensemble des poches), pour un cadre 592×592 ; le cadre 287×592 et le sur-mesure sont disponibles sur demande. ΔP initiale mesurée à 3 400 m³/h, média propre. (*) valeur à confirmer.",
-
   "courbes": [
-    { "cls": "m5", "len": 380, "a": 7.07, "b": 8.03,  "c": 9.16,   "surface": 3.46, "dp": 82,  "color": "#0897A5" },
-    { "cls": "m5", "len": 550, "a": 3.56, "b": 5.08,  "c": 8.76,   "surface": 5.11, "dp": 48,  "color": "#6FCBD2", "dash": true, "avalider": true },
-    { "cls": "m5", "len": 650, "a": 3.89, "b": 11.08, "c": 6.46,   "surface": 6.10, "dp": 65,  "color": "#036C77" },
-    { "cls": "m6", "len": 380, "a": 8.34, "b": 42.40, "c": -18.33, "surface": 3.46, "dp": 156, "color": "#1B9E5A" },
-    { "cls": "f7", "len": 380, "a": 9.10, "b": 43.96, "c": -9.79,  "surface": 3.46, "dp": 175, "color": "#0F3261" },
-    { "cls": "f7", "len": 550, "a": 5.80, "b": 22.09, "c": 3.65,   "surface": 5.11, "dp": 105, "color": "#3E66A6" },
-    { "cls": "f7", "len": 650, "a": 7.70, "b": 13.26, "c": 9.61,   "surface": 6.10, "dp": 101, "color": "#7CA0D6" },
-    { "cls": "f8", "len": 380, "a": 4.71, "b": 63.58, "c": -13.72, "surface": 3.46, "dp": 192, "color": "#6A4C93" },
-    { "cls": "f8", "len": 500, "a": 5.95, "b": 29.89, "c": 4.18,   "surface": 5.11, "dp": 128, "color": "#A98FD0" },
-    { "cls": "f9", "len": 500, "a": 9.10, "b": 31.72, "c": 6.89,   "surface": 5.11, "dp": 158, "color": "#C0392B" }
+    {
+      "cls": "m5",
+      "len": 380,
+      "a": 7.07,
+      "b": 8.03,
+      "c": 9.16,
+      "surface": 3.46,
+      "dp": 82,
+      "color": "#0897A5"
+    },
+    {
+      "cls": "m5",
+      "len": 550,
+      "a": 3.56,
+      "b": 5.08,
+      "c": 8.76,
+      "surface": 5.11,
+      "dp": 48,
+      "color": "#6FCBD2",
+      "dash": true,
+      "avalider": true
+    },
+    {
+      "cls": "m5",
+      "len": 650,
+      "a": 3.89,
+      "b": 11.08,
+      "c": 6.46,
+      "surface": 6.1,
+      "dp": 65,
+      "color": "#036C77"
+    },
+    {
+      "cls": "m6",
+      "len": 380,
+      "a": 8.34,
+      "b": 42.4,
+      "c": -18.33,
+      "surface": 3.46,
+      "dp": 156,
+      "color": "#1B9E5A"
+    },
+    {
+      "cls": "f7",
+      "len": 380,
+      "a": 9.1,
+      "b": 43.96,
+      "c": -9.79,
+      "surface": 3.46,
+      "dp": 175,
+      "color": "#0F3261"
+    },
+    {
+      "cls": "f7",
+      "len": 550,
+      "a": 5.8,
+      "b": 22.09,
+      "c": 3.65,
+      "surface": 5.11,
+      "dp": 105,
+      "color": "#3E66A6"
+    },
+    {
+      "cls": "f7",
+      "len": 650,
+      "a": 7.7,
+      "b": 13.26,
+      "c": 9.61,
+      "surface": 6.1,
+      "dp": 101,
+      "color": "#7CA0D6"
+    },
+    {
+      "cls": "f8",
+      "len": 380,
+      "a": 4.71,
+      "b": 63.58,
+      "c": -13.72,
+      "surface": 3.46,
+      "dp": 192,
+      "color": "#6A4C93"
+    },
+    {
+      "cls": "f8",
+      "len": 500,
+      "a": 5.95,
+      "b": 29.89,
+      "c": 4.18,
+      "surface": 5.11,
+      "dp": 128,
+      "color": "#A98FD0"
+    },
+    {
+      "cls": "f9",
+      "len": 500,
+      "a": 9.1,
+      "b": 31.72,
+      "c": 6.89,
+      "surface": 5.11,
+      "dp": 158,
+      "color": "#C0392B"
+    }
   ]
 }

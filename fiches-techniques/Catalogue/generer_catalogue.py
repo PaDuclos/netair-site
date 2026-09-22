@@ -196,7 +196,7 @@ def svg_courbe(c):
         if deux_lignes:
             detail = courbe["epaisseur"]
             if detail:
-                detail += "  —  "
+                detail += "  ·  "
             legende.append(
                 trait
                 + f'<text x="{LEG + 27}" y="{y + 4}" class="l">'
@@ -438,8 +438,6 @@ table.synth tr:nth-child(even) td {{ background: #E6F5F7; }}
 .do-fond {{ position: absolute; inset: 0; background: var(--navy); }}
 .do-diag {{ position: absolute; top: 0; right: 0; width: 96mm; height: 297mm;
            background: rgba(255,255,255,.045); clip-path: polygon(42% 0, 100% 0, 100% 100%, 0 100%); }}
-.do-hex {{ position: absolute; top: 58mm; right: 26mm; width: 54mm; height: 60mm;
-          background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.34); }}
 .do-gammes {{ position: absolute; top: 148mm; left: 22mm; width: 104mm; }}
 .do-gammes .label {{ color: var(--teal); }}
 .do-gamme {{ color: rgba(255,255,255,.9); font-size: 9.5pt; padding: 1.7mm 0;
@@ -495,7 +493,7 @@ def page_sommaire(sections, pages_fam, pages_prod, produits, num):
     for i, s in enumerate(sections, 1):
         items = "".join(
             f'<a class="so-item" href="#p{pages_prod[sl]}">'
-            f'<span>{e(produits[sl]["nom"])} — '
+            f'<span>{e(produits[sl]["nom"])} · '
             f'{e(produits[sl]["soustitre"])}</span><span>{pages_prod[sl]}</span></a>'
             for sl in s["produits"])
         pf = pages_fam[s["slug"]]
@@ -508,7 +506,7 @@ def page_sommaire(sections, pages_fam, pages_prod, produits, num):
   <div class="tete"></div><div class="tete-txt">Sommaire</div>
   <div class="tete-num">Catalogue produits</div>
   <div class="so-corps">{''.join(blocs)}</div>
-  <div class="pied"><span>Netair — Catalogue produits</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · Catalogue produits</span><span>{num}</span></div>
 </section>"""
 
 
@@ -530,7 +528,7 @@ def page_normes(c, num):
     <div class="no-note">{e(c['note_tableau'])}</div>
     <div class="no-encadre">{e(c['encadre'])}</div>
   </div>
-  <div class="pied"><span>Netair — Catalogue produits</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · Catalogue produits</span><span>{num}</span></div>
 </section>"""
 
 
@@ -555,7 +553,7 @@ def page_section(s, i, produits, pages_prod, num):
     <div class="label" style="margin-bottom:2.5mm;">
       {len(s['produits'])} référence{'s' if len(s['produits']) > 1 else ''}</div>
     {items}</div>
-  <div class="pied"><span>Netair — {e(s['titre'])}</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · {e(s['titre'])}</span><span>{num}</span></div>
 </section>"""
 
 
@@ -582,7 +580,7 @@ def page_produit(p, famille, img, num, courbe):
         for bloc in (p["specs"][:coupe], p["specs"][coupe:]) if bloc)
 
     bloc_courbe = (f'<div class="pr-courbe"><div class="label">'
-                   f'Perte de charge — toutes classes</div>'
+                   f'Perte de charge · toutes classes</div>'
                    f'{svg_courbe(courbe)}</div>') if courbe else ""
     return f"""<section class="page" id="p{num}">
   <div class="pr-tete">
@@ -599,7 +597,7 @@ def page_produit(p, famille, img, num, courbe):
   {bloc_courbe}
   <div class="pr-specs"><div class="label">Caractéristiques</div>
     <div class="pr-specs-cols">{colonnes}</div></div>
-  <div class="pied"><span>Netair — {e(p['nom'])}</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · {e(p['nom'])}</span><span>{num}</span></div>
 </section>"""
 
 
@@ -623,7 +621,7 @@ def page_synthese(sections, produits, pages_prod, num):
       <th style="width:34%">Efficacité</th><th style="width:8%">Page</th>
     </tr></thead><tbody>{lignes}</tbody></table>
   </div>
-  <div class="pied"><span>Netair — Catalogue produits</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · Catalogue produits</span><span>{num}</span></div>
 </section>"""
 
 
@@ -639,7 +637,6 @@ def page_dos(c, img, sections, num):
         f'<span>{len(s["produits"])} réf.</span></div>' for s in sections)
     return f"""<section class="page" id="p{num}">
   <div class="do-fond"></div><div class="do-diag"></div>
-  <div class="do-hex hex-v"></div>
   <img class="do-logo" src="{img['logo_blanc']}" alt="Netair">
   <div class="do-accroche">{e(c['accroche'])}</div>
   <div class="do-filet"></div>
@@ -743,7 +740,7 @@ def construire():
 
     html_doc = f"""<!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8">
-<title>Netair — Catalogue produits</title>
+<title>Netair · Catalogue produits</title>
 <style>{feuille_de_style()}</style>
 </head><body>
 {''.join(corps)}

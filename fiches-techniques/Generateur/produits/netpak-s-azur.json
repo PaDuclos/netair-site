@@ -74,7 +74,7 @@
     ],
     [
       "ΔP finale recommandée",
-      "min(ΔP initiale + 100 Pa [ePM] ; 3 × ΔP initiale) — EN 13053"
+      "min(ΔP initiale + 100 Pa [ePM] ; 3 × ΔP initiale), EN 13053"
     ]
   ],
   "badges_p1": [
