@@ -360,6 +360,15 @@ n'ayant aucune navigation. D'où un bouton flottant, présent sur les **18 fiche
   `dp_final_mode:"const"` (filtre **non colmatant** → ΔP finale = moyenne = initiale, remplacement à saturation),
   `ref_simple` (code `NETCARB-CILIA-LxHxP` + ΔP par ligne + en-tête tableau « Filtration »). Photo `CARB.png` (grains) placeholder.
 - **NETCARB AZUR** — **poches rigides / dièdre à charbon actif** (équiv. SV-GD CARB), moléculaire, **mono-classe** ✅
+  **v1.1 (12/10/2026) — passe de contenu, décisions PA. ⚠️ COURBE CHANGÉE : la courbe 2023 remplace la 2020.**
+  La fiche `SV GD-CARB 2023.pdf` (créée 07/11/2024, classe ISO **NA** = charbon seul) est la plus récente : ce sont les
+  fichiers F7/F8 2023 qui ont copié SA courbe, pas l'inverse → l'argument « copier-collé » de juin ne tenait que pour eux.
+  7 pts 1 000→4 000 m³/h [22…155], polynôme 8,035·v²+24,392·v−2,500, **ΔP@3400 = 122 Pa** (v1.0 : 98). Axe 0-4 000 entièrement
+  mesuré (`axe_debit_max` 4000, `vmax` 3,17, `pmax` 160). Aucune mention ISO 10121 tant qu'aucun essai ; capacité sans chiffre
+  (aucun concurrent ne publie de % massique) ; parois « Plastique » ; sous-titre, descriptif et points clés rédigés par PA ;
+  photo Netair `Azur Carb.png`. Nouvelle clé moteur **`ref_classe`** (opt-in) : code `NETCARB-AZUR-CA-LxHxP` conforme à
+  CODIFICATION_PRODUITS.md. Débits 490×592 = 2 810 et 287×592 = 1 650 (vitesse nominale). Note sous tableau réduite à 1 ligne :
+  la v1.0 sortait sur **3 pages** à l'impression. Les lignes ci-dessous décrivent la v1.0.
   Une seule épaisseur 292 mm → `mono_classe` (+ `dp_final_mode:const` + `ref_simple`). Source = dossier `SV GD CARB` :
   **courbe 2020 « QL-CARB »** [débits 1000-3500 → 18,31,45,61,79,103] retenue car **cohérente avec la fiche 2018**
   (`SV-GD CARB.pdf` : classe EN779 NA, axe Y 0-120, débit 1000-3500). **PIÈGE écarté** : `…F7 2023.xlsx` = `…F8 2023.xlsx`
