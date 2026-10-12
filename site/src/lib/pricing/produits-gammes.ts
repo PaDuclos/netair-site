@@ -483,7 +483,27 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   },
   "netpak-s-duo": { code: "20", mode: "devis" },
   "netcarb-azur": { code: "21", mode: "devis" },
-  "netcarb-nival": { code: "23", mode: "devis" }, // 🟠 « NETCARB » générique, à confirmer
+  // 🟠 « NETCARB » générique, à confirmer.
+  // Formats STANDARD uniquement (déc. PA 12/10/2026) : le caisson multidièdre n'existe qu'en
+  // trois cadres, ceux de la fiche v1.1. Sur devis, faute de grille : formats déclarés en dur.
+  "netcarb-nival": {
+    code: "23",
+    mode: "devis",
+    variantes: [
+      {
+        id: "standard",
+        label: "Multidièdre",
+        code: "23",
+        saisie: "formats",
+        labelChamp: "Dimensions (L × H)",
+        formats: [
+          { label: "592 × 592 × 292 mm", largeur: 592, hauteur: 592, defaut: true },
+          { label: "490 × 592 × 292 mm", largeur: 490, hauteur: 592 },
+          { label: "287 × 592 × 292 mm", largeur: 287, hauteur: 592 },
+        ],
+      },
+    ],
+  },
   "netcarb-bag": { code: "22", mode: "devis" },
 };
 
