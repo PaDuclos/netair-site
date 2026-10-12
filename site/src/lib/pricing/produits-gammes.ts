@@ -318,7 +318,21 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // 🟢 méthode D · parois cellule acier galvanisé (cf. fiche). L'option « cellulose pelliculée
   // incinérable » de la fiche n'est pas encore proposée : elle demande une lettre de suffixe de
   // référence à trancher (codification). Cf. CHECKLIST.
-  "netcarb-cilia": { code: "8", mode: "calcul", cadreFixe: { valeur: "galva", libelle: "Acier galvanisé" } },
+  // Filtre à charbon seul : l'Excel range son prix dans la colonne « F7 » (aucune autre classe
+  // tarifée). Le menu proposait M5→F9 et n'affichait aucun prix par défaut (M5) ; efficacité
+  // figée sur cette colonne, affichée « Charbon actif » (déc. PA 12/10/2026).
+  "netcarb-cilia": {
+    code: "8",
+    mode: "calcul",
+    // Cadre au choix comme NETPAK S CILIA (fiche v1.1 : acier galvanisé ou cellulose
+    // pelliculée). Neutre côté prix : l'Excel ne structure pas le cadre.
+    cadres: [
+      { valeur: "galva", libelle: "Acier galvanisé" },
+      { valeur: "cellulose", libelle: "Cellulose pelliculée" },
+    ],
+    classesIncluses: ["F7"],
+    etiquettesIso: { F7: "Charbon actif" },
+  },
   // Polydièdre : dimensions en menu déroulant (formats générés depuis la grille), cadre plastique
   // fixe. Deux conditionnements (déc. PA 02/08/2026) : le filtre complet (code 9) et la RECHARGE —
   // jeu de cassettes seul, support conservé (code 10 « RECHARGES NETPAK S LUMEN » de l'Excel,

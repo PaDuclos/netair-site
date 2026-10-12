@@ -493,9 +493,12 @@ def smooth_curves_origin(d):
                 v["dp"] = nom(co_ref)
 
     if ref_co is not None:
+        # deux_epaisseurs (CILIA charbon) : chaque ligne prend la courbe de SON épaisseur
+        # (clé de polynôme = P en mm), sinon la ligne 98 mm affichait la ΔP du 48 mm.
+        polys = (cl or {}).get("low", {}).get("poly", {}) if d.get("deux_epaisseurs") else {}
         for dim in d.get("dimensions", []):
             if isinstance(dim, dict) and "dp" in dim:
-                dim["dp"] = nom(ref_co)
+                dim["dp"] = nom(polys.get(str(dim.get("P")), ref_co))
 
 
 def build_poly_block(low, high):

@@ -179,6 +179,7 @@ du débit et contredisent le calculateur.
 | `note_dimensions` | note sous le tableau dimensions |
 | `ref_classe` | (12/10/2026, NETCARB AZUR) insère la classe de la codification dans le code article `ref_simple` : `NETCARB-AZUR-CA-592x592x292`. Sans la clé : code sans classe (comportement d'origine) |
 | `sans_courbe` | (12/10/2026, NETCARB NIVAL) produit **sans ΔP mesurée** : page 2 (courbe + calculateur) **masquée, pas supprimée** (le script s'y accroche), pied de page « Page 1/1 », colonne ΔP retirée du tableau, pas de graphique au catalogue (les caractéristiques y remontent). Retirer la clé suffit à tout rétablir le jour où la courbe est mesurée |
+| `deux_epaisseurs` (complément 12/10/2026) | les lignes du tableau prennent la ΔP du polynôme de **leur** épaisseur (`P` = clé 48/98). Avant, la ligne 98 mm de NETCARB CILIA affichait la ΔP du 48. Ne pas mettre de champ `epaisseur` dans les classes : il écrase les clés et le catalogue étiquette les deux courbes « 48 mm » |
 | `dims_dp_tableau` | (12/10/2026, NETCARB BAG) avec `sans_courbe` : garde la colonne ΔP et affiche le `dp` **de chaque ligne** (valeurs fournisseur). À combiner avec `no_smooth_origin`, sinon le moteur écrase ces `dp` par la ΔP nominale du polynôme |
 | `dimensions[].surface` | (12/10/2026, NETCARB BAG) surface de média par ligne (m², donnée fournisseur) affichée à la place de la surface calculée L × H × `surface_facteur` |
 | `compact_p1` | réduit les marges verticales de la page 1 (contenu dense qui doit tenir sur l'A4), par produit |
