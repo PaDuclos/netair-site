@@ -3,14 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 ---
 
-<BaseLayout title="Ma demande de devis - Netair" description="Votre demande de devis de filtres Netair.">
-  <!-- Bandeau maquette -->
-  <div class="bg-marine text-blanc">
-    <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
-      Aperçu du site · demande de devis de démonstration · <strong>l'envoi réel sera branché ensuite</strong>
-    </div>
-  </div>
-
+<BaseLayout title="Ma demande de devis - Netair" description="Composez votre demande de devis de filtres pour CTA : références, dimensions et quantités. Netair vous adresse une offre chiffrée.">
   <section class="mx-auto max-w-[1140px] px-7 pt-10">
     <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'Demande de devis' }]} />
   </section>
@@ -26,6 +19,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
         style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
         Découvrir le catalogue →
       </a>
+      <p class="mt-4 text-sm text-muted">Ou <a href="/contact" class="text-bleu hover:text-turquoise">décrivez votre besoin librement</a>.</p>
     </div>
 
     <!-- Rempli -->
@@ -33,7 +27,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       <div>
         <ul id="lignes" class="divide-y divide-soft rounded-2xl border border-soft bg-white"></ul>
         <a href="/gammes" class="mt-4 inline-flex items-center gap-1.5 text-sm font-normal text-muted transition-colors hover:text-turquoise">
-          ← Continuer mes achats
+          ← Ajouter d'autres filtres
         </a>
       </div>
 
@@ -57,24 +51,32 @@ import Breadcrumb from '../components/Breadcrumb.astro';
             <input name="tel" type="tel" class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise" />
           </label>
           <label class="block">
-            <span class="eyebrow text-[11px] text-muted">Message (optionnel)</span>
+            <span class="eyebrow text-[11px] text-muted">Message (facultatif)</span>
             <textarea name="message" rows="2" class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise"></textarea>
+          </label>
+          <label class="flex items-start gap-3 text-sm text-muted">
+            <input name="rgpd" type="checkbox" required class="mt-1 h-4 w-4 shrink-0 accent-[var(--color-turquoise)]" />
+            <span>J'accepte que mes données soient utilisées pour traiter ma demande. <span class="text-bleu">*</span></span>
           </label>
           <button type="submit"
             class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
             style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
             Envoyer ma demande de devis
           </button>
-          <p class="text-xs text-muted">Maquette : l'envoi réel (email / DEVIS AUTO) sera branché ensuite.</p>
+          <p class="text-xs text-muted">Votre messagerie s'ouvre avec la demande pré-remplie, il vous reste à l'envoyer. Données utilisées uniquement pour répondre à votre demande : <a href="/confidentialite" class="text-bleu hover:text-turquoise">politique de confidentialité</a>.</p>
         </form>
       </aside>
     </div>
 
     <!-- Confirmation -->
     <div id="done" class="mt-8 hidden rounded-2xl border border-turquoise/30 bg-turquoise/5 px-6 py-8 text-marine">
-      <p class="display text-2xl font-normal">Demande enregistrée ✓</p>
+      <p class="display text-2xl font-normal">Votre demande est prête ✓</p>
       <p id="doneMsg" class="mt-2 text-sm text-muted"></p>
-      <a href="/gammes" class="mt-5 inline-flex items-center gap-2 text-sm font-normal text-turquoise hover:text-bleu">← Retour au catalogue</a>
+      <div class="mt-5 flex flex-wrap items-center gap-5 text-sm">
+        <button id="viderBtn" type="button" class="font-normal text-turquoise hover:text-bleu">Vider ma demande</button>
+        <button id="retourBtn" type="button" class="font-normal text-muted hover:text-turquoise">Modifier ma demande</button>
+        <a href="/gammes" class="font-normal text-muted hover:text-turquoise">← Retour au catalogue</a>
+      </div>
     </div>
   </section>
 
@@ -117,19 +119,49 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       );
     }
 
+    const CONTACT_EMAIL = 'contact@netair.fr';
+    // Limite pratique d'un lien mailto (~2000 caractères) : au-delà, la liste est tronquée.
+    const MAX_MAILTO = 1800;
+
     $('form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const societe = new FormData(e.target).get('societe') || '';
+      const f = new FormData(e.target);
+      const v = (k) => String(f.get(k) || '').trim();
       const items = getDevis();
-      const lignes = items.length;
-      const total = items.reduce((s, i) => s + i.qty, 0);
-      clearDevis();
+      const subject = 'Demande de devis - ' + v('societe');
+      const entete =
+        'Société : ' + v('societe') + '\n' +
+        'Nom : ' + v('nom') + '\n' +
+        'Email : ' + v('email') + '\n' +
+        'Téléphone : ' + (v('tel') || 'non renseigné') + '\n' +
+        (v('message') ? '\nMessage :\n' + v('message') + '\n' : '') +
+        '\nFiltres demandés (' + items.length + ') :\n';
+      const lignes = items.map((it) => '- ' + it.qty + ' u. · ' + it.ref + (it.detail ? ' · ' + it.detail : ''));
+      const lien = (corps) => 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(corps);
+      let n = lignes.length;
+      let corps = entete + lignes.join('\n') + '\n';
+      while (n > 1 && lien(corps).length > MAX_MAILTO) {
+        n--;
+        corps = entete + lignes.slice(0, n).join('\n') +
+          '\n(+ ' + (lignes.length - n) + ' autre(s) filtre(s), à préciser en réponse)\n';
+      }
+      window.location.href = lien(corps);
       $('plein').classList.add('hidden');
       $('vide').classList.add('hidden');
       $('doneMsg').textContent =
-        'Merci ' + societe + '. Votre demande (' + lignes + ' filtre' + (lignes > 1 ? 's' : '') + ', ' +
-        total + ' unité' + (total > 1 ? 's' : '') + ') a bien été prise en compte. Netair revient vers vous avec un devis chiffré.';
+        'Votre messagerie s\'ouvre avec votre demande pré-remplie (' + items.length + ' filtre' + (items.length > 1 ? 's' : '') +
+        ') : il vous reste à l\'envoyer. Si rien ne s\'ouvre, écrivez-nous à ' + CONTACT_EMAIL + '.';
       $('done').classList.remove('hidden');
+    });
+
+    $('viderBtn').addEventListener('click', () => {
+      clearDevis();
+      $('done').classList.add('hidden');
+      render();
+    });
+    $('retourBtn').addEventListener('click', () => {
+      $('done').classList.add('hidden');
+      render();
     });
 
     render();

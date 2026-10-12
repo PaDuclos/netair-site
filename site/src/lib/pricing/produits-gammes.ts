@@ -503,6 +503,8 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
     mode: "calcul",
     cadreFixe: { valeur: "pp", libelle: "Plastique" },
     variantes: [{ id: "standard", label: "Polydièdre", code: "11", saisie: "formats", formatsGrandDabord: true, labelChamp: "Dimensions (L × H)" }],
+    // F7 = média GREENTEX, ePM1 50 % comme CILIA et BORA (décision PA du 03/07, confirmée le 12/10).
+    etiquettesIso: { F7: "ePM1 50 % (F7)" },
   },
   // NETPAK S CILIA DUO (renommé le 12/10/2026, ex-« netpak-s-duo ») : plage M5 → F9 annoncée par
   // la fiche v1.1 (modèle BORA), sur devis, compact 48 mm. F7 = ePM1 50 % (média de NETPAK S CILIA).
