@@ -200,7 +200,9 @@ def build_dimensions(d):
     sans_ref = d.get("dims_sans_ref", False)
     sans_sm = d.get("dims_sans_surmesure", False)
     classe_dabord = d.get("dims_classe_dabord", False)
-    ncols = 8 - int(sans_surf) - int(sans_ref)
+    # sans_courbe (opt-in, NETCARB NIVAL 12/10/2026) : aucune ΔP mesurée → pas de colonne ΔP.
+    sans_dp = d.get("sans_courbe", False)
+    ncols = 8 - int(sans_surf) - int(sans_ref) - int(sans_dp)
     rows = []
     i = 0  # index global (striping continu sur toutes les lignes de données)
 
@@ -231,9 +233,10 @@ def build_dimensions(d):
                  f'<td style="{c}">{P}</td>']
         if not sans_surf:
             cells.append(f'<td style="{c}">{surface}</td>')
-        cells += [f'<td style="{c}">{debit}</td>',
-                  f'<td style="{c}">{dp}</td>',
-                  f'<td style="{c}">{eff}</td>']
+        cells.append(f'<td style="{c}">{debit}</td>')
+        if not sans_dp:
+            cells.append(f'<td style="{c}">{dp}</td>')
+        cells.append(f'<td style="{c}">{eff}</td>')
         if not sans_ref:
             cells.append(f'<td style="{cref}">{ref}</td>')
         rows.append(f'<tr{tr}>' + "".join(cells) + '</tr>')
@@ -2231,6 +2234,14 @@ def generer(d, html):
     vd = f"{d['fiche']['version']} · {d['fiche']['date']}"
     html = html.replace("v1.0 · 20/06/2026 · Page 1/2", f"{vd} · Page 1/2")
     html = html.replace("v1.0 · 20/06/2026 · Page 2/2", f"{vd} · Page 2/2")
+    # sans_courbe (opt-in, NETCARB NIVAL 12/10/2026) : sans ΔP mesurée, la page 2 (courbe +
+    # calculateur) n'a rien à montrer. Elle est masquée, pas retirée : le script s'y accroche.
+    if d.get("sans_courbe"):
+        html = html.replace(f"{vd} · Page 1/2", f"{vd} · Page 1/1")
+        anc = '<!-- ============================ PAGE 2 ============================ -->\n    <div class="a4">'
+        if anc not in html:
+            raise RuntimeError("sans_courbe : ancre de la page 2 introuvable.")
+        html = html.replace(anc, anc[:-1] + ' style="display:none;">', 1)
 
     # --- #10a libellés courbe/calculateur (cases, légende, boutons)
     # legende_courte (portage du moteur série sur le mono-classe, NETCEL V LAM 02/08/2026) :
@@ -2388,6 +2399,7 @@ def generer(d, html):
     #     02/08/2026). Ancres vérifiées : une ancre absente lève, jamais de retrait silencieux.
     _th = '                <th style="padding:6px 7px; text-align:left; font-weight:600;">%s</th>\n'
     for _cle, _lib in (("dims_sans_surface", "S. filtrante (m²)"),
+                       ("sans_courbe", "ΔP (Pa)"),
                        ("dims_sans_ref", "Référence complète")):
         if d.get(_cle):
             _anc = _th % _lib

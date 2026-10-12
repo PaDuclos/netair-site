@@ -17,7 +17,7 @@
   "legende_courte": true,
   "fiche": {
     "num": "FT-NETCARB-AZUR-001",
-    "version": "v1.1",
+    "version": "v1.2",
     "date": "12/10/2026"
   },
   "photo": "netcarb-azur-photo.jpg",
@@ -41,7 +41,7 @@
     ],
     [
       "Fonction",
-      "Adsorption moléculaire, COV · ozone · SO₂ · NO₂"
+      "Adsorption moléculaire : gaz, odeurs et COV"
     ],
     [
       "Capacité d'adsorption",
@@ -71,12 +71,12 @@
   "badges_p1": [
     "Filtration moléculaire",
     "Charbon actif",
-    "COV · O₃ · SO₂ · NO₂"
+    "Gaz · odeurs · COV"
   ],
   "badges_p2": [
     "Filtration moléculaire",
     "Charbon actif",
-    "COV · O₃ · SO₂ · NO₂"
+    "Gaz · odeurs · COV"
   ],
   "classes": {
     "low": {
@@ -145,11 +145,12 @@
     }
   ],
   "_normes": "Décision PA 29/09/2026 : aucune mention ISO 10121 affichée (ligne « Normes », badge, légende) tant qu'aucun essai n'existe. Aucune source (fiches 2018/2023, doc 2015) ne donne de classe ISO 10121-3 (LD/MD/HD). Le cadre normatif applicable reste ISO 10121-1/-2 (méthodes d'essai) et 10121-3:2022 (classification) : à afficher dès qu'un classement existe.",
+  "_polluants": "Décision PA 12/10/2026 : badge « Gaz · odeurs · COV » et Fonction « gaz, odeurs et COV » au lieu de « COV · O₃ · SO₂ · NO₂ ». La liste des 4 gaz venait de la doc fournisseur (« VOC, Ozone, Sox, Nox ») sans aucune mesure ; Polluants adsorbés.pdf : SO₂ moyenne, ozone et NO₂ absents. Concurrents (Camfil, AAF, MANN+HUMMEL, emw) : les 4 gaz = gaz d'essai ISO 10121-3, toujours avec classe mesurée ; SO₂ souvent vLD sur charbon. À rétablir gaz par gaz avec un essai.",
   "_capacite": "Décision PA 29/09/2026 : ligne conservée, formulation sans chiffre. Aucune source ne donne la capacité du modèle dièdre (le « 15 % maximum » ne figure que sur les compacts et poches souples du fournisseur). Veille concurrents 29/09 : aucun n'affiche de % massique ; Camfil, AAF, MANN+HUMMEL, emw donnent des classes ISO 10121-3 par gaz (exige un rapport d'essai) ; Titanair et Deltrian ne chiffrent rien ; AAF US donne la masse de charbon par filtre (≈ 4,7 kg en 24×24×12 in). À remplacer par une masse de charbon ou des classes 10121-3 si le fournisseur les garantit.",
   "_parois": "Décision PA 12/10/2026 : « Plastique », convention des produits de forme AZUR (NETPAK S AZUR, NETCEL V AZUR, NETPAK S LUMEN). Source fiches 2018/2023 : parois POLYESTER (un plastique), lut OUI, séparateur NON. Lut et séparateur non affichés, comme sur les autres AZUR.",
   "_version_combinee": "Décision PA 12/10/2026 : version combinée moléculaire + particulaire (voile filtrant ajouté, « différentes efficacités » ; F7 = ePM1 50 % confirmé par PA, fiche fournisseur 2023 F7 = ePM1 50 %, F8 = ePM1 70 %). Affichée dans le descriptif et le point clé seulement, pas de ligne de caractéristique (décision PA). Pas de courbe : fichiers 2023 F7/F8 = copies de la courbe base. Code article (règle DUO) : NETCARB-AZUR-F7CA-[L]x[H]x[P], idem F8CA, M5CA.",
   "_descriptif": "Descriptif rédigé par PA le 12/10/2026, appliqué tel quel ; « granulés » → « grains » (harmonisation PA, même jour).",
-  "_caracteristiques": "Reformulations validées PA 12/10/2026 (valeurs inchangées) : Type sans « dièdre » ; feu « Non classé » (source : NA) ; T° 40 °C = limite d'efficacité d'adsorption (source fiche 2018 : 80 °C continu = tenue du cadre) ; ΔP finale = ΔP initiale (non colmatant).",
+  "_caracteristiques": "Reformulations validées PA 12/10/2026 (valeurs inchangées) : Type sans « dièdre » ; feu « Non classé » (source : NA) ; T° 40 °C = limite d'efficacité d'adsorption (source fiche 2018 : 80 °C continu = tenue du cadre) ; ΔP finale = ΔP initiale (non colmatant). v1.2 (12/10/2026, accord PA) : ligne Fonction en virgules (« Adsorption moléculaire : COV, ozone, SO₂, NO₂ »), alignée sur NETCARB NIVAL.",
   "_codes": "Décision PA 12/10/2026 : code conforme à CODIFICATION_PRODUITS.md → NETCARB-AZUR-CA-[L]x[H]x[P] (clé ref_classe). Version combinée : NETCARB-AZUR-F7CA-[L]x[H]x[P]. Les 3 autres NETCARB restent sans « CA » jusqu'à leur passe.",
   "_courbe": "Décision PA 12/10/2026 : courbe 2023 retenue (fiche SV-GD CARB 2023.pdf, créée 07/11/2024, classe ISO NA = charbon seul). 7 points mesurés 1 000→4 000 m³/h [22,38,56,77,101,128,155 Pa], polynôme grille standard 8,035·v²+24,392·v−2,500 (R² 0,9999), DONNEES_PDC l.61. ΔP@3400 ≈ 121 Pa. Axe 0-4 000 m³/h entièrement mesuré (plus d'extrapolation), pmax 160. Remplace la courbe 2020 de la v1.0 [18…103 Pa de 1 000 à 3 500, ΔP@3400 ≈ 98] : écartée car la fiche 2023 est la plus récente ; les fichiers F7/F8 2023 sont des copies de sa courbe, pas l'inverse.",
   "_note_dimensions_travail": "Ancienne note (v1.0) retirée de l'affichage : ΔP par taille écrites à la main (98/97/102 Pa, contredisaient le tableau), code fournisseur de la courbe, code article répété, « à préciser R&D ». Courbe source et pièges : voir _commentaire."
