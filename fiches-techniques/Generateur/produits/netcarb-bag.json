@@ -1,86 +1,97 @@
 {
-  "_commentaire": "NETCARB BAG — POCHES SOUPLES à média synthétique IMPRÉGNÉ DE CHARBON ACTIF (équiv. Titanair TITABAG F9 CARB / 'TITABAG F9 CA'). Nom validé PA (déjà validé). ⚠ PARADIGME DIFFÉRENT des 3 autres NETCARB (charbon en grains) : c'est un COMBINÉ particules + charbon, comme NETPAK S DUO. Il a une VRAIE classe ISO 16890 PRIMAIRE F9 (ePM1 80%) et SE COLMATE (média synthétique) → règle ΔP ePM standard (ADD +100 ; la fiche dit '2× PDC initiale'), PAS la ΔP constante des charbons en grains. Le charbon est IMPRÉGNÉ dans le média (adsorption d'odeurs/COV en complément), capacité 15% masse (donnée fiche). Source = 'Fiches techniques 2018/CARB/TITABAG F9 CARB 2021.xlsx' (cache Excel, débits 1000-4000 → ΔP 47,78,114,151,196,239,284 ; axe Y 0-300). Polynôme grille standard 9,172·v²+64,135·v−10,429 (R²=0,9998). ΔP@3400 ≈ 229 Pa (média profond 520 mm + couche charbon → résistance élevée). Specs fiche : dim 592×592×520, capacité 15%, média F9 ePM1 80%/charbon actif, cadre ACIER, séparateur OUI, lut NON, T° continue 40°C (max 50°C), feu NA. HR non communiquée → omise (à préciser). MONO-CLASSE (seule F9 CARB documentée). Drapeaux : mono_classe + ref_simple (code NETCARB-BAG-LxHxP, cohérence famille). PAS de dp_final_mode:const (filtre colmatant). PHOTO = forme poches souples (placeholder netbag-s, le média imprégné réel est plus sombre → à reshooter Netair).",
+  "_commentaire": "NETCARB BAG — POCHES SOUPLES à média synthétique IMPRÉGNÉ DE CHARBON ACTIF (équiv. Titanair TITABAG F9 CARB / 'TITABAG F9 CA'). Nom validé PA (déjà validé). ⚠ PARADIGME DIFFÉRENT des 3 autres NETCARB (charbon en grains) : c'est un COMBINÉ particules + charbon, comme NETPAK S DUO. Il a une VRAIE classe ISO 16890 PRIMAIRE F9 (ePM1 80%) et SE COLMATE (média synthétique) → règle ΔP ePM standard (ADD +100 ; la fiche dit '2× PDC initiale'), PAS la ΔP constante des charbons en grains. Le charbon est IMPRÉGNÉ dans le média (adsorption d'odeurs/COV en complément), capacité 15% masse (donnée fiche). Source = 'Fiches techniques 2018/CARB/TITABAG F9 CARB 2021.xlsx' (cache Excel, débits 1000-4000 → ΔP 47,78,114,151,196,239,284 ; axe Y 0-300). Polynôme grille standard 9,172·v²+64,135·v−10,429 (R²=0,9998). ΔP@3400 ≈ 229 Pa (média profond 520 mm + couche charbon → résistance élevée). Specs fiche : dim 592×592×520, capacité 15%, média F9 ePM1 80%/charbon actif, cadre ACIER, séparateur OUI, lut NON, T° continue 40°C (max 50°C), feu NA. HR non communiquée → omise (à préciser). MONO-CLASSE (seule F9 CARB documentée). Drapeaux : mono_classe + ref_simple (code NETCARB-BAG-LxHxP, cohérence famille). PAS de dp_final_mode:const (filtre colmatant). PHOTO = forme poches souples (placeholder netbag-s, le média imprégné réel est plus sombre → à reshooter Netair). | v1.1 (12/10/2026, passe de contenu) : DONNÉES TECHNIQUES REFONDUES sur la fiche fournisseur (BLOC3_Documents_Commerciaux_Legaux/Fournisseurs/DELTRIAN/Fiche_Technique_DELTRIAN_Deltricarb_GCA_24-09-2026.pdf), décision PA. Le produit n'est plus le F9 520 mm de la fiche TITABAG F9 CA 2021 (courbe 47…284 Pa conservée dans DONNEES_PDC pour mémoire, plus affichée). Ne jamais citer la marque du fournisseur ni reprendre son texte.",
+  "_descriptif": "Descriptif rédigé avec PA le 12/10/2026, version choisie par PA, appliquée telle quelle.",
+  "_capacite": "Comme AZUR et NIVAL : formulation sans chiffre (la nouvelle source n'en donne pas ; le « 15 % » venait de la fiche TITABAG).",
+  "_codes": "Règle des combinés (DUO) : NETCARB-BAG-F7CA-[L]x[H]x[P] (décision PA 12/10/2026).",
+  "_courbe": "Pas de courbe (décision PA 12/10/2026) : la source ne donne qu'un point par profondeur. Clés sans_courbe + dims_dp_tableau + no_smooth_origin : fiche 1 page, ΔP fournisseur par ligne. Débits du fournisseur conservés (même ΔP aux 3 largeurs d'une profondeur).",
+  "_classe": "ePM1 50 % (F7) : équivalence de la table CODIFICATION_PRODUITS.md, la source ne donne que la classe EN 779 F7 (décision PA 12/10/2026). ePM1 non mesuré par le fournisseur.",
+  "_source_technique": "Fiche fournisseur Deltricarb GCA (créée 03/2020) : classe EN 779 F7 ; média fibres de verre + granulés de charbon actif ; profondeurs 635 / 535 / 380 mm ; formats 592, 490, 287 × 592 ; poches 10 / 8 / 5 ; surfaces 7,8/6,2/3,9 (635), 6,7/5,4/3,3 (535), 4,7/3,8/2,2 m² (380) ; débit/ΔP 3 400, 2 800, 1 700 m³/h à 105 Pa (635), 130 Pa (535), 145 Pa (380) ; ΔP finale 450 Pa (ECO 250) NON reprise (règle gamme +100 Pa) ; T° 50 °C continu ; HR 70 % ; « testé contact alimentaire CE 1935/2004 » NON repris sans certificat couvrant le produit Netair (décision PA). Pas de cadre ni de classement feu dans la source → lignes retirées. | Décisions PA 12/10/2026 : cadre « Acier galvanisé » et feu « Non classé » ajoutés par PA (absents de la fiche fournisseur, à confirmer par lui) ; nombre de poches (10/8/5) non affiché, comme sur NETBAG S. | Température : « 40 °C max. (au-delà, l'adsorption diminue) » comme AZUR et NIVAL (décision PA 12/10/2026), plus prudent que les 50 °C continus de la fiche fournisseur. | Pour tenir sur une page (décision PA 12/10/2026) : ligne « Profondeur de poche » retirée (colonne P du tableau), capacité sans la parenthèse. | Note sous le tableau vidée pour tenir sur une page (décision PA 12/10/2026) ; la colonne « S. filtrante » porte la surface de média du fournisseur. | ΔP finale (décision PA 12/10/2026) : libellé comme AZUR/NIVAL, avec les deux limites (charbon saturé ou poches colmatées à ΔP initiale + 100 Pa, règle de la gamme).",
   "slug": "netcarb-bag",
   "nom": "NETCARB BAG",
-  "soustitre": "Poches souples à charbon actif imprégné, particules + gaz",
+  "soustitre": "Filtre à poches souples charbon actif",
   "mono_classe": true,
+  "sans_courbe": true,
+  "dims_dp_tableau": true,
+  "no_smooth_origin": true,
   "ref_simple": true,
+  "ref_classe": "F7CA",
   "surface_facteur": 1,
   "vmax": 3.17,
   "pmax": 300,
   "debit_nom": 3400,
   "compact_p1": true,
+  "legende_courte": true,
   "fiche": {
     "num": "FT-NETCARB-BAG-001",
-    "version": "v1.0",
-    "date": "23/06/2026"
+    "version": "v1.1",
+    "date": "12/10/2026"
   },
   "photo": "netcarb-bag-photo.jpg",
   "photo_alt": "Filtre à poches souples à charbon actif imprégné NETCARB BAG",
-  "description": "Le NETCARB BAG est un filtre à poches souples dont le média synthétique est imprégné de charbon actif. Il combine en une seule cellule la filtration fine des particules, classe F9 (ePM1 80 %), et l'adsorption des odeurs et composés organiques volatils (COV) par le charbon réparti dans le média. Cette double action en fait une solution compacte pour les ambiances chargées en poussières fines et en odeurs : air urbain, locaux à forte fréquentation, process. Poches souples de grande surface sur cadre acier, profondeur 520 mm. Contrairement aux filtres à grains de charbon, le NETCARB BAG est d'abord un filtre à particules : sa perte de charge augmente avec l'encrassement (remplacement au colmatage).",
+  "description": "Le filtre à poches souples NETCARB BAG est destiné à la filtration combinée des particules et des polluants gazeux dans les centrales de traitement d’air. Son média en fibres de verre, associé à des grains de charbon actif, retient les particules fines et adsorbe les gaz et les odeurs. Il combine ainsi la filtration des poussières et le traitement des odeurs en un seul filtre, notamment dans les environnements urbains, les bureaux, les établissements scolaires et de santé.",
   "points_cles": [
-    "Double action : particules + odeurs",
-    "F9, ePM1 80% (particules fines)",
-    "Charbon imprégné, gaz & COV",
-    "Poches souples grande surface",
-    "Capacité d'adsorption ≈ 15 %"
+    "Double filtration : particules et gaz",
+    "Adsorption des gaz et des odeurs",
+    "Média en fibres de verre et charbon actif",
+    "Grande surface filtrante",
+    "Dimensions standard et sur mesure"
   ],
   "specs": [
     [
       "Type",
-      "Poches souples à charbon actif imprégné"
+      "Filtre à poches souples, particules et gaz"
     ],
     [
       "Média filtrant",
-      "Synthétique imprégné de charbon actif"
-    ],
-    [
-      "Efficacité particules",
-      "ePM1 80 % (F9), EN ISO 16890 / EN 779"
-    ],
-    [
-      "Filtration moléculaire",
-      "Charbon imprégné · ISO 10121 (classe à déterminer)"
-    ],
-    [
-      "Capacité d'adsorption",
-      "≈ 15 % en masse (charge maximale)"
+      "Fibres de verre et grains de charbon actif"
     ],
     [
       "Cadre",
-      "Acier · séparateur oui · sans lut"
+      "Acier galvanisé"
     ],
     [
-      "Profondeur de poche",
-      "520 mm"
+      "Efficacité particules",
+      "ePM1 50 % (F7)"
+    ],
+    [
+      "Filtration moléculaire",
+      "Adsorption des gaz, odeurs et COV"
+    ],
+    [
+      "Capacité d'adsorption",
+      "Variable selon le gaz et les conditions d'usage"
     ],
     [
       "Classement au feu",
-      "NA, non classé (charbon actif)"
+      "Non classé"
     ],
     [
       "Température de service",
-      "40 °C (max. 50 °C)"
+      "40 °C max. (au-delà, l'adsorption diminue)"
     ],
     [
-      "ΔP finale recommandée",
-      "min(ΔP initiale + 100 Pa [ePM] ; 3 × ΔP initiale), EN 13053"
+      "Humidité relative max.",
+      "70 %"
+    ],
+    [
+      "ΔP finale",
+      "Charbon saturé ou poches colmatées (ΔP initiale + 100 Pa)"
     ]
   ],
   "badges_p1": [
-    "ISO 16890 : ePM1 80% (F9)",
-    "Charbon actif · ISO 10121",
-    "EN 13053"
+    "ISO 16890 : ePM1 50% (F7)",
+    "Charbon actif",
+    "Gaz · odeurs · COV"
   ],
   "badges_p2": [
-    "ISO 16890 : ePM1 80% (F9)",
-    "Charbon actif · ISO 10121",
-    "EN 13053"
+    "ISO 16890 : ePM1 50% (F7)",
+    "Charbon actif",
+    "Gaz · odeurs · COV"
   ],
   "classes": {
     "low": {
-      "label": "F9 + charbon actif",
-      "iso": "ePM1 80%",
+      "label": "F7 + charbon actif",
+      "iso": "ePM1 50%",
       "poly": {
         "48": {
           "a": 9.172,
@@ -96,11 +107,11 @@
       "add": 100,
       "rule": "classe ePM1",
       "dp": 229,
-      "epaisseur": 520
+      "epaisseur": 635
     },
     "high": {
-      "label": "F9 + charbon actif",
-      "iso": "ePM1 80%",
+      "label": "F7 + charbon actif",
+      "iso": "ePM1 50%",
       "poly": {
         "48": {
           "a": 9.172,
@@ -116,24 +127,82 @@
       "add": 100,
       "rule": "classe ePM1",
       "dp": 229,
-      "epaisseur": 520
+      "epaisseur": 635
     }
   },
-  "note_dimensions": "Surface indiquée = surface frontale ; les poches souples développent une surface média bien supérieure (≈ 5 m² à 592×592, ordre de grandeur d'après NETBAG F9, surface exacte du média imprégné non communiquée). ΔP de référence par taille : 592×592 ≈ 229 Pa @3 400 m³/h · 287×592 ≈ 239 Pa @1 700 (régime ≈ 2,7-2,8 m/s ; média profond 520 mm + charbon = perte de charge élevée). Filtre colmatant : ΔP finale = règle ePM (+100 Pa). Code article selon la codification NETCARB : NETCARB-BAG-[L]x[H]x[P]. Capacité d'adsorption ≈ 15 % en masse ; durée de vie gaz selon charge polluante (à préciser R&D).",
+  "note_dimensions": "",
   "dimensions": [
     {
       "L": 592,
       "H": 592,
-      "P": 520,
+      "P": 635,
+      "surface": 7.8,
       "debit": 3400,
-      "dp": 229
+      "dp": 105
+    },
+    {
+      "L": 490,
+      "H": 592,
+      "P": 635,
+      "surface": 6.2,
+      "debit": 2800,
+      "dp": 105
     },
     {
       "L": 287,
       "H": 592,
-      "P": 520,
+      "P": 635,
+      "surface": 3.9,
       "debit": 1700,
-      "dp": 239
+      "dp": 105
+    },
+    {
+      "L": 592,
+      "H": 592,
+      "P": 535,
+      "surface": 6.7,
+      "debit": 3400,
+      "dp": 130
+    },
+    {
+      "L": 490,
+      "H": 592,
+      "P": 535,
+      "surface": 5.4,
+      "debit": 2800,
+      "dp": 130
+    },
+    {
+      "L": 287,
+      "H": 592,
+      "P": 535,
+      "surface": 3.3,
+      "debit": 1700,
+      "dp": 130
+    },
+    {
+      "L": 592,
+      "H": 592,
+      "P": 380,
+      "surface": 4.7,
+      "debit": 3400,
+      "dp": 145
+    },
+    {
+      "L": 490,
+      "H": 592,
+      "P": 380,
+      "surface": 3.8,
+      "debit": 2800,
+      "dp": 145
+    },
+    {
+      "L": 287,
+      "H": 592,
+      "P": 380,
+      "surface": 2.2,
+      "debit": 1700,
+      "dp": 145
     }
   ]
 }

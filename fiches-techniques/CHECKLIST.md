@@ -926,18 +926,19 @@ _(déplacer ici les lignes traitées, avec date)_
 | Photo NETCARB AZUR | ✅ `Azur Carb.png`, sur les trois supports |
 | **NETCARB NIVAL v1.1** | ✅ validée PA : sous-titre, descriptif et points clés PA, photo Netair cadre noir, **sans courbe** (fiche 1 page, pas de colonne ΔP, caractéristiques remontées au catalogue) |
 | **NETCARB AZUR v1.2** | ✅ polluants « gaz, odeurs et COV » au lieu des 4 gaz non mesurés, ligne Fonction en virgules |
+| **NETCARB BAG v1.1** | ✅ validée PA : données techniques refondues sur la fiche fournisseur (F7, 9 formats, ΔP par profondeur, sans courbe), textes PA, photo Netair, configurateur formats + sur mesure |
 | Photos sources | ✅ rangées dans `BLOC5_Communication/Photos_Produits/` (ex-`Offres_de_Prix/Photos filtres Netair/`), chemin de `correspondance.json` corrigé |
 
 ### 🔴 Points ouverts
 
 - [x] ~~**NETCARB NIVAL** reprend la courbe 2020 d'AZUR~~ → **tranché le 12/10 : pas de courbe** tant que celle du NIVAL charbon seul n'est pas mesurée (clé `sans_courbe`). **Courbe à obtenir du fournisseur.**
 - [x] ~~**NETCARB NIVAL** : sous-titre trop proche d'AZUR~~ → « Filtre caisson multidièdre à charbon actif » (PA, 12/10).
-- [ ] **NETCARB CILIA, BAG** (NIVAL fait le 12/10) : codes sans « CA » (ajouter `ref_classe` à leur passe), mentions ISO 10121 et « à préciser » encore visibles.
+- [ ] **NETCARB CILIA** (NIVAL et BAG faits le 12/10) : codes sans « CA » (ajouter `ref_classe` à leur passe), mentions ISO 10121 et « à préciser » encore visibles.
 - [ ] **Mention du calculateur** commune aux charbons seuls : « ΔP finale ≈ ΔP initiale, filtre non colmatant » (jargon) → à reprendre avec NIVAL, elle touche CILIA, AZUR et NIVAL.
 - [ ] **Site, configurateur** : la « référence générée » `NETCARB_AZUR-592x592` (tiret bas, sans CA ni profondeur) ne suit pas la codification → chantier e-commerce.
 - [ ] **Version combinée AZUR** (voile filtrant + charbon) : aucune courbe fiable (fichiers F7/F8 2023 = copies). Codes prévus `NETCARB-AZUR-F7CA-…`.
 - [ ] Copie du dossier principal (`feature/b3-paiement`) : `correspondance.json` pointe encore vers l'ancien dossier photos jusqu'à sa remise à niveau sur main.
-- [ ] **NETCARB CILIA et BAG : polluants à aligner** sur AZUR et NIVAL (décision PA 12/10/2026) : badge « Gaz · odeurs · COV » et Fonction « gaz, odeurs et COV » au lieu de « COV · O₃ · SO₂ · NO₂ ». Ces 4 gaz sont ceux de l'essai ISO 10121-3 ; aucune mesure ne les soutient, et le SO₂ et le NO₂ sont faibles sur charbon non traité.
+- [ ] **NETCARB CILIA : polluants à aligner** (BAG fait le 12/10) sur AZUR et NIVAL (décision PA 12/10/2026) : badge « Gaz · odeurs · COV » et Fonction « gaz, odeurs et COV » au lieu de « COV · O₃ · SO₂ · NO₂ ». Ces 4 gaz sont ceux de l'essai ISO 10121-3 ; aucune mesure ne les soutient, et le SO₂ et le NO₂ sont faibles sur charbon non traité.
 - [ ] **NETCEL V NIVAL : ajouter « caisson »** (demande PA du 12/10/2026), sur le modèle du NETCARB NIVAL (« Filtre caisson multidièdre à charbon actif »). Aujourd'hui : sous-titre « Filtre absolu à très haute efficacité », type « Filtre absolu polydièdre ». ⚠️ Fiche validée v1.1 : accord PA sur le libellé exact, puis bump de version et registre.
 
 ### Piège confirmé
@@ -946,3 +947,5 @@ _(déplacer ici les lignes traitées, avec date)_
   les mêmes chiffres. C'était vrai pour les versions combinées F7/F8, pas pour la fiche charbon seul dont elles provenaient.
   Toujours chercher **quel fichier est l'original** (date, classe affichée) avant d'écarter toute la série.
 
+
+- [ ] **NETCARB BAG : à confirmer auprès du fournisseur** : cadre « Acier galvanisé » et feu « Non classé » (ajoutés par PA, absents de sa fiche), certificat « contact alimentaire CE 1935/2004 » à demander si on veut l'afficher.
