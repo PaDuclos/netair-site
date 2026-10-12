@@ -2548,7 +2548,8 @@ def main():
     with open(out, "w", encoding="utf-8") as f:
         f.write(result)
 
-    # Copier la photo à côté de la fiche (assets/) pour un livrable autonome.
+    # Copier la photo et les polices à côté de la fiche (assets/) pour un livrable autonome.
+    copier_polices(os.path.join(outdir, "assets"))
     src_photo = os.path.join(ROOT, "assets", d["photo"])
     if os.path.exists(src_photo):
         dst_assets = os.path.join(outdir, "assets")
@@ -2567,11 +2568,25 @@ def main():
         site_dir = os.path.abspath(os.path.join(ROOT, "..", "..", "site", "public", "fiches-techniques"))
         if os.path.isdir(site_dir):
             shutil.copy(out, os.path.join(site_dir, os.path.basename(out)))
+            copier_polices(os.path.join(site_dir, "assets"))
             if os.path.exists(src_photo):
                 site_assets = os.path.join(site_dir, "assets")
                 os.makedirs(site_assets, exist_ok=True)
                 shutil.copy(src_photo, os.path.join(site_assets, d["photo"]))
             print(f"   ↪ site/public/fiches-techniques/ synchronisé")
+
+
+
+def copier_polices(dst_assets: str) -> None:
+    """Copie Generateur/assets/fonts/ vers dst_assets/fonts/ (référencées en relatif par le gabarit)."""
+    src = os.path.join(ROOT, "assets", "fonts")
+    dst = os.path.join(dst_assets, "fonts")
+    if not os.path.isdir(src) or os.path.abspath(src) == os.path.abspath(dst):
+        return
+    os.makedirs(dst, exist_ok=True)
+    for nom in sorted(os.listdir(src)):
+        if nom.endswith(".woff2"):
+            shutil.copy(os.path.join(src, nom), os.path.join(dst, nom))
 
 
 if __name__ == "__main__":
