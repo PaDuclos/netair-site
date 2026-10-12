@@ -1,0 +1,79 @@
+# Mise en ligne automatique de netair.fr sur l'hébergement OVH.
+# À chaque fusion dans main qui touche le site (ou lancement manuel), GitHub construit le site puis l'envoie
+# par SFTP (connexion chiffrée) dans le dossier www/ de l'hébergement.
+# Seul secret : le mot de passe SFTP OVH (OVH_SFTP_PASSWORD), saisi par PA dans GitHub.
+
+name: Mise en ligne OVH
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'fiches-techniques/Generateur/**'
+      - '.github/workflows/deploy-ovh.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'fiches-techniques/Generateur/**'
+      - '.github/workflows/deploy-ovh.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-ovh
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  SFTP_HOTE: ftp.cluster129.hosting.ovh.net
+  SFTP_UTILISATEUR: netaird
+  DOSSIER_DISTANT: www
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Installation
+        working-directory: site
+        run: npm ci
+
+      - name: Construction du site
+        working-directory: site
+        run: npm run build
+
+      - name: Contrôles avant envoi
+        working-directory: site/dist
+        run: |
+          for f in index.html 404.html .htaccess api/envoi.php mentions-legales/index.html confidentialite/index.html; do
+            test -f "$f" || { echo "Fichier manquant : $f"; exit 1; }
+          done
+
+      # Sur une demande de fusion, on vérifie seulement que le site se construit.
+      - name: Envoi vers OVH
+        if: github.event_name != 'pull_request'
+        env:
+          LFTP_PASSWORD: ${{ secrets.OVH_SFTP_PASSWORD }}
+        run: |
+          test -n "$LFTP_PASSWORD" || { echo "Secret OVH_SFTP_PASSWORD absent"; exit 1; }
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+          mkdir -p ~/.ssh
+          # Empreinte du serveur OVH relevée le 12/10/2026 : refuse tout autre serveur.
+          echo "$SFTP_HOTE ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPHzGPnvg+XUpaMELjQ4AIj/6pkjvvHYCUxDVpcdaC8T" >> ~/.ssh/known_hosts
+          # Les PNG détourés ne servent qu'au catalogue PDF : le site affiche les .webp.
+          lftp -u "$SFTP_UTILISATEUR" --env-password "sftp://$SFTP_HOTE" -e "
+            set sftp:connect-program 'ssh -a -x -o StrictHostKeyChecking=yes';
+            set net:max-retries 3;
+            mirror --reverse --delete --parallel=4 --verbose=1 --exclude-glob produits/detour/*.png site/dist/ $DOSSIER_DISTANT/;
+            bye"
