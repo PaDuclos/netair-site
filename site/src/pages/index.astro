@@ -46,6 +46,7 @@ const orgSchema = {
 const siteUrl = 'https://netair.fr/';
 const metaDescription =
   "Netair, fabricant de filtres pour la ventilation générale (CTA) : préfiltres, miniplis, poches souples et rigides, filtres absolus HEPA, charbons actifs. Double classification EN ISO 16890 et EN 779. Devis sur mesure.";
+import { VENTE_EN_LIGNE } from '../lib/site-config';
 ---
 
 <!doctype html>
@@ -178,8 +179,11 @@ const metaDescription =
 
         <div class="reveal mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row" style="transition-delay:.15s">
           <a href="/gammes" class="group inline-flex w-full items-center justify-center gap-2 rounded-xl brand-gradient px-6 py-3.5 text-sm font-normal text-white shadow-lift transition-all duration-200 hover:brightness-110 sm:w-auto cursor-pointer">
-            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-            Configurer et acheter en ligne
+            {VENTE_EN_LIGNE ? (
+              <><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Configurer et acheter en ligne</>
+            ) : (
+              <><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>Configurer et demander un devis</>
+            )}
             <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
           <a href="/rendez-vous" class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border-soft bg-white/70 px-6 py-3.5 text-sm font-normal text-primary shadow-soft transition-all duration-200 hover:bg-white sm:w-auto cursor-pointer">

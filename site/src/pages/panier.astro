@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import { VENTE_EN_LIGNE } from '../lib/site-config';
+
+if (!VENTE_EN_LIGNE) return Astro.redirect('/devis');
 import { DEPARTEMENTS } from '../lib/departements';
 ---
 

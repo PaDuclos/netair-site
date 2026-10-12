@@ -11,6 +11,7 @@ import { gammeDuProduit, produitsSansCadresDeclares, formatsAuxCadresInconnus } 
 import { optionsDuCode, formatsDuCode, libelleClasse, efficaciteFigee, comparerClasses } from '../../lib/pricing/options';
 import { trouverGamme } from '../../lib/pricing/lookups';
 import { MIN_COMMANDE_HT } from '../../lib/boutique';
+import { VENTE_EN_LIGNE } from '../../lib/site-config';
 
 export async function getStaticPaths() {
   const produits = await getProduits();
@@ -222,9 +223,13 @@ const introConfig =
     ? (formatsSeuls
         ? 'Choisissez votre format standard et ajoutez ce filtre à votre demande de devis. Les autres dimensions sont étudiées sur demande.'
         : 'Précisez votre besoin et ajoutez ce filtre à votre demande de devis.')
-    : (formatsSeuls
-        ? 'Choisissez votre format standard : achetez au tarif catalogue, ou ajoutez à une demande de devis.'
-        : 'Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.');
+    : !VENTE_EN_LIGNE
+      ? (formatsSeuls
+          ? 'Choisissez votre format standard, puis ajoutez ce filtre à votre demande de devis : nous vous adressons une offre chiffrée.'
+          : 'Indiquez vos dimensions exactes, puis ajoutez ce filtre à votre demande de devis : nous vous adressons une offre chiffrée. Filtre fabriqué sur mesure.')
+      : (formatsSeuls
+          ? 'Choisissez votre format standard : achetez au tarif catalogue, ou ajoutez à une demande de devis.'
+          : 'Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.');
 ---
 
 <BaseLayout
@@ -235,12 +240,13 @@ const introConfig =
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} is:inline></script>
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} is:inline></script>
 
-  <!-- Bandeau maquette -->
-  <div class="bg-marine text-blanc">
-    <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
-      Aperçu du site · prix catalogue HT réels mais <strong>indicatifs et non contractuels</strong> (avant mise en ligne)
+  {VENTE_EN_LIGNE && (
+    <div class="bg-marine text-blanc">
+      <div class="mx-auto max-w-[1140px] px-7 py-2 text-center text-xs">
+        Aperçu du site · prix catalogue HT réels mais <strong>indicatifs et non contractuels</strong> (avant mise en ligne)
+      </div>
     </div>
-  </div>
+  )}
 
   <section class="mx-auto max-w-[1140px] px-7 pt-10">
     <Breadcrumb items={filAriane} />
@@ -283,14 +289,16 @@ const introConfig =
           class="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
           style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));"
         >
-          Configurer & commander →
+          {VENTE_EN_LIGNE ? 'Configurer & commander →' : 'Configurer & demander un devis →'}
         </a>
-        <a
-          href="#configurateur"
-          class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-5 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise"
-        >
-          Demander un devis
-        </a>
+        {VENTE_EN_LIGNE && (
+          <a
+            href="#configurateur"
+            class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-5 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise"
+          >
+            Demander un devis
+          </a>
+        )}
         <a
           href={ficheHref}
           class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-5 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise"
@@ -332,7 +340,7 @@ const introConfig =
   )}
 
   <!-- Configurateur + Panier + Demande de devis -->
-  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined} data-cadrefixe={cadreFixe?.valeur} data-cadrefixelabel={cadreFixe?.libelle} data-labelep={gamme?.labelEpaisseur}>
+  <section class="mx-auto max-w-[1140px] px-7 py-4 scroll-mt-24" id="configurateur" data-nom={d.nom} data-code={codeBase} data-codegamme={codeGamme} data-mode={modeProduit} data-vente={VENTE_EN_LIGNE ? "1" : "0"} data-variantes={variantesConfig ? JSON.stringify(variantesConfig) : undefined} data-cadrefixe={cadreFixe?.valeur} data-cadrefixelabel={cadreFixe?.libelle} data-labelep={gamme?.labelEpaisseur}>
     <h2 class="display text-2xl font-normal text-marine">Configurer votre filtre</h2>
     <p class="mt-1 text-sm text-muted">{introConfig}</p>
 
@@ -451,7 +459,7 @@ const introConfig =
 
         <!-- Prix + actions -->
         <div class="mt-4 rounded-2xl bg-mist px-5 py-4">
-          <div class="flex flex-wrap items-end justify-between gap-4">
+          <div class:list={['flex flex-wrap items-end justify-between gap-4', !VENTE_EN_LIGNE && 'hidden']}>
             <div>
               <span class="eyebrow text-[11px] text-muted">Prix unitaire HT</span>
               <div class="display text-3xl font-normal text-marine"><span id="pUnit">…</span> €</div>
@@ -461,16 +469,24 @@ const introConfig =
               )}
             </div>
           </div>
-          <div class="mt-4 flex flex-col gap-3 border-t border-soft pt-4 sm:flex-row">
+          <div class:list={['flex flex-col gap-3 sm:flex-row', VENTE_EN_LIGNE && 'mt-4 border-t border-soft pt-4']}>
             <button id="addBtn" type="button"
-              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+              class={VENTE_EN_LIGNE ? 'inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5' : 'hidden'}
               style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
               Ajouter au panier
             </button>
-            <button id="addDevisBtn" type="button"
-              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-2.5 text-sm font-normal text-marine transition-colors hover:border-turquoise">
-              Ajouter à ma demande de devis
-            </button>
+            {VENTE_EN_LIGNE ? (
+              <button id="addDevisBtn" type="button"
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-2.5 text-sm font-normal text-marine transition-colors hover:border-turquoise">
+                Ajouter à ma demande de devis
+              </button>
+            ) : (
+              <button id="addDevisBtn" type="button"
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+                style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+                Ajouter à ma demande de devis
+              </button>
+            )}
           </div>
         </div>
         <p id="priceMsg" class="mt-3 text-xs text-muted"></p>
@@ -480,7 +496,7 @@ const introConfig =
       <div class="flex flex-col gap-6 lg:sticky lg:top-24 self-start">
 
         <!-- Panier d'achat -->
-        <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
+        <aside class:list={['rounded-2xl border border-soft bg-white p-7 shadow-soft', !VENTE_EN_LIGNE && 'hidden']}>
           <div class="flex items-center justify-between">
             <h3 class="display text-xl font-normal text-marine">Panier d'achat</h3>
             <span id="cartCount" class="rounded-full bg-bleu/10 px-2.5 py-0.5 text-xs font-medium text-bleu">0</span>
@@ -561,6 +577,7 @@ const introConfig =
       const code = root.dataset.code || 'NET';
       const codeGamme = root.dataset.codegamme || '';
       const mode = root.dataset.mode || 'devis';   // "calcul" = prix instantané · "devis" = sur devis
+      const vente = root.dataset.vente === '1';     // site vitrine : aucun prix ni mention tarifaire
       const $ = (id) => document.getElementById(id);
       const eur = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -640,6 +657,7 @@ const introConfig =
         // reste actif juste en dessous. Annoncer une indisponibilité serait faux (déc. PA
         // 15/08/2026). Traité AVANT le passe-plat : le message du moteur, factuel, sert au
         // diagnostic mais ne s'adresse pas au client.
+        if (!vente && (r.statut === 'classe_indisponible' || r.statut === 'sur_devis')) return '';
         if (r.statut === 'classe_indisponible') return 'Prix sur devis dans ce format. Ajoutez-le à votre demande.';
         if (r.message) return r.message;
         switch (r.statut) {
@@ -783,7 +801,7 @@ const introConfig =
 
         // Produit « sur devis » : aucun prix public, on oriente vers la demande de devis.
         if (mode !== 'calcul') {
-          afficherPrix(null, null, 'Ce produit est proposé sur devis. Ajoutez-le à votre demande de devis.');
+          afficherPrix(null, null, vente ? 'Ce produit est proposé sur devis. Ajoutez-le à votre demande de devis.' : '');
           return { c, unit: null, ok: false };
         }
 
@@ -808,7 +826,7 @@ const introConfig =
           const total = r.prixUnitaireHT * c.qty;
           afficherPrix(
             r.prixUnitaireHT, total,
-            'Prix unitaire HT valable ' + r.dureeValiditeJours + " jours · TVA et frais de port à l'étape suivante.",
+            vente ? 'Prix unitaire HT valable ' + r.dureeValiditeJours + " jours · TVA et frais de port à l'étape suivante." : '',
           );
           return { c, unit: r.prixUnitaireHT, ok: true };
         }
