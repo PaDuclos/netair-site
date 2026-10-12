@@ -928,7 +928,7 @@ _(déplacer ici les lignes traitées, avec date)_
 | **NETCARB AZUR v1.2** | ✅ polluants « gaz, odeurs et COV » au lieu des 4 gaz non mesurés, ligne Fonction en virgules |
 | **NETCARB BAG v1.1** | ✅ validée PA : données techniques refondues sur la fiche fournisseur (F7, 9 formats, ΔP par profondeur, sans courbe), textes PA, photo Netair, configurateur formats + sur mesure |
 | **NETCARB CILIA v1.1** | ✅ validée PA : textes PA, photo Netair, alignement famille, épaisseurs 48/98 corrigées (catalogue + tableau), configurateur « Charbon actif » + cadre au choix. **Famille NETCARB terminée (4/4)** |
-| **NETPAK S CILIA DUO v1.1** | ✅ validée PA : renommé (ex-NETPAK S DUO), 2 packs miniplis, plage M5 → F9, configurateur à deux efficacités. **Les 18 fiches ont eu leur passe de contenu.** Reste à revoir : NETCEL V AZUR et NETCEL V NIVAL (statut non validé + « caisson ») |
+| **NETPAK S CILIA DUO v1.1** | ✅ validée PA : renommé (ex-NETPAK S DUO), 2 packs miniplis, plage M5 → F9, configurateur à deux efficacités. **Les 18 fiches ont eu leur passe de contenu.** Reste à revoir : NETCEL V AZUR (statut non validé). NETCEL V NIVAL validée en v1.2 le 12/10 |
 | Photos sources | ✅ rangées dans `BLOC5_Communication/Photos_Produits/` (ex-`Offres_de_Prix/Photos filtres Netair/`), chemin de `correspondance.json` corrigé |
 
 ### 🔴 Points ouverts
@@ -941,7 +941,7 @@ _(déplacer ici les lignes traitées, avec date)_
 - [ ] **Version combinée AZUR** (voile filtrant + charbon) : aucune courbe fiable (fichiers F7/F8 2023 = copies). Codes prévus `NETCARB-AZUR-F7CA-…`.
 - [ ] Copie du dossier principal (`feature/b3-paiement`) : `correspondance.json` pointe encore vers l'ancien dossier photos jusqu'à sa remise à niveau sur main.
 - [x] ~~**NETCARB CILIA : polluants à aligner**~~ fait le 12/10 (toute la famille) sur AZUR et NIVAL (décision PA 12/10/2026) : badge « Gaz · odeurs · COV » et Fonction « gaz, odeurs et COV » au lieu de « COV · O₃ · SO₂ · NO₂ ». Ces 4 gaz sont ceux de l'essai ISO 10121-3 ; aucune mesure ne les soutient, et le SO₂ et le NO₂ sont faibles sur charbon non traité.
-- [ ] **NETCEL V NIVAL : ajouter « caisson »** (demande PA du 12/10/2026), sur le modèle du NETCARB NIVAL (« Filtre caisson multidièdre à charbon actif »). Aujourd'hui : sous-titre « Filtre absolu à très haute efficacité », type « Filtre absolu polydièdre ». ⚠️ Fiche validée v1.1 : accord PA sur le libellé exact, puis bump de version et registre.
+- [x] ~~**NETCEL V NIVAL : ajouter « caisson »**~~ fait en v1.2 le 12/10 (sous-titre, descriptif, Type ; badge « Filtre absolu (T.H.E) »). (demande PA du 12/10/2026), sur le modèle du NETCARB NIVAL (« Filtre caisson multidièdre à charbon actif »). Aujourd'hui : sous-titre « Filtre absolu à très haute efficacité », type « Filtre absolu polydièdre ». ⚠️ Fiche validée v1.1 : accord PA sur le libellé exact, puis bump de version et registre.
 
 ### Piège confirmé
 
