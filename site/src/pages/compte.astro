@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import { VENTE_EN_LIGNE } from '../lib/site-config';
+
+if (!VENTE_EN_LIGNE) return Astro.redirect('/devis');
 ---
 
 <BaseLayout title="Espace client - Netair" description="Espace client Netair : connexion, suivi de commandes et conditions personnalisées (bientôt disponible).">
