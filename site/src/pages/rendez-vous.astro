@@ -2,10 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 
-// Adresse de destination de la demande — À CONFIRMER (boîte contact Netair).
+// Adresse de destination de la demande : À CONFIRMER (boîte contact Netair).
 const CONTACT_EMAIL = 'contact@netair.fr';
 
-// Téléphone — ligne principale OVH (IDENTITE_SOCIETE_Netair.md).
+// Téléphone : ligne principale OVH (IDENTITE_SOCIETE_Netair.md).
 const TELEPHONE = '04 82 53 37 17';
 const TELEPHONE_HREF = 'tel:+33482533717';
 
@@ -26,7 +26,7 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
     </p>
   </section>
 
-  <!-- Les deux formats proposés — cliquables : pré-sélectionnent le format et mènent au formulaire -->
+  <!-- Les deux formats proposés, cliquables : pré-sélectionnent le format et mènent au formulaire -->
   <section class="mx-auto max-w-[1140px] px-7 py-4 grid gap-5 sm:grid-cols-2">
     <a href="#rdv-form" data-format="Par téléphone" class="group rounded-2xl border border-soft bg-blanc p-6 transition-colors hover:border-turquoise">
       <span class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-mist text-turquoise">
@@ -50,13 +50,13 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
     </a>
   </section>
 
-  <!-- Calendrier de réservation en ligne (emplacement Cal.com — à activer) -->
+  <!-- Calendrier de réservation en ligne (emplacement Cal.com, à activer) -->
   <section class="mx-auto max-w-[1140px] px-7 py-4">
     <div class="rounded-2xl border border-soft bg-blanc p-6 sm:p-8">
       <h2 class="eyebrow text-xs text-turquoise">Réserver un créneau en ligne</h2>
       {/*
-        EMPLACEMENT CALENDRIER Cal.com — À ACTIVER (après création du compte) :
-        1. Sur cal.com : créer 2 types d'événement (« Téléphone — 15 min », « Visio — 15 min »),
+        EMPLACEMENT CALENDRIER Cal.com, À ACTIVER (après création du compte) :
+        1. Sur cal.com : créer 2 types d'événement (« Téléphone - 15 min », « Visio - 15 min »),
            puis connecter le calendrier iCloud/iCal (Settings > Calendars) pour la synchro
            automatique des disponibilités (créneaux libres affichés, créneaux occupés masqués).
         2. Remplacer le bloc #cal-booking ci-dessous par l'embed « inline » Cal.com
@@ -183,13 +183,13 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
       (d.message ? `\nSujet :\n${d.message}\n` : '');
 
     // Repli : ouvre la messagerie du visiteur tant que l'envoi serveur (/api/contact)
-    // n'est pas branché (site statique — voir server/contact-endpoint.ts).
+    // n'est pas branché (site statique, voir server/contact-endpoint.ts).
     const ouvrirMessagerie = (d) => {
-      const subject = `Rendez-vous — ${d.format} — ${d.nom}`;
+      const subject = `Rendez-vous - ${d.format} - ${d.nom}`;
       const body =
         `Nom / société : ${d.nom}\n` +
         `Téléphone : ${d.tel}\n` +
-        `Email : ${d.email || '—'}\n\n` +
+        `Email : ${d.email || 'non renseigné'}\n\n` +
         composerMessage(d);
       window.location.href =
         `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
