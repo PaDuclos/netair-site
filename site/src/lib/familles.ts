@@ -29,9 +29,9 @@ export const FAMILLES: Famille[] = [
   {
     slug: 'prefiltres',
     titre: 'Préfiltres',
-    tag: 'Coarse 65%',
+    tag: 'Coarse 40% → ePM10 50%',
     norme: 'ISO 16890',
-    tagEn: 'G3 → M5',
+    tagEn: 'G2 → M5',
     photo: '/produits/detour/netply-v6-photo.webp',
     desc: "Premier niveau de filtration, les préfiltres captent les particules grossières pour protéger les installations et prolonger la durée de vie des étages suivants.",
     descLong: "Les préfiltres assurent le premier niveau de filtration en captant les particules grossières. Disponibles dans différentes technologies et classes d'efficacité, ils répondent aux besoins de chaque installation, en préfiltration ou en filtration principale.",
@@ -39,9 +39,9 @@ export const FAMILLES: Famille[] = [
   {
     slug: 'compacts-miniplis',
     titre: 'Filtres miniplis',
-    tag: 'ePM10 50% → ePM1 80%',
+    tag: 'Coarse 65% → ePM1 80%',
     norme: 'ISO 16890',
-    tagEn: 'M5 → F9',
+    tagEn: 'G4 → F9',
     photo: '/produits/detour/netpak-s-cilia-photo.webp',
     desc: "Conçus pour offrir une faible perte de charge, les filtres miniplis associent haute efficacité et performance énergétique.",
     descLong: "Grâce à leur faible perte de charge, les filtres miniplis associent haute efficacité et économies d'énergie. Selon les applications, leur conception permet de s'affranchir d'un étage de préfiltration et de réduire le coût global d'exploitation.",
@@ -59,7 +59,7 @@ export const FAMILLES: Famille[] = [
   {
     slug: 'hepa',
     titre: 'Filtres absolus',
-    tag: 'E10 → H14',
+    tag: 'E10 → U15',
     norme: 'EN 1822',
     photo: '/produits/detour/netcel-v-nival-photo.webp',
     desc: "Les filtres absolus HEPA assurent une très haute efficacité de filtration pour répondre aux exigences des salles propres, hôpitaux et industries sensibles.",

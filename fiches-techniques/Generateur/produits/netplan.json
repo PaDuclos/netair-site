@@ -11,8 +11,8 @@
   "debit_nom": 1900,
   "fiche": {
     "num": "FT-NETPLAN-001",
-    "version": "v1.2",
-    "date": "17/07/2026"
+    "version": "v1.3",
+    "date": "12/10/2026"
   },
   "photo": "netplan-photo.jpg",
   "photo_alt": "Filtre plan NETPLAN",
@@ -78,13 +78,13 @@
     ]
   ],
   "badges_p1": [
-    "ISO 16890 : Coarse 65%",
-    "EN 779 : G4",
+    "ISO 16890 : Coarse 40% → 65%",
+    "EN 779 : G2 → G4",
     "EN 13053"
   ],
   "badges_p2": [
-    "ISO 16890 : Coarse 65%",
-    "EN 779 : G4",
+    "ISO 16890 : Coarse 40% → 65%",
+    "EN 779 : G2 → G4",
     "EN 13053"
   ],
   "classes": {
