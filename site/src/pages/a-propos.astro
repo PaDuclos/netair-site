@@ -2,55 +2,73 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 
-const blocs = [
-  {
-    titre: "Raison d'être",
-    texte:
-      "Netair conçoit et fabrique des filtres pour centrales de traitement d'air. Notre ligne de conduite est simple : ne mettre en avant que ce qui est mesuré, et accompagner chaque client en termes techniques.",
-  },
-  {
-    titre: 'Notre modèle',
-    texte:
-      "Fabrication et assemblage en interne, complétés par une sous-traitance maîtrisée. Cette organisation nous permet de tenir à la fois le catalogue standard et le sur-mesure, sans rallonger les délais.",
-  },
-];
+const chapo =
+  "Netair conçoit et fabrique des filtres pour les centrales de traitement d'air, du préfiltre au filtre absolu. Fondée en 2026 par Pierre-Alain Duclos, fort de plus de 20 ans d'expérience dans la filtration de l'air, l'entreprise accompagne les installateurs, exploitants et industriels dans le choix des solutions de filtration adaptées à leurs installations, en conciliant qualité de l'air, performance énergétique et durée de vie des filtres.";
+
+const raisonDEtre =
+  "Chez NETAIR, nous sommes convaincus qu'une filtration de l'air performante doit aller de pair avec une consommation énergétique maîtrisée. Notre ambition est de proposer des solutions adaptées aux besoins réels de chaque installation, en privilégiant la qualité de l'air, les économies d'énergie et la réduction de l'empreinte environnementale.";
+
+const modele =
+  "NETAIR associe ses capacités de fabrication et d'assemblage à un réseau de partenaires industriels spécialisés. Cette organisation flexible nous permet de proposer une gamme complète de filtres, en dimensions standard ou sur mesure, tout en privilégiant la qualité, la réactivité et la fiabilité des approvisionnements.";
+
+const citation =
+  "La filtration joue un rôle essentiel dans la performance des installations, la qualité de l'air et la maîtrise des consommations énergétiques. C'est cette conviction qui guide nos choix et notre engagement au quotidien.";
 
 const engagements = [
   {
-    titre: 'Performance documentée',
-    texte: "Classes, pertes de charge et durées de service issues de nos essais.",
-  },
-  {
-    titre: 'Accompagnement',
-    texte: 'Un interlocuteur technique, pas un standard commercial.',
-  },
-  {
-    titre: 'Démarche responsable',
+    titre: 'Performance et efficacité énergétique',
     texte:
-      'Nos filtres rechargeables (gamme NETPAK S LUMEN) conservent la carcasse et ne remplacent que les cassettes filtrantes, pour réduire les déchets.',
+      "Nous sélectionnons et développons des solutions de filtration associant efficacité, faible perte de charge et durée de vie optimisée. Notre objectif : une qualité d'air adaptée à chaque installation, avec des consommations énergétiques réduites.",
+  },
+  {
+    titre: 'Proximité et accompagnement',
+    texte:
+      "Chaque installation présente des contraintes spécifiques. Nous privilégions l'écoute, le conseil technique et la disponibilité pour accompagner nos clients dans le choix de leurs filtres, l'optimisation de leurs installations et le suivi de leurs besoins.",
+  },
+  {
+    titre: 'Une filtration plus responsable',
+    texte:
+      "Nous privilégions des solutions permettant de limiter l'impact environnemental de la filtration : réduction des consommations d'énergie, allongement de la durée de vie des filtres et développement de produits rechargeables pour diminuer les déchets.",
   },
 ];
 ---
 
 <BaseLayout
-  title="À propos - Netair, fabricant de filtres pour CTA"
-  description="Netair, fabricant de filtres pour centrales de traitement d'air : fabrication interne et sous-traitance maîtrisée, performance documentée, démarche responsable."
+  title="Qui sommes-nous - Netair"
+  description="Netair conçoit et fabrique des filtres pour centrales de traitement d'air, du préfiltre au filtre absolu. Fondée en 2026 par Pierre-Alain Duclos, plus de 20 ans d'expérience dans la filtration de l'air."
 >
   <section class="mx-auto max-w-[1140px] px-7 pt-10 pb-4">
-    <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'À propos' }]} />
+    <Breadcrumb items={[{ href: '/', label: 'Accueil' }, { label: 'Qui sommes-nous' }]} />
     <h1 class="display mt-5 text-4xl sm:text-5xl font-normal text-marine max-w-3xl">
-      Un fabricant de filtres pour le traitement d'air
+      NETAIR, l'expertise de la filtration de l'air
     </h1>
+    <p class="mt-5 max-w-3xl text-lg leading-relaxed text-muted">{chapo}</p>
   </section>
 
   <section class="mx-auto max-w-[1140px] px-7 py-8 grid gap-10 md:grid-cols-2">
-    {blocs.map((b) => (
-      <div class="relative pl-5">
-        <span class="absolute left-0 top-1 bottom-1 w-[3px] rounded-full bg-turquoise"></span>
-        <h2 class="display text-2xl text-marine">{b.titre}</h2>
-        <p class="mt-3 text-lg leading-relaxed text-muted">{b.texte}</p>
-      </div>
-    ))}
+    <div class="relative pl-5">
+      <span class="absolute left-0 top-1 bottom-1 w-[3px] rounded-full bg-turquoise"></span>
+      <h2 class="display text-2xl text-marine">Raison d'être</h2>
+      <p class="mt-3 text-lg leading-relaxed text-muted">{raisonDEtre}</p>
+    </div>
+    <div class="relative pl-5">
+      <span class="absolute left-0 top-1 bottom-1 w-[3px] rounded-full bg-turquoise"></span>
+      <h2 class="display text-2xl text-marine">Notre modèle</h2>
+      <p class="mt-3 text-lg leading-relaxed text-muted">{modele}</p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-[1140px] px-7 py-4">
+    <figure class="rounded-2xl border border-soft bg-mist p-6 sm:p-8">
+      <blockquote class="text-lg leading-relaxed text-marine">«&#8239;{citation}&#8239;»</blockquote>
+      <figcaption class="mt-5 flex items-center gap-4">
+        <img src="/img/pierre-alain-duclos.jpg" alt="Pierre-Alain Duclos, fondateur de Netair" width="64" height="64" class="h-16 w-16 rounded-full object-cover" />
+        <div>
+          <p class="text-base font-normal text-marine">Pierre-Alain Duclos</p>
+          <p class="text-sm text-muted">Fondateur, Netair</p>
+        </div>
+      </figcaption>
+    </figure>
   </section>
 
   <section class="mx-auto max-w-[1140px] px-7 py-8">
