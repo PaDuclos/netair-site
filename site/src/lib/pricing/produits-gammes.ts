@@ -325,21 +325,23 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
   // 🟢 méthode D · parois cellule acier galvanisé (cf. fiche). L'option « cellulose pelliculée
   // incinérable » de la fiche n'est pas encore proposée : elle demande une lettre de suffixe de
   // référence à trancher (codification). Cf. CHECKLIST.
-  // Filtre à charbon seul : l'Excel range son prix dans la colonne « F7 » (aucune autre classe
-  // tarifée). Le menu proposait M5→F9 et n'affichait aucun prix par défaut (M5) ; efficacité
-  // figée sur cette colonne, affichée « Charbon actif » (déc. PA 12/10/2026).
+  // Gamme NETCARB entièrement sur devis (déc. PA 12/10/2026) : plus de prix affiché pour CILIA.
+  // Pas de champ « Efficacité » : il ne servait qu'à lire le prix du charbon rangé dans la colonne
+  // F7 de l'Excel, et mettait un « F7 » trompeur dans la référence. Dimensions libres, épaisseurs
+  // 48 / 98 mm et cadre au choix (fiche v1.1) conservés pour préciser la demande.
   "netcarb-cilia": {
     code: "8",
-    mode: "calcul",
-    // Cadre au choix comme NETPAK S CILIA (fiche v1.1 : acier galvanisé ou cellulose
-    // pelliculée). Neutre côté prix : l'Excel ne structure pas le cadre.
+    mode: "devis",
+    epaisseursDevis: [48, 98],
+    // Liste blanche VIDE : la grille du code 8 range le prix du charbon sous des classes
+    // particulaires (M5→F9) ; sans ce filtre, le menu « Efficacité » et la référence les reprennent.
+    classesIncluses: [],
     cadres: [
       { valeur: "galva", libelle: "Acier galvanisé" },
       { valeur: "cellulose", libelle: "Cellulose pelliculée" },
     ],
-    classesIncluses: ["F7"],
-    etiquettesIso: { F7: "Charbon actif" },
   },
+
   // Polydièdre : dimensions en menu déroulant (formats générés depuis la grille), cadre plastique
   // fixe. Deux conditionnements (déc. PA 02/08/2026) : le filtre complet (code 9) et la RECHARGE —
   // jeu de cassettes seul, support conservé (code 10 « RECHARGES NETPAK S LUMEN » de l'Excel,
