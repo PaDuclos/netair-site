@@ -412,6 +412,8 @@ table.normes td:last-child {{ color: var(--sub); width: 30%; }}
 .pr-courbe {{ position: absolute; top: 140mm; left: 20mm; right: 20mm; }}
 .pr-svg {{ width: 170mm; display: block; margin-top: 2mm; }}
 .pr-specs {{ position: absolute; top: 216mm; left: 20mm; right: 20mm; }}
+/* Produit sans courbe (NETCARB NIVAL) : les caractéristiques prennent la place du graphique. */
+.pr-specs.sans-courbe {{ top: 140mm; }}
 .pr-specs-cols {{ display: flex; gap: 6mm; margin-top: 2.5mm; }}
 table.specs {{ width: 100%; border-collapse: collapse; }}
 table.specs td {{ padding: 1.2mm 2.5mm; font-size: 7pt; vertical-align: top;
@@ -595,7 +597,7 @@ def page_produit(p, famille, img, num, courbe):
   <div class="pr-pts"><div class="label">Points clés</div>
     <div class="pr-pts-liste">{points}</div></div>
   {bloc_courbe}
-  <div class="pr-specs"><div class="label">Caractéristiques</div>
+  <div class="pr-specs{'' if courbe else ' sans-courbe'}"><div class="label">Caractéristiques</div>
     <div class="pr-specs-cols">{colonnes}</div></div>
   <div class="pied"><span>Netair · {e(p['nom'])}</span><span>{num}</span></div>
 </section>"""

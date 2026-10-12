@@ -119,6 +119,9 @@ def lire_courbes(slug, produits_dir=None):
     dossier = produits_dir or os.path.join(GEN, "produits")
     with open(os.path.join(dossier, f"{slug}.json"), encoding="utf-8") as f:
         d = json.load(f)
+    # sans_courbe : aucune ΔP mesurée pour ce produit (NETCARB NIVAL) → pas de graphique.
+    if d.get("sans_courbe"):
+        return None
 
     groupes = _fusionner(_entrees(d))
     if not groupes:
