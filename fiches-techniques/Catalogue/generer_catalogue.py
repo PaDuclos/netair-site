@@ -48,6 +48,11 @@ MOIS = ("janvier février mars avril mai juin juillet "
         "août septembre octobre novembre décembre").split()
 
 
+# Coordonnées du pied de page des pages intérieures : une page enregistrée seule
+# doit dire comment joindre Netair. Rempli par construire() depuis le bloc DOS.
+COORD_PIED = ""
+
+
 def e(s):
     """Échappement HTML — les données produit sont du texte brut, jamais du balisage."""
     return html.escape(str(s), quote=False)
@@ -327,6 +332,9 @@ a {{ color: inherit; text-decoration: none; }}
         display: flex; justify-content: space-between; align-items: center;
         font-size: 7.5pt; color: var(--sub);
         border-top: 1px solid var(--border); padding-top: 3mm; }}
+.pied-d {{ display: flex; align-items: center; }}
+.pied-d > span {{ margin-left: 4.5mm; }}
+.pied-num {{ color: var(--navy); font-weight: 600; }}
 
 /* --- sommaire ------------------------------------------------------------ */
 .so-corps {{ position: absolute; top: 42mm; left: 20mm; right: 20mm; }}
@@ -454,7 +462,7 @@ table.synth tr:nth-child(even) td {{ background: #E6F5F7; }}
             background: var(--teal); }}
 .do-coord {{ position: absolute; bottom: 52mm; left: 22mm; color: #fff;
             font-size: 10pt; line-height: 1.85; }}
-.do-coord .k {{ color: rgba(255,255,255,.55); display: inline-block; width: 20mm;
+.do-coord .k {{ color: rgba(255,255,255,.55); display: inline-block; width: 23mm;
                font-size: 7.5pt; text-transform: uppercase; letter-spacing: .1em; }}
 .do-mentions {{ position: absolute; bottom: 30mm; left: 22mm; right: 22mm;
                color: rgba(255,255,255,.62); font-size: 7.5pt; line-height: 1.7;
@@ -508,7 +516,7 @@ def page_sommaire(sections, pages_fam, pages_prod, produits, num):
   <div class="tete"></div><div class="tete-txt">Sommaire</div>
   <div class="tete-num">Catalogue produits</div>
   <div class="so-corps">{''.join(blocs)}</div>
-  <div class="pied"><span>Netair · Catalogue produits</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · Catalogue produits</span><span class="pied-d">{COORD_PIED}<span class="pied-num">{num}</span></span></div>
 </section>"""
 
 
@@ -530,7 +538,7 @@ def page_normes(c, num):
     <div class="no-note">{e(c['note_tableau'])}</div>
     <div class="no-encadre">{e(c['encadre'])}</div>
   </div>
-  <div class="pied"><span>Netair · Catalogue produits</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · Catalogue produits</span><span class="pied-d">{COORD_PIED}<span class="pied-num">{num}</span></span></div>
 </section>"""
 
 
@@ -555,7 +563,7 @@ def page_section(s, i, produits, pages_prod, num):
     <div class="label" style="margin-bottom:2.5mm;">
       {len(s['produits'])} référence{'s' if len(s['produits']) > 1 else ''}</div>
     {items}</div>
-  <div class="pied"><span>Netair · {e(s['titre'])}</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · {e(s['titre'])}</span><span class="pied-d">{COORD_PIED}<span class="pied-num">{num}</span></span></div>
 </section>"""
 
 
@@ -599,7 +607,7 @@ def page_produit(p, famille, img, num, courbe):
   {bloc_courbe}
   <div class="pr-specs{'' if courbe else ' sans-courbe'}"><div class="label">Caractéristiques</div>
     <div class="pr-specs-cols">{colonnes}</div></div>
-  <div class="pied"><span>Netair · {e(p['nom'])}</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · {e(p['nom'])}</span><span class="pied-d">{COORD_PIED}<span class="pied-num">{num}</span></span></div>
 </section>"""
 
 
@@ -623,13 +631,13 @@ def page_synthese(sections, produits, pages_prod, num):
       <th style="width:34%">Efficacité</th><th style="width:8%">Page</th>
     </tr></thead><tbody>{lignes}</tbody></table>
   </div>
-  <div class="pied"><span>Netair · Catalogue produits</span><span>{num}</span></div>
+  <div class="pied"><span>Netair · Catalogue produits</span><span class="pied-d">{COORD_PIED}<span class="pied-num">{num}</span></span></div>
 </section>"""
 
 
 def page_dos(c, img, sections, num):
     coord = ""
-    for cle, libelle in (("adresse", "Adresse"), ("email", "Email"), ("site", "Web")):
+    for cle, libelle in (("adresse", "Adresse"), ("telephone", "Téléphone"), ("email", "Email"), ("site", "Web")):
         if c.get(cle):
             coord += f'<div><span class="k">{libelle}</span>{e(c[cle])}</div>'
     # Les gammes du dos sont lues, pas recopiées : renommer une famille sur le site
@@ -697,6 +705,12 @@ def construire():
     produits = {s: lecture_produits.lire(s) for s in slugs}
     sections = lecture_familles.plan_du_catalogue(slugs)
     contenu = lire_contenu()
+    global COORD_PIED
+    dos = contenu["DOS"]
+    COORD_PIED = "".join(
+        f"<span>{e(v)}</span>" for v in (
+            dos.get("site", "").removeprefix("www."), dos.get("email"), dos.get("telephone"))
+        if v)
 
     aujourd_hui = date.today()
     valeurs = {
