@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page introuvable - Netair" description="Cette page n'existe pas ou a été déplacée. Retrouvez le catalogue de filtres pour CTA Netair, la demande de devis et nos coordonnées.">
+  <section class="mx-auto max-w-[1140px] px-7 py-20 text-center">
+    <p class="eyebrow text-xs text-turquoise">Erreur 404</p>
+    <h1 class="display mt-4 text-4xl sm:text-5xl font-normal text-marine">Page introuvable</h1>
+    <p class="mx-auto mt-4 max-w-xl text-lg text-muted">Cette page n'existe pas ou a été déplacée.</p>
+    <div class="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <a href="/" class="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
+        style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">Retour à l'accueil</a>
+      <a href="/gammes" class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise">Voir le catalogue</a>
+      <a href="/contact" class="inline-flex items-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-3 text-sm font-normal text-marine transition-colors hover:border-turquoise">Nous contacter</a>
+    </div>
+  </section>
+</BaseLayout>

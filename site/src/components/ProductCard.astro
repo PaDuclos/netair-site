@@ -11,7 +11,7 @@ const { iso, en } = classesProduit(produit);
 // Nom de la norme primaire (ISO 16890, EN 1822…), repris de la famille du produit.
 const norme = familleBySlug(SLUG_FAMILLE[produit.id]?.[0] ?? '')?.norme;
 // Photo détourée (PNG transparent) générée dans /produits/detour/.
-const img = photo ? `/produits/detour/${photo.replace(/\.jpg$/i, '.png')}` : null;
+const img = photo ? `/produits/detour/${photo.replace(/\.jpg$/i, '.webp')}` : null;
 ---
 
 <a

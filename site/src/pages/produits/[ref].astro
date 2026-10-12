@@ -53,7 +53,7 @@ const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: d.nom,
-  ...(d.description ? { description: d.description.slice(0, 300) } : {}),
+  ...(d.description ? { description: resumeMeta(d.description) } : {}),
   ...(img ? { image: absUrl(img) } : {}),
   ...(famille ? { category: famille.titre } : {}),
   brand: { '@type': 'Brand', name: 'Netair' },
@@ -230,11 +230,21 @@ const introConfig =
       : (formatsSeuls
           ? 'Choisissez votre format standard : achetez au tarif catalogue, ou ajoutez à une demande de devis.'
           : 'Indiquez vos dimensions exactes : achetez au tarif catalogue, ou ajoutez à une demande de devis. Filtre fabriqué sur mesure.');
+// Description pour Google : 160 caractères au plus, coupée en fin de phrase (ou de mot, avec « … »).
+function resumeMeta(texte: string, max = 160): string {
+  const t = texte.replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const coupe = t.slice(0, max);
+  const finPhrase = coupe.lastIndexOf('. ');
+  if (finPhrase >= 80) return coupe.slice(0, finPhrase + 1);
+  return coupe.slice(0, coupe.lastIndexOf(' ')).replace(/[,;:]$/, '') + '…';
+}
+
 ---
 
 <BaseLayout
   title={`${d.nom} : ${d.soustitre ?? 'Filtre CTA'} - Netair`}
-  description={(d.description ?? `${d.nom}, filtre pour centrale de traitement d'air.`).slice(0, 300)}
+  description={resumeMeta(d.description ?? `${d.nom}, filtre pour centrale de traitement d'air.`)}
   ogImage={img ?? '/brand/logo.png'}
 >
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} is:inline></script>
