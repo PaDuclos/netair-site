@@ -1,5 +1,6 @@
 {
   "_commentaire": "NETBAG S — filtre à poches souples (équiv. Titanair TITABAG S). Fiche MULTI-CLASSES (moteur série opt-in via la clé 'series'). ✅ CONTENU RETRAVAILLÉ v1.1, VALIDÉ PA le 26/07/2026 — arbitrages dans _arbitrages_pad, NE PAS retoucher sans son accord. Données ΔP RÉELLES extraites des courbes vectorielles des PDF Titanair 'Fiches techniques 2018/TITABAG' et recalées sur les axes (méthode validée : F9 p500 reproduit 38/58/81/105/134/166/199 Pa). Polynômes ΔP=a·v²+b·v+c ajustés (R²≈1) sur v=débit/3600/0,3505 (frontale 592×592), débit testé 1000→4000 m³/h — courbe ET curseur du calculateur bornés à 4000 (aucune extrapolation affichée). Specs = fiches 2018 (T° 60°C, feu M1, écarteurs thermosoudés sans colle, cadre acier galva/plastique ép.25) + densité progressive et HR 100 % NON SOURCÉES (données fabricant PA). Toutes les classes ePM → ADD=+100 Pa. ANOMALIE: M5 550mm (48 Pa, 5,11 m²) < M5 650mm (65 Pa, 6,10 m²) physiquement incohérent → M5 550 marquée À VALIDER (dash + astérisque expliqué dans la note du tableau). BOUTIQUE : code 17 branché en mode calcul (déc. PA 26/07) — standard 380/550 seuls, G4/M5 sur devis, variante sur-mesure. Photo Titabag.jpg détourée = PLACEHOLDER. Détails/manques : CHECKLIST.md.",
+  "_impression": "v1.2 (12/10/2026, accord PA) : la fiche sortait sur 4 pages à l'impression (page 1 +6,4 mm, page 2 +21 mm), défaut présent depuis au moins la v1.1. Mise en page seule, aucun contenu changé : lignes du tableau à 4 px (specs_serre), interligne du calculateur 7 px et marges −1 mm (calc_serre), courbe 85 → 70 % (courbe_pct). Marges restantes mesurées : page 1 6,3 mm, page 2 2,9 mm.",
   "_arbitrages_pad": [
     "PASSE DE CONTENU v1.1 — 26/07/2026. Arbitrages de Pierre-Alain, à NE PAS rouvrir sans le consulter.",
     "(1) SOUS-TITRE « Filtre à poches souples » — suffixe « — Préfiltration à filtration fine » RETIRÉ (convention gamme « forme physique seule » ; la plage reste dans les badges).",
@@ -19,7 +20,7 @@
   "series": true,
   "compact_p1": true,
   "compact_p2": true,
-  "courbe_pct": 85,
+  "courbe_pct": 70,
   "legende_courte": true,
   "axe_debit": true,
   "axe_debit_max": 4000,
@@ -36,8 +37,8 @@
   "debit_curseur_max": 4000,
   "fiche": {
     "num": "FT-NETBAG-S-001",
-    "version": "v1.1",
-    "date": "26/07/2026"
+    "version": "v1.2",
+    "date": "12/10/2026"
   },
   "photo": "netbag-s-photo.jpg",
   "photo_alt": "Filtre à poches souples NETBAG S",
@@ -255,5 +256,7 @@
       "dp": 158,
       "color": "#C0392B"
     }
-  ]
+  ],
+  "specs_serre": true,
+  "calc_serre": true
 }

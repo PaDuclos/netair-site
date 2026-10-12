@@ -87,17 +87,20 @@ def build_points_cles(points):
     return "\n".join("              " + r for r in rows)
 
 
-def build_specs(specs):
+def build_specs(specs, serre=False):
+    # serre (opt-in `specs_serre`, NETBAG S 12/10/2026) : lignes à 4 px au lieu de 6 px pour
+    # tenir l'A4 sans rien retirer du tableau. Défaut : rendu inchangé (ancre préservée).
+    pad = "4px 12px" if serre else "6px 12px"
     rows = []
     for i, (k, v) in enumerate(specs, start=1):
         grey = (i % 2 == 1)  # première ligne grise, puis alternance
         tr = ' style="background:#F2F6FB;"' if grey else ""
-        kstyle = "padding:6px 12px; font-weight:700; color:#0F3261;"
+        kstyle = f"padding:{pad}; font-weight:700; color:#0F3261;"
         if i == 1:
-            kstyle = "padding:6px 12px; font-weight:700; color:#0F3261; width:40%;"
+            kstyle = f"padding:{pad}; font-weight:700; color:#0F3261; width:40%;"
         rows.append(
             f'<tr{tr}><td style="{kstyle}">{k}</td>'
-            f'<td style="padding:6px 12px; color:#3a4654;">{v}</td></tr>'
+            f'<td style="padding:{pad}; color:#3a4654;">{v}</td></tr>'
         )
     return "\n".join("              " + r for r in rows)
 
@@ -1072,7 +1075,7 @@ def generer_series(d, html):
 
     # #7 specs
     html = sub1(html, r"(<!-- Caractéristiques techniques -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
-                lambda m: m.group(1) + build_specs(d["specs"]) + m.group(3), flags=re.DOTALL)
+                lambda m: m.group(1) + build_specs(d["specs"], d.get("specs_serre", False)) + m.group(3), flags=re.DOTALL)
 
     # #8 dimensions (lignes explicites par série)
     html = sub1(html, r"(<!-- Dimensions -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
@@ -1293,6 +1296,21 @@ def generer_series(d, html):
                             'gap:7mm; margin-top:3mm; align-items:stretch;">')
         html = html.replace("margin-top:4mm; background:#F2F6FB;",
                             "margin-top:3mm; background:#F2F6FB;")
+
+    # --- calc_serre (opt-in, NETBAG S 12/10/2026) : la page 2 d'une fiche série (sélecteur de
+    #     10 classes) dépassait l'A4 de 21 mm à l'impression. Interligne des curseurs 11 → 7 px et
+    #     trois marges du bas de page à −1 mm. Ancres vérifiées : jamais de retrait silencieux.
+    if d.get("calc_serre"):
+        for avant, apres in (
+            ("display:flex; flex-direction:column; gap:11px; padding-top:1px;",
+             "display:flex; flex-direction:column; gap:7px; padding-top:1px;"),
+            ("gap:10px; margin-top:5mm;", "gap:10px; margin-top:4mm;"),
+            ("gap:7mm; margin-top:4mm; align-items:stretch;", "gap:7mm; margin-top:3mm; align-items:stretch;"),
+            ("margin-top:4mm; background:#F2F6FB;", "margin-top:3mm; background:#F2F6FB;"),
+        ):
+            if avant not in html:
+                raise RuntimeError(f"calc_serre : ancre introuvable « {avant[:40]}… ».")
+            html = html.replace(avant, apres, 1)
     return html
 
 
@@ -2107,7 +2125,7 @@ def generer_multi(d, html):
 
     # #7 specs
     html = sub1(html, r"(<!-- Caractéristiques techniques -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
-                lambda m: m.group(1) + build_specs(d["specs"]) + m.group(3), flags=re.DOTALL)
+                lambda m: m.group(1) + build_specs(d["specs"], d.get("specs_serre", False)) + m.group(3), flags=re.DOTALL)
 
     # #8 dimensions : retirées de la page 1 (relocalisées en page 2 par build_multi_section) ;
     # dims_p1 (opt-in, déc. PA 23/07/2026 — passe CILIA) : le tableau reste en page 1, sous les specs.
@@ -2220,7 +2238,7 @@ def generer(d, html):
     html = sub1(
         html,
         r"(<!-- Caractéristiques techniques -->.*?<tbody>\n)(.*?)(\n            </tbody>)",
-        lambda m: m.group(1) + build_specs(d["specs"]) + m.group(3),
+        lambda m: m.group(1) + build_specs(d["specs"], d.get("specs_serre", False)) + m.group(3),
         flags=re.DOTALL)
 
     # --- #8 dimensions & références
