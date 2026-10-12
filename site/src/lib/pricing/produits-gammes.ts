@@ -482,10 +482,28 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
     variantes: [{ id: "standard", label: "Polydièdre", code: "11", saisie: "formats", formatsGrandDabord: true, labelChamp: "Dimensions (L × H)" }],
   },
   "netpak-s-duo": { code: "20", mode: "devis" },
-  "netcarb-azur": { code: "21", mode: "devis" },
+  // Formats STANDARD uniquement (déc. PA 12/10/2026) : les trois cadres de la fiche v1.2.
+  "netcarb-azur": {
+    code: "21",
+    mode: "devis",
+    variantes: [
+      {
+        id: "standard",
+        label: "Poches rigides",
+        code: "21",
+        saisie: "formats",
+        labelChamp: "Dimensions (L × H)",
+        formats: [
+          { label: "592 × 592 × 292 mm", largeur: 592, hauteur: 592, defaut: true },
+          { label: "490 × 592 × 292 mm", largeur: 490, hauteur: 592 },
+          { label: "287 × 592 × 292 mm", largeur: 287, hauteur: 592 },
+        ],
+      },
+    ],
+  },
   // 🟠 « NETCARB » générique, à confirmer.
-  // Formats STANDARD uniquement (déc. PA 12/10/2026) : le caisson multidièdre n'existe qu'en
-  // trois cadres, ceux de la fiche v1.1. Sur devis, faute de grille : formats déclarés en dur.
+  // Formats STANDARD uniquement (déc. PA 12/10/2026) : ceux du NETCEL V NIVAL, même caisson
+  // multidièdre (610 en tête). Sur devis, faute de grille : formats déclarés en dur.
   "netcarb-nival": {
     code: "23",
     mode: "devis",
@@ -497,8 +515,9 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
         saisie: "formats",
         labelChamp: "Dimensions (L × H)",
         formats: [
-          { label: "592 × 592 × 292 mm", largeur: 592, hauteur: 592, defaut: true },
-          { label: "490 × 592 × 292 mm", largeur: 490, hauteur: 592 },
+          { label: "610 × 610 × 292 mm", largeur: 610, hauteur: 610, defaut: true },
+          { label: "305 × 610 × 292 mm", largeur: 305, hauteur: 610 },
+          { label: "592 × 592 × 292 mm", largeur: 592, hauteur: 592 },
           { label: "287 × 592 × 292 mm", largeur: 287, hauteur: 592 },
         ],
       },

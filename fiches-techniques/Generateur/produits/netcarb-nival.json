@@ -7,6 +7,7 @@
   "_parois": "« Plastique » (cadre noir visible sur la photo Netair ; convention des produits AZUR). Source V-CARB F7 2018 : parois POLYESTER, lut OUI, séparateur OUI.",
   "_codes": "Code conforme à CODIFICATION_PRODUITS.md : NETCARB-NIVAL-CA-[L]x[H]x[P] (clé ref_classe). Version combinée : NETCARB-NIVAL-F7CA-…",
   "_descriptif": "Descriptif rédigé par PA le 12/10/2026, « médias non tissés » aligné sur AZUR (accord PA).",
+  "_dimensions": "Correction PA 12/10/2026 (fiche restée en v1.1, pas encore diffusée) : formats du NETCEL V NIVAL, 610×610, 305×610, 592×592, 287×592 (P 292). Les 592/490/287×592 de la v1.1 initiale venaient de la doc V-CARB 2018 et sont en fait ceux d'AZUR. Débits à la vitesse du nominal (3 000 m³/h en 592×592 ≈ 2,38 m/s).",
   "slug": "netcarb-nival",
   "nom": "NETCARB NIVAL",
   "soustitre": "Filtre caisson multidièdre à charbon actif",
@@ -130,6 +131,20 @@
   "note_dimensions": "Surface indiquée : surface frontale. Les dièdres multiples développent une surface d'adsorption bien supérieure.",
   "dimensions": [
     {
+      "L": 610,
+      "H": 610,
+      "P": 292,
+      "debit": 3190,
+      "dp": 80
+    },
+    {
+      "L": 305,
+      "H": 610,
+      "P": 292,
+      "debit": 1590,
+      "dp": 80
+    },
+    {
       "L": 592,
       "H": 592,
       "P": 292,
@@ -137,18 +152,11 @@
       "dp": 80
     },
     {
-      "L": 490,
-      "H": 592,
-      "P": 292,
-      "debit": 2480,
-      "dp": 81
-    },
-    {
       "L": 287,
       "H": 592,
       "P": 292,
       "debit": 1450,
-      "dp": 84
+      "dp": 80
     }
   ]
 }
