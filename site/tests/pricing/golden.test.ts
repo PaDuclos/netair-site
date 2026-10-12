@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calculerPrixHT, MAJORATION_SITE } from "../../src/lib/pricing/engine";
+import { calculerPrixHT, majorationSite } from "../../src/lib/pricing/engine";
 import type { DemandePrix } from "../../src/lib/pricing/types";
 import golden from "./golden-vectors.json";
 import meta from "../../src/lib/pricing/data/tables.meta.json";
@@ -61,9 +61,10 @@ describe("Conformité Excel = moteur (vecteurs dorés)", () => {
         echecs.push(`${id} → prix catalogue ${r.detail?.prixCatalogueHT} ≠ ${v.prixAttendu}`);
       }
       // Prix affiché = prix Excel × majoration site, arrondi au centime.
-      const attenduSite = Math.round(v.prixAttendu * MAJORATION_SITE * 100) / 100;
+      const maj = majorationSite(v.codeGamme);
+      const attenduSite = Math.round(v.prixAttendu * maj * 100) / 100;
       if (Math.abs((r.prixUnitaireHT ?? NaN) - attenduSite) > TOLERANCE) {
-        echecs.push(`${id} → prix site ${r.prixUnitaireHT} ≠ ${attenduSite} (Excel × ${MAJORATION_SITE})`);
+        echecs.push(`${id} → prix site ${r.prixUnitaireHT} ≠ ${attenduSite} (Excel × ${maj})`);
       }
     }
 

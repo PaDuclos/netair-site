@@ -103,7 +103,7 @@ export interface DetailCalcul {
    * C'est la valeur que les tests « Excel = moteur » contrôlent au centime.
    */
   prixCatalogueHT: number;
-  /** Coefficient de majoration du site appliqué au prix du calculateur (ex. 1,40 = +40 %). */
+  /** Majoration du site appliquée au prix du calculateur : 1,40 (préfiltres) ou 1,25 (le reste). */
   majorationSite: number;
   /**
    * Coefficient de revalorisation générale appliqué (SPEC §11), si présent.

@@ -74,11 +74,18 @@ describe("calculerPrix — statuts non-ok : pas de port, passage tel quel", () =
     expect(r.fraisPortHT).toBeUndefined();
   });
 
-  it("majoration site +40 % : prix affiché = prix Excel × 1,40 ; port, franco et minimum inchangés", () => {
+  it("majoration site, préfiltre (NETPLY) : prix affiché = prix Excel × 1,40 ; port inchangé", () => {
     const r = calculerPrix(demande({ departement: "35" }));
     expect(r.detail?.prixCatalogueHT).toBe(12.6);
     expect(r.detail?.majorationSite).toBe(1.4);
     expect(r.prixUnitaireHT).toBe(17.64);
     expect(r.fraisPortHT).toBe(75); // port NON majoré (déc. PA 12/10/2026)
+  });
+
+  it("majoration site, hors préfiltres (NETPAK S CILIA, code 7) : prix affiché = prix Excel × 1,25", () => {
+    const r = calculerPrix({ codeGamme: "7", largeur_mm: 592, hauteur_mm: 592, profondeur_mm: 48, classe: "F7", quantite: 6 });
+    expect(r.statut).toBe("ok");
+    expect(r.detail?.majorationSite).toBe(1.25);
+    expect(r.prixUnitaireHT).toBe(Math.round(r.detail!.prixCatalogueHT * 1.25 * 100) / 100);
   });
 });
