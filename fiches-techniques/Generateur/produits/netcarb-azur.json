@@ -1,64 +1,63 @@
 {
-  "_commentaire": "NETCARB AZUR — filtre à POCHES RIGIDES / DIÈDRE à CHARBON ACTIF (filtration moléculaire), équiv. Titanair TITAPAK SV-GD CARB. Nom validé PA (23/06/2026, skill netair-naming : AZUR = forme dièdre 'GD', déjà NETPAK S AZUR / NETCEL V AZUR). Filtre de GAZ (adsorption COV/ozone/SO2/NO2) → AUCUNE classe particulaire ; cadre normatif = ISO 10121 (10121-1/-2 essai, 10121-3:2022 classes LD/MD/HD vs O3/SO2/NO2/toluène). Titanair ne donne aucune classe LD/MD/HD ni capacité d'adsorption → 'à déterminer/préciser R&D', non inventées. Une SEULE épaisseur 292 mm (poches rigides) → fiche MONO-CLASSE. SOURCE COURBE = dossier 'Fiches techniques 2018/SV GD CARB'. CHOIX : courbe 2020 'QL-CARB' [débit 1000-3500 → ΔP 18,31,45,61,79,103], car COHÉRENTE avec la fiche officielle 2018 (SV-GD CARB.pdf : axe Y 0-120, débit 1000-3500). PIÈGE écarté : les fichiers '...F7 2023.xlsx' et '...F8 2023.xlsx' sont des COPIES EXACTES du '...2023.xlsx' base [22,38,56,77,101,128,155] (la classe combinée n'y change pas la courbe = copier-coller non fiable) et dépassent l'axe de la fiche 2018 → 2023 NON retenue. Polynôme (grille standard, 6 pts) 8,073·v²+13,383·v+2,929 (R²=0,9992). ΔP@3400 ≈ 98 Pa (592×592) ; les 3 tailles tombent à ~97-102 Pa (le doc 2015 arrondissait à 85). Specs fiche 2018 : parois POLYESTER, lut OUI, séparateur NON, classe EN779 NA, feu NA. T° = 40 °C (choix PA : efficacité d'adsorption charbon ; le cadre polyester tient 80 °C mais l'adsorption chute au-delà de 40 °C). HR max 70 % (doc 2015). Combinable F7/F9 + charbon EN OPTION (mentionné, non chiffré). Drapeaux moteur : mono_classe + dp_final_mode:const (non colmatant) + ref_simple. PHOTO = CARB_BLEND.png (média charbon + alumine permanganate, pour O3/SOx/NOx) aplatie sur blanc = placeholder, à remplacer par visuel produit Netair (dièdre SV-GD CARB).",
+  "_commentaire": "NETCARB AZUR — filtre à POCHES RIGIDES / DIÈDRE à CHARBON ACTIF (filtration moléculaire), équiv. Titanair TITAPAK SV-GD CARB. Nom validé PA (23/06/2026, skill netair-naming : AZUR = forme dièdre 'GD', déjà NETPAK S AZUR / NETCEL V AZUR). Filtre de GAZ (adsorption COV/ozone/SO2/NO2) → AUCUNE classe particulaire ; cadre normatif = ISO 10121 (10121-1/-2 essai, 10121-3:2022 classes LD/MD/HD vs O3/SO2/NO2/toluène). Titanair ne donne aucune classe LD/MD/HD ni capacité d'adsorption → 'à déterminer/préciser R&D', non inventées. Une SEULE épaisseur 292 mm (poches rigides) → fiche MONO-CLASSE. SOURCE COURBE = dossier 'Fiches techniques 2018/SV GD CARB'. CHOIX : courbe 2020 'QL-CARB' [débit 1000-3500 → ΔP 18,31,45,61,79,103], car COHÉRENTE avec la fiche officielle 2018 (SV-GD CARB.pdf : axe Y 0-120, débit 1000-3500). PIÈGE écarté : les fichiers '...F7 2023.xlsx' et '...F8 2023.xlsx' sont des COPIES EXACTES du '...2023.xlsx' base [22,38,56,77,101,128,155] (la classe combinée n'y change pas la courbe = copier-coller non fiable) et dépassent l'axe de la fiche 2018 → 2023 NON retenue. Polynôme (grille standard, 6 pts) 8,073·v²+13,383·v+2,929 (R²=0,9992). ΔP@3400 ≈ 98 Pa (592×592) ; les 3 tailles tombent à ~97-102 Pa (le doc 2015 arrondissait à 85). Specs fiche 2018 : parois POLYESTER, lut OUI, séparateur NON, classe EN779 NA, feu NA. T° = 40 °C (choix PA : efficacité d'adsorption charbon ; le cadre polyester tient 80 °C mais l'adsorption chute au-delà de 40 °C). HR max 70 % (doc 2015). Combinable F7/F9 + charbon EN OPTION (mentionné, non chiffré). Drapeaux moteur : mono_classe + dp_final_mode:const (non colmatant) + ref_simple. PHOTO = CARB_BLEND.png (média charbon + alumine permanganate, pour O3/SOx/NOx) aplatie sur blanc = placeholder, à remplacer par visuel produit Netair (dièdre SV-GD CARB). | v1.1 (29/09/2026, passe de contenu) : mentions ISO 10121 retirées de la fiche (décision PA), note sous le tableau réduite à une ligne, débits 490×592 et 287×592 recalés sur la vitesse nominale (2 810 / 1 650), descriptif resserré, version combinée décrite sans classe (sources contradictoires F7/F9 vs F7/F8).",
   "slug": "netcarb-azur",
   "nom": "NETCARB AZUR",
-  "soustitre": "Poches rigides à charbon actif, filtration moléculaire",
+  "soustitre": "Filtre polydièdre à charbon actif",
   "mono_classe": true,
   "dp_final_mode": "const",
   "ref_simple": true,
+  "ref_classe": "CA",
   "surface_facteur": 1,
   "axe_debit": true,
-  "vmax": 2.78,
-  "pmax": 120,
+  "axe_debit_max": 4000,
+  "vmax": 3.17,
+  "pmax": 160,
   "debit_nom": 3400,
   "compact_p1": true,
+  "legende_courte": true,
   "fiche": {
     "num": "FT-NETCARB-AZUR-001",
-    "version": "v1.0",
-    "date": "23/06/2026"
+    "version": "v1.1",
+    "date": "12/10/2026"
   },
   "photo": "netcarb-azur-photo.jpg",
   "photo_alt": "Filtre à poches rigides à charbon actif NETCARB AZUR",
-  "description": "Le NETCARB AZUR est un filtre à poches rigides (forme dièdre) à charbon actif, dédié à la filtration moléculaire des gaz. Conçu pour les environnements urbains chargés en ozone, oxydes de soufre (SOx) et d'azote (NOx) et composés organiques volatils (COV), il adsorbe ces molécules sur un lit de micro-grains de charbon actif. Sa forme à poches rigides développe une grande surface d'adsorption et permet de remplacer directement un filtre à poches souples dans une centrale de traitement d'air. Cadre polyester, profondeur 292 mm, sur cadre 592×592 (et 490×592, 287×592). Une version combinée F7 ou F9 + charbon actif est disponible sur demande. Le NETCARB AZUR traite les gaz : il complète un filtre à particules, dont il ne remplace pas la fonction.",
+  "description": "Le filtre à poches rigides NETCARB AZUR est destiné à la filtration moléculaire de l’air dans les centrales de traitement d’air. Son média, constitué de grains de charbon actif maintenus entre deux couches de médias non tissés, permet l’adsorption des polluants gazeux et des odeurs. Sa conception à poches rigides développe une grande surface d’échange avec l’air à traiter. Une version combinant filtration moléculaire et filtration particulaire est également disponible, grâce à l’ajout d’un voile filtrant de différentes efficacités. En version charbon actif seul, le NETCARB AZUR s’utilise en complément d’un filtre à particules.",
   "points_cles": [
-    "Adsorbe gaz, odeurs & COV",
-    "Air urbain - ozone, SOx, NOx",
-    "Forme à poches rigides (dièdre)",
-    "Remplace un filtre à poches souples",
-    "Combinable F7/F9 + charbon (option)"
+    "Adsorption des gaz et des odeurs",
+    "Grande surface d’échange",
+    "Média à grains de charbon actif",
+    "Filtration particulaire en option",
+    "Conception à poches rigides"
   ],
   "specs": [
     [
       "Type",
-      "Poches rigides / dièdre à charbon actif"
+      "Filtre à poches rigides à charbon actif"
     ],
     [
       "Média filtrant",
-      "Micro-grains de charbon actif"
+      "Grains de charbon actif maintenus entre deux couches de médias non tissés"
     ],
     [
       "Fonction",
       "Adsorption moléculaire, COV · ozone · SO₂ · NO₂"
     ],
     [
-      "Normes",
-      "ISO 10121-1/-2 (essai) · classe 10121-3 (LD·MD·HD) à déterminer"
-    ],
-    [
       "Capacité d'adsorption",
-      "Non communiquée, à préciser R&D"
+      "Variable selon le gaz et les conditions d'usage (concentration, débit, température, humidité)"
     ],
     [
       "Parois cellule",
-      "Polyester (292 mm) · lut oui · sans séparateur"
+      "Plastique"
     ],
     [
       "Classement au feu",
-      "NA, non classé (charbon actif)"
+      "Non classé"
     ],
     [
       "Température de service",
-      "40 °C (efficacité d'adsorption)"
+      "40 °C max. (au-delà, l'adsorption diminue)"
     ],
     [
       "Humidité relative max.",
@@ -66,33 +65,33 @@
     ],
     [
       "ΔP finale",
-      "≈ ΔP initiale, remplacement à saturation (non colmatant)"
+      "Remplacement à saturation du charbon actif"
     ]
   ],
   "badges_p1": [
     "Filtration moléculaire",
-    "ISO 10121",
+    "Charbon actif",
     "COV · O₃ · SO₂ · NO₂"
   ],
   "badges_p2": [
     "Filtration moléculaire",
-    "ISO 10121",
+    "Charbon actif",
     "COV · O₃ · SO₂ · NO₂"
   ],
   "classes": {
     "low": {
       "label": "Charbon actif",
-      "iso": "ISO 10121",
+      "iso": "Moléculaire",
       "poly": {
         "48": {
-          "a": 8.073,
-          "b": 13.383,
-          "c": 2.929
+          "a": 8.035,
+          "b": 24.392,
+          "c": -2.5
         },
         "98": {
-          "a": 8.073,
-          "b": 13.383,
-          "c": 2.929
+          "a": 8.035,
+          "b": 24.392,
+          "c": -2.5
         }
       },
       "add": 0,
@@ -102,17 +101,17 @@
     },
     "high": {
       "label": "Charbon actif",
-      "iso": "ISO 10121",
+      "iso": "Moléculaire",
       "poly": {
         "48": {
-          "a": 8.073,
-          "b": 13.383,
-          "c": 2.929
+          "a": 8.035,
+          "b": 24.392,
+          "c": -2.5
         },
         "98": {
-          "a": 8.073,
-          "b": 13.383,
-          "c": 2.929
+          "a": 8.035,
+          "b": 24.392,
+          "c": -2.5
         }
       },
       "add": 0,
@@ -121,28 +120,37 @@
       "epaisseur": 292
     }
   },
-  "note_dimensions": "Surface indiquée = surface frontale ; le pack à poches rigides développe une surface d'adsorption supérieure (surface développée non communiquée par le fournisseur). ΔP de référence par taille (courbe 2020 QL-CARB, fiche 2018) : 592×592 ≈ 98 Pa @3 400 m³/h · 490×592 ≈ 97 Pa @2 800 · 287×592 ≈ 102 Pa @1 700 (les trois tailles sont dans le même régime de vitesse ≈ 2,7 m/s). Code article selon la codification NETCARB : NETCARB-AZUR-[L]x[H]x[P]. Capacité d'adsorption et durée de vie gaz : à préciser R&D.",
+  "note_dimensions": "Surface indiquée : surface frontale. Les poches rigides développent une surface d'adsorption bien supérieure.",
   "dimensions": [
     {
       "L": 592,
       "H": 592,
       "P": 292,
       "debit": 3400,
-      "dp": 98
+      "dp": 97
     },
     {
       "L": 490,
       "H": 592,
       "P": 292,
-      "debit": 2800,
+      "debit": 2810,
       "dp": 97
     },
     {
       "L": 287,
       "H": 592,
       "P": 292,
-      "debit": 1700,
-      "dp": 102
+      "debit": 1650,
+      "dp": 97
     }
-  ]
+  ],
+  "_normes": "Décision PA 29/09/2026 : aucune mention ISO 10121 affichée (ligne « Normes », badge, légende) tant qu'aucun essai n'existe. Aucune source (fiches 2018/2023, doc 2015) ne donne de classe ISO 10121-3 (LD/MD/HD). Le cadre normatif applicable reste ISO 10121-1/-2 (méthodes d'essai) et 10121-3:2022 (classification) : à afficher dès qu'un classement existe.",
+  "_capacite": "Décision PA 29/09/2026 : ligne conservée, formulation sans chiffre. Aucune source ne donne la capacité du modèle dièdre (le « 15 % maximum » ne figure que sur les compacts et poches souples du fournisseur). Veille concurrents 29/09 : aucun n'affiche de % massique ; Camfil, AAF, MANN+HUMMEL, emw donnent des classes ISO 10121-3 par gaz (exige un rapport d'essai) ; Titanair et Deltrian ne chiffrent rien ; AAF US donne la masse de charbon par filtre (≈ 4,7 kg en 24×24×12 in). À remplacer par une masse de charbon ou des classes 10121-3 si le fournisseur les garantit.",
+  "_parois": "Décision PA 12/10/2026 : « Plastique », convention des produits de forme AZUR (NETPAK S AZUR, NETCEL V AZUR, NETPAK S LUMEN). Source fiches 2018/2023 : parois POLYESTER (un plastique), lut OUI, séparateur NON. Lut et séparateur non affichés, comme sur les autres AZUR.",
+  "_version_combinee": "Décision PA 12/10/2026 : version combinée moléculaire + particulaire (voile filtrant ajouté, « différentes efficacités » ; F7 = ePM1 50 % confirmé par PA, fiche fournisseur 2023 F7 = ePM1 50 %, F8 = ePM1 70 %). Affichée dans le descriptif et le point clé seulement, pas de ligne de caractéristique (décision PA). Pas de courbe : fichiers 2023 F7/F8 = copies de la courbe base. Code article (règle DUO) : NETCARB-AZUR-F7CA-[L]x[H]x[P], idem F8CA, M5CA.",
+  "_descriptif": "Descriptif rédigé par PA le 12/10/2026, appliqué tel quel ; « granulés » → « grains » (harmonisation PA, même jour).",
+  "_caracteristiques": "Reformulations validées PA 12/10/2026 (valeurs inchangées) : Type sans « dièdre » ; feu « Non classé » (source : NA) ; T° 40 °C = limite d'efficacité d'adsorption (source fiche 2018 : 80 °C continu = tenue du cadre) ; ΔP finale = ΔP initiale (non colmatant).",
+  "_codes": "Décision PA 12/10/2026 : code conforme à CODIFICATION_PRODUITS.md → NETCARB-AZUR-CA-[L]x[H]x[P] (clé ref_classe). Version combinée : NETCARB-AZUR-F7CA-[L]x[H]x[P]. Les 3 autres NETCARB restent sans « CA » jusqu'à leur passe.",
+  "_courbe": "Décision PA 12/10/2026 : courbe 2023 retenue (fiche SV-GD CARB 2023.pdf, créée 07/11/2024, classe ISO NA = charbon seul). 7 points mesurés 1 000→4 000 m³/h [22,38,56,77,101,128,155 Pa], polynôme grille standard 8,035·v²+24,392·v−2,500 (R² 0,9999), DONNEES_PDC l.61. ΔP@3400 ≈ 121 Pa. Axe 0-4 000 m³/h entièrement mesuré (plus d'extrapolation), pmax 160. Remplace la courbe 2020 de la v1.0 [18…103 Pa de 1 000 à 3 500, ΔP@3400 ≈ 98] : écartée car la fiche 2023 est la plus récente ; les fichiers F7/F8 2023 sont des copies de sa courbe, pas l'inverse.",
+  "_note_dimensions_travail": "Ancienne note (v1.0) retirée de l'affichage : ΔP par taille écrites à la main (98/97/102 Pa, contredisaient le tableau), code fournisseur de la courbe, code article répété, « à préciser R&D ». Courbe source et pièges : voir _commentaire."
 }

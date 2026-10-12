@@ -69,6 +69,7 @@ export const FAMILLES: Famille[] = [
     slug: 'charbon-actif',
     titre: 'Charbons actifs',
     tag: 'Gaz · odeurs',
+    photo: '/produits/detour/netcarb-azur-photo.png',
     desc: "Les filtres à charbon actif sont spécialement conçus pour capter les odeurs, les gaz et les composés organiques volatils (COV).",
     descLong: "Les filtres à charbon actif sont conçus pour le traitement des odeurs et de certains composés gazeux. Leur diversité de conception répond aux besoins de chaque application.",
   },

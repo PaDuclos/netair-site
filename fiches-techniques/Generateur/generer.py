@@ -190,6 +190,9 @@ def build_dimensions(d):
     # ref_simple : code article = [NOM sans espaces]-[L]x[H]x[P] (codification charbon /
     #   produit sans classe particulaire) ; eff = libellé de classe seul. Défaut : legacy.
     simple = d.get("ref_simple", False)
+    # ref_classe (opt-in, NETCARB AZUR 12/10/2026) : insère la classe de la codification
+    #   (« CA ») → NETCARB-AZUR-CA-592x592x292 (CODIFICATION_PRODUITS.md). Défaut : sans classe.
+    ref_classe = f'-{d["ref_classe"]}' if d.get("ref_classe") else ""
     # Portage des réglages de tableau du moteur série vers le mono-classe (NETCEL V LAM,
     # 02/08/2026) : surface non vérifiée, référence retirée (déc. PA 16/07), sur-mesure
     # absent des produits vendus en formats standard seuls. Défauts = comportement legacy.
@@ -212,7 +215,7 @@ def build_dimensions(d):
         dp = dim.get("dp", cls["dp"])     # ΔP de référence par ligne (sinon celle de la classe)
         if simple:
             eff = cls["label"]
-            ref = f'{nom.replace(" ", "-")}-{L}x{H}x{P}'
+            ref = f'{nom.replace(" ", "-")}{ref_classe}-{L}x{H}x{P}'
         else:
             # dims_classe_dabord (opt-in, NETCEL V LAM 04/08/2026) : la colonne s'intitule
             # « Efficacité EN 1822 » → la CLASSE passe devant, le MPPS entre parenthèses.

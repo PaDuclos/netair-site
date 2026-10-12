@@ -911,3 +911,34 @@ _(déplacer ici les lignes traitées, avec date)_
   NETCEL V LAM 68 mm. Les prendre pour des mm affiche des cotes fausses.
 - **NETCEL V LAM a sa propre surface frontale** (`aref` 0,3721 m² au lieu de 0,3505). Toute conversion
   vitesse → débit doit la respecter, sinon sa courbe est fausse.
+
+## 📓 SÉANCE DU 12/10/2026 — passe de contenu NETCARB AZUR (v1.1)
+
+### Ce qui est acquis
+
+| Sujet | État |
+|---|---|
+| **NETCARB AZUR v1.1** | ✅ contenu retravaillé avec PA : sous-titre, descriptif, points clés, caractéristiques. Détail des arbitrages dans les champs `_…` du JSON |
+| Mentions de travail visibles (AZUR) | ✅ 0 : ISO 10121 retiré (aucun essai), capacité sans chiffre, note sous tableau réduite à 1 ligne |
+| Impression AZUR | ✅ 2 pages (la v1.0 sortait sur 3, seule fiche de la gamme dans ce cas) |
+| **Courbe AZUR** | ✅ courbe **2023** (charbon seul, 7 pts mesurés jusqu'à 4 000 m³/h), ΔP@3400 = 122 Pa au lieu de 98 |
+| Codes article NETCARB | ✅ AZUR conforme (`NETCARB-AZUR-CA-…`, clé `ref_classe`) |
+| Photo NETCARB AZUR | ✅ `Azur Carb.png`, sur les trois supports |
+| Photos sources | ✅ rangées dans `BLOC5_Communication/Photos_Produits/` (ex-`Offres_de_Prix/Photos filtres Netair/`), chemin de `correspondance.json` corrigé |
+
+### 🔴 Points ouverts
+
+- [ ] **NETCARB NIVAL** reprend la courbe **2020** d'AZUR (`DONNEES_PDC` l.62), désormais abandonnée pour AZUR. À trancher à sa passe.
+- [ ] **NETCARB NIVAL** : sous-titre presque identique au nouveau sous-titre d'AZUR (« polydièdre à charbon actif ») → trouver ce qui les distingue.
+- [ ] **NETCARB CILIA, NIVAL, BAG** : codes sans « CA » (ajouter `ref_classe` à leur passe), mentions ISO 10121 et « à préciser » encore visibles.
+- [ ] **Mention du calculateur** commune aux charbons seuls : « ΔP finale ≈ ΔP initiale, filtre non colmatant » (jargon) → à reprendre avec NIVAL, elle touche CILIA, AZUR et NIVAL.
+- [ ] **Site, configurateur** : la « référence générée » `NETCARB_AZUR-592x592` (tiret bas, sans CA ni profondeur) ne suit pas la codification → chantier e-commerce.
+- [ ] **Version combinée AZUR** (voile filtrant + charbon) : aucune courbe fiable (fichiers F7/F8 2023 = copies). Codes prévus `NETCARB-AZUR-F7CA-…`.
+- [ ] Copie du dossier principal (`feature/b3-paiement`) : `correspondance.json` pointe encore vers l'ancien dossier photos jusqu'à sa remise à niveau sur main.
+
+### Piège confirmé
+
+- **Une courbe copiée n'est pas forcément la copie.** En juin, la courbe 2023 avait été écartée parce que quatre fichiers portaient
+  les mêmes chiffres. C'était vrai pour les versions combinées F7/F8, pas pour la fiche charbon seul dont elles provenaient.
+  Toujours chercher **quel fichier est l'original** (date, classe affichée) avant d'écarter toute la série.
+
