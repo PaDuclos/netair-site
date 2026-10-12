@@ -47,6 +47,7 @@ const siteUrl = 'https://netair.fr/';
 const metaDescription =
   "Netair, fabricant de filtres pour la ventilation générale (CTA) : préfiltres, miniplis, poches souples et rigides, filtres absolus HEPA, charbons actifs. Double classification EN ISO 16890 et EN 779. Devis sur mesure.";
 import { VENTE_EN_LIGNE } from '../lib/site-config';
+import '../styles/global.css';
 ---
 
 <!doctype html>
@@ -71,43 +72,15 @@ import { VENTE_EN_LIGNE } from '../lib/site-config';
 
   <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} is:inline></script>
 
-  <script src="https://cdn.tailwindcss.com" is:inline></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
-  <script is:inline>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary:   '#0F3261',
-            secondary: '#4A5E7A',
-            accent:    '#0897A5',
-            'accent-bright': '#0070C8',
-            background:'#F8FAFC',
-            foreground:'#0F3261',
-            muted:     '#ECF1F4',
-            'border-soft': '#E2E8F0',
-          },
-          fontFamily: {
-            sans: ['DM Sans', 'system-ui', 'sans-serif'],
-            display: ['Space Grotesk', 'DM Sans', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          boxShadow: {
-            soft: '0 1px 2px rgba(15,50,97,.05), 0 8px 24px -8px rgba(15,50,97,.12)',
-            lift: '0 24px 60px -24px rgba(8,151,165,.42)',
-          },
-        },
-      },
-    };
-  </script>
 
   <style is:global>
     :root { color-scheme: light; }
-    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.5; }
     .font-display { font-family: 'Space Grotesk', 'DM Sans', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    /* La règle de titres de global.css (hors couche) écraserait les tracking-* de cette page. */
+    body :is(h1, h2, h3).tracking-tight { letter-spacing: -0.025em; }
+    body :is(h1, h2, h3):not([class*="tracking-"]) { letter-spacing: normal; }
     .brand-gradient { background-image: linear-gradient(135deg, #0070C8 0%, #0897A5 100%); }
 
     .mesh {
@@ -169,7 +142,7 @@ import { VENTE_EN_LIGNE } from '../lib/site-config';
           La filtration nouvelle génération
         </span>
 
-        <h1 class="reveal font-display mt-6 text-4xl font-normal leading-[1.08] tracking-tight text-primary sm:text-6xl" style="transition-delay:.05s">
+        <h1 class="reveal font-display mt-6 text-4xl font-normal leading-[1.08] tracking-tight text-primary sm:text-6xl sm:leading-none" style="transition-delay:.05s">
           Respirez un air<br class="hidden sm:block" /> <span class="bg-gradient-to-r from-accent to-accent-bright bg-clip-text text-transparent">vraiment maîtrisé</span>.
         </h1>
 
@@ -424,7 +397,7 @@ import { VENTE_EN_LIGNE } from '../lib/site-config';
     <div class="mx-auto max-w-4xl px-5 sm:px-8">
       <figure class="reveal rounded-3xl border border-border-soft bg-white p-10 text-center shadow-soft sm:p-14">
         <svg class="mx-auto h-10 w-10 text-accent/30" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 7C6.5 7 4 9.5 4 12.5V18h6v-6H7.5c0-1.6 1.3-2.5 2.5-2.5V7zm10 0c-3 0-5.5 2.5-5.5 5.5V18h6v-6h-2.5c0-1.6 1.3-2.5 2.5-2.5V7z"/></svg>
-        <blockquote class="font-display mt-6 text-xl font-normal leading-relaxed text-primary sm:text-2xl">
+        <blockquote class="font-display mt-6 text-xl font-normal leading-relaxed text-primary sm:text-2xl sm:leading-8">
           «&#8239;La filtration joue un rôle essentiel dans la performance des installations, la qualité de l'air et la maîtrise des consommations énergétiques. C'est cette conviction qui guide nos choix et notre engagement au quotidien.&#8239;»
         </blockquote>
         <figcaption class="mt-8 flex items-center justify-center gap-4">
