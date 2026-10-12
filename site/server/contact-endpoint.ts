@@ -59,11 +59,11 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ ok: false, erreur: 'Adresse email invalide.' }, 422);
   }
 
-  const sujet = `Contact — ${objet} — ${nom}`;
+  const sujet = `Contact - ${objet} - ${nom}`;
   const corps =
     `Nom / société : ${nom}\n` +
-    `Email : ${email || '—'}\n` +
-    `Téléphone : ${tel || '—'}\n` +
+    `Email : ${email || 'non renseigné'}\n` +
+    `Téléphone : ${tel || 'non renseigné'}\n` +
     `Objet : ${objet}\n\n` +
     `Message :\n${message}\n`;
 

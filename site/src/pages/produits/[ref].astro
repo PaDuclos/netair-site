@@ -228,7 +228,7 @@ const introConfig =
 ---
 
 <BaseLayout
-  title={`${d.nom} — ${d.soustitre ?? 'Filtre CTA'} | Netair`}
+  title={`${d.nom} : ${d.soustitre ?? 'Filtre CTA'} - Netair`}
   description={(d.description ?? `${d.nom}, filtre pour centrale de traitement d'air.`).slice(0, 300)}
   ogImage={img ?? '/brand/logo.png'}
 >
@@ -454,8 +454,8 @@ const introConfig =
           <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span class="eyebrow text-[11px] text-muted">Prix unitaire HT</span>
-              <div class="display text-3xl font-normal text-marine"><span id="pUnit">—</span> €</div>
-              <p class="mt-1 text-xs text-muted">Total (<span id="pQty">6</span> u.) : <span id="pTotal" class="font-medium text-marine">—</span> € HT</p>
+              <div class="display text-3xl font-normal text-marine"><span id="pUnit">…</span> €</div>
+              <p class="mt-1 text-xs text-muted">Total (<span id="pQty">6</span> u.) : <span id="pTotal" class="font-medium text-marine">…</span> € HT</p>
               {modeProduit === 'calcul' && (
                 <p class="mt-1 text-xs text-muted">Commande minimum : <span class="font-medium text-marine">{MIN_COMMANDE_HT} € HT</span></p>
               )}
@@ -640,10 +640,10 @@ const introConfig =
         // reste actif juste en dessous. Annoncer une indisponibilité serait faux (déc. PA
         // 15/08/2026). Traité AVANT le passe-plat : le message du moteur, factuel, sert au
         // diagnostic mais ne s'adresse pas au client.
-        if (r.statut === 'classe_indisponible') return 'Prix sur devis dans ce format — ajoutez-le à votre demande.';
+        if (r.statut === 'classe_indisponible') return 'Prix sur devis dans ce format. Ajoutez-le à votre demande.';
         if (r.message) return r.message;
         switch (r.statut) {
-          case 'sur_devis': return 'Produit proposé sur devis — ajoutez-le à votre demande.';
+          case 'sur_devis': return 'Produit proposé sur devis. Ajoutez-le à votre demande.';
           case 'hors_fabrication': return 'Dimensions hors des limites de fabrication.';
           case 'quantite_insuffisante': return r.quantiteMini ? ('Quantité minimale : ' + r.quantiteMini + '.') : 'Quantité insuffisante.';
           case 'gamme_inconnue': return 'Produit non disponible à la commande en ligne.';
@@ -654,8 +654,8 @@ const introConfig =
       // Affiche (ou efface) le prix et pilote l'état du bouton « Ajouter au panier ».
       function afficherPrix(unit, total, msg) {
         const ok = unit != null;
-        $('pUnit').textContent = ok ? eur(unit) : '—';
-        $('pTotal').textContent = ok ? eur(total) : '—';
+        $('pUnit').textContent = ok ? eur(unit) : '…';
+        $('pTotal').textContent = ok ? eur(total) : '…';
         $('priceMsg').textContent = msg || '';
         const btn = $('addBtn');
         btn.disabled = !ok;

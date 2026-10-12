@@ -1,5 +1,5 @@
 {
-  "_commentaire": "Correspondance photo Netair → produit, validée par Pierre-Alain le 22/09/2026. Le champ 'cible' reprend EXACTEMENT le nom de fichier déjà déclaré dans le JSON du produit : on remplace le contenu des images, jamais leur nom, donc aucun code n'est à modifier. Arbitrages de PA : Azur.png sert aux deux produits AZUR (NETPAK S et NETCEL V), qui partagent la même forme ; pour NETPAK S CILIA c'est 'Cilia A.png' qui est retenue. Ajout du 12/10/2026 : NETCARB AZUR ← 'Azur Carb.png' (photo prise pendant la passe de contenu v1.1). Ajout du 12/10/2026 : NETCARB BAG ← 'Netcarb Bag.png'. Ajout du 12/10/2026 : NETCARB CILIA ← 'Netcarb Cilia.png'. Ajout du 12/10/2026 : NETPAK S CILIA DUO ← 'Netpak Cilia Duo.png' (photo en écorché).",
+  "_commentaire": "Correspondance photo Netair → produit, validée par Pierre-Alain le 22/09/2026. Le champ 'cible' reprend EXACTEMENT le nom de fichier déjà déclaré dans le JSON du produit : on remplace le contenu des images, jamais leur nom, donc aucun code n'est à modifier. Arbitrages de PA : Azur.png sert aux deux produits AZUR (NETPAK S et NETCEL V), qui partagent la même forme ; pour NETPAK S CILIA c'est 'Cilia A.png' qui est retenue. Ajout du 12/10/2026 : NETCARB AZUR ← 'Azur Carb.png' (photo prise pendant la passe de contenu v1.1). Ajout du 12/10/2026 : NETCARB BAG ← 'Netcarb Bag.png'. Ajout du 12/10/2026 : NETCARB CILIA ← 'Netcarb Cilia.png'. Ajout du 12/10/2026 : NETPAK S CILIA DUO ← 'Netpak Cilia Duo.png' (photo en écorché). 12/10/2026 : NETBAG S ← nouvelle 'Netbag.png' (cadre galvanisé, poches blanches), seuil 248 : à 232 le haut des poches blanches était effacé (photo « blanchie »).",
   "dossier_source": "/Users/pierre-alainduclos/Desktop/Netair/BLOC5_Communication/Photos_Produits",
   "sans_photo": [],
   "produits": [
@@ -32,7 +32,8 @@
     {
       "produit": "NETBAG S",
       "photo": "Netbag.png",
-      "cible": "netbag-s-photo.jpg"
+      "cible": "netbag-s-photo.jpg",
+      "seuil": 248
     },
     {
       "produit": "NETPAK S BORA",

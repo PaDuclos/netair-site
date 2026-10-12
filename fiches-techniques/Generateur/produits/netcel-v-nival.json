@@ -1,8 +1,9 @@
 {
   "_commentaire": "NETCEL V NIVAL — filtre absolu à polydièdres (équiv. Titanair TITACEL V, vendu aussi sous TITAPAK V CU : mêmes specs, même courbe). ✅ CONTENU RETRAVAILLÉ v1.1, VALIDÉ PA le 15/08/2026 — arbitrages dans _arbitrages_pad, NE PAS retoucher sans son accord. Fiche SÉRIE en MODE HEPA (hepa:true → ΔP finale = 2×initiale, EN 1822 ; pas d'étiquette énergie Eurovent). ⚠️ SURFACE FRONTALE DE RÉFÉRENCE = 610×610 (aref 0,3721) et NON 592×592 : le moteur série l'écrivait en dur, corrigé le 15/08 (clé `aref`, cf. _arbitrages_pad §8). Les coefficients des DEUX courbes sont ajustés SUR CETTE SURFACE — les changer sans refaire l'ajustement déplacerait toutes les ΔP. Données ΔP RÉELLES = caches Excel des fiches 2018, contrôlés point par point contre le graphe du PDF (pas de compression d'axe, contrairement à NETCEL V AZUR) : H13 (TITACEL V H13) débit [640,1280,1920,2560,3200,3840] → ΔP [39,85,137,189,250,316] ; E10 (TITACEL V E10) débit [1000,1500,2000,2500,3000,3500,4000] → ΔP [40,53,71,91,115,150,200]. Fits (v = débit/3600/0,3721) : H13 10,6394·v²+79,9550·v−1,20 (R²=0,9999) ; E10 = parabole par l'origine ANCRÉE sur le dernier point mesuré : 13,8943·v²+25,4889·v (exacte à 4000 m³/h = 200 Pa ; écart max 13 Pa, surestimation au milieu de plage). ΔP@3400 : H13 270 Pa, E10 154 Pa. ⚠️ NE PAS chercher à faire passer une courbe lisse par les 7 points : la mesure E10 est INCOMPATIBLE avec un passage par l'origine (pente 0→1000 = 0,040 > pente 1000→1500 = 0,026), donc toute courbe fidèle fait une bosse. Le graphe Titanair lui-même commence son axe à 1000 m³/h. ⚠️ H14 SANS COURBE : la source (TITAPAK V CU H14) recopie EXACTEMENT les 6 valeurs du H13 — impossible, un H14 est plus résistant. À mesurer R&D (CHECKLIST). Specs fiches 2018 : média fibre de verre, parois PLASTIQUE (H13) / POLYSTYRÈNE (E10), séparateur hot melt, lut oui, M1, 60 °C (acc. 65 °C/1 h), ΔP finale 750 Pa sur les DEUX classes. Surface 40 m² documentée pour le seul cadre 610×610 — CONSERVÉE À L'AFFICHAGE sur décision PA, avec la mention du cadre (cf. _arbitrages_pad §5). Photo TITACEL V.png nettoyée = placeholder.",
+  "_caisson": "v1.2 (12/10/2026, décision PA) : « caisson multidièdre » dans le sous-titre, le descriptif et le Type, comme NETCARB NIVAL (même forme). Avant : sous-titre « Filtre absolu à très haute efficacité », Type « Filtre absolu polydièdre ». Badge d'en-tête « Polydièdre » → « Filtre absolu (T.H.E) » (décision PA).",
   "slug": "netcel-v-nival",
   "nom": "NETCEL V NIVAL",
-  "soustitre": "Filtre absolu à très haute efficacité",
+  "soustitre": "Filtre absolu caisson multidièdre",
   "series": true,
   "hepa": true,
   "compact_p1": true,
@@ -14,12 +15,12 @@
   "len0": 292,
   "fiche": {
     "num": "FT-NETCEL-V-NIVAL-001",
-    "version": "v1.1",
-    "date": "15/08/2026"
+    "version": "v1.2",
+    "date": "12/10/2026"
   },
   "photo": "netcel-v-nival-photo.jpg",
   "photo_alt": "Filtre absolu HEPA polydièdre NETCEL V NIVAL",
-  "description": "Le filtre absolu NETCEL V NIVAL est destiné à la filtration de très haute efficacité de l'air dans les centrales de traitement d'air. Il est particulièrement adapté aux environnements à exigences de propreté, tels que les salles propres, les établissements de santé, les laboratoires et les applications industrielles sensibles. Son média en microfibres de verre permet d'atteindre les niveaux de filtration requis pour ces applications.",
+  "description": "Le filtre absolu caisson multidièdre NETCEL V NIVAL est destiné à la filtration de très haute efficacité de l'air dans les centrales de traitement d'air. Il est particulièrement adapté aux environnements à exigences de propreté, tels que les salles propres, les établissements de santé, les laboratoires et les applications industrielles sensibles. Son média en microfibres de verre permet d'atteindre les niveaux de filtration requis pour ces applications.",
   "points_cles": [
     "Très haute efficacité de filtration",
     "Grande surface filtrante",
@@ -34,7 +35,7 @@
     ],
     [
       "Type",
-      "Filtre absolu polydièdre"
+      "Filtre absolu caisson multidièdre"
     ],
     [
       "Parois cellule",
@@ -83,12 +84,12 @@
   ],
   "badges_p1": [
     "EN 1822 : E10 → H14",
-    "Polydièdre",
+    "Filtre absolu (T.H.E)",
     "HEPA"
   ],
   "badges_p2": [
     "EN 1822 : E10 → H14",
-    "Polydièdre",
+    "Filtre absolu (T.H.E)",
     "HEPA"
   ],
   "classes_def": {
