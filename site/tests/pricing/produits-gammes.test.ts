@@ -226,7 +226,7 @@ describe("les produits à efficacité figée gardent un prix", () => {
   ])("%s : prix au centime", (_nom, demande, attendu) => {
     const r = calculerPrix(demande as never);
     expect(r.statut).toBe("ok");
-    expect(r.statut === "ok" && r.prixUnitaireHT).toBe(attendu);
+    expect(r.statut === "ok" && r.detail?.prixCatalogueHT).toBe(attendu); // prix Excel, avant majoration site
   });
 });
 

@@ -29,8 +29,8 @@ describe("Méthode A — NETPLY (ancres validées par la référence)", () => {
     expect(r.statut).toBe("ok");
     expect(r.detail?.methode).toBe("A");
     expect(r.detail?.coutHT).toBe(3.78);
-    expect(r.prixUnitaireHT).toBe(12.6);
-    expect(r.prixTotalHT).toBe(126);
+    expect(r.detail?.prixCatalogueHT).toBe(12.6);
+    expect(r.prixTotalHT).toBe(176.4); // 10 × (12,60 × 1,40)
     expect(r.palierQuantite).toBe("6-19");
     expect(r.dureeValiditeJours).toBe(30);
   });
@@ -39,7 +39,7 @@ describe("Méthode A — NETPLY (ancres validées par la référence)", () => {
     const r = calculerPrixHT(demande({ largeur_mm: 592, quantite: 46 }));
     expect(r.statut).toBe("ok");
     expect(r.detail?.coutHT).toBe(5.7);
-    expect(r.prixUnitaireHT).toBe(19);
+    expect(r.detail?.prixCatalogueHT).toBe(19);
     expect(r.palierQuantite).toBe("20-499");
   });
 });
@@ -50,7 +50,7 @@ describe("Méthodes B/C/D/E/F — cohérence sur données Netair", () => {
     expect(r.statut).toBe("ok");
     expect(r.detail?.methode).toBe("B");
     expect(r.detail?.coutHT).toBe(2.05);
-    expect(r.prixUnitaireHT).toBe(5.86);
+    expect(r.detail?.prixCatalogueHT).toBe(5.86);
     expect(r.detail?.perimetre_m).toBeCloseTo(1.758, 3);
   });
 
@@ -59,7 +59,7 @@ describe("Méthodes B/C/D/E/F — cohérence sur données Netair", () => {
     expect(r.statut).toBe("ok");
     expect(r.detail?.methode).toBe("C");
     expect(r.detail?.coutHT).toBe(1.45);
-    expect(r.prixUnitaireHT).toBe(4.14);
+    expect(r.detail?.prixCatalogueHT).toBe(4.14);
   });
 
   it("D — CILIA (code 7) F7 425×472×98 ×1 → cadre+média+pièce → coût 24,67 € · prix 70,49 €", () => {
@@ -69,7 +69,7 @@ describe("Méthodes B/C/D/E/F — cohérence sur données Netair", () => {
     expect(r.statut).toBe("ok");
     expect(r.detail?.methode).toBe("D");
     expect(r.detail?.coutHT).toBe(24.67);
-    expect(r.prixUnitaireHT).toBe(70.49);
+    expect(r.detail?.prixCatalogueHT).toBe(70.49);
     expect(r.detail?.composantsCout).toHaveLength(3);
   });
 
@@ -80,7 +80,7 @@ describe("Méthodes B/C/D/E/F — cohérence sur données Netair", () => {
     expect(r.statut).toBe("ok");
     expect(r.detail?.methode).toBe("E");
     expect(r.detail?.coutHT).toBe(36.29);
-    expect(r.prixUnitaireHT).toBe(103.69);
+    expect(r.detail?.prixCatalogueHT).toBe(103.69);
   });
 
   it("F — NETBAG (code 11) F7 287×592×292 ×1 → lecture L×l → coût 24,93 € · prix 71,23 €", () => {
@@ -90,7 +90,7 @@ describe("Méthodes B/C/D/E/F — cohérence sur données Netair", () => {
     expect(r.statut).toBe("ok");
     expect(r.detail?.methode).toBe("F");
     expect(r.detail?.coutHT).toBe(24.93);
-    expect(r.prixUnitaireHT).toBe(71.23);
+    expect(r.detail?.prixCatalogueHT).toBe(71.23);
   });
 });
 

@@ -99,6 +99,13 @@ export interface DetailCalcul {
   /** Ratio prix tarif appliqué (col. `ratio` de la table des gammes). */
   ratioTarif: number;
   /**
+   * Prix tarif unitaire HT du calculateur Excel, AVANT majoration site (= PTU de l'Excel).
+   * C'est la valeur que les tests « Excel = moteur » contrôlent au centime.
+   */
+  prixCatalogueHT: number;
+  /** Coefficient de majoration du site appliqué au prix du calculateur (ex. 1,40 = +40 %). */
+  majorationSite: number;
+  /**
    * Coefficient de revalorisation générale appliqué (SPEC §11), si présent.
    * Absent tant que le levier n'est pas activé dans l'Excel.
    */

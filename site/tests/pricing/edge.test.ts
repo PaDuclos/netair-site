@@ -45,7 +45,7 @@ describe("Cas limites", () => {
   it("département inconnu → prix conservé, port sur devis", () => {
     const r = calculerPrix(d({ departement: "971" }));
     expect(r.statut).toBe("ok");
-    expect(r.prixUnitaireHT).toBe(12.6);
+    expect(r.detail?.prixCatalogueHT).toBe(12.6);
     expect(r.fraisPortHT).toBeUndefined();
     expect(r.message).toContain("971");
   });
@@ -59,11 +59,11 @@ describe("Cas limites", () => {
   it("hors-format > 50 dm² : NETPLY 900×600 (54 dm²) = 37,67 € (validé sur Excel réel)", () => {
     const r = calculerPrixHT(d({ largeur_mm: 900, hauteur_mm: 600 }));
     expect(r.statut).toBe("ok");
-    expect(r.prixUnitaireHT).toBe(37.67);
+    expect(r.detail?.prixCatalogueHT).toBe(37.67);
   });
 
   it("hors-format : NETPLY 1000×600 (60 dm²) = 46,03 € (validé sur Excel réel)", () => {
     const r = calculerPrixHT(d({ largeur_mm: 1000, hauteur_mm: 600 }));
-    expect(r.prixUnitaireHT).toBe(46.03);
+    expect(r.detail?.prixCatalogueHT).toBe(46.03);
   });
 });
