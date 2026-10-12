@@ -1,14 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import EnvoiFormulaire from '../components/EnvoiFormulaire.astro';
 import { VENTE_EN_LIGNE } from '../lib/site-config';
+import { TELEPHONE, TELEPHONE_HREF } from '../lib/envoi';
 
-// Adresse de destination du message : À CONFIRMER (boîte contact Netair).
 const CONTACT_EMAIL = 'contact@netair.fr';
 
 // Coordonnées, source : IDENTITE_SOCIETE_Netair.md (adresse d'exploitation, pas le siège).
-const TELEPHONE = '04 82 53 37 17';
-const TELEPHONE_HREF = 'tel:+33482533717';
 const ADRESSE = 'Parc d\'activité des Chênes, Route de Tramoyes, 01700 Miribel';
 const HORAIRES = 'Du lundi au vendredi, 8 h 30 – 12 h et 13 h 30 – 18 h';
 
@@ -85,6 +84,7 @@ const OBJETS = [
           <input id="rgpd" name="rgpd" type="checkbox" required class="mt-1 h-4 w-4 shrink-0 accent-[var(--color-turquoise)]" />
           <span>J'accepte que mes données soient utilisées pour traiter ma demande. <span class="text-bleu">*</span></span>
         </label>
+        <EnvoiFormulaire erreurId="contact-erreur" />
         <div>
           <button type="submit" id="contact-submit"
             class="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
@@ -135,54 +135,40 @@ const OBJETS = [
     </aside>
   </section>
 
-  <script define:vars={{ CONTACT_EMAIL }}>
-    const form = document.getElementById('contact-form');
+  <script>
+    import { envoyerFormulaire } from '../lib/envoi';
+
+    const form = document.getElementById('contact-form') as HTMLFormElement;
     const okNote = document.getElementById('contact-ok');
     const helpNote = document.getElementById('contact-note');
-    const submitBtn = document.getElementById('contact-submit');
+    const erreur = document.getElementById('contact-erreur');
+    const submitBtn = document.getElementById('contact-submit') as HTMLButtonElement;
+    const libelle = submitBtn.innerHTML;
 
-    const val = (id) => (document.getElementById(id)?.value || '').trim();
+    const val = (id: string) => ((document.getElementById(id) as HTMLInputElement | null)?.value || '').trim();
 
-    // Repli : ouvre la messagerie du visiteur avec le message pré-rempli.
-    // Utilisé tant que l'envoi serveur (/api/contact) n'est pas encore branché
-    // (site statique aujourd'hui, voir server/contact-endpoint.ts).
-    const ouvrirMessagerie = (data) => {
-      const subject = `Contact - ${data.objet} - ${data.nom}`;
-      const body =
-        `Nom / société : ${data.nom}\n` +
-        `Email : ${data.email}\n` +
-        `Téléphone : ${data.tel || 'non renseigné'}\n` +
-        `Objet : ${data.objet}\n\n` +
-        `Message :\n${data.message}\n`;
-      window.location.href =
-        `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    };
-
-    form?.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const data = {
+      erreur?.classList.add('hidden');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Envoi en cours…';
+      const ok = await envoyerFormulaire('contact', form, {
         nom: val('nom'),
         email: val('email'),
         tel: val('tel'),
         objet: val('objet'),
         message: val('message'),
-      };
-
-      // Tente l'envoi serveur ; si indisponible (site statique / hors ligne),
-      // on retombe proprement sur l'ouverture de la messagerie.
-      try {
-        const res = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
-        if (!res.ok) throw new Error('endpoint indisponible');
+        rgpd: (document.getElementById('rgpd') as HTMLInputElement).checked,
+      });
+      if (ok) {
         form.reset();
         okNote?.classList.remove('hidden');
         helpNote?.classList.add('hidden');
-        if (submitBtn) submitBtn.disabled = true;
-      } catch {
-        ouvrirMessagerie(data);
+        submitBtn.innerHTML = libelle;
+      } else {
+        erreur?.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = libelle;
       }
     });
   </script>
