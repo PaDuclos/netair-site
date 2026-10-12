@@ -1,0 +1,29 @@
+# Netair : réglages Apache de l'hébergement OVH (site statique Astro).
+
+RewriteEngine On
+
+# Toujours en https (certificat Let's Encrypt OVH).
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Adresse canonique sans « www ».
+RewriteCond %{HTTP_HOST} ^www\.netair\.fr$ [NC]
+RewriteRule ^(.*)$ https://netair.fr/$1 [R=301,L]
+
+# Mode vitrine (VENTE_EN_LIGNE = false) : panier et espace client renvoient vers la demande de devis.
+# ⚠️ À retirer le jour où la vente en ligne est activée.
+RewriteRule ^(panier|compte)/?$ /devis/ [R=301,L]
+
+ErrorDocument 404 /404.html
+
+# Mise en cache navigateur des ressources statiques.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
