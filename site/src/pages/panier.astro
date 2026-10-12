@@ -47,8 +47,8 @@ import { DEPARTEMENTS } from '../lib/departements';
           <span class="eyebrow text-[11px] text-muted">Département de livraison</span>
           <select id="dept"
             class="mt-1 w-full rounded-xl border border-soft bg-mist px-4 py-2.5 text-sm text-marine outline-none focus:border-turquoise">
-            <option value="">— Choisir un département —</option>
-            {DEPARTEMENTS.map((d) => <option value={d.code}>{d.code} — {d.nom}</option>)}
+            <option value="">Choisir un département</option>
+            {DEPARTEMENTS.map((d) => <option value={d.code}>{d.code} - {d.nom}</option>)}
           </select>
         </label>
         <p class="mt-1.5 text-[11px] text-muted">Livraison en France métropolitaine et Corse.</p>
@@ -257,7 +257,7 @@ import { DEPARTEMENTS } from '../lib/departements';
       // Pré-remplir l'adresse avec le département déjà saisi (si l'adresse est vide).
       const dep = getDeliveryDept().trim();
       const adr = $('form').querySelector('[name="adresse"]');
-      if (dep && adr && !adr.value.trim()) adr.value = 'Département ' + dep + ' — ';
+      if (dep && adr && !adr.value.trim()) adr.value = 'Département ' + dep + ', ';
     });
 
     $('form').addEventListener('submit', (e) => {
