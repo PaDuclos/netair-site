@@ -45,9 +45,17 @@ const maj = '12 octobre 2026';
       <div>
         <h2 class="display text-xl text-marine">Comment vos données nous parviennent</h2>
         <p class="mt-2 text-muted">
-          Actuellement, l'envoi d'un formulaire ouvre votre logiciel de messagerie avec un
-          message pré-rempli que vous envoyez vous-même : aucune donnée n'est enregistrée
-          sur ce site, elle nous parvient par email.
+          Lorsque vous envoyez un formulaire, vos informations sont transmises par une connexion
+          sécurisée (https) au serveur de notre hébergeur, OVHcloud, qui nous les adresse par
+          email. Elles ne sont pas enregistrées dans une base de données du site : elles sont
+          conservées dans la messagerie professionnelle de Netair (Microsoft 365).
+        </p>
+        <p class="mt-2 text-muted">
+          Pour protéger les formulaires contre les envois automatisés, votre adresse IP est
+          conservée sur le serveur sous une forme codée, avec l'heure de l'envoi ; elle n'est
+          utilisée que pendant 10 minutes. Comme tout hébergeur, OVHcloud enregistre par ailleurs
+          les connexions au site (adresse IP, pages consultées, date et heure) dans des journaux
+          techniques, pour la sécurité du service et le respect de ses obligations légales.
         </p>
         <p class="mt-2 text-muted">
           La réservation en ligne utilise Microsoft Bookings (Microsoft 365), l'outil d'agenda
@@ -60,12 +68,12 @@ const maj = '12 octobre 2026';
 
       <div>
         <h2 class="display text-xl text-marine">Base légale</h2>
-        <p class="mt-2 text-muted">
-          Le traitement repose sur l'exécution de mesures précontractuelles prises à votre
-          demande, sur votre consentement (case à cocher des formulaires) et sur l'intérêt
-          légitime de Netair à répondre aux sollicitations reçues, conformément au Règlement
-          général sur la protection des données (RGPD).
-        </p>
+        <ul class="mt-2 list-disc space-y-1.5 pl-5 text-muted">
+          <li><strong class="text-marine">Demandes de devis et de rendez-vous</strong> : mesures précontractuelles prises à votre demande.</li>
+          <li><strong class="text-marine">Messages de contact</strong> : intérêt légitime de Netair à répondre aux sollicitations reçues.</li>
+          <li><strong class="text-marine">Protection des formulaires contre les envois automatisés</strong> : intérêt légitime de Netair à assurer la sécurité du site.</li>
+          <li><strong class="text-marine">Affichage du calendrier Microsoft Bookings</strong>, qui dépose des cookies : votre consentement, donné en cliquant sur « Afficher le calendrier ». Vous pouvez le retirer à tout moment en supprimant les cookies de votre navigateur ; le calendrier ne se recharge pas sans un nouveau clic.</li>
+        </ul>
       </div>
 
       <div>
@@ -74,6 +82,24 @@ const maj = '12 octobre 2026';
           Vos données sont destinées aux seules personnes habilitées de Netair chargées
           du traitement des demandes. Elles ne sont ni vendues ni cédées à des tiers à des
           fins commerciales.
+        </p>
+        <p class="mt-2 text-muted">
+          Nos prestataires techniques n'y accèdent que pour assurer leur service : OVHcloud
+          (hébergement du site et envoi des formulaires, en France) et Microsoft (messagerie
+          professionnelle et réservation en ligne).
+        </p>
+      </div>
+
+      <div>
+        <h2 class="display text-xl text-marine">Transferts hors de l'Union européenne</h2>
+        <p class="mt-2 text-muted">
+          OVHcloud héberge le site et traite les formulaires en France. Microsoft traite les
+          données de ses clients européens dans l'Union européenne (programme « EU Data
+          Boundary »). Des accès ponctuels depuis des pays situés hors de l'Union, notamment les
+          États-Unis, restent possibles pour la maintenance ou la sécurité de ses services : ils
+          sont encadrés par le cadre de protection des données UE-États-Unis (Data Privacy
+          Framework), auquel Microsoft adhère, et par les clauses contractuelles types de la
+          Commission européenne.
         </p>
       </div>
 

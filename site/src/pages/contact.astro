@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import EnvoiFormulaire from '../components/EnvoiFormulaire.astro';
+import MentionFormulaire from '../components/MentionFormulaire.astro';
 import { VENTE_EN_LIGNE } from '../lib/site-config';
 import { TELEPHONE, TELEPHONE_HREF } from '../lib/envoi';
 
@@ -97,6 +98,7 @@ const OBJETS = [
           <p id="contact-note" class="mt-3 text-xs text-muted">
             Nous vous répondons par email ou par téléphone.
           </p>
+          <MentionFormulaire />
         </div>
       </div>
     </form>

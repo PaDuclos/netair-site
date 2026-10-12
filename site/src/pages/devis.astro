@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import EnvoiFormulaire from '../components/EnvoiFormulaire.astro';
+import MentionFormulaire from '../components/MentionFormulaire.astro';
 ---
 
 <BaseLayout title="Ma demande de devis - Netair" description="Composez votre demande de devis de filtres pour CTA : références, dimensions et quantités. Netair vous adresse une offre chiffrée.">
@@ -65,7 +66,7 @@ import EnvoiFormulaire from '../components/EnvoiFormulaire.astro';
             style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
             Envoyer ma demande de devis
           </button>
-          <p class="text-xs text-muted">Données utilisées uniquement pour répondre à votre demande : <a href="/confidentialite" class="text-bleu hover:text-turquoise">politique de confidentialité</a>.</p>
+          <MentionFormulaire />
         </form>
       </aside>
     </div>
