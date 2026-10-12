@@ -523,7 +523,35 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
       },
     ],
   },
-  "netcarb-bag": { code: "22", mode: "devis" },
+  // Fiche v1.1 (déc. PA 12/10/2026) : 9 formats standard (3 largeurs × 3 profondeurs de poche)
+  // ET sur-mesure confirmé par le fournisseur → deux variantes, sur le modèle de NETBAG S.
+  "netcarb-bag": {
+    code: "22",
+    mode: "devis",
+    labelEpaisseur: "Profondeur de poche",
+    variantes: [
+      {
+        id: "standard",
+        label: "Dimensions standard",
+        code: "22",
+        saisie: "formats",
+        labelChamp: "Dimensions standard (L × H)",
+        epaisseurs: [635, 535, 380],
+        formats: [
+          { label: "592 × 592 mm", largeur: 592, hauteur: 592, defaut: true },
+          { label: "490 × 592 mm", largeur: 490, hauteur: 592 },
+          { label: "287 × 592 mm", largeur: 287, hauteur: 592 },
+        ],
+      },
+      {
+        id: "surmesure",
+        label: "Sur mesure",
+        code: "22",
+        saisie: "dimensions",
+        epaisseurs: [635, 535, 380],
+      },
+    ],
+  },
 };
 
 /**

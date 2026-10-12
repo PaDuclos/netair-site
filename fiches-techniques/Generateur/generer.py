@@ -201,7 +201,9 @@ def build_dimensions(d):
     sans_sm = d.get("dims_sans_surmesure", False)
     classe_dabord = d.get("dims_classe_dabord", False)
     # sans_courbe (opt-in, NETCARB NIVAL 12/10/2026) : aucune ΔP mesurée → pas de colonne ΔP.
-    sans_dp = d.get("sans_courbe", False)
+    # dims_dp_tableau (opt-in, NETCARB BAG) : pas de courbe, mais une ΔP fournisseur par ligne
+    # (`dp` de chaque dimension, à figer avec no_smooth_origin) → la colonne reste.
+    sans_dp = d.get("sans_courbe", False) and not d.get("dims_dp_tableau", False)
     ncols = 8 - int(sans_surf) - int(sans_ref) - int(sans_dp)
     rows = []
     i = 0  # index global (striping continu sur toutes les lignes de données)
@@ -212,7 +214,10 @@ def build_dimensions(d):
         grey = (i % 2 == 0)  # ligne 1 blanche, ligne 2 grise, …
         tr = ' style="background:#F2F6FB;"' if grey else ""
         L, H, P = dim["L"], dim["H"], dim["P"]
-        surface = fr_surface(L, H, facteur)
+        # `surface` par ligne (opt-in, NETCARB BAG) : surface de média donnée par le fournisseur,
+        # au lieu de la surface calculée depuis L × H.
+        surface = (f'{dim["surface"]:.1f}'.replace(".", ",") if "surface" in dim
+                   else fr_surface(L, H, facteur))
         debit = fr_debit(dim["debit"])
         dp = dim.get("dp", cls["dp"])     # ΔP de référence par ligne (sinon celle de la classe)
         if simple:
@@ -2398,9 +2403,12 @@ def generer(d, html):
     #     leurs colonnes dans build_dimensions. Portage des clés du moteur série (NETCEL V LAM,
     #     02/08/2026). Ancres vérifiées : une ancre absente lève, jamais de retrait silencieux.
     _th = '                <th style="padding:6px 7px; text-align:left; font-weight:600;">%s</th>\n'
+    _sans_dp_col = d.get("sans_courbe") and not d.get("dims_dp_tableau")
     for _cle, _lib in (("dims_sans_surface", "S. filtrante (m²)"),
                        ("sans_courbe", "ΔP (Pa)"),
                        ("dims_sans_ref", "Référence complète")):
+        if _cle == "sans_courbe" and not _sans_dp_col:
+            continue
         if d.get(_cle):
             _anc = _th % _lib
             if _anc not in html:
