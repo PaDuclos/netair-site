@@ -928,6 +928,7 @@ _(déplacer ici les lignes traitées, avec date)_
 | **NETCARB AZUR v1.2** | ✅ polluants « gaz, odeurs et COV » au lieu des 4 gaz non mesurés, ligne Fonction en virgules |
 | **NETCARB BAG v1.1** | ✅ validée PA : données techniques refondues sur la fiche fournisseur (F7, 9 formats, ΔP par profondeur, sans courbe), textes PA, photo Netair, configurateur formats + sur mesure |
 | **NETCARB CILIA v1.1** | ✅ validée PA : textes PA, photo Netair, alignement famille, épaisseurs 48/98 corrigées (catalogue + tableau), configurateur « Charbon actif » + cadre au choix. **Famille NETCARB terminée (4/4)** |
+| **NETPAK S CILIA DUO v1.1** | ✅ validée PA : renommé (ex-NETPAK S DUO), 2 packs miniplis, plage M5 → F9, configurateur à deux efficacités. **Les 18 fiches ont eu leur passe de contenu.** Reste à revoir : NETCEL V AZUR et NETCEL V NIVAL (statut non validé + « caisson ») |
 | Photos sources | ✅ rangées dans `BLOC5_Communication/Photos_Produits/` (ex-`Offres_de_Prix/Photos filtres Netair/`), chemin de `correspondance.json` corrigé |
 
 ### 🔴 Points ouverts
@@ -951,3 +952,5 @@ _(déplacer ici les lignes traitées, avec date)_
 
 - [ ] **NETCARB BAG : à confirmer auprès du fournisseur** : cadre « Acier galvanisé » et feu « Non classé » (ajoutés par PA, absents de sa fiche), certificat « contact alimentaire CE 1935/2004 » à demander si on veut l'afficher.
 - [ ] **Site, NETCARB CILIA** : efficacité figée « Charbon actif » le 12/10 (le prix du charbon est rangé dans la colonne F7 de l'Excel). La référence générée reste `NETCARB_CILIA-F7-…` et laisse croire à un F7 → à traiter avec le chantier des références (codification `NETCARB-CILIA-CA-…`).
+- [ ] **Configurateur DUO** : faut-il imposer que l'efficacité 2 soit supérieure à l'efficacité 1 (préfiltre puis filtre fin) ? Proposé à PA le 12/10, non tranché.
+- [ ] **Registre** : NETFIL encore noté « photo à remplacer » alors que sa photo Netair existe depuis le 22/09.

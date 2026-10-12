@@ -1,0 +1,146 @@
+{
+  "_commentaire": "NETPAK S DUO — compact miniplis COMBINÉ particules + charbon actif (équiv. Titanair TITAPAK S PRISME DUO). Nom validé PA (22/06/2026). Fiche MONO-CLASSE 'F7 GREENTEX + charbon actif' (ePM1 50%), ep48. Source = TITAPAK S PRISME A DUO F7 GR-CA ep48 (fiche 2018, GREENTEX cohérent avec CILIA F7). Courbe ΔP réelle (cache Excel, combinée particulaire + couche charbon) : v=[0,79..3,17] → ΔP=[36,58,88,121,157,198,247] Pa. Polynôme ajusté 15,013·v²+28,882·v+3,537 (R²=0,9998). ΔP finale Titanair = 'PDC initiale + 100 Pa' = exactement notre règle ePM (+100). Specs fiche 2018 : parois ACIER GALVANISÉ, média POLYPROPYLENE + CA, lut OUI, séparateur intérieur, T° continue 60°C (acc.65/1h), CLASSEMENT FEU = NA (le charbon actif n'est pas classé au feu). Surface média développée du média F7 GREENTEX ≈ 12,55 m² @592×592 ep48 (la couche charbon s'ajoute au pack). Vmax 3,17 · nominal 3400 m³/h (≈2,7 m/s) → ΔP nom ≈ 190 Pa. La fonction charbon actif assure l'adsorption des gaz/odeurs/COV (capacité dépend du grammage CA, non communiquée par Titanair → à préciser R&D). PHOTO = placeholder (PRISME A, à remplacer par visuel DUO Netair). | v1.1 (12/10/2026, passe de contenu) : RENOMMÉ NETPAK S CILIA DUO partout (décision PA : nom, slug netpak-s-cilia-duo, fiche, site, catalogue), conforme à CODIFICATION_PRODUITS.md. Modèle BORA (décision PA) : plage M5 → F9 annoncée, courbe et calculateur F7 (ePM1 50 %) seuls. ",
+  "_descriptif": "Descriptif rédigé par PA le 12/10/2026 (nom complet et classes ISO d'abord ajoutés avec son accord). DUO = DEUX PACKS plissés dans un même cadre : particules + particules (ex. M5F7) ou particules + charbon (F7CA), cf. CODIFICATION_PRODUITS.md. Courbe, calculateur et tableau = version F7 + charbon seule mesurée.",
+  "_cadre": "Décision PA 12/10/2026 : cadre au choix, acier galvanisé (source fournisseur) ou cellulose pelliculée (CODIFICATION_PRODUITS.md du 22/07 : cellulose -C). Suffixes -A / -C. Feu (décision PA 12/10/2026) : M1 pour la filtration particulaire, non classé pour le charbon (source DUO : NA pour l'ensemble).",
+  "_sources": "Dossier PRISME COMBI : DUO F7 ep48 (GREENTEX, ePM1 50 %, 36…247 Pa, retenue), DUO F7 ep48 standard (ePM1 55 %, 46…270), DUO F7 ep98 (28…208), DUO F8 ep48 (47…273), DUO F9 ep48 (55…299). Aucune courbe M5/M6. Toutes : cadre acier galvanisé, média polypropylène + CA, 60 °C continu (65 °C / 1 h), feu NA. « VOILE F7-CA 1 média » = version combinée du NETCARB CILIA, PAS le DUO (PA). Retirés car non sourcés : surface 12,6 m², HR 100 %. Séparateur « INT » retiré (jargon).",
+  "_codes": "NETPAK-CILIA-DUO-F7CA-[L]x[H]x[P] (CODIFICATION_PRODUITS.md, règle DUO ; clés ref_base + ref_classe). Autres classes : M5CA, M6CA, F8CA, F9CA.",
+  "slug": "netpak-s-cilia-duo",
+  "nom": "NETPAK S CILIA DUO",
+  "soustitre": "Filtre compact double filtration",
+  "mono_classe": true,
+  "titre_fs": 26,
+  "ref_simple": true,
+  "ref_base": "NETPAK-CILIA-DUO",
+  "ref_classe": "F7CA",
+  "legende_courte": true,
+  "surface_facteur": 1,
+  "axe_debit": true,
+  "axe_debit_max": 4000,
+  "vmax": 3.17,
+  "pmax": 260,
+  "debit_nom": 3400,
+  "fiche": {
+    "num": "FT-NETPAK-S-CILIA-DUO-001",
+    "version": "v1.1",
+    "date": "12/10/2026"
+  },
+  "photo": "netpak-s-cilia-duo-photo.jpg",
+  "photo_alt": "Filtre compact miniplis combiné NETPAK S CILIA DUO (particules + charbon actif)",
+  "description": "Le filtre compact NETPAK S CILIA DUO est destiné à la filtration de l’air dans les centrales de traitement d’air. Il intègre deux packs de médias plissés distincts dans un même cadre, permettant d’associer deux efficacités de filtration particulaire, comme ePM10 50 % (M5) et ePM1 50 % (F7), ou de combiner une filtration particulaire avec une filtration moléculaire au charbon actif. Cette conception réunit deux étapes de filtration dans un seul filtre, tout en réduisant l’encombrement dans les installations.",
+  "points_cles": [
+    "Deux packs miniplis distincts",
+    "Double filtration dans un seul cadre",
+    "Combinaison de différentes efficacités",
+    "Option charbon actif : gaz et odeurs",
+    "Encombrement réduit"
+  ],
+  "specs": [
+    [
+      "Type",
+      "Compact miniplis double filtration"
+    ],
+    [
+      "Média filtrant",
+      "2 packs miniplis : particulaire, ou particulaire et charbon actif"
+    ],
+    [
+      "Efficacités ISO 16890",
+      "ePM10 50 % · ePM2,5 50 % · ePM1 50 % · 70 % · 80 %"
+    ],
+    [
+      "Efficacités EN 779",
+      "M5 · M6 · F7 · F8 · F9"
+    ],
+    [
+      "Filtration moléculaire",
+      "Version charbon : adsorption des gaz, odeurs et COV"
+    ],
+    [
+      "Capacité d'adsorption",
+      "Version charbon : variable selon le gaz et les conditions d'usage"
+    ],
+    [
+      "Cadre",
+      "Acier galvanisé ou cellulose pelliculée"
+    ],
+    [
+      "Classement au feu",
+      "M1 (média particulaire), non classé (charbon actif)"
+    ],
+    [
+      "Température de service",
+      "60 °C (accidentelle 65 °C / 1 h)"
+    ],
+    [
+      "ΔP finale",
+      "Média colmaté (ΔP initiale + 100 Pa) ou charbon saturé"
+    ]
+  ],
+  "badges_p1": [
+    "ISO 16890 : ePM10 50% → ePM1 80%",
+    "EN 779 : M5 → F9",
+    "Double filtration"
+  ],
+  "badges_p2": [
+    "ISO 16890 : ePM10 50% → ePM1 80%",
+    "EN 779 : M5 → F9",
+    "Double filtration"
+  ],
+  "classes": {
+    "low": {
+      "label": "ePM1 50 % (F7) + charbon actif",
+      "iso": "ePM1 50%",
+      "poly": {
+        "48": {
+          "a": 15.013,
+          "b": 28.882,
+          "c": 3.537
+        },
+        "98": {
+          "a": 15.013,
+          "b": 28.882,
+          "c": 3.537
+        }
+      },
+      "add": 100,
+      "rule": "classe ePM1",
+      "dp": 190,
+      "epaisseur": 48
+    },
+    "high": {
+      "label": "ePM1 50 % (F7) + charbon actif",
+      "iso": "ePM1 50%",
+      "poly": {
+        "48": {
+          "a": 15.013,
+          "b": 28.882,
+          "c": 3.537
+        },
+        "98": {
+          "a": 15.013,
+          "b": 28.882,
+          "c": 3.537
+        }
+      },
+      "add": 100,
+      "rule": "classe ePM1",
+      "dp": 190,
+      "epaisseur": 48
+    }
+  },
+  "note_dimensions": "Surface indiquée : surface frontale. ΔP donnée pour la version ePM1 50 % (F7) + charbon actif ; autres combinaisons sur demande.",
+  "dimensions": [
+    {
+      "L": 592,
+      "H": 592,
+      "P": 48,
+      "debit": 3400
+    },
+    {
+      "L": 287,
+      "H": 592,
+      "P": 48,
+      "debit": 1650
+    }
+  ]
+}

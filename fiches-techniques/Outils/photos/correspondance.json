@@ -1,9 +1,7 @@
 {
-  "_commentaire": "Correspondance photo Netair → produit, validée par Pierre-Alain le 22/09/2026. Le champ 'cible' reprend EXACTEMENT le nom de fichier déjà déclaré dans le JSON du produit : on remplace le contenu des images, jamais leur nom, donc aucun code n'est à modifier. Arbitrages de PA : Azur.png sert aux deux produits AZUR (NETPAK S et NETCEL V), qui partagent la même forme ; pour NETPAK S CILIA c'est 'Cilia A.png' qui est retenue. Ajout du 12/10/2026 : NETCARB AZUR ← 'Azur Carb.png' (photo prise pendant la passe de contenu v1.1). Ajout du 12/10/2026 : NETCARB BAG ← 'Netcarb Bag.png'. Ajout du 12/10/2026 : NETCARB CILIA ← 'Netcarb Cilia.png'.",
+  "_commentaire": "Correspondance photo Netair → produit, validée par Pierre-Alain le 22/09/2026. Le champ 'cible' reprend EXACTEMENT le nom de fichier déjà déclaré dans le JSON du produit : on remplace le contenu des images, jamais leur nom, donc aucun code n'est à modifier. Arbitrages de PA : Azur.png sert aux deux produits AZUR (NETPAK S et NETCEL V), qui partagent la même forme ; pour NETPAK S CILIA c'est 'Cilia A.png' qui est retenue. Ajout du 12/10/2026 : NETCARB AZUR ← 'Azur Carb.png' (photo prise pendant la passe de contenu v1.1). Ajout du 12/10/2026 : NETCARB BAG ← 'Netcarb Bag.png'. Ajout du 12/10/2026 : NETCARB CILIA ← 'Netcarb Cilia.png'. Ajout du 12/10/2026 : NETPAK S CILIA DUO ← 'Netpak Cilia Duo.png' (photo en écorché).",
   "dossier_source": "/Users/pierre-alainduclos/Desktop/Netair/BLOC5_Communication/Photos_Produits",
-  "sans_photo": [
-    "NETPAK S DUO"
-  ],
+  "sans_photo": [],
   "produits": [
     {
       "produit": "NETPLY",
@@ -90,6 +88,11 @@
       "produit": "NETCARB CILIA",
       "photo": "Netcarb Cilia.png",
       "cible": "netcarb-cilia-photo.jpg"
+    },
+    {
+      "produit": "NETPAK S CILIA DUO",
+      "photo": "Netpak Cilia Duo.png",
+      "cible": "netpak-s-cilia-duo-photo.jpg"
     }
   ],
   "_seuil": "Seuil de détourage : à partir de quelle clarté un pixel compte comme du fond. 232 par défaut. NETFIBRE monte à 248 : son média fibreux est presque aussi blanc que le fond, et à 232 le détourage mordait dans le rouleau (bord rongé, vérifié à l'écran). Ne pas monter le seuil partout : à 248, NETBAG S garde au contraire un résidu blanchâtre sur son bord."
