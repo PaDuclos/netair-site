@@ -222,7 +222,9 @@ def build_dimensions(d):
         dp = dim.get("dp", cls["dp"])     # ΔP de référence par ligne (sinon celle de la classe)
         if simple:
             eff = cls["label"]
-            ref = f'{nom.replace(" ", "-")}{ref_classe}-{L}x{H}x{P}'
+            # ref_base (opt-in, NETPAK S CILIA DUO) : racine de code de la codification quand
+            # elle diffère du nom commercial (« NETPAK-CILIA-DUO », sans le « S »).
+            ref = f'{d.get("ref_base") or nom.replace(" ", "-")}{ref_classe}-{L}x{H}x{P}'
         else:
             # dims_classe_dabord (opt-in, NETCEL V LAM 04/08/2026) : la colonne s'intitule
             # « Efficacité EN 1822 » → la CLASSE passe devant, le MPPS entre parenthèses.

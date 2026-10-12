@@ -254,6 +254,13 @@ export interface GammeProduit {
    * « hors fabrication ». Absent → 592×592.
    */
   dimensionDefaut?: { largeur: number; hauteur: number };
+  /**
+   * Filtre à DEUX packs (NETPAK S CILIA DUO, 12/10/2026) : un second menu d'efficacité, pour le
+   * second pack. Le premier menu reprend les classes habituelles, renommé `libelle1`. La
+   * référence accole les deux classes (codification DUO : `M5F7`, `F7CA`). Produit sur devis :
+   * le second choix n'entre dans aucun calcul de prix.
+   */
+  doubleEfficacite?: { libelle1: string; libelle2: string; classes2: string[]; defaut1?: string };
 }
 
 /**
@@ -495,7 +502,26 @@ export const GAMME_PRODUIT: Record<string, GammeProduit> = {
     cadreFixe: { valeur: "pp", libelle: "Plastique" },
     variantes: [{ id: "standard", label: "Polydièdre", code: "11", saisie: "formats", formatsGrandDabord: true, labelChamp: "Dimensions (L × H)" }],
   },
-  "netpak-s-duo": { code: "20", mode: "devis" },
+  // NETPAK S CILIA DUO (renommé le 12/10/2026, ex-« netpak-s-duo ») : plage M5 → F9 annoncée par
+  // la fiche v1.1 (modèle BORA), sur devis, compact 48 mm. F7 = ePM1 50 % (média de NETPAK S CILIA).
+  "netpak-s-cilia-duo": {
+    code: "20",
+    mode: "devis",
+    epaisseursDevis: [48],
+    efficacitesDevis: ["M5", "M6", "F7", "F8", "F9", "CA"],
+    etiquettesIso: { F7: "ePM1 50 % (F7)", CA: "Charbon actif" },
+    doubleEfficacite: {
+      libelle1: "Efficacité 1",
+      libelle2: "Efficacité 2",
+      classes2: ["M5", "M6", "F7", "F8", "F9", "CA"],
+      defaut1: "F7", // ouverture sur F7 + charbon actif, la version documentée par la fiche
+    },
+    // Cadre au choix (déc. PA 12/10/2026) : acier galvanisé (source) ou cellulose pelliculée.
+    cadres: [
+      { valeur: "galva", libelle: "Acier galvanisé" },
+      { valeur: "cellulose", libelle: "Cellulose pelliculée" },
+    ],
+  },
   // Formats STANDARD uniquement (déc. PA 12/10/2026) : les trois cadres de la fiche v1.2.
   "netcarb-azur": {
     code: "21",

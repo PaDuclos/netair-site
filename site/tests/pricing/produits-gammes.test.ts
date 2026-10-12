@@ -208,6 +208,7 @@ describe("étiquettes ISO par produit (etiquettesIso)", () => {
     if (cles.length === 0) return;
     const proposees = [
       ...(gamme.efficacitesDevis ?? []),
+      ...(gamme.doubleEfficacite?.classes2 ?? []), // second pack d'un filtre DUO (ex. « CA »)
       ...optionsDuCode(gamme.code).classes.map((c) => c.valeur),
     ];
     for (const cle of cles) expect(proposees, `clé « ${cle} » sans classe proposée`).toContain(cle);

@@ -126,6 +126,9 @@ const classesCalc = filtreClasses(optsReelles?.classes ?? []);
 // Stopgap : efficacités d'un produit sur devis non encore saisi au calculateur (ex. BORA G4→F9),
 // pour que le client précise son besoin de filtration. À retirer quand l'Excel les couvre.
 const classesStopgap = (gamme?.efficacitesDevis ?? []).map((v) => ({ valeur: v, libelle: etiquetteIso[v] ?? libelleClasse(v) }));
+// Filtre à deux packs (DUO) : second menu d'efficacité, sans incidence sur le prix.
+const doubleEff = gamme?.doubleEfficacite ?? null;
+const classes2 = (doubleEff?.classes2 ?? []).map((v) => ({ valeur: v, libelle: etiquetteIso[v] ?? libelleClasse(v) }));
 // Classes annoncées par la fiche mais non tarifées (ex. NETBAG S G4/M5) : ajoutées au menu d'un
 // produit calculable, à leur rang EN 779, pour partir en devis faute de prix.
 const classesHorsTarif = (gamme?.classesSurDevis ?? [])
@@ -390,11 +393,22 @@ const introConfig =
               (calculable OU sur devis). Pas de classe dans le calculateur → pas de champ. */}
           {menus.classes.length > 0 && !effFixe && (
             <label class="block">
-              <span class="eyebrow text-[11px] text-muted">Efficacité</span>
+              <span class="eyebrow text-[11px] text-muted">{doubleEff?.libelle1 ?? 'Efficacité'}</span>
               <select id="inEff"
                 class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
                 {menus.classes.map((c) => (
-                  <option value={c.valeur} selected={c.valeur === effSelection}>{c.libelle}</option>
+                  <option value={c.valeur} selected={c.valeur === (doubleEff?.defaut1 ?? effSelection)}>{c.libelle}</option>
+                ))}
+              </select>
+            </label>
+          )}
+          {doubleEff && classes2.length > 0 && (
+            <label class="block">
+              <span class="eyebrow text-[11px] text-muted">{doubleEff.libelle2}</span>
+              <select id="inEff2"
+                class="mt-1.5 w-full rounded-xl border border-soft bg-mist px-4 py-2 text-marine outline-none focus:border-turquoise">
+                {classes2.map((c, i) => (
+                  <option value={c.valeur} selected={i === classes2.length - 1}>{c.libelle}</option>
                 ))}
               </select>
             </label>
@@ -675,10 +689,16 @@ const introConfig =
         const ep = epEl ? (+epEl.value || null) : null;
         // Le menu Efficacité peut être absent (produits sur devis : pas de prix).
         const effEl = $('inEff');
-        const eff = effEl ? effEl.value : '';
+        const eff1 = effEl ? effEl.value : '';
         // Menu → libellé de l'option choisie ; efficacité figée (champ caché) → `data-libelle`.
         const effOpt = effEl && effEl.selectedOptions ? effEl.selectedOptions[0] : null;
-        const effLabel = effOpt ? effOpt.text : (effEl?.dataset.libelle ?? '');
+        const effLabel1 = effOpt ? effOpt.text : (effEl?.dataset.libelle ?? '');
+        // Second pack (filtre DUO) : la classe s'accole à la première dans la référence
+        // (M5 + F7 → « M5F7 ») et les deux libellés se suivent sur la ligne de devis.
+        const eff2El = $('inEff2');
+        // Codification DUO : la classe particulaire d'abord, le charbon (« CA ») toujours en fin.
+        const eff = !eff2El ? eff1 : (eff1 === 'CA' ? eff2El.value + eff1 : eff1 + eff2El.value);
+        const effLabel = eff2El ? effLabel1 + ' + ' + eff2El.selectedOptions[0].text : effLabel1;
         // Trois cas : menu (cadre au choix), cadre imposé lu sur le conteneur (affiché en
         // lecture seule, il compte quand même dans la référence), ou rien (ex. NETFIBRE).
         const cadreEl = $('inCadre');
@@ -857,7 +877,24 @@ const introConfig =
         );
       }
 
-      ['inL', 'inH', 'inEp', 'inEff', 'inCadre', 'inQ', 'inFormat'].forEach((id) =>
+      // Filtre DUO : deux packs de même efficacité n'ont pas de sens. La classe choisie dans un
+      // menu est désactivée dans l'autre ; si les deux coïncident, le menu 2 passe à la suivante.
+      function syncDoubleEff(source) {
+        const e1 = $('inEff'), e2 = $('inEff2');
+        if (!e1 || !e2 || e1.tagName !== 'SELECT') return;
+        if (e1.value === e2.value) {
+          const cible = source === 'inEff2' ? e1 : e2;
+          const autre = source === 'inEff2' ? e2 : e1;
+          const libre = [...cible.options].find((o) => o.value !== autre.value);
+          if (libre) cible.value = libre.value;
+        }
+        [...e1.options].forEach((o) => { o.disabled = o.value === e2.value; });
+        [...e2.options].forEach((o) => { o.disabled = o.value === e1.value; });
+      }
+      ['inEff', 'inEff2'].forEach((id) => $(id)?.addEventListener('input', () => syncDoubleEff(id)));
+      syncDoubleEff('inEff');
+
+      ['inL', 'inH', 'inEp', 'inEff', 'inEff2', 'inCadre', 'inQ', 'inFormat'].forEach((id) =>
         $(id)?.addEventListener('input', refresh)
       );
       // Changer de conditionnement (panneau ↔ rouleau) bascule la saisie + les menus.

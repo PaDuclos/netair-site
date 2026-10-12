@@ -77,7 +77,7 @@ export const FAMILLES: Famille[] = [
     slug: 'combines',
     titre: 'Combinés',
     tag: 'Particules + gaz',
-    photo: '/produits/detour/netpak-s-duo-photo.png',
+    photo: '/produits/detour/netpak-s-cilia-duo-photo.png',
     desc: "Les filtres combinés associent deux efficacités de filtration dans un seul filtre.",
     descLong: "Les filtres combinés associent plusieurs niveaux ou technologies de filtration au sein d'un même filtre. Ils répondent aux exigences de chaque application.",
   },
@@ -107,7 +107,7 @@ export const SLUG_FAMILLE: Record<string, string[]> = {
   'netcarb-azur': ['charbon-actif'],
   'netcarb-nival': ['charbon-actif'],
   'netcarb-bag': ['charbon-actif'],
-  'netpak-s-duo': ['combines', 'charbon-actif', 'compacts-miniplis'],
+  'netpak-s-cilia-duo': ['combines', 'charbon-actif', 'compacts-miniplis'],
 };
 
 /** Famille principale d'un produit (1re de la liste), pour le fil d'Ariane. */
