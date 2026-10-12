@@ -1,13 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import EnvoiFormulaire from '../components/EnvoiFormulaire.astro';
+import MentionFormulaire from '../components/MentionFormulaire.astro';
+import { TELEPHONE, TELEPHONE_HREF } from '../lib/envoi';
 
-// Adresse de destination de la demande : À CONFIRMER (boîte contact Netair).
 const CONTACT_EMAIL = 'contact@netair.fr';
-
-// Téléphone : ligne principale OVH (IDENTITE_SOCIETE_Netair.md).
-const TELEPHONE = '04 82 53 37 17';
-const TELEPHONE_HREF = 'tel:+33482533717';
 
 // Réservation en ligne : page Microsoft Bookings de Netair (agenda Outlook de PA).
 // Vide = page pas encore publiée : on garde le message d'attente et les cartes mènent au formulaire.
@@ -147,6 +145,7 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
           <input id="rgpd" name="rgpd" type="checkbox" required class="mt-1 h-4 w-4 shrink-0 accent-[var(--color-turquoise)]" />
           <span>J'accepte que mes données soient utilisées pour traiter ma demande. <span class="text-bleu">*</span></span>
         </label>
+        <EnvoiFormulaire erreurId="rdv-erreur" />
         <div>
           <button type="submit" id="rdv-submit"
             class="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
@@ -156,6 +155,7 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
           <p id="rdv-ok" role="status" class="mt-3 hidden rounded-lg bg-turquoise/10 px-4 py-3 text-sm font-normal text-marine">
             Merci, votre demande est bien reçue. Un conseiller vous recontacte pour fixer le rendez-vous.
           </p>
+          <MentionFormulaire />
         </div>
       </div>
     </form>
@@ -187,21 +187,25 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
     </aside>
   </section>
 
-  <script define:vars={{ CONTACT_EMAIL }}>
-    const form = document.getElementById('rdv-form');
-    const okNote = document.getElementById('rdv-ok');
-    const submitBtn = document.getElementById('rdv-submit');
+  <script>
+    import { envoyerFormulaire } from '../lib/envoi';
 
-    const val = (id) => (document.getElementById(id)?.value || '').trim();
+    const form = document.getElementById('rdv-form') as HTMLFormElement;
+    const okNote = document.getElementById('rdv-ok');
+    const erreur = document.getElementById('rdv-erreur');
+    const submitBtn = document.getElementById('rdv-submit') as HTMLButtonElement;
+    const libelle = submitBtn.innerHTML;
+
+    const val = (id: string) => ((document.getElementById(id) as HTMLInputElement | null)?.value || '').trim();
 
     // Blocs « Par téléphone » / « En visio » : pré-sélectionnent le format dans le
     // formulaire et, si le service Bookings a son propre lien, l'ouvrent dans le calendrier.
-    const formatSelect = document.getElementById('format');
+    const formatSelect = document.getElementById('format') as HTMLSelectElement | null;
     const bookingsFrame = document.getElementById('bookings-frame');
     const bookingsConsent = document.getElementById('bookings-consent');
-    const bookingsLoad = document.getElementById('bookings-load');
+    const bookingsLoad = document.getElementById('bookings-load') as HTMLButtonElement | null;
     // Le calendrier n'est chargé qu'à la demande du visiteur (bouton, ou carte de format).
-    const afficherCalendrier = (url) => {
+    const afficherCalendrier = (url: string | null | undefined) => {
       if (!bookingsFrame || !url) return;
       bookingsFrame.setAttribute('src', url);
       bookingsFrame.classList.remove('hidden');
@@ -216,54 +220,27 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
       });
     });
 
-    const composerMessage = (d) =>
-      `Format souhaité : ${d.format}\n` +
-      `Créneau préféré : ${d.creneau}\n` +
-      (d.message ? `\nSujet :\n${d.message}\n` : '');
-
-    // Repli : ouvre la messagerie du visiteur tant que l'envoi serveur (/api/contact)
-    // n'est pas branché (site statique, voir server/contact-endpoint.ts).
-    const ouvrirMessagerie = (d) => {
-      const subject = `Rendez-vous - ${d.format} - ${d.nom}`;
-      const body =
-        `Nom / société : ${d.nom}\n` +
-        `Téléphone : ${d.tel}\n` +
-        `Email : ${d.email || 'non renseigné'}\n\n` +
-        composerMessage(d);
-      window.location.href =
-        `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    };
-
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const d = {
+      erreur?.classList.add('hidden');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Envoi en cours…';
+      const ok = await envoyerFormulaire('rdv', form, {
         nom: val('nom'),
         tel: val('tel'),
         email: val('email'),
         format: val('format'),
         creneau: val('creneau'),
         message: val('message'),
-      };
-      const payload = {
-        nom: d.nom,
-        email: d.email,
-        tel: d.tel,
-        objet: 'Prise de rendez-vous',
-        message: composerMessage(d),
-      };
-
-      try {
-        const res = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) throw new Error('endpoint indisponible');
+        rgpd: (document.getElementById('rgpd') as HTMLInputElement).checked,
+      });
+      submitBtn.innerHTML = libelle;
+      if (ok) {
         form.reset();
         okNote?.classList.remove('hidden');
-        if (submitBtn) submitBtn.disabled = true;
-      } catch {
-        ouvrirMessagerie(d);
+      } else {
+        erreur?.classList.remove('hidden');
+        submitBtn.disabled = false;
       }
     });
   </script>

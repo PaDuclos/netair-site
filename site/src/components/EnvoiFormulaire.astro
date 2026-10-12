@@ -1,0 +1,17 @@
+---
+// Champ piège invisible (seuls les robots le remplissent) + message d'échec avec le téléphone.
+import { TELEPHONE, TELEPHONE_HREF } from '../lib/envoi';
+
+interface Props {
+  erreurId: string;
+}
+const { erreurId } = Astro.props;
+---
+
+<div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+  <label>Ne pas remplir ce champ <input name="site_web" type="text" tabindex="-1" autocomplete="off" /></label>
+</div>
+<p id={erreurId} role="alert" class="hidden rounded-lg border border-soft bg-mist px-4 py-3 text-sm text-marine">
+  L'envoi n'a pas abouti. Réessayez dans un instant ou appelez-nous au{' '}
+  <a href={TELEPHONE_HREF} class="font-normal text-bleu hover:text-turquoise">{TELEPHONE}</a>.
+</p>

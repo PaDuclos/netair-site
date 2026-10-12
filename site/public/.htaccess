@@ -1,6 +1,7 @@
 # Netair : réglages Apache de l'hébergement OVH (site statique Astro).
 
 RewriteEngine On
+Options -Indexes
 
 # Toujours en https (certificat Let's Encrypt OVH).
 RewriteCond %{SERVER_PORT} 80

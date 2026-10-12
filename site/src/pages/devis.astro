@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
+import EnvoiFormulaire from '../components/EnvoiFormulaire.astro';
+import MentionFormulaire from '../components/MentionFormulaire.astro';
 ---
 
 <BaseLayout title="Ma demande de devis - Netair" description="Composez votre demande de devis de filtres pour CTA : références, dimensions et quantités. Netair vous adresse une offre chiffrée.">
@@ -58,23 +60,22 @@ import Breadcrumb from '../components/Breadcrumb.astro';
             <input name="rgpd" type="checkbox" required class="mt-1 h-4 w-4 shrink-0 accent-[var(--color-turquoise)]" />
             <span>J'accepte que mes données soient utilisées pour traiter ma demande. <span class="text-bleu">*</span></span>
           </label>
-          <button type="submit"
+          <EnvoiFormulaire erreurId="erreur" />
+          <button type="submit" id="envoyerBtn"
             class="w-full rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)]"
             style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
             Envoyer ma demande de devis
           </button>
-          <p class="text-xs text-muted">Votre messagerie s'ouvre avec la demande pré-remplie, il vous reste à l'envoyer. Données utilisées uniquement pour répondre à votre demande : <a href="/confidentialite" class="text-bleu hover:text-turquoise">politique de confidentialité</a>.</p>
+          <MentionFormulaire />
         </form>
       </aside>
     </div>
 
     <!-- Confirmation -->
     <div id="done" class="mt-8 hidden rounded-2xl border border-turquoise/30 bg-turquoise/5 px-6 py-8 text-marine">
-      <p class="display text-2xl font-normal">Votre demande est prête ✓</p>
+      <p class="display text-2xl font-normal">Votre demande est envoyée ✓</p>
       <p id="doneMsg" class="mt-2 text-sm text-muted"></p>
       <div class="mt-5 flex flex-wrap items-center gap-5 text-sm">
-        <button id="viderBtn" type="button" class="font-normal text-turquoise hover:text-bleu">Vider ma demande</button>
-        <button id="retourBtn" type="button" class="font-normal text-muted hover:text-turquoise">Modifier ma demande</button>
         <a href="/gammes" class="font-normal text-muted hover:text-turquoise">← Retour au catalogue</a>
       </div>
     </div>
@@ -82,8 +83,9 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 
   <script>
     import { getDevis, setDevisQty, removeDevisItem, onDevisChange, clearDevis } from '../lib/devis';
+    import { envoyerFormulaire } from '../lib/envoi';
 
-    const $ = (id) => document.getElementById(id);
+    const $ = (id: string) => document.getElementById(id)!;
 
     function render() {
       const items = getDevis();
@@ -111,57 +113,49 @@ import Breadcrumb from '../components/Breadcrumb.astro';
           '</div>';
         list.appendChild(li);
       });
-      list.querySelectorAll('[data-qty]').forEach((inp) =>
-        inp.addEventListener('change', () => setDevisQty(inp.dataset.qty, Math.max(1, +inp.value || 1)))
+      list.querySelectorAll<HTMLInputElement>('[data-qty]').forEach((inp) =>
+        inp.addEventListener('change', () => setDevisQty(inp.dataset.qty!, Math.max(1, +inp.value || 1)))
       );
-      list.querySelectorAll('[data-rm]').forEach((b) =>
-        b.addEventListener('click', () => removeDevisItem(b.dataset.rm))
+      list.querySelectorAll<HTMLElement>('[data-rm]').forEach((b) =>
+        b.addEventListener('click', () => removeDevisItem(b.dataset.rm!))
       );
     }
 
-    const CONTACT_EMAIL = 'contact@netair.fr';
-    // Limite pratique d'un lien mailto (~2000 caractères) : au-delà, la liste est tronquée.
-    const MAX_MAILTO = 1800;
+    const btn = $('envoyerBtn') as HTMLButtonElement;
+    const libelle = btn.textContent;
 
-    $('form').addEventListener('submit', (e) => {
+    $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const f = new FormData(e.target);
-      const v = (k) => String(f.get(k) || '').trim();
+      const form = e.target as HTMLFormElement;
+      const f = new FormData(form);
+      const v = (k: string) => String(f.get(k) || '').trim();
       const items = getDevis();
-      const subject = 'Demande de devis - ' + v('societe');
-      const entete =
-        'Société : ' + v('societe') + '\n' +
-        'Nom : ' + v('nom') + '\n' +
-        'Email : ' + v('email') + '\n' +
-        'Téléphone : ' + (v('tel') || 'non renseigné') + '\n' +
-        (v('message') ? '\nMessage :\n' + v('message') + '\n' : '') +
-        '\nFiltres demandés (' + items.length + ') :\n';
-      const lignes = items.map((it) => '- ' + it.qty + ' u. · ' + it.ref + (it.detail ? ' · ' + it.detail : ''));
-      const lien = (corps) => 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(corps);
-      let n = lignes.length;
-      let corps = entete + lignes.join('\n') + '\n';
-      while (n > 1 && lien(corps).length > MAX_MAILTO) {
-        n--;
-        corps = entete + lignes.slice(0, n).join('\n') +
-          '\n(+ ' + (lignes.length - n) + ' autre(s) filtre(s), à préciser en réponse)\n';
+      $('erreur').classList.add('hidden');
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours…';
+      const ok = await envoyerFormulaire('devis', form, {
+        societe: v('societe'),
+        nom: v('nom'),
+        email: v('email'),
+        tel: v('tel'),
+        message: v('message'),
+        rgpd: f.get('rgpd') === 'on',
+        filtres: items.map((it) => ({ ref: it.ref, produit: it.produit || '', qty: it.qty, detail: it.detail || '' })),
+      });
+      btn.disabled = false;
+      btn.textContent = libelle;
+      if (!ok) {
+        $('erreur').classList.remove('hidden');
+        return;
       }
-      window.location.href = lien(corps);
       $('plein').classList.add('hidden');
       $('vide').classList.add('hidden');
       $('doneMsg').textContent =
-        'Votre messagerie s\'ouvre avec votre demande pré-remplie (' + items.length + ' filtre' + (items.length > 1 ? 's' : '') +
-        ') : il vous reste à l\'envoyer. Si rien ne s\'ouvre, écrivez-nous à ' + CONTACT_EMAIL + '.';
+        'Nous avons bien reçu votre demande (' + items.length + ' filtre' + (items.length > 1 ? 's' : '') +
+        '). Netair vous adresse un devis chiffré par email.';
       $('done').classList.remove('hidden');
-    });
-
-    $('viderBtn').addEventListener('click', () => {
+      form.reset();
       clearDevis();
-      $('done').classList.add('hidden');
-      render();
-    });
-    $('retourBtn').addEventListener('click', () => {
-      $('done').classList.add('hidden');
-      render();
     });
 
     render();

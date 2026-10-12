@@ -9,5 +9,8 @@ serveur (après immatriculation / choix d'hébergement).
 |---|---|---|
 | `contact-endpoint.ts` | Réception + envoi par email du formulaire de la page `/contact` | Voir l'en-tête du fichier (adaptateur Astro + service d'email + variables d'environnement), puis déplacer vers `src/pages/api/contact.ts`. |
 
-Tant que ce code n'est pas activé, la page `/contact` **retombe automatiquement** sur
-l'ouverture de la messagerie du visiteur (mailto) — rien n'est cassé.
+⚠️ **Depuis le 12/10/2026, ce n'est plus ce fichier qui envoie les formulaires.** Sur
+l'hébergement OVH, les trois formulaires (devis, contact, rendez-vous) passent par
+`public/api/envoi.php` (fonction mail() d'OVH, sans mot de passe stocké) ; plus aucun
+repli mailto. `contact-endpoint.ts` n'est conservé que pour un éventuel passage vers un
+hébergeur à fonctions serveur (boutique en ligne).
