@@ -95,6 +95,7 @@ Filtres pour centrales de traitement d'air.
 Standard et sur mesure, sur devis.
 
 adresse: Parc d'activités des Chênes, Route de Tramoyes, 01700 Miribel
+telephone: 04 82 53 37 17
 email: contact@netair.fr
 site: www.netair.fr
 mentions: SASU au capital de 1 000 € · SIREN 107 397 648 R.C.S. Lyon · APE 28.25Z

@@ -454,7 +454,7 @@ table.synth tr:nth-child(even) td {{ background: #E6F5F7; }}
             background: var(--teal); }}
 .do-coord {{ position: absolute; bottom: 52mm; left: 22mm; color: #fff;
             font-size: 10pt; line-height: 1.85; }}
-.do-coord .k {{ color: rgba(255,255,255,.55); display: inline-block; width: 20mm;
+.do-coord .k {{ color: rgba(255,255,255,.55); display: inline-block; width: 23mm;
                font-size: 7.5pt; text-transform: uppercase; letter-spacing: .1em; }}
 .do-mentions {{ position: absolute; bottom: 30mm; left: 22mm; right: 22mm;
                color: rgba(255,255,255,.62); font-size: 7.5pt; line-height: 1.7;
@@ -629,7 +629,7 @@ def page_synthese(sections, produits, pages_prod, num):
 
 def page_dos(c, img, sections, num):
     coord = ""
-    for cle, libelle in (("adresse", "Adresse"), ("email", "Email"), ("site", "Web")):
+    for cle, libelle in (("adresse", "Adresse"), ("telephone", "Téléphone"), ("email", "Email"), ("site", "Web")):
         if c.get(cle):
             coord += f'<div><span class="k">{libelle}</span>{e(c[cle])}</div>'
     # Les gammes du dos sont lues, pas recopiées : renommer une famille sur le site
