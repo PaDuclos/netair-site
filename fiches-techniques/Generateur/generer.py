@@ -1402,7 +1402,7 @@ def build_multi_pagebreak(d, num):
     return f'''        </div>
       <!-- Footer P2 -->
       <div style="margin:0; background:#0F3261; color:#cdd9e8; height:10mm; display:flex; align-items:center; justify-content:space-between; padding:0 12mm; font-size:11px;">
-        <span><span style="font-weight:700; color:#fff;">Netair</span><span style="color:#9DB8D6;"> · </span>netair.fr<span style="color:#9DB8D6;"> · </span>contact@netair.fr<span style="color:#9DB8D6;"> · </span>04 82 53 37 17</span>
+        <span style="white-space:nowrap;"><span style="font-weight:700; color:#fff;">Netair</span><span style="margin-left:4.5mm;">netair.fr</span><span style="margin-left:4.5mm;">contact@netair.fr</span><span style="margin-left:4.5mm;">04 82 53 37 17</span></span>
         <span style="font-family:'IBM Plex Mono',monospace; color:#9DB8D6; letter-spacing:.3px;">Fiche n° {f["num"]}</span>
         <span>{vd} · Page {num}/3</span>
       </div>
