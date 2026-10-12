@@ -5,8 +5,9 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 // Adresse de destination de la demande — À CONFIRMER (boîte contact Netair).
 const CONTACT_EMAIL = 'contact@netair.fr';
 
-// Téléphone — à compléter dès l'immatriculation de la société.
-const TELEPHONE = '[À COMPLÉTER]';
+// Téléphone — ligne principale OVH (IDENTITE_SOCIETE_Netair.md).
+const TELEPHONE = '04 82 53 37 17';
+const TELEPHONE_HREF = 'tel:+33482533717';
 
 const FORMATS = ['Par téléphone', 'En visio'];
 const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h)'];
@@ -148,7 +149,7 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
         <dl class="mt-4 space-y-3 text-sm">
           <div>
             <dt class="text-muted">Téléphone</dt>
-            <dd class="font-normal text-marine">{TELEPHONE}</dd>
+            <dd><a href={TELEPHONE_HREF} class="font-normal text-marine hover:text-turquoise">{TELEPHONE}</a></dd>
           </div>
           <div>
             <dt class="text-muted">Email</dt>

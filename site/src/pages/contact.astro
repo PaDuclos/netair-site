@@ -5,10 +5,11 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 // Adresse de destination du message — À CONFIRMER (boîte contact Netair).
 const CONTACT_EMAIL = 'contact@netair.fr';
 
-// Coordonnées — à compléter dès l'immatriculation de la société.
-const TELEPHONE = '[À COMPLÉTER]';
-const ADRESSE = '[À COMPLÉTER]';
-const HORAIRES = '[À COMPLÉTER] (ex. lun.–ven., 8 h–18 h)';
+// Coordonnées — source : IDENTITE_SOCIETE_Netair.md (adresse d'exploitation, pas le siège).
+const TELEPHONE = '04 82 53 37 17';
+const TELEPHONE_HREF = 'tel:+33482533717';
+const ADRESSE = 'Parc d\'activité des Chênes, Route de Tramoyes, 01700 Miribel';
+const HORAIRES = 'Du lundi au vendredi, 8 h 30 – 12 h et 13 h 30 – 18 h';
 
 // Objets proposés dans le formulaire (tri des messages à l'arrivée).
 const OBJETS = [
@@ -100,7 +101,7 @@ const OBJETS = [
           </div>
           <div>
             <dt class="text-muted">Téléphone</dt>
-            <dd class="font-normal text-marine">{TELEPHONE}</dd>
+            <dd><a href={TELEPHONE_HREF} class="font-normal text-marine hover:text-turquoise">{TELEPHONE}</a></dd>
           </div>
         </dl>
       </div>
