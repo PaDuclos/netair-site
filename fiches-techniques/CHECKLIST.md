@@ -9,6 +9,14 @@ Légende statut fiche : ✅ validée · 🟡 créée (données à compléter) ·
 
 ---
 
+## Audit avant mise en ligne du 12/10/2026 (5 volets, rapport consolidé en session)
+
+- [x] **NETPAK S AZUR, F7 = ePM1 50 %** (média GREENTEX, comme CILIA et BORA) : **TRANCHÉ par PA le 12/10**. Fiche v1.3, étiquette `etiquettesIso` ajoutée côté site. Reste à porter dans l'Excel à la resynchro (table ISO globale à 55 %) et dans DONNEES_PDC (ligne 48).
+- [x] **NETCEL V AZUR et NETCEL V NIVAL, calculateur** : affichait « min(ΔP init + Pa ; × 3), EN 13053 » au lieu de « 2 × ΔP initiale, EN 1822 » (remplacement muet de `generer.py` depuis le retrait des cadratins du 22/09). Corrigé + **garde-fou** (le générateur échoue si la ligne est introuvable). Fiches v1.3, accord PA.
+- [ ] Constats ouverts de l'audit fiches (non bloquants) : débit nominal NETPAK S CILIA 3 000 vs 3 400 ; n° « FT-NETPAK-CILIA-001 » ; note de référence CILIA ; courbe E10 de NIVAL absente de DONNEES_PDC ; annotations sans vitesse (NETCARB CILIA/AZUR, CILIA DUO) ; PROCESS en retard sur la ligne « ΔP finale » (charbons, BAG, DUO) ; sources périmées dans DONNEES_PDC et le registre (voir rapport).
+
+---
+
 ## Vue d'ensemble
 
 | Réf. | Statut | Manques / à valider clés |

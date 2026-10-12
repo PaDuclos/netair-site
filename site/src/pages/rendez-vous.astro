@@ -70,8 +70,20 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
             Choisissez le format puis un créneau libre : vous recevez aussitôt une confirmation
             par email, avec le lien de la visio si vous l'avez choisie.
           </p>
-          <iframe id="bookings-frame" src={BOOKINGS_URL} title="Réserver un créneau avec un conseiller Netair"
-            loading="lazy" class="mt-5 w-full rounded-xl border border-soft bg-blanc" style="height: 780px;"></iframe>
+          <!-- Chargé seulement au clic : le calendrier Microsoft dépose des cookies (CNIL, consentement préalable). -->
+          <div id="bookings-consent" class="mt-5 flex flex-col items-center justify-center rounded-xl border border-dashed border-soft bg-mist px-6 py-12 text-center">
+            <p class="max-w-md text-sm text-muted">
+              Le calendrier de réservation est fourni par Microsoft Bookings. Son affichage dépose des
+              cookies Microsoft. <a href="/confidentialite" class="text-bleu hover:text-turquoise">En savoir plus</a>
+            </p>
+            <button id="bookings-load" type="button" data-src={BOOKINGS_URL}
+              class="mt-5 inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
+              style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
+              Afficher le calendrier
+            </button>
+          </div>
+          <iframe id="bookings-frame" title="Réserver un créneau avec un conseiller Netair"
+            class="mt-5 hidden w-full rounded-xl border border-soft bg-blanc" style="height: 780px;"></iframe>
           <p class="mt-3 text-xs text-muted">
             Le calendrier ne s'affiche pas ?
             <a href={BOOKINGS_URL} target="_blank" rel="noopener" class="text-bleu hover:text-turquoise">Ouvrir la réservation dans un nouvel onglet</a>.
@@ -186,12 +198,21 @@ const CRENEAUX = ['Peu importe', 'Matin (9 h–12 h)', 'Après-midi (14 h–18 h
     // formulaire et, si le service Bookings a son propre lien, l'ouvrent dans le calendrier.
     const formatSelect = document.getElementById('format');
     const bookingsFrame = document.getElementById('bookings-frame');
+    const bookingsConsent = document.getElementById('bookings-consent');
+    const bookingsLoad = document.getElementById('bookings-load');
+    // Le calendrier n'est chargé qu'à la demande du visiteur (bouton, ou carte de format).
+    const afficherCalendrier = (url) => {
+      if (!bookingsFrame || !url) return;
+      bookingsFrame.setAttribute('src', url);
+      bookingsFrame.classList.remove('hidden');
+      bookingsConsent?.classList.add('hidden');
+    };
+    bookingsLoad?.addEventListener('click', () => afficherCalendrier(bookingsLoad.dataset.src));
     document.querySelectorAll('[data-format]').forEach((el) => {
       el.addEventListener('click', () => {
         const fmt = el.getAttribute('data-format');
         if (formatSelect && fmt) formatSelect.value = fmt;
-        const url = el.getAttribute('data-bookings');
-        if (bookingsFrame && url) bookingsFrame.setAttribute('src', url);
+        afficherCalendrier(el.getAttribute('data-bookings'));
       });
     });
 

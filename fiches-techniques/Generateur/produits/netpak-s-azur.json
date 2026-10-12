@@ -17,8 +17,8 @@
   "len0": 292,
   "fiche": {
     "num": "FT-NETPAK-S-AZUR-001",
-    "version": "v1.2",
-    "date": "18/07/2026"
+    "version": "v1.3",
+    "date": "12/10/2026"
   },
   "photo": "netpak-s-azur-photo.jpg",
   "photo_alt": "Filtre compact polydièdre NETPAK S AZUR",
@@ -46,7 +46,7 @@
     ],
     [
       "Efficacités ISO 16890",
-      "ePM10 50 %  ·  ePM2,5 50 %  ·  ePM1 55 %  ·  70 %  ·  80 %"
+      "ePM10 50 %  ·  ePM2,5 50 %  ·  ePM1 50 %  ·  70 %  ·  80 %"
     ],
     [
       "Efficacités EN 779",
@@ -90,7 +90,7 @@
   "classes_def": {
     "f7": {
       "label": "F7",
-      "iso": "ePM1 55%",
+      "iso": "ePM1 50%",
       "add": 100,
       "rule": "classe ePM1"
     },

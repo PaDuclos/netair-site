@@ -122,8 +122,12 @@ import { DEPARTEMENTS } from '../lib/departements';
 
   <script>
     import { getCart, setQty, removeItem, cartTotalHT, onCartChange, getDeliveryDept, setDeliveryDept } from '../lib/cart';
-    import { calculerPrix } from '../lib/pricing';
-    import { calculerPort, seuilFranco } from '../lib/pricing/shipping';
+    // Voir produits/[ref].astro : moteur de prix absent du build en mode vitrine.
+    let calculerPrix = null, calculerPort = null, seuilFranco = null;
+    if (__VENTE_EN_LIGNE__) {
+      ({ calculerPrix } = await import('../lib/pricing'));
+      ({ calculerPort, seuilFranco } = await import('../lib/pricing/shipping'));
+    }
     import { MIN_COMMANDE_HT } from '../lib/boutique';
 
     const $ = (id) => document.getElementById(id);

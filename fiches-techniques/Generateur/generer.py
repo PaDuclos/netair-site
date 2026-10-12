@@ -1274,11 +1274,16 @@ def generer_series(d, html):
 
     # --- mode HEPA : ΔP finale = 2 × initiale (au lieu de la règle ePM ; cf. EN 1822)
     if d.get("hepa"):
+        ancien = ('ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3),'
+                  '<span style="color:#b9c2cd;"> EN 13053 · <span id="effRule"></span></span>')
+        # Garde-fou : si le gabarit change, échouer bruyamment plutôt que publier la règle ePM
+        # sur une fiche HEPA (régression constatée le 12/10 : remplacement muet depuis le 22/09).
+        if ancien not in html:
+            sys.exit("❌ mode HEPA : ligne « ΔP finale » du calculateur introuvable dans le gabarit")
         html = html.replace(
-            'ΔP finale = min(ΔP init + <span id="effAdd"></span> Pa ; ΔP init × 3) '
-            '<span style="color:#b9c2cd;">, EN 13053 · <span id="effRule"></span></span>',
-            'ΔP finale = 2 × ΔP initiale<span id="effAdd" style="display:none"></span> '
-            '<span style="color:#b9c2cd;">, EN 1822 · <span id="effRule"></span></span>')
+            ancien,
+            'ΔP finale = 2 × ΔP initiale<span id="effAdd" style="display:none"></span>,'
+            '<span style="color:#b9c2cd;"> EN 1822 · <span id="effRule"></span></span>')
 
     # --- page 1 compacte
     if d.get("compact_p1"):

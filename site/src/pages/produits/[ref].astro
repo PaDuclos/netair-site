@@ -459,7 +459,7 @@ const introConfig =
 
         <!-- Prix + actions -->
         <div class="mt-4 rounded-2xl bg-mist px-5 py-4">
-          <div class:list={['flex flex-wrap items-end justify-between gap-4', !VENTE_EN_LIGNE && 'hidden']}>
+          {VENTE_EN_LIGNE && (<div class="flex flex-wrap items-end justify-between gap-4">
             <div>
               <span class="eyebrow text-[11px] text-muted">Prix unitaire HT</span>
               <div class="display text-3xl font-normal text-marine"><span id="pUnit">…</span> €</div>
@@ -468,13 +468,15 @@ const introConfig =
                 <p class="mt-1 text-xs text-muted">Commande minimum : <span class="font-medium text-marine">{MIN_COMMANDE_HT} € HT</span></p>
               )}
             </div>
-          </div>
+          </div>)}
           <div class:list={['flex flex-col gap-3 sm:flex-row', VENTE_EN_LIGNE && 'mt-4 border-t border-soft pt-4']}>
+            {VENTE_EN_LIGNE && (
             <button id="addBtn" type="button"
-              class={VENTE_EN_LIGNE ? 'inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5' : 'hidden'}
+              class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-sm font-normal text-blanc shadow-[0_10px_24px_-10px_rgba(8,151,165,0.55)] transition-transform hover:-translate-y-0.5"
               style="background-image: linear-gradient(135deg, var(--color-bleu), var(--color-turquoise));">
               Ajouter au panier
             </button>
+            )}
             {VENTE_EN_LIGNE ? (
               <button id="addDevisBtn" type="button"
                 class="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-soft bg-blanc px-6 py-2.5 text-sm font-normal text-marine transition-colors hover:border-turquoise">
@@ -496,7 +498,7 @@ const introConfig =
       <div class="flex flex-col gap-6 lg:sticky lg:top-24 self-start">
 
         <!-- Panier d'achat -->
-        <aside class:list={['rounded-2xl border border-soft bg-white p-7 shadow-soft', !VENTE_EN_LIGNE && 'hidden']}>
+        {VENTE_EN_LIGNE && (<aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
           <div class="flex items-center justify-between">
             <h3 class="display text-xl font-normal text-marine">Panier d'achat</h3>
             <span id="cartCount" class="rounded-full bg-bleu/10 px-2.5 py-0.5 text-xs font-medium text-bleu">0</span>
@@ -517,7 +519,7 @@ const introConfig =
               Voir le panier &amp; commander →
             </a>
           </div>
-        </aside>
+        </aside>)}
 
         <!-- Demande de devis (liste multi-produits) -->
         <aside class="rounded-2xl border border-soft bg-white p-7 shadow-soft">
@@ -565,7 +567,10 @@ const introConfig =
     // Bloc B2 : le configurateur appelle le VRAI moteur de prix (calculerPrix).
     // Ce <script> est groupé/empaqueté par Astro (pas `is:inline`) afin de pouvoir
     // importer le moteur — qui embarque les tables tarifaires pour un calcul instantané.
-    import { calculerPrix } from '../../lib/pricing';
+    // Site vitrine : le moteur (et ses grilles tarifaires) n'est ni chargé ni même fabriqué
+    // (__VENTE_EN_LIGNE__ est remplacé par une constante au build, cf. astro.config.mjs).
+    let calculerPrix = null;
+    if (__VENTE_EN_LIGNE__) ({ calculerPrix } = await import('../../lib/pricing'));
     import { CADRE_SUFFIXE } from '../../lib/pricing/produits-gammes';
     import { addItem, getCart, removeItem, onCartChange } from '../../lib/cart';
     import { addDevisItem, getDevis, removeDevisItem, onDevisChange } from '../../lib/devis';
@@ -672,10 +677,11 @@ const introConfig =
       // Affiche (ou efface) le prix et pilote l'état du bouton « Ajouter au panier ».
       function afficherPrix(unit, total, msg) {
         const ok = unit != null;
-        $('pUnit').textContent = ok ? eur(unit) : '…';
-        $('pTotal').textContent = ok ? eur(total) : '…';
+        if ($('pUnit')) $('pUnit').textContent = ok ? eur(unit) : '…';
+        if ($('pTotal')) $('pTotal').textContent = ok ? eur(total) : '…';
         $('priceMsg').textContent = msg || '';
         const btn = $('addBtn');
+        if (!btn) return;
         btn.disabled = !ok;
         btn.classList.toggle('opacity-40', !ok);
         btn.classList.toggle('cursor-not-allowed', !ok);
@@ -796,11 +802,11 @@ const introConfig =
       function refresh() {
         majCadresSelonFormat();
         const c = readCfg();
-        $('pQty').textContent = c.qty;
+        if ($('pQty')) $('pQty').textContent = c.qty;
         $('genRef').textContent = refRef(c);
 
         // Produit « sur devis » : aucun prix public, on oriente vers la demande de devis.
-        if (mode !== 'calcul') {
+        if (mode !== 'calcul' || !calculerPrix) {
           afficherPrix(null, null, vente ? 'Ce produit est proposé sur devis. Ajoutez-le à votre demande de devis.' : '');
           return { c, unit: null, ok: false };
         }
@@ -839,6 +845,7 @@ const introConfig =
       // ---- Panier d'achat ----
       // Mini-panier de la page produit : reflète le VRAI panier (partagé entre toutes les pages).
       function renderCart() {
+        if (!$('cartList')) return;
         const items = getCart();
         $('cartCount').textContent = items.reduce((s, i) => s + i.qty, 0);
         const empty = items.length === 0;
@@ -921,7 +928,7 @@ const introConfig =
         if (v) applyVariante(v);
       });
 
-      $('addBtn').addEventListener('click', () => {
+      $('addBtn')?.addEventListener('click', () => {
         const { c, unit, ok } = refresh();
         if (!ok || unit == null) return;   // pas d'ajout sans prix (sur devis, hors format, classe indispo…)
         addItem({
