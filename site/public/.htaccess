@@ -13,7 +13,7 @@ RewriteRule ^(.*)$ https://netair.fr/$1 [R=301,L]
 
 # Mode vitrine (VENTE_EN_LIGNE = false) : panier et espace client renvoient vers la demande de devis.
 # ⚠️ À retirer le jour où la vente en ligne est activée.
-RewriteRule ^(panier|compte)/?$ /devis/ [R=301,L]
+RewriteRule ^(panier|compte)/?$ https://netair.fr/devis/ [R=301,L]
 
 ErrorDocument 404 /404.html
 
