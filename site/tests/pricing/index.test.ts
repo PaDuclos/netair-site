@@ -17,10 +17,10 @@ function demande(p: Partial<DemandePrix>): DemandePrix {
 }
 
 describe("calculerPrix — assemblage prix + port", () => {
-  it("ok + département 35 → prix + port 75 € (total 126 € < 750 → pas de franco)", () => {
+  it("ok + département 35 → prix + port 75 € (total 176,40 € < 750 → pas de franco)", () => {
     const r = calculerPrix(demande({ departement: "35" }));
     expect(r.statut).toBe("ok");
-    expect(r.prixTotalHT).toBe(126);
+    expect(r.prixTotalHT).toBe(176.4);
     expect(r.fraisPortHT).toBe(75);
     expect(r.francoApplique).toBe(false);
   });
@@ -28,7 +28,7 @@ describe("calculerPrix — assemblage prix + port", () => {
   it("ok + total ≥ 750 € → franco (port 0 €)", () => {
     const r = calculerPrix(demande({ departement: "35", quantite: 100 }));
     expect(r.statut).toBe("ok");
-    expect(r.prixTotalHT).toBe(1260);
+    expect(r.prixTotalHT).toBe(1764);
     expect(r.fraisPortHT).toBe(0);
     expect(r.francoApplique).toBe(true);
   });
@@ -36,7 +36,7 @@ describe("calculerPrix — assemblage prix + port", () => {
   it("ok + département inconnu (971) → prix conservé, port sur devis (message, pas de montant)", () => {
     const r = calculerPrix(demande({ departement: "971" }));
     expect(r.statut).toBe("ok");
-    expect(r.prixUnitaireHT).toBe(12.6);
+    expect(r.prixUnitaireHT).toBe(17.64); // 12,60 € (Excel) × 1,40
     expect(r.fraisPortHT).toBeUndefined();
     expect(r.francoApplique).toBeUndefined();
     expect(r.message).toContain("971");
@@ -45,7 +45,7 @@ describe("calculerPrix — assemblage prix + port", () => {
   it("ok sans département → prix nu (aucun port)", () => {
     const r = calculerPrix(demande({}));
     expect(r.statut).toBe("ok");
-    expect(r.prixUnitaireHT).toBe(12.6);
+    expect(r.prixUnitaireHT).toBe(17.64); // 12,60 € (Excel) × 1,40
     expect(r.fraisPortHT).toBeUndefined();
     expect(r.francoApplique).toBeUndefined();
   });
@@ -72,5 +72,20 @@ describe("calculerPrix — statuts non-ok : pas de port, passage tel quel", () =
     const r = calculerPrix(demande({ classe: "F7", departement: "35" }));
     expect(r.statut).toBe("classe_indisponible");
     expect(r.fraisPortHT).toBeUndefined();
+  });
+
+  it("majoration site, préfiltre (NETPLY) : prix affiché = prix Excel × 1,40 ; port inchangé", () => {
+    const r = calculerPrix(demande({ departement: "35" }));
+    expect(r.detail?.prixCatalogueHT).toBe(12.6);
+    expect(r.detail?.majorationSite).toBe(1.4);
+    expect(r.prixUnitaireHT).toBe(17.64);
+    expect(r.fraisPortHT).toBe(75); // port NON majoré (déc. PA 12/10/2026)
+  });
+
+  it("majoration site, hors préfiltres (NETPAK S CILIA, code 7) : prix affiché = prix Excel × 1,25", () => {
+    const r = calculerPrix({ codeGamme: "7", largeur_mm: 592, hauteur_mm: 592, profondeur_mm: 48, classe: "F7", quantite: 6 });
+    expect(r.statut).toBe("ok");
+    expect(r.detail?.majorationSite).toBe(1.25);
+    expect(r.prixUnitaireHT).toBe(Math.round(r.detail!.prixCatalogueHT * 1.25 * 100) / 100);
   });
 });

@@ -45,6 +45,22 @@ import {
 // ── Petits utilitaires ──────────────────────────────────────────────────────
 
 /** Arrondi classique à 2 décimales (cf. SPEC §10). */
+/**
+ * Majoration du site sur le prix du calculateur Netair (décision PA du 12/10/2026) :
+ * +40 % pour les PRÉFILTRES (famille « 1. Préfiltres » de l'Excel), +25 % pour tout le reste.
+ * Prix affiché = arrondi2(prix tarif Excel × majoration). Le port, le franco (750 €) et le minimum
+ * de commande ne sont PAS majorés. Le prix Excel reste lisible dans `detail.prixCatalogueHT`.
+ * Repérage par la FAMILLE (donnée de l'Excel) et non par une liste de codes : un préfiltre ajouté
+ * au calculateur reçoit sa majoration sans retoucher ce fichier.
+ */
+export const MAJORATION_PREFILTRES = 1.4;
+export const MAJORATION_AUTRES = 1.25;
+
+export function majorationSite(codeGamme: string): number {
+  const gamme = trouverGamme(codeGamme);
+  return gamme && /pr[ée]filtre/i.test(gamme.famille ?? "") ? MAJORATION_PREFILTRES : MAJORATION_AUTRES;
+}
+
 function arrondi2(x: number): number {
   return Math.round(x * 100) / 100;
 }
@@ -421,7 +437,9 @@ export function calculerPrixHT(demande: DemandePrix): ResultatPrix {
   const reval = getParam("Revalorisation générale :");
   const facteurReval = typeof reval === "number" && reval > 0 ? reval : undefined;
 
-  const prixUnitaireHT = arrondi2(coutHT * gamme.ratio * (facteurReval ?? 1));
+  const prixCatalogueHT = arrondi2(coutHT * gamme.ratio * (facteurReval ?? 1));
+  const majoration = majorationSite(demande.codeGamme);
+  const prixUnitaireHT = arrondi2(prixCatalogueHT * majoration);
   const prixTotalHT = arrondi2(prixUnitaireHT * q);
 
   const composants = [...calc.composants];
@@ -437,6 +455,8 @@ export function calculerPrixHT(demande: DemandePrix): ResultatPrix {
     composantsCout: composants,
     coutHT,
     ratioTarif: gamme.ratio,
+    prixCatalogueHT,
+    majorationSite: majoration,
     revalorisation: facteurReval,
     surface_dm2: calc.surface_dm2,
     perimetre_m: calc.perimetre_m,
