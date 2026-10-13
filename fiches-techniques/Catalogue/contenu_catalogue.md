@@ -84,6 +84,13 @@ Leur conception permet, selon les modèles et les conditions d’utilisation, de
 
 NETAIR propose des filtres compacts à brides ou à cadre plat, disponibles en différentes épaisseurs, classes d’efficacité et dimensions standard ou sur mesure.
 
+poches_souples_rigides:
+Les filtres à poches sont destinés à la préfiltration et à la filtration fine de l’air dans les centrales de traitement d’air. Leur surface filtrante développée leur donne une forte capacité de rétention des poussières.
+
+NETAIR propose des filtres à poches souples en fibres synthétiques à densité progressive et des filtres à poches rigides à média plissé en polypropylène, disponibles en différentes classes d’efficacité.
+
+La gamme comprend également des filtres à poches rigides rechargeables, dont la conception permet de conserver la structure du filtre et de remplacer uniquement les cassettes filtrantes, afin de réduire les déchets liés à la maintenance.
+
 ---
 
 ## NORMES

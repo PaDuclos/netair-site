@@ -385,8 +385,8 @@ table.normes-th th {{ background: var(--teal); }}
 .se-tag {{ position: absolute; top: 46mm; left: 54mm; color: #fff; font-size: 8pt;
           border: 1px solid rgba(255,255,255,.45); padding: 2mm 4mm;
           text-transform: uppercase; letter-spacing: .1em; }}
-.se-texte {{ position: absolute; top: 112mm; left: 20mm; width: 110mm;
-            font-size: 10pt; line-height: 1.62; color: rgba(255,255,255,.88); }}
+.se-texte {{ position: absolute; top: 100mm; left: 20mm; width: 110mm;
+            font-size: 10pt; line-height: 1.5; color: rgba(255,255,255,.88); }}
 .se-texte p {{ margin: 0 0 3mm; }}
 .se-liste {{ position: absolute; top: 202mm; left: 20mm; right: 20mm; }}
 .se-item {{ display: flex; align-items: baseline; gap: 4mm; padding: 2.6mm 0;
