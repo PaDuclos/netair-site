@@ -57,14 +57,11 @@ signature: Pierre-Alain Duclos, dirigeant
 
 titre: Lire une classe d'efficacité
 intro:
-Depuis juillet 2018, la norme EN ISO 16890 remplace l'EN 779. Elle classe les
-filtres selon leur efficacité sur les particules en suspension (PM10, PM2,5,
-PM1) plutôt que sur un essai à poussière synthétique. Un filtre relève d'une
-catégorie s'il retient au moins 50 % des particules de la taille considérée.
+Depuis juillet 2018, la norme EN ISO 16890 remplace l’ancienne norme EN 779 pour la classification des filtres de ventilation générale. Elle évalue leur efficacité de filtration sur différentes fractions de particules en suspension dans l’air : PM10, PM2,5 et PM1.
 
-Dans ce catalogue, la classe EN ISO 16890 est toujours donnée en premier, la
-classe EN 779 entre parenthèses ou en second. Les filtres absolus relèvent d'une
-troisième norme, l'EN 1822, et se désignent par leur classe seule (E10, H13, H14).
+Les filtres sont classés selon leur efficacité mesurée, exprimée en pourcentage. Les catégories ISO ePM10, ISO ePM2,5 et ISO ePM1 correspondent à une efficacité minimale de 50 % pour la fraction de particules considérée.
+
+Dans ce catalogue, les classes EN ISO 16890 sont indiquées en priorité, accompagnées des anciennes désignations EN 779 à titre indicatif. Les filtres à très haute efficacité sont classés séparément selon la norme EN 1822 (EPA, HEPA et ULPA).
 
 tableau:
 ISO Coarse | Poussières grossières (> 10 µm) | G1 · G2 · G3 · G4
