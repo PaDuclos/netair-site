@@ -91,7 +91,7 @@ def lire_taxonomie():
             "tag_en": c.get("tagEn", ""),
             # descLong est le texte long des pages famille du site ; desc est la
             # phrase courte des bulles. On préfère le long, on retombe sur le court.
-            "texte": c.get("descLong") or c.get("desc", ""),
+            "texte": (c.get("descLong") or c.get("desc", "")).replace("\\n", "\n"),
         })
     if not familles:
         raise TaxonomieIllisible("aucune famille lue dans familles.ts")

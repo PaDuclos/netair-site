@@ -387,6 +387,7 @@ table.normes-th th {{ background: var(--teal); }}
           text-transform: uppercase; letter-spacing: .1em; }}
 .se-texte {{ position: absolute; top: 112mm; left: 20mm; width: 110mm;
             font-size: 10pt; line-height: 1.62; color: rgba(255,255,255,.88); }}
+.se-texte p {{ margin: 0 0 3mm; }}
 .se-liste {{ position: absolute; top: 202mm; left: 20mm; right: 20mm; }}
 .se-item {{ display: flex; align-items: baseline; gap: 4mm; padding: 2.6mm 0;
            border-bottom: 1px solid var(--border); }}
@@ -573,7 +574,7 @@ def page_section(s, i, produits, pages_prod, num):
   <div class="se-diag"></div>
   <div class="se-num hex-v">{i}</div>{tag}
   <h1 class="se-titre">{e(s['titre'])}</h1>
-  <div class="se-texte">{e(s['texte'])}</div>
+  <div class="se-texte">{paragraphes(s['texte'])}</div>
   <div class="se-liste">
     <div class="label" style="margin-bottom:2.5mm;">
       {len(s['produits'])} référence{'s' if len(s['produits']) > 1 else ''}</div>
