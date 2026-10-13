@@ -361,6 +361,8 @@ table.normes td {{ padding: 3mm 3.5mm; font-size: 9pt; border-bottom: 1px solid 
 table.normes tr:nth-child(even) td {{ background: #E6F5F7; }}
 table.normes td:first-child {{ font-weight: 700; color: var(--navy); width: 26%; }}
 table.normes td:last-child {{ color: var(--sub); width: 30%; }}
+table.normes-th {{ margin-top: 7mm; }}
+table.normes-th th {{ background: var(--teal); }}
 .no-note {{ font-size: 8pt; color: var(--sub); line-height: 1.5; font-style: italic; }}
 .no-encadre {{ margin-top: 8mm; background: var(--navy); color: #fff;
               padding: 6mm 7mm; font-size: 10.5pt; line-height: 1.5; font-weight: 600; }}
@@ -521,20 +523,33 @@ def page_sommaire(sections, pages_fam, pages_prod, produits, num):
 
 
 def page_normes(c, num):
-    lignes = ""
-    for ligne in c["tableau"].splitlines():
-        if not ligne.strip():
-            continue
-        cols = [x.strip() for x in ligne.split("|")]
-        lignes += "<tr>" + "".join(f"<td>{e(x)}</td>" for x in cols) + "</tr>"
+    def corps(texte):
+        lignes = ""
+        for ligne in texte.splitlines():
+            if not ligne.strip():
+                continue
+            cols = [x.strip() for x in ligne.split("|")]
+            lignes += "<tr>" + "".join(f"<td>{e(x)}</td>" for x in cols) + "</tr>"
+        return lignes
+
+    def entete(texte, defaut):
+        cols = [x.strip() for x in (texte or defaut).split("|")]
+        return "<thead><tr>" + "".join(f"<th>{e(x)}</th>" for x in cols) + "</tr></thead>"
+
+    # Les classes EN 1822 ne sont pas des équivalences EN 779 : tableau à part, avec son propre en-tête.
+    tres_haute = ""
+    if c.get("tableau_tres_haute"):
+        tres_haute = (f'<table class="normes normes-th">'
+                      f'{entete(c.get("entete_tres_haute"), "Norme | Domaine | Classes")}'
+                      f'<tbody>{corps(c["tableau_tres_haute"])}</tbody></table>')
     return f"""<section class="page" id="p{num}">
   <div class="tete"></div><div class="tete-txt">{e(c['titre'])}</div>
   <div class="tete-num">Repères</div>
   <div class="no-corps">
     {paragraphes(c['intro'])}
-    <table class="normes"><thead><tr>
-      <th>Catégorie</th><th>Particules visées</th><th>Équivalence EN 779</th>
-    </tr></thead><tbody>{lignes}</tbody></table>
+    <table class="normes">{entete(c.get("entete_tableau"), "Catégorie | Particules visées | Équivalence EN 779")}
+    <tbody>{corps(c["tableau"])}</tbody></table>
+    {tres_haute}
     <div class="no-note">{e(c['note_tableau'])}</div>
     <div class="no-encadre">{e(c['encadre'])}</div>
   </div>

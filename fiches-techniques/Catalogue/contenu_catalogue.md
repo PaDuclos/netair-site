@@ -63,12 +63,16 @@ Les filtres sont classés selon leur efficacité mesurée, exprimée en pourcent
 
 Dans ce catalogue, les classes EN ISO 16890 sont indiquées en priorité, accompagnées des anciennes désignations EN 779 à titre indicatif. Les filtres à très haute efficacité sont classés séparément selon la norme EN 1822 (EPA, HEPA et ULPA).
 
+entete_tableau: Catégorie | Particules visées | Anciennes classes EN 779 (indicatif)
 tableau:
-ISO Coarse | Poussières grossières (> 10 µm) | G1 · G2 · G3 · G4
-ISO ePM10 | Particules ≤ 10 µm · pollens, spores | M5
-ISO ePM2,5 | Particules ≤ 2,5 µm · bactéries, fumées | M6
-ISO ePM1 | Particules ≤ 1 µm · suies, particules de combustion | F7 · F8 · F9
-EN 1822 | Filtres absolus · essai au MPPS | E10 · H13 · H14
+ISO Coarse | Particules grossières | G1 à G4
+ISO ePM10 | Particules ≤ 10 µm | M5
+ISO ePM2,5 | Particules ≤ 2,5 µm | M6
+ISO ePM1 | Particules ≤ 1 µm | F7 à F9
+
+entete_tres_haute: Norme | Domaine | Classes EN 1822
+tableau_tres_haute:
+EN 1822 | Filtration à très haute efficacité | E10 à U17
 
 note_tableau:
 Équivalences EN 779 données à titre indicatif (Eurovent · AICVF · VDI). Pour un
