@@ -53,6 +53,19 @@ signature: Pierre-Alain Duclos, dirigeant
 
 ---
 
+## RATTACHEMENT
+
+> Familles des produits propres à la plaquette (le site garde son classement, dans
+> site/src/lib/familles.ts). Une ligne par produit déplacé : produit | famille.
+> Décision PA du 13/10/2026 : les filtres à poches rigides AZUR et LUMEN vont avec
+> les poches souples.
+
+produits:
+netpak-s-azur | poches-souples-rigides
+netpak-s-lumen | poches-souples-rigides
+
+---
+
 ## FAMILLES
 
 > Textes des pages d'ouverture de famille, propres à la plaquette (le site garde les siens,

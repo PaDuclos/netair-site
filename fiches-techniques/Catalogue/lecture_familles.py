@@ -111,7 +111,7 @@ def lire_taxonomie():
     return familles, principale, ordre
 
 
-def plan_du_catalogue(slugs_disponibles):
+def plan_du_catalogue(slugs_disponibles, rattachement_propre=None):
     """Les sections du catalogue, dans l'ordre, chacune avec ses produits.
 
     Contrôle d'exhaustivité : un produit présent sur le disque mais rattaché à
@@ -119,6 +119,13 @@ def plan_du_catalogue(slugs_disponibles):
     du catalogue en silence — ce qui arriverait au premier produit ajouté.
     """
     familles, principale, ordre = lire_taxonomie()
+    # Rattachements propres à la plaquette (bloc RATTACHEMENT du contenu manuel) :
+    # ils déplacent un produit dans la plaquette sans toucher au site.
+    noms = {f["slug"] for f in familles}
+    for produit, famille in (rattachement_propre or {}).items():
+        if famille not in noms:
+            raise TaxonomieIllisible(f"famille inconnue « {famille} » pour {produit}")
+        principale[produit] = famille
 
     inconnus = [s for s in slugs_disponibles if s not in principale]
     if inconnus:

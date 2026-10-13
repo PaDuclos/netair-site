@@ -719,8 +719,13 @@ def substituer(texte, valeurs):
 def construire():
     slugs = lecture_produits.slugs_disponibles()
     produits = {s: lecture_produits.lire(s) for s in slugs}
-    sections = lecture_familles.plan_du_catalogue(slugs)
     contenu = lire_contenu()
+    rattachement = {}
+    for ligne in contenu.get("RATTACHEMENT", {}).get("produits", "").splitlines():
+        if "|" in ligne:
+            produit, famille = (x.strip() for x in ligne.split("|", 1))
+            rattachement[produit] = famille
+    sections = lecture_familles.plan_du_catalogue(slugs, rattachement)
     # Textes de famille propres à la plaquette (bloc FAMILLES du contenu manuel) :
     # ils remplacent ceux du site sans les modifier. Clé = slug, tirets en « _ ».
     for s_ in sections:
