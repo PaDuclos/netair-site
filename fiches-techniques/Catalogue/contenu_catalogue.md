@@ -75,13 +75,10 @@ tableau_tres_haute:
 EN 1822 | Filtration à très haute efficacité | E10 à U17
 
 note_tableau:
-Équivalences EN 779 données à titre indicatif (Eurovent · AICVF · VDI). Pour un
-produit disposant d'un procès-verbal d'essai EN ISO 16890, c'est l'efficacité
-réellement mesurée qui fait foi.
+Les correspondances entre les anciennes classes EN 779 et les classes EN ISO 16890 sont données à titre indicatif. Seuls les résultats d’essais réalisés selon la norme EN ISO 16890 permettent de déterminer la classe d’efficacité réelle d’un filtre.
 
 encadre:
-Pour la protection des occupants, la référence usuelle est une efficacité
-ePM1 ≥ 50 %, soit l'équivalent d'un ancien F7.
+Le choix d’un filtre doit tenir compte de la qualité de l’air extérieur, des exigences de qualité de l’air intérieur et des caractéristiques de l’installation. Pour la filtration fine, les filtres ISO ePM1 ≥ 50 % constituent une solution couramment utilisée.
 
 ---
 
