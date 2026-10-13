@@ -727,11 +727,15 @@ def construire():
             rattachement[produit] = famille
     sections = lecture_familles.plan_du_catalogue(slugs, rattachement)
     # Textes de famille propres à la plaquette (bloc FAMILLES du contenu manuel) :
-    # ils remplacent ceux du site sans les modifier. Clé = slug, tirets en « _ ».
+    # ils remplacent ceux du site sans les modifier. Clé = slug, tirets en « _ » ;
+    # « <slug>_bandeau » remplace aussi le bandeau de la famille.
     for s_ in sections:
         propre = contenu.get("FAMILLES", {}).get(s_["slug"].replace("-", "_"))
         if propre:
             s_["texte"] = propre
+        bandeau = contenu.get("FAMILLES", {}).get(s_["slug"].replace("-", "_") + "_bandeau")
+        if bandeau:
+            s_["tag"], s_["norme"] = bandeau, ""
     global COORD_PIED
     dos = contenu["DOS"]
     COORD_PIED = "".join(

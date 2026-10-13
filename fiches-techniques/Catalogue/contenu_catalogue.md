@@ -70,7 +70,7 @@ netpak-s-lumen | poches-souples-rigides
 
 > Textes des pages d'ouverture de famille, propres à la plaquette (le site garde les siens,
 > dans site/src/lib/familles.ts). Clé = identifiant de la famille ; une famille absente
-> d'ici reprend le texte du site.
+> d'ici reprend le texte du site. « <famille>_bandeau » remplace le bandeau de la famille.
 
 prefiltres:
 Les préfiltres retiennent les particules grossières et protègent les équipements de ventilation ainsi que les étages de filtration situés en aval. Selon les besoins de l’installation, ils peuvent également être utilisés comme unique étage de filtration.
@@ -102,6 +102,13 @@ Installés dans les centrales de traitement d’air, les filtres à charbon acti
 NETAIR propose différentes technologies de filtres à charbon actif : filtres à poches rigides, filtres à poches souples, filtres compacts miniplis et filtres caissons multidièdres.
 
 Selon les modèles, la filtration moléculaire peut être associée à une filtration particulaire, permettant de traiter les poussières et les polluants gazeux au sein d’un même filtre.
+
+combines:
+Les filtres combinés réunissent deux étages de filtration au sein d’un même cadre, dans un encombrement réduit.
+
+NETAIR propose le NETPAK S CILIA DUO, un filtre compact intégrant deux packs de médias plissés distincts. Selon la configuration, il peut associer deux classes d’efficacité particulaire ou combiner une filtration des particules avec une filtration moléculaire par charbon actif.
+
+combines_bandeau: Double filtration
 
 ---
 
