@@ -77,6 +77,13 @@ Les préfiltres retiennent les particules grossières et protègent les équipem
 
 NETAIR propose des préfiltres plissés, plans, métalliques, cousus sur fil et des médias filtrants, en dimensions standard ou sur mesure, adaptés aux centrales de traitement d’air, aux réseaux de ventilation et aux ventilo-convecteurs.
 
+compacts_miniplis:
+Les filtres miniplis associent une grande surface filtrante à une faible perte de charge, ce qui réduit la consommation énergétique des installations de ventilation et de traitement d’air.
+
+Leur conception permet, selon les modèles et les conditions d’utilisation, de fonctionner sans préfiltre.
+
+NETAIR propose des filtres compacts à brides ou à cadre plat, disponibles en différentes épaisseurs, classes d’efficacité et dimensions standard ou sur mesure.
+
 ---
 
 ## NORMES
