@@ -34,22 +34,20 @@ mention_bas: Édition du {date_edition} · {nb_produits} références
 
 ## EDITO
 
-titre: Netair en quelques lignes
+titre: NETAIR, l’expertise de la filtration de l’air
 photo: ambiance-foret.jpg
 texte:
-Netair conçoit et fournit des filtres pour les centrales de traitement d'air.
+Créée en 2026 par Pierre-Alain Duclos, fort de plus de 20 ans d’expérience dans la filtration de l’air, NETAIR est une entreprise implantée à Miribel, près de Lyon, spécialisée dans la conception et la fabrication de filtres pour les installations de ventilation et de traitement d’air.
 
-La gamme couvre les étages de filtration, du préfiltre métallique lavable aux
-filtres absolus, avec les filtres à charbon actif pour le traitement des gaz et
-des odeurs. {nb_produits} références réparties en {nb_familles} familles, en
-dimensions standard ou sur mesure.
+Notre gamme couvre l’ensemble des besoins de filtration, du préfiltre au filtre absolu, en passant par les filtres à poches, les filtres à charbon actif et les solutions combinées. Nos produits sont disponibles en dimensions standard ou sur mesure.
 
-Chaque référence dispose d'une fiche technique : composition, classes
-d'efficacité selon EN ISO 16890 et EN 779, courbe de perte de charge et
-calculateur de consommation énergétique.
+Notre approche repose sur une conviction : une filtration performante doit associer qualité de l’air, efficacité énergétique et maîtrise des coûts d’exploitation.
 
-Les devis sont établis au cas par cas, sur dimensions et classes réelles.
-Livraison par transporteur.
+Au-delà de la fourniture de filtres, NETAIR accompagne ses clients dans le choix et l’optimisation de leurs solutions de filtration, avec une attention particulière portée à la réduction des consommations d’énergie et de l’empreinte environnementale.
+
+Chaque référence dispose d’une fiche technique détaillée permettant d’en connaître les caractéristiques et les performances. Nos propositions sont établies en fonction des besoins spécifiques de chaque installation.
+
+Proximité, réactivité et conseil technique sont au cœur de notre engagement.
 
 signature: Pierre-Alain Duclos, dirigeant
 

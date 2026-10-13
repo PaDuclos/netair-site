@@ -314,9 +314,9 @@ a {{ color: inherit; text-decoration: none; }}
             background: linear-gradient(180deg, rgba(15,50,97,.55), rgba(15,50,97,.78));
             clip-path: polygon(0 0, 100% 0, 74% 100%, 0 100%); }}
 .ed-logo {{ position: absolute; top: 22mm; left: 18mm; width: 44mm; }}
-.ed-corps {{ position: absolute; top: 62mm; left: 104mm; width: 86mm; }}
+.ed-corps {{ position: absolute; top: 40mm; left: 104mm; width: 86mm; }}
 .ed-titre {{ font-size: 21pt; font-weight: 700; line-height: 1.15; margin: 3mm 0 7mm; }}
-.ed-corps p {{ font-size: 10pt; line-height: 1.62; color: #26364d; margin-bottom: 4.5mm; }}
+.ed-corps p {{ font-size: 10pt; line-height: 1.5; color: #26364d; margin-bottom: 3.6mm; }}
 .ed-sign {{ position: absolute; bottom: 34mm; left: 104mm; width: 86mm;
            padding-top: 4mm; border-top: 1px solid var(--border);
            font-size: 9pt; color: var(--sub); }}
