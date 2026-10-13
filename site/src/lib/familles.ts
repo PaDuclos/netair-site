@@ -34,7 +34,7 @@ export const FAMILLES: Famille[] = [
     tagEn: 'G2 → M5',
     photo: '/produits/detour/netply-v6-photo.webp',
     desc: "Premier niveau de filtration, les préfiltres captent les particules grossières pour protéger les installations et prolonger la durée de vie des étages suivants.",
-    descLong: "Les préfiltres retiennent les particules grossières et protègent les équipements de ventilation ainsi que les étages de filtration situés en aval. Selon les besoins de l'installation, ils peuvent également être utilisés comme unique étage de filtration.\n\nNETAIR propose des préfiltres plissés, plans, métalliques, cousus sur fil et des médias filtrants, en dimensions standard ou sur mesure, adaptés aux centrales de traitement d'air, aux réseaux de ventilation et aux ventilo-convecteurs.",
+    descLong: "Les préfiltres assurent le premier niveau de filtration en captant les particules grossières. Disponibles dans différentes technologies et classes d'efficacité, ils répondent aux besoins de chaque installation, en préfiltration ou en filtration principale.",
   },
   {
     slug: 'compacts-miniplis',

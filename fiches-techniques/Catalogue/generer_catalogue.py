@@ -721,6 +721,12 @@ def construire():
     produits = {s: lecture_produits.lire(s) for s in slugs}
     sections = lecture_familles.plan_du_catalogue(slugs)
     contenu = lire_contenu()
+    # Textes de famille propres à la plaquette (bloc FAMILLES du contenu manuel) :
+    # ils remplacent ceux du site sans les modifier. Clé = slug, tirets en « _ ».
+    for s_ in sections:
+        propre = contenu.get("FAMILLES", {}).get(s_["slug"].replace("-", "_"))
+        if propre:
+            s_["texte"] = propre
     global COORD_PIED
     dos = contenu["DOS"]
     COORD_PIED = "".join(

@@ -53,6 +53,19 @@ signature: Pierre-Alain Duclos, dirigeant
 
 ---
 
+## FAMILLES
+
+> Textes des pages d'ouverture de famille, propres à la plaquette (le site garde les siens,
+> dans site/src/lib/familles.ts). Clé = identifiant de la famille ; une famille absente
+> d'ici reprend le texte du site.
+
+prefiltres:
+Les préfiltres retiennent les particules grossières et protègent les équipements de ventilation ainsi que les étages de filtration situés en aval. Selon les besoins de l’installation, ils peuvent également être utilisés comme unique étage de filtration.
+
+NETAIR propose des préfiltres plissés, plans, métalliques, cousus sur fil et des médias filtrants, en dimensions standard ou sur mesure, adaptés aux centrales de traitement d’air, aux réseaux de ventilation et aux ventilo-convecteurs.
+
+---
+
 ## NORMES
 
 titre: Lire une classe d'efficacité
