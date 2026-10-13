@@ -51,7 +51,7 @@ calculateur de consommation énergétique.
 Les devis sont établis au cas par cas, sur dimensions et classes réelles.
 Livraison par transporteur.
 
-signature: Pierre-Alain Duclos, Président
+signature: Pierre-Alain Duclos, dirigeant
 
 ---
 
@@ -94,7 +94,7 @@ texte:
 Filtres pour centrales de traitement d'air.
 Standard et sur mesure, sur devis.
 
-adresse: Parc d'activités des Chênes, Route de Tramoyes, 01700 Miribel
+adresse: Parc d'activité des Chênes, Route de Tramoyes, 01700 Miribel
 telephone: 04 82 53 37 17
 email: contact@netair.fr
 site: www.netair.fr
