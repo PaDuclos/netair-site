@@ -202,9 +202,13 @@ def svg_courbe(c):
             detail = courbe["epaisseur"]
             if detail:
                 detail += "  ·  "
+            # Étiquette longue (ex. « ePM1 50 % (F7) + charbon actif ») : corps réduit
+            # juste assez pour tenir dans la colonne au lieu d'être coupée au bord.
+            corps = min(13, (LARG_LEG - 4) / (0.56 * max(len(courbe["classe"]), 1)))
             legende.append(
                 trait
-                + f'<text x="{LEG + 27}" y="{y + 4}" class="l">'
+                + f'<text x="{LEG + 27}" y="{y + 4}" class="l" '
+                  f'style="font-size:{corps:.1f}px">'
                   f'{e(courbe["classe"])}</text>'
                 + f'<text x="{LEG + 27}" y="{y + 19}" class="v">'
                   f'{e(detail)}{courbe["dp_nom"]:.0f} Pa</text>')
