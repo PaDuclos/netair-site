@@ -96,6 +96,13 @@ Les filtres absolus assurent une filtration de très haute efficacité des parti
 
 NETAIR propose des filtres absolus multidièdres pour les centrales de traitement d’air, ainsi que des filtres à flux laminaire pour les applications terminales. Ces solutions sont notamment utilisées dans les établissements de santé, les laboratoires, les salles propres et les environnements industriels sensibles.
 
+charbon_actif:
+Installés dans les centrales de traitement d’air, les filtres à charbon actif assurent la filtration moléculaire de l’air par adsorption des polluants gazeux, des composés organiques volatils (COV) et des odeurs.
+
+NETAIR propose différentes technologies de filtres à charbon actif : filtres à poches rigides, filtres à poches souples, filtres compacts miniplis et filtres caissons multidièdres.
+
+Selon les modèles, la filtration moléculaire peut être associée à une filtration particulaire, permettant de traiter les poussières et les polluants gazeux au sein d’un même filtre.
+
 ---
 
 ## NORMES
