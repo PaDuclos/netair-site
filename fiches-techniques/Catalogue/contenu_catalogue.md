@@ -91,6 +91,11 @@ NETAIR propose des filtres à poches souples en fibres synthétiques à densité
 
 La gamme comprend également des filtres à poches rigides rechargeables, dont la conception permet de conserver la structure du filtre et de remplacer uniquement les cassettes filtrantes, afin de réduire les déchets liés à la maintenance.
 
+hepa:
+Les filtres absolus assurent une filtration de très haute efficacité des particules en suspension dans l’air. Classés selon la norme EN 1822, ils sont destinés aux installations nécessitant une maîtrise rigoureuse de la contamination particulaire.
+
+NETAIR propose des filtres absolus multidièdres pour les centrales de traitement d’air, ainsi que des filtres à flux laminaire pour les applications terminales. Ces solutions sont notamment utilisées dans les établissements de santé, les laboratoires, les salles propres et les environnements industriels sensibles.
+
 ---
 
 ## NORMES
